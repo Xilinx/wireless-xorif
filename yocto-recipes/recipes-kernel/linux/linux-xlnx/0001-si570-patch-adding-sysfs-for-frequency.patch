@@ -1,0 +1,112 @@
+From 6e40c5201204d47a9561c6bc601e272dff382719 Mon Sep 17 00:00:00 2001
+From: Vasileios Bimpikas <vasileios.bimpikas@xilinx.com>
+Date: Mon, 4 Feb 2019 11:42:15 +0000
+Subject: [si570] si570 patch: adding sysfs for frequency
+
+Signed-off-by: Vasileios Bimpikas <vasileios.bimpikas@xilinx.com>
+---
+ drivers/clk/clk-si570.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/clk-si570.c b/drivers/clk/clk-si570.c
+index 646af1d..99fc91f 100644
+--- a/drivers/clk/clk-si570.c
++++ b/drivers/clk/clk-si570.c
+@@ -27,6 +27,14 @@
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+ 
++#include <linux/stat.h>
++#include <linux/string.h>
++#include <linux/sysfs.h>
++#include <linux/device.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kobject.h>
++
+ /* Si570 registers */
+ #define SI570_REG_HS_N1		7
+ #define SI570_REG_N1_RFREQ0	8
+@@ -90,6 +98,38 @@ enum clk_si570_variant {
+ 	si59x
+ };
+ 
++int si570_config_sysfs_init(struct device *dev);
++static int si570_set_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long parent_rate);
++
++static ssize_t frequency_vas_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct clk_si570 *data = dev_get_drvdata(dev);
++
++	return sprintf(buf, "%llu\n", data->frequency);
++}
++
++static ssize_t frequency_vas_store(struct device *dev,
++				   struct device_attribute *attr,
++				   const char *buf, size_t count)
++{
++	u64 frequency;
++	int ret;
++	struct clk_si570 *data = dev_get_drvdata(dev);
++
++	ret = kstrtoull(buf, 10, &frequency);
++	if (ret)
++		return ret;
++	dev_err(dev, "read frequency: %llu Hz\n", frequency);
++	ret = si570_set_rate(&data->hw, frequency, frequency);
++	if (ret)
++		return ret;
++	return count;
++}
++static DEVICE_ATTR_RW(frequency_vas);
++
++
+ /**
+  * si570_get_divs() - Read clock dividers from HW
+  * @data:	Pointer to struct clk_si570
+@@ -484,18 +524,39 @@ static int si570_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Display a message indicating that we've successfully registered */
++	dev_err(&client->dev, "registered, VASILEIOS\n");
++	dev_set_drvdata(&client->dev, data);
++	si570_config_sysfs_init(&client->dev);
+ 	dev_info(&client->dev, "registered, current frequency %llu Hz\n",
+ 			data->frequency);
+-
+ 	return 0;
+ }
+ 
+ static int si570_remove(struct i2c_client *client)
+ {
+ 	of_clk_del_provider(client->dev.of_node);
++	dev_err(&client->dev, "exit, VASILEIOS\n");
+ 	return 0;
+ }
+ 
++static struct attribute *si570_config_attrs[] = {
++	&dev_attr_frequency_vas.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(si570_config);
++
++int si570_config_sysfs_init(struct device *dev)
++{
++	int ret;
++
++	dev->groups = si570_config_groups;
++	ret = sysfs_create_group(&dev->kobj, *si570_config_groups);
++	if (ret)
++		dev_err(dev, "sysfs creation failed\n");
++
++	return ret;
++}
++
+ static const struct i2c_device_id si570_id[] = {
+ 	{ "si570", si57x },
+ 	{ "si571", si57x },
+-- 
+1.8.3.1
+

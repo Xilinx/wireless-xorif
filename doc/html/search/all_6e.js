@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['name',['name',['../structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2',1,'reg_info']]],
+  ['no_5fdeframer_5fantennas',['no_deframer_antennas',['../structxorif__fhi__caps.html#aa0ad24783205cc0d9c631a9d81c8b5b4',1,'xorif_fhi_caps']]],
+  ['no_5fframer_5fantenna',['no_framer_antenna',['../structxorif__fhi__caps.html#a84d2cb918b823d267d26623804edc31a',1,'xorif_fhi_caps']]],
+  ['no_5fhardware',['NO_HARDWARE',['../group__xorif-app.html#ggabfd51332ef0e0ba71f951a69e68e06beaab8362714613193d1871955ecc148b8e',1,'xorif_app.h']]],
+  ['no_5fresult',['NO_RESULT',['../group__xorif-app.html#ggabfd51332ef0e0ba71f951a69e68e06beab479d2a98a08044edd1b2678c7cdaa83',1,'xorif_app.h']]],
+  ['num_5fctrl_5fper_5fsym_5fdl',['num_ctrl_per_sym_dl',['../structxorif__cc__config.html#a51e04b59ae018f5fa92cf1813ae06710',1,'xorif_cc_config']]],
+  ['num_5fctrl_5fper_5fsym_5ful',['num_ctrl_per_sym_ul',['../structxorif__cc__config.html#a6af4701fbb2e422379e9a3847df8aaab',1,'xorif_cc_config']]],
+  ['num_5feth_5fports',['num_eth_ports',['../structxorif__caps.html#a116264f384122ab1d0e8af98fc5349ae',1,'xorif_caps::num_eth_ports()'],['../structxorif__fhi__caps.html#a8ec508b721a3f6ad32ab4806fceb195c',1,'xorif_fhi_caps::num_eth_ports()']]],
+  ['num_5fnumerology',['NUM_NUMEROLOGY',['../group__libxorif.html#ga59585c1be51df603a4083ad41ee0d614',1,'xorif_common.h']]],
+  ['num_5fprach_5fports',['num_prach_ports',['../structxorif__fhi__caps.html#aef4bb773bbae8ac843832ab6fd593db2',1,'xorif_fhi_caps']]],
+  ['num_5frbs',['num_rbs',['../structxorif__cc__config.html#a24ef9909f0a1e732f95f0111905c0586',1,'xorif_cc_config::num_rbs()'],['../structxorif__cc__alloc.html#a01e149a402bcf1f6703ceb12a4a06398',1,'xorif_cc_alloc::num_rbs()']]],
+  ['num_5funsolicited_5fports',['num_unsolicited_ports',['../structxorif__fhi__caps.html#ab6f6226691814d1bbab2e76ad9e8a7b7',1,'xorif_fhi_caps']]],
+  ['numerologies',['numerologies',['../structxorif__caps.html#ac8c780b8cf22b37f6a6e58632ae48058',1,'xorif_caps']]],
+  ['numerology',['numerology',['../structxorif__cc__config.html#ac84fa34977ebd1d5d9f9c70e0de1926e',1,'xorif_cc_config::numerology()'],['../structxorif__cc__alloc.html#a1c039fe73beb058128c7f9a3a27be6be',1,'xorif_cc_alloc::numerology()']]],
+  ['numerology_5f0_5fsupport',['NUMEROLOGY_0_SUPPORT',['../group__libxorif-api.html#ggafcc97497c06504f7172b0a51de12c494a5904e3b5d28da4b2a6aa809589d9547a',1,'xorif_api.h']]],
+  ['numerology_5f1_5fsupport',['NUMEROLOGY_1_SUPPORT',['../group__libxorif-api.html#ggafcc97497c06504f7172b0a51de12c494a5ca064cd279ed4c87ff1dd89af277680',1,'xorif_api.h']]],
+  ['numerology_5f2_5fsupport',['NUMEROLOGY_2_SUPPORT',['../group__libxorif-api.html#ggafcc97497c06504f7172b0a51de12c494ac9d67330d56e99c8793776ab0399899b',1,'xorif_api.h']]],
+  ['numerology_5f3_5fsupport',['NUMEROLOGY_3_SUPPORT',['../group__libxorif-api.html#ggafcc97497c06504f7172b0a51de12c494ac407eb05fb795c5b6a87e72f31a72a66',1,'xorif_api.h']]],
+  ['numerology_5f4_5fsupport',['NUMEROLOGY_4_SUPPORT',['../group__libxorif-api.html#ggafcc97497c06504f7172b0a51de12c494a03c32cf6087e69af3aba957951f64741',1,'xorif_api.h']]]
+];

@@ -1,0 +1,54 @@
+## YAML Configuration file
+
+cfg:
+  
+  ## IP Configurations. These are some basic examples used by Xilinx. These can be extended by the user.
+  ## This can be useful if you want to check resource utilisation on multiple configurations for example.
+  ip:
+    ## Simple 10G configuration.
+    om5:
+      CONFIG.Axis_Ports_Fram: 1
+      CONFIG.Axis_Ports_Defm: 1
+
+    ## Simple 25G configuration.
+    om5_25:
+      CONFIG.Physical_Ethernet_Rate : "25G"
+      CONFIG.Axis_Ports_Fram        : 1
+      CONFIG.Axis_Ports_Defm        : 1
+
+    ## SW develeopment configuration. This is a good example of a more complex configuration.
+    ## Xilinx use this for Driver testing.
+    om5_10_swtest:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 4
+      CONFIG.Physical_Ethernet_Ports   : 4
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 6
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Xran_Max_Dl_Data_Pointers : 6
+
+  ## Supported boards parts for Implementation and Petalinux Build using this flow.
+  boards:
+    zcu111:
+      PART:  "xczu28dr-ffvg1517-2-e"
+      BOARD: "xilinx.com:zcu111:part0:1.2"
+    zcu102:
+      PART:  "xczu9eg-ffvb1156-2-e"
+      BOARD: "xilinx.com:zcu102:part0:3.3"
+      
+  ## Flow settings
+  flow:
+    ipName: roe_framer_0
+    ipType: xilinx.com:ip:oran_radio_if
+    bdName: "design_1"
+
+  ## Block automation settings. 
+  bacfg:
+    cust_repo_ptp:  {CONFIG: {processorSelect: ARM_Linux, ptpSelect: XilinxPtpV1, cfg_addBlFifoReset: 1 }}
+    norm_repo_ptp:           {processorSelect: ARM_Linux, ptpSelect: XilinxPtpV1, cfg_addBlFifoReset: 1 }
+    cust_repo    :  {CONFIG: {processorSelect: ARM_Linux,                         cfg_addBlFifoReset: 1 }}
+    norm_repo    :           {processorSelect: ARM_Linux,                         cfg_addBlFifoReset: 1 }
+

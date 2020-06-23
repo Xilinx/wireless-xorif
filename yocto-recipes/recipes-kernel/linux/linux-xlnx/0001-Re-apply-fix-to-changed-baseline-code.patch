@@ -1,0 +1,39 @@
+From 4268e8a0653e396f4744b68aaceaf74469ad0d6a Mon Sep 17 00:00:00 2001
+From: Steven Dickinson <steven.dickinson@xilinx.com>
+Date: Thu, 19 Mar 2020 13:47:58 +0000
+Subject: [PATCH] Re-apply fix to changed baseline code
+
+Signed-off-by: Steven Dickinson <steven.dickinson@xilinx.com>
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index e13f584..438794a8 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -495,10 +495,6 @@ static void axienet_device_reset(struct net_device *ndev)
+ 					 XAXIFIFO_TXTS_RESET_MASK);
+ 			axienet_rxts_iow(lp, XAXIFIFO_TXTS_SRR,
+ 					 XAXIFIFO_TXTS_RESET_MASK);
+-			axienet_txts_iow(lp, XAXIFIFO_TXTS_RDFR,
+-					 XAXIFIFO_TXTS_RESET_MASK);
+-			axienet_txts_iow(lp, XAXIFIFO_TXTS_SRR,
+-					 XAXIFIFO_TXTS_RESET_MASK);
+ 		}
+ #endif
+ 	}
+@@ -877,9 +873,7 @@ static void axienet_create_tsheader(u8 *buf, u8 msg_type,
+ 	cur_p = &q->tx_bd_v[q->tx_bd_tail];
+ #endif
+ 
+-	if (msg_type == TX_TS_OP_NOOP) {
+-		buf[0] = TX_TS_OP_NOOP;
+-	} else if (msg_type == TX_TS_OP_ONESTEP) {
++	if (msg_type == TX_TS_OP_ONESTEP) {
+ 		buf[0] = TX_TS_OP_ONESTEP;
+ 		buf[1] = TX_TS_CSUM_UPDATE;
+ 		buf[4] = TX_PTP_TS_OFFSET;
+-- 
+1.8.3.1
+

@@ -1,0 +1,14 @@
+The majority of files within this repository are Apache License Version 2.0
+(SPDX short identifier: Apache-2.0).
+
+However, there are a small number of files from other sources, which possess
+different licenses:
+
+1) xlnx-ptp-timer module
+	- Author: Xilinx, Inc.
+	- GNU General Public License version 2
+	- SPDX short identifier: GPL-2.0
+2) eCPRI module
+	- Author: Xilinx, Inc.
+	- BSD-3-Clause
+	- SPDX short identifier: BSD-3-Clause
