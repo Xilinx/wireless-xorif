@@ -15,8 +15,8 @@ Once loaded, review the printed help. When you are familiar with the flow and wa
 ## This style uses a set of strings concatenated together to tell the 
 ## script what mode it should built in. Note. case is ignored.
 ## 
-## 1st TCLARGS = board to use (zcu111|zcu102)
-## 2nd TCLARGS = Ip Mode to select (om0|om5)
+## 1st TCLARGS = board to use        (zcu111|zcu102)
+## 2nd TCLARGS = Ip Mode to select   (om5)
 ## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
