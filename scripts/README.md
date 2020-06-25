@@ -54,15 +54,13 @@ Example: make zcu111_om5_exs
 Supported targets:
     all
     clean_all
-    zcu102_om5_exd
     zcu102_om5_exs
-    zcu111_om5_exd
     zcu111_om5_exs
 
 Notes:
-    Board: [zcu102 | zcu111 | vck190]
+    Board: [zcu102 | zcu111]
     Mode: [om5 = ORAN]
-    Design: [exd = example design | exs = example system]
+    Design: [exs = example system]
 ~~~
 
 * Note 1: The "all" target builds all of the supported targets.
