@@ -72,16 +72,13 @@ usage:
 	@echo "Supported targets:"
 	@echo "    all"
 	@echo "    clean_all"
-	@echo "    zcu102_om5_exd"
 	@echo "    zcu102_om5_exs"
-	@echo "    zcu111_om5_exd"
 	@echo "    zcu111_om5_exs"
-	@echo "    vck190_test"
 	@echo
 	@echo "Notes:"
-	@echo "    Board: [zcu102 | zcu111 | vck190]"
+	@echo "    Board: [zcu102 | zcu111]"
 	@echo "    Mode: [om5 = ORAN]"
-	@echo "    Design: [exd = example design | exs = example system]"
+	@echo "    Design: [exs = example system]"
 
 ### MAIN RULES AND RECIPES ###
 
@@ -280,7 +277,7 @@ vck190_test:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-all: zcu102_om5_exd zcu102_om5_exs zcu111_om5_exd zcu111_om5_exs vck190_test
+all: zcu102_om5_exs zcu111_om5_exs
 
 clean_all:
 	@echo Cleaning all targets
