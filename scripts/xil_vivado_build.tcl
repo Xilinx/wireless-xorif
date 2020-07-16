@@ -283,6 +283,21 @@ set exitOnDone 0
       file copy -force ${dir}/${name}.runs/impl_1/design_1_wrapper.sysdef ${sdkPath}/design_1_wrapper.hdf
   
     }
+    
+    ## Give the user some help
+    regsub "_exs_.+" $name "_exs" target
+    puts " 
+################################################################################
+## Possible command sequence to launch Petalinux
+################################################################################
+source /proj/petalinux/2020.1/petalinux-v2020.1_daily_latest/tool/petalinux-v2020.1-final/settings.csh
+mkdir ../xsa/$target
+cp ../output/${dir}/vivado/${dir}.sdk/${dir}.xsa ../xsa/${target}/system.xsa   
+make 
+################################################################################
+## $target
+################################################################################
+"
 
   }
 
