@@ -8,7 +8,7 @@ This project contains the C LibMetal driver for the oran_radio_if IP. Additional
 
 |<div style="width:490px">Link</div>|Description|
 |---|---|
-|[Register_Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the oran_radio_if lounge. Registration required|
+|[Register_Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the oran_radio_if lounge. Registration required.|
 |[Library_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/libxorif)|Example of IP configuration using library calls. Includes full breakdown of IP register accesses. Note. this library contains C code that can be re-targeted for your application, if not using the library directly.|
 |[Library_C_Code](https://github.com/Xilinx/wireless-xorif/blob/master/src/libxorif/xorif_fh_func.c)|Direct link to xorif library C function definitions. Use in conjunction with link above.|
 |[Xorif_App_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app)|Examples of App configuration files.|
