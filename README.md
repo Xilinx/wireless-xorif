@@ -2,7 +2,15 @@
 
 ## Project Information
 
-TBD
+This project contains the C LibMetal driver for the oran_radio_if IP. Additionally a C application is supplied demonstrating how to use the library to configure the IP. Full build instructions and scripts are provided for Vivado and Petalinux. 
+
+## Programming references
+
+|Link|Description|
+|---|---|
+|[Register Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the oran_radio_if lounge. Registration required|
+|[Library README](https://github.com/Xilinx/wireless-xorif/tree/master/src/libxorif)|Example of IP configuration using library calls. Includes full breakdown of IP register accesses. Note. this library contains C code that can be re-targeted for your application, if not using the library directly.|
+|[Xorif-App README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app)|Examples of App configuration files.|
 
 ## Directory Structure
 
