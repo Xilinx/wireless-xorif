@@ -9,6 +9,11 @@ cfg:
     om5:
       CONFIG.Axis_Ports_Fram: 1
       CONFIG.Axis_Ports_Defm: 1
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 6
+      CONFIG.Xran_Max_Dl_Data_Pointers : 8
+      CONFIG.Xran_Max_Ctrl_Symbols     : 12
 
     ## Simple 25G configuration.
     om5_25:
