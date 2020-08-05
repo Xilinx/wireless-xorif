@@ -41,6 +41,7 @@ enum xorif_error_codes
     XORIF_OPERATIONAL_ERRORS = -3000,   /**< (Place holder for operational errors) */
     XORIF_NULL_POINTER,                 /**< Attempt to access memory with null pointer */
     REGISTER_NOT_FOUND,                 /**< Unknown register name */
+    MEMORY_ALLOCATION_FAIL,             /**< Memory allocation fail */
     XORIF_CONFIGURATION_ERRORS = -2000, /**< (Place holder for configuration errors) */
     XORIF_INVALID_CC,                   /**< Component carrier instance is not valid */
     XORIF_INVALID_RBS,                  /**< Number of RBs is not valid */
@@ -49,6 +50,7 @@ enum xorif_error_codes
     XORIF_NUMEROLOGY_NOT_SUPPORTED,     /**< Requested numerology is not supported */
     XORIF_EXT_CP_NOT_SUPPORTED,         /**< Extended cyclic prefix mode is not suported */
     XORIF_COMP_MODE_NOT_SUPPORTED,      /**< Requested compression mode is not supported */
+    XORIF_COMP_WIDTH_NOT_SUPPORTED,     /**< Requested compression width is not supported */
     XORIF_MAX_CTRL_SYM_EXCEEDED,        /**< Number of control symbols exceeds available space */
     XORIF_MAX_DATA_SYM_EXCEEDED,        /**< Number of data symbols exceeds available space */
     XORIF_AVAIL_BUFFER_SPACE_EXCEEDED,  /**< Required buffer space exceeds available space */
@@ -602,13 +604,42 @@ uint32_t xorif_get_bf_hw_version(void);
 uint32_t xorif_get_bf_hw_revision(void);
 
 /**
- * @brief Load beam-weight set.
- * @param[in] TBD
+ * @brief Load beam-weight set (raw data).
+ * @note This function takes packed "cache-ready" beam-weight data, including the control word.
+ * @param[in] count Number of 32-bit words.
+ * @param[in] data Pointer to data (array of 32-bit words)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_set_bf_beam_weights(void);
+int xorif_load_bf_beam_weights_raw(uint16_t count, const uint32_t *data);
+
+/**
+ * @brief Load beam-weight set.
+ * @note This function takes un-packed beam-weight data and control information.
+ * @note The function does not compress the data.
+ * @param[in] bid Beam-id
+ * @param[in] comp_width Compression width (e.g. 12 bits)
+ * @param[in] comp_meth Compression method (e.g. BW_COMP_BLOCK_FP = 1)
+ * @param[in] comp_param Compression paratemer (related to the compression method)
+ * @param[in] ss Spatial stream
+ * @param[in] dir Direction (0 = uplink, 1 = downlink)
+ * @param[in] type (0 = U-plane, 1 = PRACH)
+ * @param[in] num_weights Number of beam-weights to load
+ * @param[in] data Pointer to data (array of 32-bit words; I-value as 16 LSBs, and Q-value as 16 MSBs)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_load_bf_beam_weights(uint16_t bid,
+                               uint16_t comp_width,
+                               uint16_t comp_meth,
+                               uint16_t comp_param,
+                               uint16_t ss,
+                               uint16_t dir,
+                               uint16_t type,
+                               uint16_t num_weights,
+                               const uint32_t *data);
 
 /**
  * @brief Get alarms for Beamformer.

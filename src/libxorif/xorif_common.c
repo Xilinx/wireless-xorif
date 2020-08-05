@@ -255,8 +255,12 @@ void xorif_finish(void)
         {
             TRACE("Closing FHI device %s\n", fh_device.dev_name);
             int irq = (intptr_t)fh_device.dev->irq_info;
-            metal_irq_disable(irq);
-            metal_irq_unregister(irq);
+            if (irq != -1)
+            {
+                metal_irq_disable(irq);
+                metal_irq_unregister(irq);
+                TRACE("FHI IRQ de-registered\n");
+            }
             metal_device_close(fh_device.dev);
         }
 
@@ -266,15 +270,19 @@ void xorif_finish(void)
         {
             TRACE("Closing BF device %s\n", bf_device.dev_name);
             int irq = (intptr_t)bf_device.dev->irq_info;
-            metal_irq_disable(irq);
-            metal_irq_unregister(irq);
+            if (irq != -1)
+            {
+                metal_irq_disable(irq);
+                metal_irq_unregister(irq);
+                TRACE("BF IRQ de-registered\n");
+            }
             metal_device_close(bf_device.dev);
         }
+#endif
 
         // Close libmetal
         TRACE("Finishing libmetal framework\n");
         metal_finish();
-#endif
 
         // Set state to 'not operational'
         xorif_state = 0;
@@ -351,7 +359,7 @@ int xorif_configure_cc(uint16_t cc)
     // Configure the FHI
     int result = xorif_fhi_configure_cc(cc);
 
-#ifdef BF_INCLUDE
+#ifdef BF_INCLUDED
     if (result == XORIF_SUCCESS && xorif_has_beamformer())
     {
         // Configure the BF
@@ -548,7 +556,7 @@ int xorif_set_cc_dl_iq_compression(
         TRACE("IQ compression mode not supported\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    // TODO also check for valid bit width range
+    // TODO check for valid bit width range?
 
     cc_config[cc].iq_comp_width_dl = bit_width;
     cc_config[cc].iq_comp_meth_dl = comp_meth;
@@ -573,7 +581,7 @@ int xorif_set_cc_ul_iq_compression(
         TRACE("IQ compression mode not supported\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    // TODO also check for valid bit width range
+    // TODO check for valid bit width range?
 
     cc_config[cc].iq_comp_width_ul = bit_width;
     cc_config[cc].iq_comp_meth_ul = comp_meth;
@@ -598,7 +606,11 @@ int xorif_set_cc_bw_compression(
         TRACE("Beam-weight compression mode not supported\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    // TODO also check for valid bit width range
+    else if (bit_width != 12)
+    {
+        TRACE("Beam-weight compression width not supported\n");
+        return XORIF_COMP_WIDTH_NOT_SUPPORTED;
+    }
 
     cc_config[cc].bw_comp_width = bit_width;
     cc_config[cc].bw_comp_meth = comp_meth;

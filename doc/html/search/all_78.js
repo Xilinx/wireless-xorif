@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_temp_xorif_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
+  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_test_oran-radio-if-int_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
   ['xorif_2dapp',['Xorif-app',['../group__xorif-app.html',1,'']]],
   ['xorif_5fapi_2eh',['xorif_api.h',['../xorif__api_8h.html',1,'']]],
   ['xorif_5fapp_2ec',['xorif_app.c',['../xorif__app_8c.html',1,'']]],
@@ -16,6 +16,7 @@ var searchData=
   ['xorif_5fcommon_2ec',['xorif_common.c',['../xorif__common_8c.html',1,'']]],
   ['xorif_5fcommon_2eh',['xorif_common.h',['../xorif__common_8h.html',1,'']]],
   ['xorif_5fcomp_5fmode_5fnot_5fsupported',['XORIF_COMP_MODE_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5a2dddf89e5e2a94e6335821d3329384',1,'xorif_api.h']]],
+  ['xorif_5fcomp_5fwidth_5fnot_5fsupported',['XORIF_COMP_WIDTH_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa575bb37977f8a8018ca1488c89c8829c',1,'xorif_api.h']]],
   ['xorif_5fconfiguration_5ferrors',['XORIF_CONFIGURATION_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2003ba5fea3e33e16b988ed0a86289d0',1,'xorif_api.h']]],
   ['xorif_5fconfigure_5fcc',['xorif_configure_cc',['../group__libxorif-api.html#ga60d073a6ce61f808a5489f61a721a41b',1,'xorif_configure_cc(uint16_t cc):&#160;xorif_common.c'],['../group__libxorif.html#ga60d073a6ce61f808a5489f61a721a41b',1,'xorif_configure_cc(uint16_t cc):&#160;xorif_common.c']]],
   ['xorif_5fdebug',['xorif_debug',['../group__libxorif-api.html#ga060c30abe081322ad6caeaaf99b0ef07',1,'xorif_debug(int level):&#160;xorif_common.c'],['../group__libxorif.html#ga060c30abe081322ad6caeaaf99b0ef07',1,'xorif_debug(int level):&#160;xorif_common.c']]],

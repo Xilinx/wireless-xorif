@@ -30,7 +30,7 @@
 #include "oran_radio_if_v1_0_ctrl.h"
 
 // Constants for time advance calculation
-const uint32_t XRAN_TIMER_CLK = 2500;      // 2,500 ps
+uint32_t XRAN_TIMER_CLK = 2500;      // 2,500 ps
 const uint32_t FH_DECAP_DLY = 5000000;     // 5,000,000 ps
 const uint32_t UL_RADIO_CH_DLY = 30000000; // 30,000,000 ps
 
@@ -239,17 +239,17 @@ const reg_info_t fhi_reg_map[] =
 #define WRITE_REG_OFFSET(a, o, v) write_reg_offset(fh_device.io, #a, ADDR(a), o, MASK(a), SHIFT(a), v)
 
 // Interrupt macros
-#define FHI_INT_ENABLE_ADDR CFG_DEFM_INT_ENA_INFIFO_OF_ADDR
-#define FHI_INT_STATUS_ADDR CFG_DEFM_INT_INFIFO_OF_ADDR
-#define FHI_INT_MASK (CFG_DEFM_INT_INFIFO_OF_MASK |              \
-                      CFG_DEFM_INT_INFIFO_UF_MASK |              \
-                      CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK |      \
-                      CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK |      \
-                      CFG_FRAM_INT_OUTFIFO_OF_MASK |             \
-                      CFG_FRAM_INT_OUTFIFO_UF_MASK |             \
-                      CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK | \
-                      CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK | \
-                      CFG_AXI_TIMEOUT_STATUS_MASK)
+#define FHI_INTR_ENABLE_ADDR CFG_DEFM_INT_ENA_INFIFO_OF_ADDR
+#define FHI_INTR_STATUS_ADDR CFG_DEFM_INT_INFIFO_OF_ADDR
+#define FHI_INTR_MASK (CFG_DEFM_INT_INFIFO_OF_MASK |              \
+                       CFG_DEFM_INT_INFIFO_UF_MASK |              \
+                       CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK |      \
+                       CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK |      \
+                       CFG_FRAM_INT_OUTFIFO_OF_MASK |             \
+                       CFG_FRAM_INT_OUTFIFO_UF_MASK |             \
+                       CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK | \
+                       CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK | \
+                       CFG_AXI_TIMEOUT_STATUS_MASK)
 
 // FHI alarm flags
 enum xorif_fhi_alarms fhi_alarm_status;
@@ -271,9 +271,6 @@ void xorif_reset_fhi(void)
     WRITE_REG(FRAM_DISABLE, 1);
     WRITE_REG(DEFM_RESTART, 1);
     WRITE_REG(ORAN_CC_ENABLE, 0);
-
-    // Set up useful defaults
-    // TODO?
 
     // Clear alarms
     fhi_alarm_status = 0;
@@ -497,17 +494,56 @@ static int fhi_irq_handler(int id, void *data)
     if (device)
     {
         // Check interrupt status
-        uint32_t val = metal_io_read32(fh_device.io, FHI_INT_STATUS_ADDR) & FHI_INT_MASK;
+        uint32_t val = metal_io_read32(fh_device.io, FHI_INTR_STATUS_ADDR) & FHI_INTR_MASK;
         if (val)
         {
             // Record the alarm status
             fhi_alarm_status |= val;
-            
-            // TODO - call-back if present
+            TRACE("fhi_irq_handler()\n");
+
+            if (val & CFG_DEFM_INT_INFIFO_OF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_DEFM_INT_INFIFO_OF\n");
+            }
+            if (val & CFG_DEFM_INT_INFIFO_UF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_DEFM_INT_INFIFO_UF\n");
+            }
+            if (val & CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_C_BUF_OF\n");
+            }
+            if (val & CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_TABLE_OF\n");
+            }
+            if (val & CFG_FRAM_INT_OUTFIFO_OF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_FRAM_INT_OUTFIFO_OF\n");
+            }
+            if (val & CFG_FRAM_INT_OUTFIFO_UF_MASK)
+            {
+                TRACE("FHI IRQ: CFG_FRAM_INT_OUTFIFO_UF\n");
+            }
+            if (val & CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK)
+            {
+                TRACE("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_OVERFLOW\n");
+            }
+            if (val & CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK)
+            {
+                TRACE("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
+            }
+            if (val & CFG_AXI_TIMEOUT_STATUS_MASK)
+            {
+                TRACE("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
+            }
 
             // Clear interrupts by writing to the "master interrupt"
-            // TODO write just 1, or 0 then 1?
+            // TODO write just 1, or 0 then 1? This doesn't seem to work currently!!!
             WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
+
+            // TODO handle call-backs if required
+
             return METAL_IRQ_HANDLED;
         }
     }
@@ -522,18 +558,21 @@ void xorif_fhi_init_device(void)
     if (num > 0)
     {
         int irq = (intptr_t)fh_device.dev->irq_info;
-        metal_irq_register(irq, fhi_irq_handler, &fh_device);
-        metal_irq_enable(irq);
-        TRACE("FHI IRQ registered (%d)\n", irq);
+        if (irq != -1)
+        {
+            metal_irq_register(irq, fhi_irq_handler, &fh_device);
+            metal_irq_enable(irq);
+            TRACE("FHI IRQ registered (%d)\n", irq);
+        }
     }
 
     // Clear alarm status
     fhi_alarm_status = 0;
 
     // Setup interrupts (doing it in one go rather than separate WRITE_REG's)
-    uint32_t val = metal_io_read32(fh_device.io, FHI_INT_ENABLE_ADDR);
-    val |= FHI_INT_MASK;
-    metal_io_write32(fh_device.io, FHI_INT_ENABLE_ADDR, val);
+    uint32_t val = metal_io_read32(fh_device.io, FHI_INTR_ENABLE_ADDR);
+    val |= FHI_INTR_MASK;
+    metal_io_write32(fh_device.io, FHI_INTR_ENABLE_ADDR, val);
 
     // Finally enable the master interrupt
     WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
@@ -555,6 +594,9 @@ void xorif_fhi_init_device(void)
     fhi_caps.timer_clk_ps = READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
     fhi_caps.num_unsolicited_ports = READ_REG(CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM);
     fhi_caps.num_prach_ports = READ_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS);
+
+    // Set up any useful defaults, etc.
+    XRAN_TIMER_CLK = READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
 }
 
 int xorif_fhi_get_num_ul_spatial_streams(void)
@@ -740,19 +782,23 @@ int xorif_fhi_configure_time_advance_offsets(
     uint16_t cc,
     uint16_t numerology,
     uint16_t sym_per_slot,
-    uint32_t T2A_MIN_CP_UL,
-    uint32_t TCP_ADV_DL)
+    uint32_t advance_ul,
+    uint32_t advance_dl)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
     int num = 100 * 10 * slots_per_subframe[numerology] * (sym_per_slot ? 12 : 14);
 
-    // Symbol period in picoseconds = 1e12 * 1 / num
-    double sym_period = 1 * 1e12 / num;
+    // Symbol period in picoseconds = 1e12 / num
+    double sym_period = 1e12 / num;
 
     // Adjust symbol period to be in clock cycles
     // Note, rounding-down / truncating here
     uint32_t sym_period_clk = sym_period / XRAN_TIMER_CLK;
+
+    // Convert from ps to us
+    uint32_t T2A_MIN_CP_UL = advance_ul * 1e6;
+    uint32_t TCP_ADV_DL = advance_dl * 1e6;
 
     // Intermediate values used in the calculation
     uint32_t DL_CTRL_RXWIN_ADV_CP = (TCP_ADV_DL + FH_DECAP_DLY) / XRAN_TIMER_CLK;

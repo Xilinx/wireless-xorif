@@ -2,6 +2,7 @@ var searchData=
 [
   ['xorif_5favail_5fbuffer_5fspace_5fexceeded',['XORIF_AVAIL_BUFFER_SPACE_EXCEEDED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faa11f20729d01e5230c84c6193c5bb91b',1,'xorif_api.h']]],
   ['xorif_5fcomp_5fmode_5fnot_5fsupported',['XORIF_COMP_MODE_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5a2dddf89e5e2a94e6335821d3329384',1,'xorif_api.h']]],
+  ['xorif_5fcomp_5fwidth_5fnot_5fsupported',['XORIF_COMP_WIDTH_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa575bb37977f8a8018ca1488c89c8829c',1,'xorif_api.h']]],
   ['xorif_5fconfiguration_5ferrors',['XORIF_CONFIGURATION_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2003ba5fea3e33e16b988ed0a86289d0',1,'xorif_api.h']]],
   ['xorif_5fext_5fcp_5fnot_5fsupported',['XORIF_EXT_CP_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa4ae13d9268b129d3fc5efec9a518c3b8',1,'xorif_api.h']]],
   ['xorif_5ffailure',['XORIF_FAILURE',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa9a03a40b03b36e83d8ebdc2a08ef6df4',1,'xorif_api.h']]],
