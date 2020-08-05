@@ -15,5 +15,6 @@ var searchData=
   ['max_5fnum_5frbs',['MAX_NUM_RBS',['../group__libxorif.html#ga76c3a0d476df43e28930206696ccd64c',1,'xorif_common.h']]],
   ['max_5fsubcarriers',['max_subcarriers',['../structxorif__fhi__caps.html#ab4739e9cab8a33f700e1fc91ec385a0d',1,'xorif_fhi_caps']]],
   ['max_5ful_5fctrl_5f1kwords',['max_ul_ctrl_1kwords',['../structxorif__fhi__caps.html#aa54041df84d7374e946c0f99177b6884',1,'xorif_fhi_caps']]],
+  ['memory_5fallocation_5ffail',['MEMORY_ALLOCATION_FAIL',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faa4a17a9724e08388209006e10f6ff279',1,'xorif_api.h']]],
   ['min_5fnum_5frbs',['MIN_NUM_RBS',['../group__libxorif.html#gae72b330d0a300443407080e66b318a83',1,'xorif_common.h']]]
 ];

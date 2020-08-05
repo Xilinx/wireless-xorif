@@ -15,14 +15,14 @@ Once loaded, review the printed help. When you are familiar with the flow and wa
 ## This style uses a set of strings concatenated together to tell the 
 ## script what mode it should built in. Note. case is ignored.
 ## 
-## 1st TCLARGS = board to use        (zcu111|zcu102)
-## 2nd TCLARGS = Ip Mode to select   (om5)
+## 1st TCLARGS = board to use (zcu111|zcu102)
+## 2nd TCLARGS = Ip Mode to select (om0|om5)
 ## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5  -tclargs impl
- 
 ```
+
 #### **Vivado TCL going deeper**
 Also provided is `xil_vivado_utils.tcl` should you wish to augment or further explore the vivado design. Both supplied scripts
 can be TCL "sourced" in your own flow and extended to achieve your end design.

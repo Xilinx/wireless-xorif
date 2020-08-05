@@ -44,11 +44,11 @@
 // Labelled printf macro
 #define LPRINTF(format, ...) printf("LIBXORIF> " format, ##__VA_ARGS__)
 #define LOG(format, ...) LPRINTF("LOG: "format, ##__VA_ARGS__)
-#define PERROR(format, ...) {LPRINTF(ANSI_RED "ERROR: " format ANSI_RESET, ##__VA_ARGS__); fflush(NULL);}
+#define PERROR(format, ...) {LPRINTF("ERROR: " format, ##__VA_ARGS__);}
 
 #ifdef DEBUG
 #define TRACE(format, ...) {if (xorif_trace){LPRINTF("DEBUG: " format, ##__VA_ARGS__);}}
-#define ASSERT(expression) {if (!expression){PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__);}}
+#define ASSERT(expression) {if (!(expression)){PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__);}}
 #else
 #define TRACE(format, ...)
 #define ASSERT(expression)
