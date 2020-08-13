@@ -107,7 +107,7 @@ static int open_connections(void)
     }
 
     // Add to poll structure
-    fds[IP_POLL_FD].fd = ip_socket_fd; 
+    fds[IP_POLL_FD].fd = ip_socket_fd;
     fds[IP_POLL_FD].events = POLLIN;
 
     // Creating UDP socket file descriptor
@@ -174,10 +174,10 @@ static int open_connections(void)
     // Bind this socket to a particular device!
     memset(&ifreq, 0, sizeof(ifreq));
     snprintf(ifreq.ifr_name, sizeof(ifreq.ifr_name) - 1, "%s", eth_device_name);
-    if (setsockopt(udp_socket_fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifreq, sizeof(ifreq)) < 0) 
+    if (setsockopt(udp_socket_fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifreq, sizeof(ifreq)) < 0)
     {
-      PERROR("UDP device bind failed (SO_BINDTODEVICE): %x\n", errno);
-      return COMMS_ERROR;
+        PERROR("UDP device bind failed (SO_BINDTODEVICE): %x\n", errno);
+        return COMMS_ERROR;
     }
 #endif
 
@@ -330,7 +330,7 @@ int do_socket(void)
             // Close connection
             close(new_socket_fd);
         }
-        else if(fds[UDP_POLL_FD].revents & (POLLIN | POLLERR))
+        else if (fds[UDP_POLL_FD].revents & (POLLIN | POLLERR))
         {
             // Handle UDP socket events...
             int result = proto_ecpri_handle_incoming_msg(fds[UDP_POLL_FD].fd, fds[UDP_POLL_FD].revents, NULL);

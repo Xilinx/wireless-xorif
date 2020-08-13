@@ -151,12 +151,11 @@ void xorif_fhi_set_enabled_mask(uint16_t mask);
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_symbol_pointers(
-    uint16_t cc,
-    uint16_t dl_data_sym_num,
-    uint16_t dl_data_sym_start_index,
-    uint16_t dl_ctrl_sym_num,
-    uint16_t ul_ctrl_sym_num);
+int xorif_fhi_init_cc_symbol_pointers(uint16_t cc,
+                                      uint16_t dl_data_sym_num,
+                                      uint16_t dl_data_sym_start_index,
+                                      uint16_t dl_ctrl_sym_num,
+                                      uint16_t ul_ctrl_sym_num);
 
 /**
  * @brief Configure the data offsets for the DL data buffer.
@@ -169,12 +168,11 @@ int xorif_fhi_init_cc_symbol_pointers(
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_dl_data_offsets(
-    uint16_t cc,
-    uint16_t dl_data_sym_num,
-    uint16_t dl_data_sym_start_index,
-    uint16_t symbol_buffer_start,
-    uint16_t symbol_buffer_size);
+int xorif_fhi_init_cc_dl_data_offsets(uint16_t cc,
+                                      uint16_t dl_data_sym_num,
+                                      uint16_t dl_data_sym_start_index,
+                                      uint16_t symbol_buffer_start,
+                                      uint16_t symbol_buffer_size);
 
 /**
  * @brief Configure the Numerology and RB count for the CC.
@@ -186,11 +184,10 @@ int xorif_fhi_init_cc_dl_data_offsets(
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_rbs(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t num_rbs,
-    uint16_t sym_per_slot);
+int xorif_fhi_init_cc_rbs(uint16_t cc,
+                          uint16_t numerology,
+                          uint16_t num_rbs,
+                          uint16_t sym_per_slot);
 
 /**
  * @brief Configure the downlink IQ compression for the component carrier.
@@ -201,10 +198,9 @@ int xorif_fhi_init_cc_rbs(
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_fhi_set_cc_dl_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth);
+int xorif_fhi_set_cc_dl_iq_compression(uint16_t cc,
+                                       uint16_t bit_width,
+                                       enum xorif_iq_comp comp_meth);
 
 /**
  * @brief Configure the uplink IQ compression for the component carrier.
@@ -215,10 +211,9 @@ int xorif_fhi_set_cc_dl_iq_compression(
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_fhi_set_cc_ul_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth);
+int xorif_fhi_set_cc_ul_iq_compression(uint16_t cc,
+                                       uint16_t bit_width,
+                                       enum xorif_iq_comp comp_meth);
 
 /**
  * @brief Configure the uplink control memories.
@@ -230,11 +225,10 @@ int xorif_fhi_set_cc_ul_iq_compression(
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_ul_section_mem(
-    uint16_t cc,
-    uint16_t ul_ctrl_offset,
-    uint16_t ul_ctrl_unrolled_offset,
-    uint16_t ul_ctrl_base_offset);
+int xorif_fhi_init_cc_ul_section_mem(uint16_t cc,
+                                     uint16_t ul_ctrl_offset,
+                                     uint16_t ul_ctrl_unrolled_offset,
+                                     uint16_t ul_ctrl_base_offset);
 
 /**
  * @brief Configure the downlink control memories.
@@ -245,10 +239,9 @@ int xorif_fhi_init_cc_ul_section_mem(
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_dl_section_mem(
-    uint16_t cc,
-    uint16_t dl_ctrl_offset,
-    uint16_t dl_ctrl_unrolled_offset);
+int xorif_fhi_init_cc_dl_section_mem(uint16_t cc,
+                                     uint16_t dl_ctrl_offset,
+                                     uint16_t dl_ctrl_unrolled_offset);
 
 /**
  * @brief Configure the control constants.
@@ -263,14 +256,13 @@ int xorif_fhi_init_cc_dl_section_mem(
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_init_cc_ctrl_constants(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t num_ctrl_per_sym_dl,
-    uint16_t num_ctrl_per_sym_ul,
-    uint16_t dl_ctrl_sym_num,
-    uint16_t ul_ctrl_sym_num,
-    uint16_t sym_per_slot);
+int xorif_fhi_init_cc_ctrl_constants(uint16_t cc,
+                                     uint16_t numerology,
+                                     uint16_t num_ctrl_per_sym_dl,
+                                     uint16_t num_ctrl_per_sym_ul,
+                                     uint16_t dl_ctrl_sym_num,
+                                     uint16_t ul_ctrl_sym_num,
+                                     uint16_t sym_per_slot);
 
 /**
  * @brief Configure the specified component carrier.
@@ -299,12 +291,11 @@ void xorif_fhi_get_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr);
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int xorif_fhi_configure_time_advance_offsets(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t sym_per_slot,
-    uint32_t advance_ul,
-    uint32_t advance_dl);
+int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
+                                             uint16_t numerology,
+                                             uint16_t sym_per_slot,
+                                             uint32_t advance_ul,
+                                             uint32_t advance_dl);
 
 #endif /* XORIF_FH_FUNC_H */
 

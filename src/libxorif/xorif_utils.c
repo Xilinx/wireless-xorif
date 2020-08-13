@@ -108,14 +108,14 @@ int get_device_name(const char *path, const char *short_name, char *full_name, i
 
     // Open directory
     folder = opendir(path);
-    if(folder == NULL)
+    if (folder == NULL)
     {
         PERROR("Unable to read directory %s\n", path);
         return 0;
     }
 
     // Iterate through files in directory
-    while((entry = readdir(folder)))
+    while ((entry = readdir(folder)))
     {
         // Check for matching short name
         char *s = strstr(entry->d_name, short_name);

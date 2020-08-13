@@ -20,7 +20,7 @@
  * @brief Main header file for the Xilinx ORAN Radio Interface (libxorif).
  * @addtogroup libxorif-api
  * @{
- * 
+ *
  * C Library API for the Xilinx ORAN Radio Interface (libxorif)
  */
 
@@ -55,7 +55,7 @@ enum xorif_error_codes
     XORIF_MAX_DATA_SYM_EXCEEDED,        /**< Number of data symbols exceeds available space */
     XORIF_AVAIL_BUFFER_SPACE_EXCEEDED,  /**< Required buffer space exceeds available space */
     XORIF_INVALID_ETH_PORT,             /**< Invalid ethernet port number */
-    XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in beamformer schedule table */ 
+    XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in beamformer schedule table */
     XORIF_FRAME_WORK_ERRORS = -1000,    /**< (Place holder for library / libmetal errors) */
     XORIF_LIBMETAL_ERROR,               /**< Error with libmetal framework */
     XORIF_LIBMETAL_DEV_ERROR,           /**< Error with libmetal device */
@@ -259,6 +259,53 @@ enum xorif_fhi_alarms
     AXU_TIMEOUT = 0x80000000,          /**< AXI time-out */
 };
 
+#ifdef BF_INCLUDED
+/**
+ * @brief Structure for Beamformer statistic information.
+ */
+struct xorif_bf_stats
+{
+    uint32_t cache_miss_count; /**< Cache miss counter */
+};
+
+/**
+ * @brief Structure for Beamformer alarm/status information.
+ */
+enum xorif_bf_alarms
+{
+    CACHE_DL_MISS = 0x1,            /**< Requested downlink beamweights was not found in the cache */
+    CACHE_UL_MISS = 0x2,            /**< Requested uplink beamweights was not found in the cache */
+    FHI_DL_U_OF = 0x4,              /**< Downlink U-plane FIFO for FHI data was full when a packet was received */
+    FHI_DL_C_OF = 0x8,              /**< Downlink C-plane FIFO for FHI input was full when a packet was received */
+    FHI_UL_U_OF = 0x10,             /**< Uplink U-plane FIFO for FHI data requests was full when a packet was received */
+    FHI_UL_C_OF = 0x20,             /**< Uplink C-plane FIFO for FHI input was full when a packet was received */
+    CPLANE_DL_NO_DESC = 0x40,       /**< Downlink C-plane packet exceeded the system limit on overlapping descriptors */
+    CPLANE_UL_NO_DESC = 0x80,       /**< Uplink C-plane packet exceeded the system limit on overlapping descriptors */
+    BF_DL_RE_MUTEX = 0x100,         /**< Downlink RB had multiple overlapping RE masks which were not mutually exclusive */
+    BF_UL_RE_MUTEX = 0x200,         /**< Uplink RB had multiple overlapping RE masks which were not mutually exclusive */
+    BWM_DL_BID_UF = 0x400,          /**< Downlink beamweight manager beam ID interface buffer experienced an underflow condition */
+    BWM_DL_BID_OF = 0x800,          /**< Downlink beamweight manager beam ID interface buffer experienced an overflow condition */
+    BWM_DL_BW_UF = 0x1000,          /**< Downlink beamweight manager beamweight interface buffer experienced an underflow condition */
+    BWM_DL_BW_OF = 0x2000,          /**< Downlink beamweight manager beamweight interface buffer experienced an overflow condition */
+    BWM_DL_NEXT_BIDN_UF = 0x4000,   /**< Downlink beamweight manager ran out of spare cache addresses */
+    BWM_DL_NEXT_BIDN_OF = 0x8000,   /**< Downlink beamweight manager cache address FIFO overflowed */
+    BWM_DL_CACHE_W_UF = 0x10000,    /**< Cache write FIFO experienced an underflow condition */
+    BWM_DL_CACHE_W_OF = 0x20000,    /**< Cache write FIFO experienced an overflow condition */
+    BWM_UL_BID_UF = 0x40000,        /**< Uplink beamweight manager beam ID interface buffer experienced an underflow condition */
+    BWM_UL_BID_OF = 0x80000,        /**< Uplink beamweight manager beam ID interface buffer experienced an overflow condition */
+    BWM_UL_BW_UF = 0x100000,        /**< Uplink beamweight manager beamweight interface buffer experienced an underflow condition */
+    BWM_UL_BW_OF = 0x200000,        /**< Uplink beamweight manager beamweight interface buffer experienced an overflow condition */
+    BWM_UL_NEXT_BIDN_UF = 0x400000, /**< Uplink beamweight manager ran out of spare cache addresses */
+    BWM_UL_NEXT_BIDN_OF = 0x800000, /**< Uplink beamweight manager cache address FIFO overflowed */
+    BWM_UL_CACHE_W_UF = 0x1000000,  /**< Cache write FIFO experienced an underflow condition */
+    BWM_UL_CACHE_W_OF = 0x2000000,  /**< Cache write FIFO experienced an overflow condition */
+    BWC_DL_BIDN_OF = 0x4000000,     /**< Downlink cache FIFO experienced an overflow condition */
+    BWC_UL_BIDN_OF = 0x8000000,     /**< Uplink cache FIFO experienced an overflow condition */
+    PRACH = 0x10000000,             /**< PRACH error condition */
+    SSB = 0x20000000,               /**< SSB error condition */
+};
+#endif
+
 /**********************************************/
 /*** Function prototypes (common interface) ***/
 /**********************************************/
@@ -400,11 +447,10 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_set_cc_time_advance(
-    uint16_t cc,
-    uint32_t deskew,
-    uint32_t advance_ul,
-    uint32_t advance_dl);
+int xorif_set_cc_time_advance(uint16_t cc,
+                              uint32_t deskew,
+                              uint32_t advance_ul,
+                              uint32_t advance_dl);
 
 /**
  * @brief Configure the downlink IQ compression for the component carrier.
@@ -415,10 +461,9 @@ int xorif_set_cc_time_advance(
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_set_cc_dl_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth);
+int xorif_set_cc_dl_iq_compression(uint16_t cc,
+                                   uint16_t bit_width,
+                                   enum xorif_iq_comp comp_meth);
 
 /**
  * @brief Configure the uplink IQ compression for the component carrier.
@@ -443,10 +488,9 @@ int xorif_set_cc_ul_iq_compression(
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_set_cc_bw_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_bw_comp comp_meth);
+int xorif_set_cc_bw_compression(uint16_t cc,
+                                uint16_t bit_width,
+                                enum xorif_bw_comp comp_meth);
 
 /***********************************************************/
 /*** Function prototypes (Front-Haul Interface specific) ***/
@@ -604,18 +648,28 @@ uint32_t xorif_get_bf_hw_version(void);
 uint32_t xorif_get_bf_hw_revision(void);
 
 /**
- * @brief Load beam-weight set (raw data).
- * @note This function takes packed "cache-ready" beam-weight data, including the control word.
- * @param[in] count Number of 32-bit words.
- * @param[in] data Pointer to data (array of 32-bit words)
+ * @brief Load beam-weight set.
+ * @note This function takes un-packed beam-weight data and control information.
+ * @note The function does not compress the data.
+ * @param[in] bid Beam-id
+ * @param[in] comp_width Compression width (e.g. 12 bits)
+ * @param[in] comp_meth Compression method (e.g. BW_COMP_BLOCK_FP = 1)
+ * @param[in] comp_param Compression paratemer (related to the compression method)
+ * @param[in] num_weights Number of beam-weights to load
+ * @param[in] data Pointer to data (array of 32-bit words; I-value as 16 LSBs, and Q-value as 16 MSBs)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_load_bf_beam_weights_raw(uint16_t count, const uint32_t *data);
+int xorif_load_bf_beam_weights(uint16_t bid,
+                                    uint16_t comp_width,
+                                    uint16_t comp_meth,
+                                    uint16_t comp_param,
+                                    uint16_t num_weights,
+                                    const uint32_t *data);
 
 /**
- * @brief Load beam-weight set.
+ * @brief Load beam-weight set (alternative API, for test/debug)
  * @note This function takes un-packed beam-weight data and control information.
  * @note The function does not compress the data.
  * @param[in] bid Beam-id
@@ -631,20 +685,20 @@ int xorif_load_bf_beam_weights_raw(uint16_t count, const uint32_t *data);
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_load_bf_beam_weights(uint16_t bid,
-                               uint16_t comp_width,
-                               uint16_t comp_meth,
-                               uint16_t comp_param,
-                               uint16_t ss,
-                               uint16_t dir,
-                               uint16_t type,
-                               uint16_t num_weights,
-                               const uint32_t *data);
+int xorif_load_bf_beam_weights_alt(uint16_t bid,
+                                   uint16_t comp_width,
+                                   uint16_t comp_meth,
+                                   uint16_t comp_param,
+                                   uint16_t ss,
+                                   uint16_t dir,
+                                   uint16_t type,
+                                   uint16_t num_weights,
+                                   const uint32_t *data);
 
 /**
  * @brief Get alarms for Beamformer.
  * @returns
- *      - TBD
+ *      - - Bit-map of alarm status (see enum xorif_bf_alarms)
  */
 uint32_t xorif_get_bf_alarms(void);
 
@@ -702,6 +756,42 @@ int xorif_write_bf_reg_offset(const char *name, uint16_t offset, uint32_t value)
  *      - Error code on failure
  */
 int xorif_configure_bf(void);
+
+/**
+ * @brief Load static PRACH configuration.
+ * @param ptr Pointer to configuration data array
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @details
+ * The PRACH configuration is static, and default values are loaded during initialization
+ * of the beam-former. This API allows alternative values to be used. The function should
+ * be called after beam-former initialization, but before configuration and use.
+ * The configuration data consists of an array of 64 x 32-bit words. Each pair of words
+ * represents the configuration data for a particular PRACH format.
+ * Word N
+ *      - bits [4:0] - CP length
+ *      - bits [5:8] - Number of channels
+ *      - bits [9:12] - Number of sequence repetitions
+ *      - bits [13:22] - Sequence length
+ *      - bits [23:27] - Format ID
+ *      - bits [28:31] - Reservered (set to 0)
+ * Word N+1
+ *      - bits [0:7] - Timeout value 15kHz
+ *      - bits [8:15] - Timeout value 30kHz
+ *      - bits [16:23] - Computed number of PRBs 15kHz
+ *      - bits [24:31] - Computed number of PRBs 30kHz
+ */
+int xorif_load_bf_prach_config(const uint32_t *ptr);
+
+/**
+ * @brief Get statistics from Beamformer.
+ * @param[in,out] ptr Pointer to component statistics data structure
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_get_bf_stats(struct xorif_bf_stats *ptr);
 
 #endif // BF_INCLUDED
 

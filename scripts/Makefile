@@ -175,7 +175,7 @@ config2: config1 $(ROOTFS_Y) $(ROOTFS_N) $(EXTRAS)
 	@echo Configuring 2 $(PLX_DIR)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_HOSTNAME.*/CONFIG_SUBSYSTEM_HOSTNAME="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_PRODUCT.*/CONFIG_SUBSYSTEM_PRODUCT="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
-ifeq ($(BOARD),vck190)
+ifeq ($(TARGET),vck190_hw_emu)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
 	sed -i '/CONFIG_SUBSYSTEM_INITRD_RAMDISK_LOADADDR/d' $(PLX_DIR)/project-spec/configs/config
 	sed -i '/CONFIG_SUBSYSTEM_RAMDISK_IMAGE/d' $(PLX_DIR)/project-spec/configs/config
@@ -271,7 +271,12 @@ zcu111_om5_exs:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-vck190_test:
+vck190_hw:
+	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+	
+vck190_hw_emu:
 	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package

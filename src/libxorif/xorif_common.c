@@ -20,7 +20,7 @@
  * @brief Source file for libxorif common functions.
  * @addtogroup libxorif
  * @{
- * 
+ *
  * C Library for the Xilinx ORAN Radio Interface (libxorif)
  */
 
@@ -55,8 +55,8 @@ static char bf_device_name[MAX_DEV_NAME];
 
 // Some default values for initialization
 const uint32_t DEFAULT_DESKEW_TIME = 30; // 30 us
-const uint32_t DEFAULT_ADVANCE_UL = 90; // 90 us
-const uint32_t DEFAULT_ADVANCE_DL = 90; // 90 us
+const uint32_t DEFAULT_ADVANCE_UL = 90;  // 90 us
+const uint32_t DEFAULT_ADVANCE_DL = 90;  // 90 us
 #define DEFAULT_CTRL_PER_SYM 64
 
 // Globals
@@ -74,7 +74,7 @@ const int sc_spacing[NUM_NUMEROLOGY] = {15, 30, 60, 120, 240};
 const int slots_per_subframe[NUM_NUMEROLOGY] = {1, 2, 4, 8, 16};
 
 // Simple macro to return minimum of two values
-#define MIN(a,b) (a) < (b) ? (a) : (b)
+#define MIN(a, b) (a) < (b) ? (a) : (b)
 
 /**
  * @brief Initialize capabilities structure.
@@ -97,7 +97,7 @@ static void initialize_capabilities(void)
         caps.max_cc = xorif_fhi_get_max_cc();
         caps.num_eth_ports = xorif_fhi_get_num_eth_ports();
         caps.numerologies = NUMEROLOGY_0_SUPPORT | NUMEROLOGY_1_SUPPORT | NUMEROLOGY_2_SUPPORT |
-            NUMEROLOGY_3_SUPPORT | NUMEROLOGY_4_SUPPORT;
+                            NUMEROLOGY_3_SUPPORT | NUMEROLOGY_4_SUPPORT;
     }
 
     caps.extended_cp = 0;
@@ -163,10 +163,10 @@ int xorif_init(const char *fh_dev_name, const char *bf_dev_name)
 
     // Parameters define log handlers and log level for libmetal
     struct metal_init_params init_param =
-    {
-        .log_handler = metal_default_log_handler,
-        .log_level = METAL_LOG_ERROR
-    };
+        {
+            .log_handler = metal_default_log_handler,
+            .log_level = METAL_LOG_ERROR,
+        };
 
     // Initialize libmetal
     TRACE("Initializing libmetal framework\n");
@@ -518,11 +518,10 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_time_advance(
-    uint16_t cc,
-    uint32_t deskew,
-    uint32_t advance_ul,
-    uint32_t advance_dl)
+int xorif_set_cc_time_advance(uint16_t cc,
+                              uint32_t deskew,
+                              uint32_t advance_ul,
+                              uint32_t advance_dl)
 {
     TRACE("xorif_set_cc_time_advance(%d, %d, %d, %d)\n", cc, deskew, advance_ul, advance_dl);
 
@@ -539,10 +538,9 @@ int xorif_set_cc_time_advance(
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_dl_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth)
+int xorif_set_cc_dl_iq_compression(uint16_t cc,
+                                   uint16_t bit_width,
+                                   enum xorif_iq_comp comp_meth)
 {
     TRACE("xorif_set_cc_dl_iq_compression(%d, %d, %d)\n", cc, bit_width, comp_meth);
 
@@ -564,10 +562,9 @@ int xorif_set_cc_dl_iq_compression(
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_ul_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth)
+int xorif_set_cc_ul_iq_compression(uint16_t cc,
+                                   uint16_t bit_width,
+                                   enum xorif_iq_comp comp_meth)
 {
     TRACE("xorif_set_cc_ul_iq_compression(%d, %d, %d)\n", cc, bit_width, comp_meth);
 
@@ -589,10 +586,9 @@ int xorif_set_cc_ul_iq_compression(
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_bw_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_bw_comp comp_meth)
+int xorif_set_cc_bw_compression(uint16_t cc,
+                                uint16_t bit_width,
+                                enum xorif_bw_comp comp_meth)
 {
     TRACE("xorif_set_cc_bw_compression(%d, %d, %d)\n", cc, bit_width, comp_meth);
 

@@ -10,9 +10,3 @@
 &gem3 {
 	local-mac-address = [ff ff ff ff ff ff];
 };
-&datapath_framer_datapath_roe_framer_0 {
-	compatible = "xlnx,oran-radio-if-1.0";
-	interrupt-names = "interrupt";
-	interrupt-parent = <&gic>;
-	interrupts = <0 94 4>;
-};

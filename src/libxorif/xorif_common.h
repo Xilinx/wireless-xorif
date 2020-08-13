@@ -43,23 +43,38 @@
 
 // Labelled printf macro
 #define LPRINTF(format, ...) printf("LIBXORIF> " format, ##__VA_ARGS__)
-#define LOG(format, ...) LPRINTF("LOG: "format, ##__VA_ARGS__)
-#define PERROR(format, ...) {LPRINTF("ERROR: " format, ##__VA_ARGS__);}
+#define LOG(format, ...) LPRINTF("LOG: " format, ##__VA_ARGS__)
+#define PERROR(format, ...)                       \
+    {                                             \
+        LPRINTF("ERROR: " format, ##__VA_ARGS__); \
+    }
 
 #ifdef DEBUG
-#define TRACE(format, ...) {if (xorif_trace){LPRINTF("DEBUG: " format, ##__VA_ARGS__);}}
-#define ASSERT(expression) {if (!(expression)){PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__);}}
+#define TRACE(format, ...)                            \
+    {                                                 \
+        if (xorif_trace)                              \
+        {                                             \
+            LPRINTF("DEBUG: " format, ##__VA_ARGS__); \
+        }                                             \
+    }
+#define ASSERT(expression)                                         \
+    {                                                              \
+        if (!(expression))                                         \
+        {                                                          \
+            PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__); \
+        }                                                          \
+    }
 #else
 #define TRACE(format, ...)
 #define ASSERT(expression)
 #endif
 
 // Some system constants
-#define NUM_NUMEROLOGY 5         /**< Number of numerologies */
-#define MAX_NUM_CC 8             /**< Maximum number of component carriers */
-#define MAX_NUM_RBS 275          /**< Maximum number of RBs supported per CC */
-#define MIN_NUM_RBS 2            /**< Minimum number of RBs supported per CC */
-#define RE_PER_RB 12             /**< Number of REs per RB */
+#define NUM_NUMEROLOGY 5 /**< Number of numerologies */
+#define MAX_NUM_CC 8     /**< Maximum number of component carriers */
+#define MAX_NUM_RBS 275  /**< Maximum number of RBs supported per CC */
+#define MIN_NUM_RBS 2    /**< Minimum number of RBs supported per CC */
+#define RE_PER_RB 12     /**< Number of REs per RB */
 
 /**
  * @brief Structure for device related information, including libmetal pointers

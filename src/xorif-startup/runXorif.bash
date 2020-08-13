@@ -150,10 +150,10 @@ fi
 ###############################################################################
 ## Start the xorif-app
 ###############################################################################
-if [ -e $USERAPPFILE ]; then
-   ${LOGGER} "Launching $USERAPPFILE -s"
-   $USERAPPFILE -s &
-fi
+#if [ -e $USERAPPFILE ]; then
+#   ${LOGGER} "Launching $USERAPPFILE -d"
+#   $USERAPPFILE -d -e ${eth_10g}
+#fi
 
 ###############################################################################
 ${LOGGER} "Bring the 10G link down->up one last time to flush system"

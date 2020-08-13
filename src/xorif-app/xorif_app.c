@@ -20,7 +20,7 @@
  * @brief Main source file for the Xilinx ORAN Radio Interface example application (xorif-app).
  * @addtogroup xorif-app
  * @{
- * 
+ *
  * Example application for the Xilinx ORAN Radio Interface (xorif-app)
  */
 
@@ -50,7 +50,7 @@ const char *bf_dev_name = NULL;
  *
  * @param[in] argc Number of command line arguments
  * @param[in] argv Array of C-style strings containing the command line arguments
- * 
+ *
  * @returns
  *      - EXIT_SUCCESS on success
  *      - EXIT_FAILURE on error
@@ -174,12 +174,15 @@ int main(int argc, char *argv[])
 
     if (mode != CMD_LINE_MODE)
     {
+        // Banner
+        printf("\n");
         printf(" __  _____  ____  ___ _____       _    ____  ____  \n");
         printf(" \\ \\/ / _ \\|  _ \\|_ _|  ___|     / \\  |  _ \\|  _ \\ \n");
         printf("  \\  / | | | |_) || || |_ _____ / _ \\ | |_) | |_) |\n");
         printf("  /  \\ |_| |  _ < | ||  _|_____/ ___ \\|  __/|  __/ \n");
         printf(" /_/\\_\\___/|_| \\_\\___|_|      /_/   \\_\\_|   |_|    \n");
         printf("© Copyright 2020 – 2020 Xilinx, Inc. All rights reserved.\n");
+        printf("\n");
     }
 
     TRACE("mode = %d\n", mode);

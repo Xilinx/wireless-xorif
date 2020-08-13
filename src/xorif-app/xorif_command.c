@@ -136,44 +136,44 @@ static int num_tokens = 0;
 // Set of commands (must be terminated with NULLs)
 const static struct command command_set[] =
 {
-    {"help", help, "help [<topic>]"},
-    {"init", init, "init [<device> <device>]"},
-    {"finish", finish, "finish"},
+    { "help", help, "help [<topic>]" },
+    { "init", init, "init [<device> <device>]" },
+    { "finish", finish, "finish" },
 #ifdef BF_INCLUDED
-    {"reset", reset, "reset [fhi | bf]"},
-    {"has", has, "has [fhi | bf]"},
-    {"get", get, GET_USAGE},
-    {"set", set, SET_USAGE},
-    {"clear", clear, CLEAR_USAGE},
+    { "reset", reset, "reset [fhi | bf]" },
+    { "has", has, "has [fhi | bf]" },
+    { "get", get, GET_USAGE },
+    { "set", set, SET_USAGE },
+    { "clear", clear, CLEAR_USAGE },
 #else
-    {"reset", reset, "reset [fhi]"},
-    {"has", has, "has [fhi | bf]"},
-    {"get", get, GET_USAGE},
-    {"set", set, SET_USAGE},
-    {"clear", clear, CLEAR_USAGE},
+    { "reset", reset, "reset [fhi]" },
+    { "has", has, "has [fhi | bf]" },
+    { "get", get, GET_USAGE },
+    { "set", set, SET_USAGE },
+    { "clear", clear, CLEAR_USAGE },
 #endif // BF_INCLUDED
-    {"configure", configure, "configure <cc>"},
-    {"enable", enable, "enable <cc>"},
-    {"disable", disable, "disable <c>"},
+    { "configure", configure, "configure <cc>" },
+    { "enable", enable, "enable <cc>" },
+    { "disable", disable, "disable <c>" },
 #ifdef BF_INCLUDED
-    {"configure_bf", configure_bf, "configure_bf"},
-    {"read_reg", read_reg, "read_reg [fhi | bf] <name>"},
-    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf] <name> <offset>"},
-    {"write_reg", write_reg, "write_reg [fhi | bf] <name> <value>"},
-    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf] <name> <offset> <value>"},
+    { "configure_bf", configure_bf, "configure_bf" },
+    { "read_reg", read_reg, "read_reg [fhi | bf] <name>" },
+    { "read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf] <name> <offset>" },
+    { "write_reg", write_reg, "write_reg [fhi | bf] <name> <value>" },
+    { "write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf] <name> <offset> <value>" },
 #else
-    {"read_reg", read_reg, "read_reg [fhi] <name>"},
-    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi] <name> <offset>"},
-    {"write_reg", write_reg, "write_reg [fhi] <name> <value>"},
-    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>"},
+    { "read_reg", read_reg, "read_reg [fhi] <name>" },
+    { "read_reg_offset", read_reg_offset, "read_reg_offset [fhi] <name> <offset>" },
+    { "write_reg", write_reg, "write_reg [fhi] <name> <value>" },
+    { "write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>" },
 #endif // BF_INCLUDED
-    {"quit", quit, "quit"},
-    {"ecpri", ecpri, ECPRI_USAGE},
-    {"peek", peek, "peek <address>"},
-    {"poke", poke, "poke <address> <value>"},
-    {"debug", debug, "debug <level>"},
+    { "quit", quit, "quit" },
+    { "ecpri", ecpri, ECPRI_USAGE },
+    { "peek", peek, "peek <address>" },
+    { "poke", poke, "poke <address> <value>" },
+    { "debug", debug, "debug <level>" },
     // Last line must be all NULL's
-    {NULL, NULL, NULL}
+    { NULL, NULL, NULL }
 };
 
 /**
@@ -954,7 +954,7 @@ static int clear(const char *request, char *response)
 #else
     else
     {
-       if (num_tokens == 2)
+        if (num_tokens == 2)
         {
             const char *s;
             if (parse_string(1, &s))
@@ -1163,7 +1163,7 @@ static int read_reg_offset(const char *request, char *response)
                 int result = 0;
                 if (match(s1, "fhi"))
                 {
-                   result = xorif_read_fhi_reg_offset(s2, offset, &val);
+                    result = xorif_read_fhi_reg_offset(s2, offset, &val);
                 }
 #ifdef BF_INCLUDED
                 else if (match(s1, "bf"))
@@ -1338,7 +1338,7 @@ static int peek(const char *request, char *response)
             if (parse_integer(1, &addr))
             {
                 int result = FAILURE;
-                char buff[256]; 
+                char buff[256];
 
                 // Create name for temporary file which will store the output
                 // Closing file immediately, because we only really want the name
@@ -1378,7 +1378,7 @@ static int peek(const char *request, char *response)
                         response += sprintf(response, "result = %s\n", s);
                     }
                 }
-                
+
                 if (result != SUCCESS)
                 {
                     // Failure

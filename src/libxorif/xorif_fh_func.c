@@ -30,7 +30,7 @@
 #include "oran_radio_if_v1_0_ctrl.h"
 
 // Constants for time advance calculation
-uint32_t XRAN_TIMER_CLK = 2500;      // 2,500 ps
+uint32_t XRAN_TIMER_CLK = 2500;            // 2,500 ps
 const uint32_t FH_DECAP_DLY = 5000000;     // 5,000,000 ps
 const uint32_t UL_RADIO_CH_DLY = 30000000; // 30,000,000 ps
 
@@ -209,7 +209,7 @@ const reg_info_t fhi_reg_map[] =
     {"STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT", 0xc00c, 0xffffffff, 0},
     {"STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE", 0xc02c, 0xffffffff, 0},
     // Last line has to be NULL, 0, 0, 0
-    {NULL, 0, 0, 0}
+    {NULL, 0, 0, 0},
 };
 
 // Macros to access regsiter map header file
@@ -495,11 +495,12 @@ static int fhi_irq_handler(int id, void *data)
     {
         // Check interrupt status
         uint32_t val = metal_io_read32(fh_device.io, FHI_INTR_STATUS_ADDR) & FHI_INTR_MASK;
+        TRACE("fhi_irq_handler mask = 0x%x\n", val);
+
         if (val)
         {
             // Record the alarm status
             fhi_alarm_status |= val;
-            TRACE("fhi_irq_handler()\n");
 
             if (val & CFG_DEFM_INT_INFIFO_OF_MASK)
             {
@@ -540,7 +541,8 @@ static int fhi_irq_handler(int id, void *data)
 
             // Clear interrupts by writing to the "master interrupt"
             // TODO write just 1, or 0 then 1? This doesn't seem to work currently!!!
-            WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
+            WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
+            //WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
 
             // TODO handle call-backs if required
 
@@ -553,29 +555,8 @@ static int fhi_irq_handler(int id, void *data)
 
 void xorif_fhi_init_device(void)
 {
-    // Register and enable ISR
-    int num = fh_device.dev->irq_num;
-    if (num > 0)
-    {
-        int irq = (intptr_t)fh_device.dev->irq_info;
-        if (irq != -1)
-        {
-            metal_irq_register(irq, fhi_irq_handler, &fh_device);
-            metal_irq_enable(irq);
-            TRACE("FHI IRQ registered (%d)\n", irq);
-        }
-    }
-
     // Clear alarm status
     fhi_alarm_status = 0;
-
-    // Setup interrupts (doing it in one go rather than separate WRITE_REG's)
-    uint32_t val = metal_io_read32(fh_device.io, FHI_INTR_ENABLE_ADDR);
-    val |= FHI_INTR_MASK;
-    metal_io_write32(fh_device.io, FHI_INTR_ENABLE_ADDR, val);
-
-    // Finally enable the master interrupt
-    WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
 
     // Set-up the FHI capabilities
     memset(&fhi_caps, 0, sizeof(fhi_caps));
@@ -597,6 +578,27 @@ void xorif_fhi_init_device(void)
 
     // Set up any useful defaults, etc.
     XRAN_TIMER_CLK = READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
+
+    // Register and enable ISR
+    int num = fh_device.dev->irq_num;
+    if (num > 0)
+    {
+        int irq = (intptr_t)fh_device.dev->irq_info;
+        if (irq != -1)
+        {
+            metal_irq_register(irq, fhi_irq_handler, &fh_device);
+            metal_irq_enable(irq);
+            TRACE("FHI IRQ registered (%d)\n", irq);
+
+            // Setup interrupts (doing it in one go rather than separate WRITE_REG's)
+            uint32_t val = metal_io_read32(fh_device.io, FHI_INTR_ENABLE_ADDR);
+            val |= FHI_INTR_MASK;
+            metal_io_write32(fh_device.io, FHI_INTR_ENABLE_ADDR, val);
+
+            // Finally enable the master interrupt
+            //WRITE_REG(CFG_MASTER_INT_ENABLE, 1); // HACK for now, since seems broken
+        }
+    }
 }
 
 int xorif_fhi_get_num_ul_spatial_streams(void)
@@ -692,12 +694,11 @@ int xorif_fhi_init_cc_symbol_pointers(
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_init_cc_dl_data_offsets(
-    uint16_t cc,
-    uint16_t dl_data_sym_num,
-    uint16_t dl_data_sym_start_index,
-    uint16_t symbol_buffer_size,
-    uint16_t dl_data_buff_start)
+int xorif_fhi_init_cc_dl_data_offsets(uint16_t cc,
+                                      uint16_t dl_data_sym_num,
+                                      uint16_t dl_data_sym_start_index,
+                                      uint16_t symbol_buffer_size,
+                                      uint16_t dl_data_buff_start)
 {
     for (int i = 0; i < dl_data_sym_num; ++i)
     {
@@ -709,11 +710,10 @@ int xorif_fhi_init_cc_dl_data_offsets(
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_init_cc_rbs(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t num_rbs,
-    uint16_t sym_per_slot)
+int xorif_fhi_init_cc_rbs(uint16_t cc,
+                          uint16_t numerology,
+                          uint16_t num_rbs,
+                          uint16_t sym_per_slot)
 {
     WRITE_REG_OFFSET(ORAN_CC_NUMEROLOGY, cc * 0x70, numerology);
     WRITE_REG_OFFSET(ORAN_CC_NUMRBS, cc * 0x70, num_rbs);
@@ -721,11 +721,10 @@ int xorif_fhi_init_cc_rbs(
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_init_cc_ul_section_mem(
-    uint16_t cc,
-    uint16_t ul_ctrl_offset,
-    uint16_t ul_ctrl_unrolled_offset,
-    uint16_t ul_ctrl_base_offset)
+int xorif_fhi_init_cc_ul_section_mem(uint16_t cc,
+                                     uint16_t ul_ctrl_offset,
+                                     uint16_t ul_ctrl_unrolled_offset,
+                                     uint16_t ul_ctrl_base_offset)
 {
     WRITE_REG_OFFSET(ORAN_CC_UL_CTRL_OFFSETS, cc * 0x70, ul_ctrl_offset);
     WRITE_REG_OFFSET(ORAN_CC_UL_CTRL_UNROLLED_OFFSETS, cc * 0x70, ul_ctrl_unrolled_offset);
@@ -733,24 +732,22 @@ int xorif_fhi_init_cc_ul_section_mem(
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_init_cc_dl_section_mem(
-    uint16_t cc,
-    uint16_t dl_ctrl_offset,
-    uint16_t dl_ctrl_unrolled_offset)
+int xorif_fhi_init_cc_dl_section_mem(uint16_t cc,
+                                     uint16_t dl_ctrl_offset,
+                                     uint16_t dl_ctrl_unrolled_offset)
 {
     WRITE_REG_OFFSET(ORAN_CC_DL_CTRL_OFFSETS, cc * 0x70, dl_ctrl_offset);
     WRITE_REG_OFFSET(ORAN_CC_DL_CTRL_UNROLLED_OFFSETS, cc * 0x70, dl_ctrl_unrolled_offset);
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_init_cc_ctrl_constants(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t num_ctrl_per_sym_dl,
-    uint16_t num_ctrl_per_sym_ul,
-    uint16_t dl_ctrl_sym_num,
-    uint16_t ul_ctrl_sym_num,
-    uint16_t sym_per_slot)
+int xorif_fhi_init_cc_ctrl_constants(uint16_t cc,
+                                     uint16_t numerology,
+                                     uint16_t num_ctrl_per_sym_dl,
+                                     uint16_t num_ctrl_per_sym_ul,
+                                     uint16_t dl_ctrl_sym_num,
+                                     uint16_t ul_ctrl_sym_num,
+                                     uint16_t sym_per_slot)
 {
     WRITE_REG_OFFSET(ORAN_CC_MAX_SYMBOLS, cc * 0x70, 10 * (1 << numerology) * (sym_per_slot ? 12 : 14));
     WRITE_REG_OFFSET(ORAN_CC_MODVALS_DL, cc * 0x70, dl_ctrl_sym_num * num_ctrl_per_sym_dl);
@@ -758,32 +755,29 @@ int xorif_fhi_init_cc_ctrl_constants(
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_set_cc_dl_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth)
+int xorif_fhi_set_cc_dl_iq_compression(uint16_t cc,
+                                       uint16_t bit_width,
+                                       enum xorif_iq_comp comp_meth)
 {
     WRITE_REG_OFFSET(ORAN_CC_DL_UD_IQ_WIDTH, cc * 0x70, bit_width);
     WRITE_REG_OFFSET(ORAN_CC_DL_UD_COMP_METH, cc * 0x70, comp_meth);
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_set_cc_ul_iq_compression(
-    uint16_t cc,
-    uint16_t bit_width,
-    enum xorif_iq_comp comp_meth)
+int xorif_fhi_set_cc_ul_iq_compression(uint16_t cc,
+                                       uint16_t bit_width,
+                                       enum xorif_iq_comp comp_meth)
 {
     WRITE_REG_OFFSET(ORAN_CC_UL_UD_IQ_WIDTH, cc * 0x70, bit_width);
     WRITE_REG_OFFSET(ORAN_CC_UL_UD_COMP_METH, cc * 0x70, comp_meth);
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_configure_time_advance_offsets(
-    uint16_t cc,
-    uint16_t numerology,
-    uint16_t sym_per_slot,
-    uint32_t advance_ul,
-    uint32_t advance_dl)
+int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
+                                             uint16_t numerology,
+                                             uint16_t sym_per_slot,
+                                             uint32_t advance_ul,
+                                             uint32_t advance_dl)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
@@ -992,7 +986,7 @@ static int get_left_cc(uint16_t cc)
 {
     // Scan left for 1st instance that's active (i.e. enabled bit = 1)
     // Note, by "left" here we mean, for example: CC[0], CC[1], CC[2]...
-    // then "CC[1]" is left of "CC[2]", etc. 
+    // then "CC[1]" is left of "CC[2]", etc.
     // Returns -1 if nothing to the left was found
 
     // Using the component carrier enabled bit-map
@@ -1020,7 +1014,7 @@ static int get_right_cc(uint16_t cc)
 {
     // Scan right for 1st instance that's active (i.e. enabled bit = 1)
     // Note, by "right" here we mean, for example: CC[0], CC[1], CC[2]...
-    // then "CC[1]" is right of "CC[0]", etc. 
+    // then "CC[1]" is right of "CC[0]", etc.
     // Returns MAX_NUM_CC if nothing to the left was found
 
     // Using the component carrier enabled bit-map
@@ -1077,7 +1071,7 @@ static uint16_t calc_dl_data_buff_size(uint16_t num_rbs, enum xorif_iq_comp comp
         // (n bits I + n bits Q) per RE + 1 byte for exponent
         size = (comp_width * 2 * RE_PER_RB + 7) / 8 + 1;
         break;
-    
+
     case IQ_COMP_NONE:
     default:
         // (16 bits I + 16 bits Q) per RE
