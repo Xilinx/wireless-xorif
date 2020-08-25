@@ -64,7 +64,7 @@ namespace eval ::roe::data {
 ## Privide another hook to allow constraints, custom user modifications etc
 ## after the main design has been built.
 namespace eval ::roe::data {
-  proc design_modification { projectName board  mode } {
+  proc design_modification { projectName board  mode ipRepo } {
   
     if { $board == "zcu111" } {
       add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_zcu111_pinout.xdc
@@ -80,14 +80,37 @@ namespace eval ::roe::data {
       generate_target all [get_files *.bd]
 
     }
+    
+    ## 
+    if { [get_property CONFIG.LINE_RATE [get_bd_cells /datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]] == 10} {
+    
+      set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {156250}] [get_bd_cells datapath/framer_datapath/roe_radio_top_0] 
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps    {6400}]   [get_bd_cells datapath/framer_datapath/roe_framer_0   ]
+
+    }
 
     if {[regexp {om5} $mode] == 1} {
       ## Add additional xdc constraint for ORAN mode.
       add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_xdc_fifosync.xdc
     }
     
+    ## 
+    add_toggle
+    ## 
+    create_bd_cell -type module -reference mrf_toggle datapath/framer_datapath/mrf_toggle_0
+    connect_bd_net [get_bd_pins datapath/framer_datapath/mrf_toggle_0/pulse_in] [get_bd_pins datapath/framer_datapath/roe_framer_0/m0_dl_update]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/internal_bus_clk]      [get_bd_pins datapath/framer_datapath/mrf_toggle_0/clk]
+    make_bd_pins_external  [get_bd_pins datapath/framer_datapath/mrf_toggle_0/toggle_out]
+
+    
     ## Run work around procs
-    wa_fix_inverted_reset_out
+    if { $ipRepo == "" } {
+      if { [ regexp 1_AR [version -short]] }  {
+        puts "Using Patched Vivado, version [version -short]"
+      } else {
+        wa_fix_inverted_reset_out      
+      }
+    }
     wa_add_additional_ila_of_interest
 
     ## redo validation
@@ -104,20 +127,73 @@ namespace eval ::roe::data {
 
   }
 
+  proc wa_add_core_reset_from_register { } {
+    ## This needs to hook on somewhere else  
+    set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
+
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 datapath/framer_datapath/xlslice_0
+    connect_bd_net [get_bd_pins datapath/framer_datapath/xlslice_0/Din] [get_bd_pins ${ipName}/user_rw_out]
+    set_property -dict [list CONFIG.DIN_TO {1} CONFIG.DIN_FROM {1} CONFIG.DIN_WIDTH {8} CONFIG.DOUT_WIDTH {1}] [get_bd_cells datapath/framer_datapath/xlslice_0]
+    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 datapath/framer_datapath/util_vector_logic_1
+    set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells datapath/framer_datapath/util_vector_logic_1]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/util_vector_logic_1/Op1] [get_bd_pins datapath/framer_datapath/xlslice_0/Dout]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/util_vector_logic_1/Res] [get_bd_pins datapath/framer_datapath/defm_reset_sync/aux_reset_in]
+
+  }
+
   proc wa_add_additional_ila_of_interest { } {
       
     set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
     
-    set_property -dict [list CONFIG.C_BRAM_CNT {5.5} CONFIG.C_NUM_OF_PROBES {6} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+    set_property -dict [list CONFIG.C_NUM_OF_PROBES {12} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
     
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_cta_sym_num] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe0]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_sym_num]     [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe1]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_update]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe2]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_cta_sym_num] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe3]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_sym_num]     [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe4]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_update]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe5]
+    connect_bd_net [get_bd_pins ${ipName}/m0_dl_cta_sym_num]        [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe0]
+    connect_bd_net [get_bd_pins ${ipName}/m0_dl_sym_num]            [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe1]
+    connect_bd_net [get_bd_pins ${ipName}/m0_dl_update]             [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe2]
+    connect_bd_net [get_bd_pins ${ipName}/m0_ul_cta_sym_num]        [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe3]
+    connect_bd_net [get_bd_pins ${ipName}/m0_ul_sym_num]            [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe4]
+    connect_bd_net [get_bd_pins ${ipName}/m0_ul_update]             [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe5]
+    connect_bd_net [get_bd_pins ${ipName}/m0_radio_app_head_valid]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe6]
+    connect_bd_net [get_bd_pins ${ipName}/m0_section_header_valid]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe7]
+    connect_bd_net [get_bd_pins ${ipName}/m0_t_header_offset_valid] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe8]
+    connect_bd_net [get_bd_pins ${ipName}/m0_packet_in_window]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe9]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/radio_start_recover_v_0/radio_start_10ms]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe10]
+
+    connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe11]
 
   }
+  
+  ## ---------------------------------------------------------------------------
+  ## Module that can be added to visualise pulse signals on external IO with OSC
+  ## ---------------------------------------------------------------------------
+  proc add_toggle {} {
+
+    set fName "mrf_toggle.v"
+    set string "
+
+module mrf_toggle (
+input      clk,
+input      pulse_in,
+output reg toggle_out=0 );
+
+always @(posedge clk)
+  toggle_out <= pulse_in ? ~toggle_out : toggle_out;
+endmodule
+"
+
+    ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
+    add_files -force -norecurse -copy_to [get_property DIRECTORY [current_project]] $fName
+
+    set fName "mrf_toggle.xdc"
+    set string "
+set_property PACKAGE_PIN J19         \[get_ports \"toggle_out_0\"\]
+set_property IOSTANDARD  LVCMOS33    \[get_ports \"toggle_out_0\"\]
+"
+
+    ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
+    add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
+
+  }   
 
 }
 
@@ -283,6 +359,21 @@ set exitOnDone 0
       file copy -force ${dir}/${name}.runs/impl_1/design_1_wrapper.sysdef ${sdkPath}/design_1_wrapper.hdf
   
     }
+    
+    ## Give the user some help
+    regsub "_exs_.+" $name "_exs" target
+    puts " 
+################################################################################
+## Possible command sequence to launch Petalinux
+################################################################################
+source /proj/petalinux/2020.1/petalinux-v2020.1_daily_latest/tool/petalinux-v2020.1-final/settings.csh
+mkdir ../xsa/$target
+cp ${dir}/${name}.sdk/${name}.xsa ../xsa/${target}/system.xsa   
+make $target
+################################################################################
+## $target
+################################################################################
+"
 
   }
 
@@ -399,8 +490,8 @@ proc process_tclargs { argc argv } {
     }
   
     if {$argc > 3} {
-      set argIn  [string tolower [lindex $argv 3]]
-      puts "Using tclargs lowercased to $argIn - Using as IP Repo"
+      set argIn  [lindex $argv 3]
+      puts "Using $argIn as IP Repo"
       set ipRepo $argIn
     }
   
@@ -412,7 +503,7 @@ proc process_tclargs { argc argv } {
     puts "roePROJECTNAME: $projectName"
 
     ## Add board specific constraints in automation.
-    ::roe::data::design_modification $projectName $board  $mode
+    ::roe::data::design_modification $projectName $board $mode $ipRepo
   
     ## Run the implementation
     if { $doimpl == 1 } {
