@@ -95,7 +95,7 @@ namespace eval ::roe::data {
     }
     
     ## 
-    add_toggle
+    add_toggle $board
     ## 
     create_bd_cell -type module -reference mrf_toggle datapath/framer_datapath/mrf_toggle_0
     connect_bd_net [get_bd_pins datapath/framer_datapath/mrf_toggle_0/pulse_in] [get_bd_pins datapath/framer_datapath/roe_framer_0/m0_dl_update]
@@ -162,11 +162,11 @@ namespace eval ::roe::data {
     connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe11]
 
   }
-  
+
   ## ---------------------------------------------------------------------------
   ## Module that can be added to visualise pulse signals on external IO with OSC
   ## ---------------------------------------------------------------------------
-  proc add_toggle {} {
+  proc add_toggle { board } {
 
     set fName "mrf_toggle.v"
     set string "
@@ -182,12 +182,19 @@ endmodule
 "
 
     ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
+    
+    if { $board == "zcu111" } {
+      set IO_TYPE "LVCMOS12"
+    } else {
+      set IO_TYPE "LVCMOS33"
+    }
+    
     add_files -force -norecurse -copy_to [get_property DIRECTORY [current_project]] $fName
 
     set fName "mrf_toggle.xdc"
     set string "
 set_property PACKAGE_PIN J19         \[get_ports \"toggle_out_0\"\]
-set_property IOSTANDARD  LVCMOS33    \[get_ports \"toggle_out_0\"\]
+set_property IOSTANDARD  $IO_TYPE    \[get_ports \"toggle_out_0\"\]
 "
 
     ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
