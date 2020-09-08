@@ -1,5 +1,8 @@
 # ORAN-Radio-Interface Project
 
+## IP documentation
+This can be found on the [**oran_radio_if lounge**](https://www.xilinx.com/member/oran-radio-if.html). Registration is required for this site.
+
 ## Project Information
 
 This project contains the C LibMetal driver for the oran_radio_if IP. Additionally a C application is supplied demonstrating how to use the library to configure the IP. Full build instructions and scripts are provided for Vivado and Petalinux. 
