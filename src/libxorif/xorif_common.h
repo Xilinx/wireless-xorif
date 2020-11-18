@@ -37,26 +37,41 @@
 /*******************************************/
 
 // Control codes for coloured text in console
-#define ANSI_RED "\x1b[31m"
-#define ANSI_GREEN "\x1b[32m"
-#define ANSI_RESET "\x1b[0m"
-
-// Labelled printf macro
-#define LPRINTF(format, ...) printf("LIBXORIF> " format, ##__VA_ARGS__)
-#define LOG(format, ...) LPRINTF("LOG: " format, ##__VA_ARGS__)
-#define PERROR(format, ...)                       \
-    {                                             \
-        LPRINTF("ERROR: " format, ##__VA_ARGS__); \
-    }
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_YELLOW "\x1b[33m"
+#define ANSI_COLOR_BLUE "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 
 #ifdef DEBUG
-#define TRACE(format, ...)                            \
-    {                                                 \
-        if (xorif_trace)                              \
-        {                                             \
-            LPRINTF("DEBUG: " format, ##__VA_ARGS__); \
-        }                                             \
+#define PERROR(format, ...)                                         \
+    {                                                               \
+        fprintf(stderr, ANSI_COLOR_RED);                            \
+        fprintf(stderr, "LIBXORIF> ERROR: " format, ##__VA_ARGS__); \
+        fprintf(stderr, ANSI_COLOR_RESET);                          \
+        fflush(stderr);                                             \
     }
+
+#define TRACE(format, ...)                              \
+    {                                                   \
+        if (xorif_trace >= 1)                           \
+        {                                               \
+            printf("LIBXORIF> " format, ##__VA_ARGS__); \
+            fflush(stdout);                             \
+        }                                               \
+    }
+
+#define INFO(format, ...)                                      \
+    {                                                          \
+        if (xorif_trace >= 2)                                  \
+        {                                                      \
+            printf("LIBXORIF> DEBUG: " format, ##__VA_ARGS__); \
+            fflush(stdout);                                    \
+        }                                                      \
+    }
+
 #define ASSERT(expression)                                         \
     {                                                              \
         if (!(expression))                                         \
@@ -65,16 +80,11 @@
         }                                                          \
     }
 #else
+#define PERROR(format, ...)
 #define TRACE(format, ...)
+#define INFO(format, ...)
 #define ASSERT(expression)
 #endif
-
-// Some system constants
-#define NUM_NUMEROLOGY 5 /**< Number of numerologies */
-#define MAX_NUM_CC 8     /**< Maximum number of component carriers */
-#define MAX_NUM_RBS 275  /**< Maximum number of RBs supported per CC */
-#define MIN_NUM_RBS 2    /**< Minimum number of RBs supported per CC */
-#define RE_PER_RB 12     /**< Number of REs per RB */
 
 /**
  * @brief Structure for device related information, including libmetal pointers

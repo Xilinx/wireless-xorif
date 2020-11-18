@@ -10,13 +10,14 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = " \
 	file://Makefile \
 	file://xorif_api.h \
+	file://xorif_system.h \
 	file://xorif_common.c \
 	file://xorif_common.h \
 	file://xorif_fh_func.c \
 	file://xorif_fh_func.h \
 	file://xorif_utils.c \
 	file://xorif_utils.h \
-	file://oran_radio_if_v1_0_ctrl.h \
+	file://oran_radio_if_v1_1_ctrl.h \
 	"
 
 S = "${WORKDIR}"
@@ -30,7 +31,8 @@ do_compile() {
 do_install() {
 	install -d ${D}${libdir}
 	oe_libinstall -so libxorif ${D}${libdir}
-	
+
 	install -d ${D}${includedir}/xorif
 	install -m 0644 ${S}/xorif_api.h ${D}${includedir}/xorif/
+	install -m 0644 ${S}/xorif_api.txt ${D}${includedir}/xorif/
 }

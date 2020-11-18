@@ -60,7 +60,7 @@ static unsigned int get_integer(const char *prompt, unsigned int min, unsigned i
         float f;
         char c;
         int valid = 0;
-        if (sscanf(buff, "0x%x%c", &u, &c) == 2 && isspace(c))
+        if (sscanf(buff, "0x%X%c", &u, &c) == 2 && isspace(c))
         {
             number = (unsigned int)u;
             //printf("Hex: %d\n", number);
@@ -85,7 +85,7 @@ static unsigned int get_integer(const char *prompt, unsigned int min, unsigned i
         }
         else
         {
-            printf("Valid values are [%d..%d]\n", min, max);
+            printf("Valid values are [%u..%u]\n", min, max);
         }
     }
 }
@@ -98,7 +98,7 @@ static unsigned int get_integer(const char *prompt, unsigned int min, unsigned i
  */
 static char *get_string(const char *prompt)
 {
-    static char buff2[MAX_BUFF_SIZE]; // TODO FIX this
+    static char buff2[256];
 
     while (1)
     {
@@ -113,7 +113,7 @@ static char *get_string(const char *prompt)
         }
 
         // Attempt to scan input as an string
-        if (sscanf(buff, "%s", buff2) == 1)
+        if (sscanf(buff, "%255s", buff2) == 1)
         {
             // Remove any trailing newline character
             if (buff2[strlen(buff2) -1] == '\n')
@@ -270,12 +270,12 @@ static int do_eth_config_menu(void)
         case 2:
             // Set ethernet destination MAC address
             s = get_string("Enter destination MAC address (e.g. 01:02:03:04:05:06)");
-            do_command("set dest_mac_addr %x %s", port, s);
+            do_command("set dest_mac_addr %d %s", port, s);
             break;
         case 3:
             // Set ethernet source MAC address
             s = get_string("Enter destination MAC address (e.g. 01:02:03:04:05:06)");
-            do_command("set src_mac_addr %x %s", port, s);
+            do_command("set src_mac_addr %d %s", port, s);
             break;
         default:
             printf("Invalid option '%d'\n", choice);
@@ -325,13 +325,13 @@ static int do_register_menu(void)
         case 1:
             // Peek memory address
             val1 = get_integer("Enter address", 0, UINT32_MAX);
-            do_command("peek 0x%x", val1);
+            do_command("peek 0x%X", val1);
             break;
         case 2:
             // Poke memory address
             val1 = get_integer("Enter address", 0, UINT32_MAX);
             val2 = get_integer("Enter value to write", 0, UINT32_MAX);
-            do_command("poke 0x%x 0x%x", val1, val2);
+            do_command("poke 0x%X 0x%X", val1, val2);
             break;
         case 3:
             // Read FHI register
@@ -519,7 +519,7 @@ static int do_main_menu(void)
 int do_menu()
 {
     // Initialize library
-    do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+    //do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
 
     // Do menu
     do_main_menu();

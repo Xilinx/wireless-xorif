@@ -42,25 +42,57 @@
 #include "xorif_app.h"
 
 // Control codes for coloured text in console
-#define ANSI_RED "\x1b[31m"
-#define ANSI_GREEN "\x1b[32m"
-#define ANSI_RESET "\x1b[0m"
-
-// Labelled printf macro
-#define LPRINTF(format, ...) printf("XORIF-APP> " format, ##__VA_ARGS__)
-#define LOG(format, ...) LPRINTF("LOG: "format, ##__VA_ARGS__)
-#define PERROR(format, ...) LPRINTF("ERROR: " format, ##__VA_ARGS__)
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_YELLOW "\x1b[33m"
+#define ANSI_COLOR_BLUE "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 
 #ifdef DEBUG
-#define TRACE(format, ...) {if (trace){LPRINTF("DEBUG: " format, ##__VA_ARGS__);}}
-#define ASSERT(expression) {if (!(expression)){PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__);}}
+#define PERROR(format, ...)                                          \
+    {                                                                \
+        fprintf(stderr, ANSI_COLOR_RED);                             \
+        fprintf(stderr, "XORIF-APP> ERROR: " format, ##__VA_ARGS__); \
+        fprintf(stderr, ANSI_COLOR_RESET);                           \
+        fflush(stderr);                                              \
+    }
+
+#define TRACE(format, ...)                               \
+    {                                                    \
+        if (trace >= 1)                                  \
+        {                                                \
+            printf("XORIF-APP> " format, ##__VA_ARGS__); \
+            fflush(stdout);                              \
+        }                                                \
+    }
+
+#define INFO(format, ...)                                       \
+    {                                                           \
+        if (trace >= 2)                                         \
+        {                                                       \
+            printf("XORIF-APP> DEBUG: " format, ##__VA_ARGS__); \
+            fflush(stdout);                                     \
+        }                                                       \
+    }
+
+#define ASSERT(expression)                                         \
+    {                                                              \
+        if (!(expression))                                         \
+        {                                                          \
+            PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__); \
+        }                                                          \
+    }
 #else
+#define PERROR(format, ...)
 #define TRACE(format, ...)
+#define INFO(format, ...)
 #define ASSERT(expression)
 #endif
 
 // Constants, enums, typedefs, structures, etc.
-#define MAX_BUFF_SIZE 1024
+#define MAX_BUFF_SIZE 2048
 
 /**
  * @brief Error codes.
@@ -76,6 +108,7 @@ enum error_codes
     COMMS_ERROR,          /**< Communication error */
     NO_HARDWARE,          /**< No hardware present */
     SYSTEM_CMD_FAILURE,   /**< Attempt to perform system command failed */
+    FILE_NOT_FOUND,       /**< File not found */
     SUCCESS = 0,          /**< Success! No error! */
     FAILURE = 1,          /**< Failure return code */
     TERMINATE,            /**< Termination return code */

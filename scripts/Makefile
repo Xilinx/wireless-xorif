@@ -11,39 +11,44 @@ DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/u
 
 ### CONFIGURATION SECTION ###
 
+# Define targets for "all" here
+#ALL = zcu102_om5_exs zcu102_om5_exd zcu111_om5_exs zcu111_om5_exd vck190_hw vck190_hw_emu
+ALL = zcu102_om5_exs zcu111_om5_exs
+
 # Add kernel modules (e.g. drivers) here
 override MODULES += xlnx-ptp-timer
 
 # Add apps / libs here
 override APPS += libxorif
 override APPS += xorif-app
-#override APPS += xorif-test
 
 # Add scripts here
+ifeq ($(XXV),1)
 override INSTALL += xorif-startup
 override INSTALL += xorif-scripts
+endif
+#override APPS += xorif-test
 
 # Add rootfs (=Y) config options here
+override ROOTFS_Y += linuxptp
 override ROOTFS_Y += peekpoke
 override ROOTFS_Y += perl
-override ROOTFS_Y += perl-module-findbin
 override ROOTFS_Y += python
 override ROOTFS_Y += python-dev
-#override ROOTFS_Y += python-ctypes
-#override ROOTFS_Y += python-unittest
 override ROOTFS_Y += python-argparse
 override ROOTFS_Y += python3
+override ROOTFS_Y += python3-dev
 override ROOTFS_Y += netcat
 override ROOTFS_Y += tcpdump
 override ROOTFS_Y += libmetal
 ifeq ($(DBG),1)
-#override ROOTFS_Y += git
-#override ROOTFS_Y += packagegroup-core-buildessential
-#override ROOTFS_Y += libgcc
-#override ROOTFS_Y += libgcc-dev
-#override ROOTFS_Y += libgcc-dbg
-#override ROOTFS_Y += libstdcPLUSPLUS
-#override ROOTFS_Y += libstdcPLUSPLUS-dev
+override ROOTFS_Y += git
+override ROOTFS_Y += packagegroup-core-buildessential
+override ROOTFS_Y += libgcc
+override ROOTFS_Y += libgcc-dev
+override ROOTFS_Y += libgcc-dbg
+override ROOTFS_Y += libstdcPLUSPLUS
+override ROOTFS_Y += libstdcPLUSPLUS-dev
 override ROOTFS_Y += gdb
 override ROOTFS_Y += gdbserver
 override ROOTFS_Y += libmetal-dev
@@ -52,16 +57,20 @@ override ROOTFS_Y += libxorif-dev
 override ROOTFS_Y += libxorif-dbg
 override ROOTFS_Y += xorif-app-dev
 override ROOTFS_Y += xorif-app-dbg
-override ROOTFS_Y += xorif-test-dev
-override ROOTFS_Y += xorif-test-dbg
 endif
 
 # Add rootfs (=N) config options here
 override ROOTFS_N +=
 
 # Extra bits
-override EXTRAS += recipes-kernel/linux
-override EXTRAS += recipes-core/init-ifupdown
+override EXTRAS += linux
+override EXTRAS += init-ifupdown
+override EXTRAS += perl-modules
+override EXTRAS += perl-module-findbin
+override EXTRAS += perl-module-carp
+override EXTRAS += perl-module-lib
+#override EXTRAS += python3-modules
+#override EXTRAS += oran-codec
 
 # Add help / usage guide here
 usage:
@@ -71,8 +80,9 @@ usage:
 	@echo "Supported targets:"
 	@echo "    all"
 	@echo "    clean_all"
-	@echo "    zcu102_om5_exs"
-	@echo "    zcu111_om5_exs"
+	@for x in $(ALL); do \
+		echo "    $${x}";\
+	done
 	@echo
 	@echo "Notes:"
 	@echo "    Board: [zcu102 | zcu111]"
@@ -81,23 +91,85 @@ usage:
 
 ### MAIN RULES AND RECIPES ###
 
+oran-codec:
+	@echo Creating application $@
+	petalinux-create --project $(PLX_DIR) --type apps --template c --name $@ --enable --force
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	echo CONFIG_$@-dbg >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_$@-dev >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+
+perl-modules:
+	@echo Adding changes for $@
+	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+perl-module-findbin:
+	@echo Adding changes for $@
+	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+perl-module-carp:
+	@echo Adding changes for $@
+	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+perl-module-lib:
+	@echo Adding changes for $@
+	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+python3-modules:
+	@echo Adding changes for $@
+	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	echo CONFIG_python3-pyro4 >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-cffi >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-pytest >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_python3-pyro4\s.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-pyro4=n.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-cffi\s.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-cffi=n.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-pytest\s.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-pytest=n.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+linux:
+	@echo Adding changes for $@
+	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-kernel/$@
+	cp -pr $(RCP_DIR)/recipes-kernel/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-kernel/$@/.
+
+init-ifupdown:
+	@echo Adding changes for $@
+	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-core/$@
+	cp -pr $(RCP_DIR)/recipes-core/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-core/$@/.
+
 # Recipe to add kernel module
 $(MODULES):
 	@echo Creating kernel module $@
 	petalinux-create --project $(PLX_DIR) --type modules --name $@ --enable --force
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/$@.c
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/$@.bb
-	cp $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/.
-	cp $(RCP_DIR)/recipes-modules/$@/$@.bb $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/.
+	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/.
+	cp -p $(RCP_DIR)/recipes-modules/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/.
 
 # Recipe to add app / lib
 $(APPS):
 	@echo Creating application $@
 	petalinux-create --project $(PLX_DIR) --type apps --template c --name $@ --enable --force
-	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/$@.c
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
-	cp $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
-	cp $(RCP_DIR)/recipes-apps/$@/$@.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
 	echo CONFIG_$@-dbg >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 	echo CONFIG_$@-dev >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
@@ -107,14 +179,8 @@ $(INSTALL):
 	petalinux-create --project $(PLX_DIR) --type apps --template install --name $@ --enable --force
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
-	cp $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
-	cp $(RCP_DIR)/recipes-apps/$@/$@.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
-
-# Recipe for extra bits that are just copied wholesale into meta-user directory
-$(EXTRAS):
-	@echo Adding extra files for $@
-	mkdir -p $(PLX_DIR)/project-spec/meta-user/$@
-	cp -pr $(RCP_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/$@/.
+	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
 
 # Recipe for rootfs (=Y) config option
 $(ROOTFS_Y):
@@ -261,7 +327,17 @@ zcu102_om5_exs:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
+zcu102_om5_e4_exs:
+	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 DBG=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
 zcu111_om5_exd:
+	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu111_om5_10_slv_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
@@ -271,23 +347,28 @@ zcu111_om5_exs:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
+zcu111_om5_e4_exs:
+	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 DBG=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
 vck190_hw:
 	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
-	
+
 vck190_hw_emu:
 	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-all: zcu102_om5_exs zcu111_om5_exs
+all: $(ALL)
 
 clean_all:
-	@echo Cleaning all targets
-	$(MAKE) PLX_DIR="$(OUT_DIR)/zcu102_om5_exs_$(TOOL_VER)/petalinux" mrproper
-	$(MAKE) PLX_DIR="$(OUT_DIR)/zcu111_om5_exs_$(TOOL_VER)/petalinux" mrproper
+	@echo Cleaning targets
+	for x in $(ALL); do \
+		$(MAKE) PLX_DIR="$(OUT_DIR)/$${x}_$(TOOL_VER)/petalinux" mrproper; \
+	done
 
 # TODO
 # - Only add the rootfs_config and user-rootfsconfig lines if they don't already exist
-# - Change the clean target to loop through directories? Or maybe use same inputs as all target?

@@ -38,6 +38,7 @@ set PL_BOOTS=${PL_SRC}/boot.scr
 set PL_IMGUB=${PL_SRC}/image.ub
 
 set VI_LTX=$BASEPATH/${TAG}/vivado/${TAG}.runs/impl_1/design_1_wrapper.ltx
+set VI_LTX=$BASEPATH/${TAG}/vivado/*.runs/impl_1/*.ltx
 
 if ( ! -e $PL_BOOTB ) then
    echo "Exiting, non-existing file $PL_BOOTB"

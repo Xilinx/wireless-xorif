@@ -35,6 +35,9 @@
 /*** Function prototypes ***/
 /***************************/
 
+// TODO consider removing/moving some of these prototypes, many are only used in xorif_fhi_func.c
+// and should be static functions, or not used at all!
+
 /**
  * @brief Perform default initialization of the device.
  */
@@ -55,9 +58,9 @@ int xorif_fhi_get_num_ul_spatial_streams(void);
 int xorif_fhi_get_num_dl_spatial_streams(void);
 
 /**
- * @brief Returns the number of supported compinent carriers.
+ * @brief Returns the number of supported component carriers.
  * @returns
- *      - Number of supported compinent carriers
+ *      - Number of supported component carriers
  */
 int xorif_fhi_get_max_cc(void);
 
@@ -88,20 +91,6 @@ int xorif_fhi_get_max_numerology(void);
  *      - Number of supported downlink symbols
  */
 int xorif_fhi_get_max_dl_symbols(void);
-
-/**
- * @brief Returns the number of supported sections per uplink symbol.
- * @returns
- *      - Number of uplink sections per symbol
- */
-int xorif_fhi_get_num_sect_per_sym_ul(void);
-
-/**
- * @brief Returns the number of supported sections per downlink symbol.
- * @returns
- *      - Number of downlink sections per symbol
- */
-int xorif_fhi_get_num_sect_per_sym_dl(void);
 
 /**
  * @brief Re-load / re-configure the component carrier configuration.
@@ -177,16 +166,16 @@ int xorif_fhi_init_cc_dl_data_offsets(uint16_t cc,
 /**
  * @brief Configure the Numerology and RB count for the CC.
  * @param[in] cc Component carrier to configure
- * @param[in] numerology Numerology to set for this CC
  * @param[in] num_rbs Number of RBS to assign to this CC (max 275)
+ * @param[in] numerology Numerology to set for this CC
  * @param[in] sym_per_slot Number of symbols per slot (0 = 14 symbols, 1 = 12 symbols)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
 int xorif_fhi_init_cc_rbs(uint16_t cc,
-                          uint16_t numerology,
                           uint16_t num_rbs,
+                          uint16_t numerology,
                           uint16_t sym_per_slot);
 
 /**
@@ -218,51 +207,47 @@ int xorif_fhi_set_cc_ul_iq_compression(uint16_t cc,
 /**
  * @brief Configure the uplink control memories.
  * @param[in] cc Component carrier to configure
+ * @param[in] num_ctrl_per_sym_ul Number of sections per symbol
  * @param[in] ul_ctrl_offset Uplink control offset
- * @param[in] ul_ctrl_unrolled_offset Iplink control un-rolled offset
  * @param[in] ul_ctrl_base_offset Uplink control base offset
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
 int xorif_fhi_init_cc_ul_section_mem(uint16_t cc,
+                                     uint16_t num_ctrl_per_sym_ul,
                                      uint16_t ul_ctrl_offset,
-                                     uint16_t ul_ctrl_unrolled_offset,
                                      uint16_t ul_ctrl_base_offset);
 
 /**
  * @brief Configure the downlink control memories.
  * @param[in] cc Component carrier to configure
+ * @param[in] num_ctrl_per_sym_dl Number of sections per symbol
  * @param[in] dl_ctrl_offset Downlink control offset
- * @param[in] dl_ctrl_unrolled_offset Downlink control un-rolled offset
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
 int xorif_fhi_init_cc_dl_section_mem(uint16_t cc,
-                                     uint16_t dl_ctrl_offset,
-                                     uint16_t dl_ctrl_unrolled_offset);
+                                     uint16_t num_ctrl_per_sym_dl,
+                                     uint16_t dl_ctrl_offset);
 
 /**
  * @brief Configure the control constants.
  * @param[in] cc Component carrier to configure
- * @param[in] numerology Numerology for the specified CC
- * @param[in] num_ctrl_per_sym_dl Number of control sections per downlink symbol
- * @param[in] num_ctrl_per_sym_ul Number of control sections per uplink symbol
  * @param[in] dl_ctrl_sym_num Number of downlink control symbols
+ * @param[in] num_ctrl_per_sym_dl Number of control sections per downlink symbol
  * @param[in] ul_ctrl_sym_num Number of uplink control symbols
- * @param[in] sym_per_slot Number of symbols per slot (0 = 14 symbols, 1 = 12 symbols)
+ * @param[in] num_ctrl_per_sym_ul Number of control sections per uplink symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
 int xorif_fhi_init_cc_ctrl_constants(uint16_t cc,
-                                     uint16_t numerology,
-                                     uint16_t num_ctrl_per_sym_dl,
-                                     uint16_t num_ctrl_per_sym_ul,
                                      uint16_t dl_ctrl_sym_num,
+                                     uint16_t num_ctrl_per_sym_dl,
                                      uint16_t ul_ctrl_sym_num,
-                                     uint16_t sym_per_slot);
+                                     uint16_t num_ctrl_per_sym_ul);
 
 /**
  * @brief Configure the specified component carrier.
@@ -272,13 +257,6 @@ int xorif_fhi_init_cc_ctrl_constants(uint16_t cc,
  *      - XORIF_FAILURE on error
  */
 int xorif_fhi_configure_cc(uint16_t cc);
-
-/**
- * @brief Retrieve the configured allocation for the specified component carrier.
- * @param[in] cc Component carrier
- * @param[in,out] ptr Pointer to component carrier allocation structure
- */
-void xorif_fhi_get_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr);
 
 /**
  * @brief Compute timing advance offsets for the specified component carrier.

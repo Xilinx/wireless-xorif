@@ -10,16 +10,16 @@ The flows generate output in specific subdirectories according to the build targ
 
 For example:
 ~~~
-├── zcu102_om5_exs_2019_2
-│   ├── vivado
-│   └── petalinux
-├── zcu111_om5_exs_2019_2
+├── zcu102_om5_exs_2020_1
 │   ├── vivado
 │   └── petalinux
 ├── zcu111_om5_exs_2020_1
 │   ├── vivado
 │   └── petalinux
-└─── zcu111_om7_exs_2020_1
+├── zcu111_om5_exs_2020_2
+│   ├── vivado
+│   └── petalinux
+└─── zcu111_om7_exs_2020_2
     ├── vivado
     └── petalinux
 ~~~

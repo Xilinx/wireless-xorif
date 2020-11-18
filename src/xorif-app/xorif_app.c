@@ -59,21 +59,27 @@ int main(int argc, char *argv[])
 {
     int mode = SERVER_MODE;
     int do_help = 0;
+    int do_banner = 1;
+    int do_init = 0;
     const char *file = "";
     int opt;
 
     // Process command line options
     opterr = 0;
 #ifdef NO_HW
-    while ((opt = getopt(argc, argv, "cf:hmn:p:v")) != -1)
+    while ((opt = getopt(argc, argv, "bcf:himn:p:v")) != -1)
 #else
-    while ((opt = getopt(argc, argv, "ce:f:hmn:p:svF:B:")) != -1)
+    while ((opt = getopt(argc, argv, "bce:f:himn:p:svF:B:")) != -1)
 #endif
     {
         switch (opt)
         {
+        case 'b':
+            do_banner = 0;
+            break;
         case 'c':
             mode = CMD_LINE_MODE;
+            do_banner = 0;
             break;
         case 'e':
             eth_device_name = optarg;
@@ -84,6 +90,9 @@ int main(int argc, char *argv[])
             break;
         case 'h':
             do_help = 1;
+            break;
+        case 'i':
+            do_init = 1;
             break;
         case 'm':
             mode = MENU_MODE;
@@ -129,7 +138,7 @@ int main(int argc, char *argv[])
     }
 
     // Process command line non-option arguments
-    if (mode != CMD_LINE_MODE)
+    if (do_banner)
     {
         for (; optind < argc; ++optind)
         {
@@ -141,20 +150,22 @@ int main(int argc, char *argv[])
     if (do_help)
     {
 #ifdef NO_HW
-        printf("Usage: [-hv] [-c | -f <file> | -m] [-n <ip_addr>] [-p <port>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -m] [-n <ip_addr>] [-p <port>] {\"<command> {<arguments>}\"}\n");
 #else
 #ifdef BF_INCLUDED
-        printf("Usage: [-hv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] [-B <bf_dev_name>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] [-B <bf_dev_name>] {\"<command> {<arguments>}\"}\n");
 #else
-        printf("Usage: [-hv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {\"<command> {<arguments>}\"}\n");
 #endif
 #endif
+        printf("\t-b Disable banner\n");
         printf("\t-c Client mode using the command line\n");
 #ifndef NO_HW
         printf("\t-e <device> Specified ethernet device (default eth0)\n");
 #endif
         printf("\t-f <file> Client mode using the specified file\n");
         printf("\t-h Show help\n");
+        printf("\t-i Automatically perform 'init' before performing command/file/menu\n");
         printf("\t-m Client mode using console menu\n");
         printf("\t-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)\n");
         printf("\t-p <port> Specified port (defaults to 5001)\n");
@@ -168,11 +179,11 @@ int main(int argc, char *argv[])
 #endif
         printf("\t-F <fhi_dev_name> Specify name of Front-Haul Interface device\n");
 #endif
-        printf("\t<commands> {<arguments>} For command line mode only\n");
+        printf("\t<command> {<arguments>} For command line mode only\n");
         return FAILURE;
     }
 
-    if (mode != CMD_LINE_MODE)
+    if (do_banner)
     {
         // Banner
         printf("\n");
@@ -181,7 +192,7 @@ int main(int argc, char *argv[])
         printf("  \\  / | | | |_) || || |_ _____ / _ \\ | |_) | |_) |\n");
         printf("  /  \\ |_| |  _ < | ||  _|_____/ ___ \\|  __/|  __/ \n");
         printf(" /_/\\_\\___/|_| \\_\\___|_|      /_/   \\_\\_|   |_|    \n");
-        printf("© Copyright 2020 – 2020 Xilinx, Inc. All rights reserved.\n");
+        printf("© Copyright 2019 – 2020 Xilinx, Inc. All rights reserved.\n");
         printf("\n");
     }
 
@@ -201,8 +212,11 @@ int main(int argc, char *argv[])
         remote_target = 1;
         if (optind < argc)
         {
-            // Initialize library
-            do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+            if (do_init)
+            {
+                // Initialize library
+                do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+            }
 
             // Process commands
             for (; optind < argc; ++optind)
@@ -228,6 +242,13 @@ int main(int argc, char *argv[])
     case FILE_MODE:
         // File mode
         TRACE("File mode (%s)\n", file);
+
+        if (do_init)
+        {
+            // Initialize library
+            do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+        }
+
         remote_host = 0;
         remote_target = 1;
         return do_file(file);
@@ -235,6 +256,13 @@ int main(int argc, char *argv[])
     case MENU_MODE:
         // Menu mode
         TRACE("Menu mode\n");
+
+        if (do_init)
+        {
+            // Initialize library
+            do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+        }
+
         remote_host = 0;
         remote_target = 1;
         return do_menu();

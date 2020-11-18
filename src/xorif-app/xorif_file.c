@@ -39,7 +39,7 @@ int do_file(const char *name)
     }
 
     // Initialize library
-    do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
+    //do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
 
     // Reset line count
     int num_lines = 0;

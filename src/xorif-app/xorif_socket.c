@@ -22,7 +22,7 @@
  * @{
  */
 
-// TODO sort out these headers, are they all needed? Some duplicates
+// TODO sort out these headers, are they all needed?
 #include <inttypes.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -288,7 +288,7 @@ int do_socket(void)
     // Open connections
     open_connections();
 
-    // TODO: need to decide how to handle errors here, stop or continue?
+    // TODO need to decide how to handle errors here, stop or continue?
     while (!quit)
     {
         // Poll the connections

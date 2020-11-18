@@ -8,13 +8,13 @@ The hardware definition files (usually an XSA file) is generated as part of the 
 
 For example:
 ~~~
-├── zcu102_om5_2019_2
-│   └── system.xsa
-├── zcu111_om5_2019_2
+├── zcu102_om5_2020_1
 │   └── system.xsa
 ├── zcu111_om5_2020_1
 │   └── system.xsa
-└─── zcu111_om5_ptp_2020_1
+├── zcu111_om5_2020_2
+│   └── system.xsa
+└─── zcu111_om5_ptp_2020_2
     └── system.xsa
 ~~~
 

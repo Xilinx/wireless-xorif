@@ -43,31 +43,102 @@ namespace eval ::roe::data {
 ##
 ## ----------------------------------------------------------------------------
 namespace eval ::roe::data {
-  proc design_build { ipRepo ipName ipCfgKey } {
+  proc design_build { ipRepo ipName ipCfgKey board projectName } {
   
     ## add the framer and configure with settings passed in as arguments
     create_bd_cell -type ip -vlnv [dict get ${::roe::data::script_config} flow ipType] ${ipName}
     set_property -dict [::roe::bin::returnIpSettings $ipCfgKey] [get_bd_cells ${ipName}]
     
-    if { $ipRepo != "" } {
-      puts "Manual source of BA scripts from IP repo. Factory use case."
-      source ${ipRepo}/automation/auto_utils.tcl  
-      ::xilinx.com_bd_rule_oran_radio_if::build_roe_demo_subsystem ${ipName} [::roe::bin::get_baSettings cust_repo_ptp]
+    ##  
+    if { [get_property CONFIG.Production_Simulation [get_bd_cells ${ipName}] ] == 0x10000000} {
+
+      puts "Build example design for HW. Factory use case."
+      set ipRepo [::roe::bin::getIpRootDir]
+      set version [get_property MODEL_NAME [get_ipdefs "*[dict get ${::roe::data::script_config} flow ipType]*"]]
+
+      puts "Repo is $ipRepo using version ${version}."
+
+      # Use the exdes flow
+      #save_bd_design
+      #open_example_project -in_process -force -dir ../output/${projectName}/vivado_exdes [get_ips] 
+      
+      # or Source the build scripts inline for speed
+      source ${ipRepo}/tcl/helpers/ipi_common_ip_procs.tcl
+      source ${ipRepo}/tcl/exdes/gen_torwave.tcl
+      source ${ipRepo}/tcl/exdes/oran_monitor.tcl
+      source ${ipRepo}/tcl/exdes/exdes_generate_procs.tcl
+      ::xilinx.com::${version}::build_ipi_demo_design_inner ${ipName} 1 1 0
+      set wrapperFile [make_wrapper -files [get_files *.bd -filter {NAME =~ *framer*}] -top]
+      add_files $wrapperFile
+      set_property top [get_bd_designs -filter {NAME =~ *framer*}]_wrapper [current_fileset]     
+
+      if { $board == "zcu102" } {
+        add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/xorif_exd_zcu102.xdc
+      }
+
+      if { $board == "zcu111" } {
+        add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/xorif_exd_zcu111.xdc
+      }
+
     } else {
-      puts "Call standard block automation"
-      apply_bd_automation -rule xilinx.com:bd_rule:oran_radio_if -config [::roe::bin::get_baSettings norm_repo_ptp] [get_bd_cells ${ipName}]
+    
+      if { $ipRepo != "" } {
+        puts "Manual source of BA scripts from IP repo. Factory use case."
+        source ${ipRepo}/automation/auto_utils.tcl  
+        ::xilinx.com_bd_rule_oran_radio_if::build_roe_demo_subsystem ${ipName} [::roe::bin::get_baSettings cust_repo_ptp]
+      } else {
+        puts "Call standard block automation"
+        apply_bd_automation -rule xilinx.com:bd_rule:oran_radio_if -config [::roe::bin::get_baSettings norm_repo_ptp] [get_bd_cells ${ipName}]
+      }
+      
+      add_qpll_reset ${ipName}
+    
     }
 
   }
+  
+  proc add_qpll_reset { ipName } {
+     
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice /datapath/framer_datapath/xlslice_0
+    set_property -dict [list CONFIG.DIN_TO {1} CONFIG.DIN_FROM {1} CONFIG.DIN_WIDTH {8} CONFIG.DOUT_WIDTH {1}] [get_bd_cells datapath/framer_datapath/xlslice_0]
+    
+    connect_bd_net [get_bd_pins datapath/framer_datapath/xlslice_0/Din]  [get_bd_pins datapath/framer_datapath/${ipName}/user_rw_out]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/xlslice_0/Dout] [get_bd_pins datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0/qpllreset_in_0]
+
+  }
+  
+  
 }
 
 ## Privide another hook to allow constraints, custom user modifications etc
 ## after the main design has been built.
 namespace eval ::roe::data {
-  proc design_modification { projectName board  mode ipRepo } {
+  
+  proc puts_xorif { log_message } {
+    puts "##----------------------------------------------------------------------"
+    puts "## xorif_vivado_build: $log_message"
+    puts "##----------------------------------------------------------------------"
+  }
+
+  proc run_user_mods { projectName board  mode ipRepo } {
+    puts_xorif "Default run_user_mods, override in user_procs.tcl if you want to add custom logic."
+  }
+
+  proc design_modification { projectName board  mode ipRepo designType } {
+  
+    puts_xorif "Check for Design modifications"
+
+    if { [get_property CONFIG.Production_Simulation [get_bd_cells -hierarchical roe_framer_0] ] == 0x10000000} {
+      puts_xorif "No modifications in this test mode."
+      run_user_mods $projectName $board  $mode $ipRepo $designType
+      return
+    }
   
     if { $board == "zcu111" } {
-      add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_zcu111_pinout.xdc
+      puts_xorif "Modify for zcu111"
+      
+      ## No longer required, constrai
+      #add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_zcu111_pinout.xdc
 
       ## If the board is zcu111, ensure the REFCLK is 156.25MHz. The default BA
       ## can set this to 161 in 25G Mode, but we want to force this to the default
@@ -83,6 +154,7 @@ namespace eval ::roe::data {
     
     ## 
     if { [get_property CONFIG.LINE_RATE [get_bd_cells /datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]] == 10} {
+      puts_xorif "Modifications for Line Rate of 10gbps"
     
       set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {156250}] [get_bd_cells datapath/framer_datapath/roe_radio_top_0] 
       set_property -dict [list CONFIG.Xran_Timer_Clk_Ps    {6400}]   [get_bd_cells datapath/framer_datapath/roe_framer_0   ]
@@ -90,42 +162,43 @@ namespace eval ::roe::data {
     }
 
     if {[regexp {om5} $mode] == 1} {
-      ## Add additional xdc constraint for ORAN mode.
+      puts_xorif "Add additional xdc constraint for ORAN mode."
       add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_xdc_fifosync.xdc
     }
     
-    ## 
+    ##
+    puts_xorif "Add toggle for debug"
     add_toggle $board
     ## 
-    create_bd_cell -type module -reference mrf_toggle datapath/framer_datapath/mrf_toggle_0
-    connect_bd_net [get_bd_pins datapath/framer_datapath/mrf_toggle_0/pulse_in] [get_bd_pins datapath/framer_datapath/roe_framer_0/m0_dl_update]
-    connect_bd_net [get_bd_pins datapath/framer_datapath/internal_bus_clk]      [get_bd_pins datapath/framer_datapath/mrf_toggle_0/clk]
-    make_bd_pins_external  [get_bd_pins datapath/framer_datapath/mrf_toggle_0/toggle_out]
-
+    #create_bd_cell -type module -reference mrf_toggle datapath/framer_datapath/mrf_toggle_0
+    #connect_bd_net [get_bd_pins datapath/framer_datapath/mrf_toggle_0/pulse_in] [get_bd_pins datapath/framer_datapath/roe_framer_0/m0_dl_update]
+    #connect_bd_net [get_bd_pins datapath/framer_datapath/internal_bus_clk]      [get_bd_pins datapath/framer_datapath/mrf_toggle_0/clk]
+    make_bd_pins_external  [get_bd_pins /datapath/framer_datapath/roe_framer_0/m0_dl_toggle]
     
-    ## Run work around procs
-    if { $ipRepo == "" } {
-      if { [ regexp 1_AR [version -short]] }  {
-        puts "Using Patched Vivado, version [version -short]"
-      } else {
-        wa_fix_inverted_reset_out      
-      }
-    }
+    ## Run work around procs - DELETE THIS FOR 2020.2 release
+    #if { $ipRepo == "" } {
+    #  if { [ regexp 1_AR [version -short]] }  {
+    #    puts "Using Patched Vivado, version [version -short]"
+    #  } else {
+    #    wa_fix_inverted_reset_out      
+    #  }
+    #}
+    puts_xorif "Add ILA"
     wa_add_additional_ila_of_interest
+    
+    run_user_mods $projectName $board  $mode $ipRepo $designType
 
     ## redo validation
+    puts_xorif "design_modification done, re-validate"
     validate_bd_design
 
   }
 
-  proc wa_fix_inverted_reset_out { } {
-      
-    set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
-    
-    delete_bd_objs [get_bd_cells datapath/framer_datapath/defm_resetn]
-    connect_bd_net [get_bd_pins ${ipName}/defm_reset_active] [get_bd_pins datapath/framer_datapath/axis_pkt_message_fifo/s_axis_aresetn]
-
-  }
+  #proc wa_fix_inverted_reset_out { } {     
+  #  set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
+  #  delete_bd_objs [get_bd_cells datapath/framer_datapath/defm_resetn]
+  #  connect_bd_net [get_bd_pins ${ipName}/defm_reset_active] [get_bd_pins datapath/framer_datapath/axis_pkt_message_fifo/s_axis_aresetn]
+  #}
 
   proc wa_add_core_reset_from_register { } {
     ## This needs to hook on somewhere else  
@@ -158,11 +231,39 @@ namespace eval ::roe::data {
     connect_bd_net [get_bd_pins ${ipName}/m0_t_header_offset_valid] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe8]
     connect_bd_net [get_bd_pins ${ipName}/m0_packet_in_window]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe9]
     connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/radio_start_recover_v_0/radio_start_10ms]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe10]
-
     connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe11]
 
-  }
+    if { [get_property CONFIG.Physical_Ethernet_Ports [get_bd_cells $ipName]] == 2 } {
+    
+      ## Add the AXIS Debug  
+      set_property -dict [list CONFIG.C_NUM_MONITOR_SLOTS {2} ] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+      connect_bd_intf_net [get_bd_intf_pins datapath/framer_datapath/roe_radio_top_0/sink_data_002] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_int/SLOT_1_AXIS] 
 
+      copy_bd_objs datapath/framer_datapath/oran_mon  [get_bd_cells {datapath/framer_datapath/oran_mon/ila_eth}]
+      
+      connect_bd_intf_net [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_eth1/SLOT_0_AXIS] [get_bd_intf_pins ${ipName}/s1_eth_axis]
+      connect_bd_net [get_bd_pins datapath/framer_datapath/tx1_eth_port_clk] [get_bd_pins datapath/framer_datapath/oran_mon/ila_eth1/clk]
+      
+      delete_bd_objs [get_bd_intf_nets datapath/framer_datapath/oran_mon/ila_int_TRIG_OUT]
+      connect_bd_intf_net [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_int/TRIG_OUT] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_eth1/TRIG_IN]
+      connect_bd_intf_net [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_eth/TRIG_IN] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_eth1/TRIG_OUT]
+
+      create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 datapath/framer_datapath/oran_mon/proc_sys_reset_0
+
+      connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/ila_eth1/resetn] [get_bd_pins datapath/framer_datapath/oran_mon/proc_sys_reset_0/interconnect_aresetn]
+      connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/tx1_eth_port_clk] [get_bd_pins datapath/framer_datapath/oran_mon/proc_sys_reset_0/slowest_sync_clk]
+      connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/resetn1] [get_bd_pins datapath/framer_datapath/oran_mon/proc_sys_reset_0/ext_reset_in]
+    
+    }
+    
+    ## Add reset on Framer
+    create_bd_cell -type ip -vlnv xilinx.com:ip:vio datapath/framer_datapath/vio_0
+    set_property -dict [list CONFIG.C_PROBE_OUT0_INIT_VAL {0x1} CONFIG.C_EN_PROBE_IN_ACTIVITY {0} CONFIG.C_NUM_PROBE_IN {0}] [get_bd_cells datapath/framer_datapath/vio_0]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/vio_0/probe_out0] [get_bd_pins datapath/framer_datapath/defm_reset_sync/aux_reset_in]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/m_axis_defm_aclk] [get_bd_pins datapath/framer_datapath/vio_0/clk]
+
+  }
+  
   ## ---------------------------------------------------------------------------
   ## Module that can be added to visualise pulse signals on external IO with OSC
   ## ---------------------------------------------------------------------------
@@ -170,7 +271,6 @@ namespace eval ::roe::data {
 
     set fName "mrf_toggle.v"
     set string "
-
 module mrf_toggle (
 input      clk,
 input      pulse_in,
@@ -181,23 +281,27 @@ always @(posedge clk)
 endmodule
 "
 
-    ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
+    ## This is a neat way to add verilog modules
+    #::xilinx.com::oran_radio_if_v1_1::writeStringToFile $fName $string
+    #add_files -force -norecurse -copy_to [get_property DIRECTORY [current_project]] $fName
+    ## from 20.2 IP has these avaiable as IO pins
+    make_bd_pins_external  [get_bd_pins /datapath/framer_datapath/roe_framer_0/m0_dl_toggle]
     
     if { $board == "zcu111" } {
       set IO_TYPE "LVCMOS12"
+      set IO_PIN  "J15"
     } else {
       set IO_TYPE "LVCMOS33"
-    }
-    
-    add_files -force -norecurse -copy_to [get_property DIRECTORY [current_project]] $fName
+      set IO_PIN  "J19"
+    }  
 
     set fName "mrf_toggle.xdc"
     set string "
-set_property PACKAGE_PIN J19         \[get_ports \"toggle_out_0\"\]
-set_property IOSTANDARD  $IO_TYPE    \[get_ports \"toggle_out_0\"\]
+set_property PACKAGE_PIN $IO_PIN     \[get_ports \"m0_dl_toggle_0\"\]
+set_property IOSTANDARD  $IO_TYPE    \[get_ports \"m0_dl_toggle_0\"\]
 "
 
-    ::xilinx.com::oran_radio_if_v1_0::writeStringToFile $fName $string
+    ::xilinx.com::oran_radio_if_v1_1::writeStringToFile $fName $string
     add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
 
   }   
@@ -217,6 +321,7 @@ namespace eval ::roe::bin {
     set mode   om5
     set ipRepo "[pwd]/path_to_repo"
     set board  zcu111
+    set designType "exs"
     
     puts "
 ##-----------------------------------------------------------------------------
@@ -238,16 +343,28 @@ set exitOnDone 0
 ::roe::bin::showData
 
 ## Build command
-::roe::bin::createIp_runIpiBuild <Optional IP Repo> <Build Mode(om0|om5)> <Target Board(zcu102|zcu111)>
+::roe::bin::createIp_runIpiBuild <Optional IP Repo> <Build Mode(om0|om5)> <designType(exd|exs)> <Target Board(zcu102|zcu111)>
 
 ## Default
-::roe::bin::createIp_runIpiBuild $ipRepo $mode $board
+::roe::bin::createIp_runIpiBuild $ipRepo $mode $designType $board
 
 ## Once complete you can call implementation & then generate the XSA
 ::roe::bin::run_impl
 ::roe::bin::exportHw
 
 ##-----------------------------------------------------------------------------"
+  }
+
+
+  ## --------------------------------------------------------------------------
+  ## Get the IP root from the component XML file.
+  proc getIpRootDir {  } {
+    
+    set vlnv    [get_ipdefs  *:oran_radio_if:* -filter {UPGRADE_VERSIONS == ""} ]
+    set xmlfile [get_property XML_FILE_NAME [get_ipdefs $vlnv]]
+    regsub  {\/component.xml} $xmlfile "" xmlfile
+    return "${xmlfile}"
+    
   }
 
   ## --------------------------------------------------------------------------
@@ -325,15 +442,15 @@ set exitOnDone 0
   ## Functions to build the design. This holds minimal Vivado TCL mechanics
   ## to get to a validated design and only bitstream and XSA.
   ## --------------------------------------------------------------------------
-  proc create_projName { board mode noDateInProjName} {
+  proc create_projName { board mode designType noDateInProjName} {
     ## Create a uniqueish name based in the board, project name and Vivado
     ## version in use. The chosen name is last as this is likely to change/incrment
     ## during development runs. Therefore directory names should sort nicely
     ## on the users file browser.
     if { $noDateInProjName } {
-      set pName "${board}_${mode}_exs_[version -short]"
+      set pName "${board}_${mode}_${designType}_[version -short]"
     } else {
-      set pName "${board}_${mode}_exs_[version -short]__[clock format [clock seconds] -format "%Y%m%d_%H%M%S"]"
+      set pName "${board}_${mode}_${designType}_[version -short]__[clock format [clock seconds] -format "%Y%m%d_%H%M%S"]"
     }
     ## Replace chars we dont want in the project name.
     regsub {\.+} $pName "_" pName
@@ -358,22 +475,19 @@ set exitOnDone 0
     set  sdkPath ${dir}/${name}.sdk
     file mkdir   ${sdkPath}
   
-    ## Post 2019.2 you can only generate XSA, the hdf replacement. Deal with
-    ## older versions
-    if { [catch {write_hw_platform -fixed -force -include_bit -file ${sdkPath}/${name}.xsa} errMess] } {
-  
-      puts "Fall back to HDF output, placing in ${sdkPath}"
-      file copy -force ${dir}/${name}.runs/impl_1/design_1_wrapper.sysdef ${sdkPath}/design_1_wrapper.hdf
-  
-    }
-    
+    write_hw_platform -fixed -force -include_bit -file ${sdkPath}/${name}.xsa
+      
     ## Give the user some help
+    puts "Target Modification 1 : $name"
     regsub "_exs_.+" $name "_exs" target
+    puts "Target Modification 2 : $target"
+    regsub "_exd_.+" $target "_exd" target
+    puts "Target Modification 3 : $target"
     puts " 
 ################################################################################
 ## Possible command sequence to launch Petalinux
 ################################################################################
-source /proj/petalinux/2020.1/petalinux-v2020.1_daily_latest/tool/petalinux-v2020.1-final/settings.csh
+source /proj/petalinux/2020.2/petalinux-v2020.2_daily_latest/tool/petalinux-v2020.2-final/settings.csh
 mkdir ../xsa/$target
 cp ${dir}/${name}.sdk/${name}.xsa ../xsa/${target}/system.xsa   
 make $target
@@ -385,11 +499,11 @@ make $target
   }
 
   ## Select the part/board we want, create a project anme and the project
-  proc configure_project { ipRepo mode board noDateInProjName } {
+  proc configure_project { ipRepo mode board designType noDateInProjName } {
     ## 
     set PART  [get_board $board PART]
     set BOARD [get_board $board BOARD]
-    set pName [create_projName $board $mode $noDateInProjName]
+    set pName [create_projName $board $mode $designType $noDateInProjName]
   
 	  create_project ${pName} ../output/${pName}/vivado -part $PART -force
     set_property board_part $BOARD [current_project]
@@ -405,15 +519,15 @@ make $target
   }
   
   ## Create project/Board Design/Example design and validate
-  proc createIp_runIpiBuild { ipRepo mode board noDateInProjName } {
+  proc createIp_runIpiBuild { ipRepo mode board designType noDateInProjName } {
 
     set ipName roe_framer_0
-    set pName [configure_project $ipRepo $mode $board $noDateInProjName]
+    set pName [configure_project $ipRepo $mode $board $designType $noDateInProjName]
 
-    create_bd_design "design_1"
+    create_bd_design "${ipName}_exdes_ipi"
   
     ## Call the design script, separate proc so it can be loaded seperately.
-    ::roe::data::design_build $ipRepo $ipName $mode
+    ::roe::data::design_build $ipRepo $ipName $mode $board $pName
   
     ## Validate and write BD tcl
     validate_bd_design
@@ -463,6 +577,7 @@ proc process_tclargs { argc argv } {
     set board            zcu102
     ## Use the repo in the build
     set ipRepo           ""
+    set designType       "exs"
     set doimpl           0
     set exitOnDone       0
     set startGui         0
@@ -490,9 +605,10 @@ proc process_tclargs { argc argv } {
     if {$argc > 2} {
       set argIn  [string tolower [lindex $argv 2]]
       puts "Using tclargs lowercased to $argIn"
-      if { [regexp {gui}    $argIn] == 1}     { set startGui   1   }
-      if { [regexp {impl}   $argIn] == 1}     { set doimpl     1   }
-      if { [regexp {exit}   $argIn] == 1}     { set exitOnDone 1   }
+      if { [regexp {exd}    $argIn] == 1}     { set designType "exd" }
+      if { [regexp {gui}    $argIn] == 1}     { set startGui   1     }
+      if { [regexp {impl}   $argIn] == 1}     { set doimpl     1     }
+      if { [regexp {exit}   $argIn] == 1}     { set exitOnDone 1     }
       if { [regexp {nodate} $argIn] == 1}     { set noDateInProjName 1   }
     }
   
@@ -503,14 +619,18 @@ proc process_tclargs { argc argv } {
     }
   
     puts "**********************************************************************"
-    puts "Launching\n::roe::bin::createIp_runIpiBuild $ipRepo $mode $board"
+    puts "Launching\n::roe::bin::createIp_runIpiBuild $ipRepo $mode $board $designType"
     puts "**********************************************************************"
-    set projectName [::roe::bin::createIp_runIpiBuild $ipRepo $mode $board $noDateInProjName]
+    set projectName [::roe::bin::createIp_runIpiBuild $ipRepo $mode $board $designType $noDateInProjName]
 
     puts "roePROJECTNAME: $projectName"
 
     ## Add board specific constraints in automation.
-    ::roe::data::design_modification $projectName $board $mode $ipRepo
+    ::roe::data::design_modification $projectName $board $mode $ipRepo $designType
+  
+    foreach prop [list_property [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]] { 
+      puts "[format %-40s $prop] [get_property $prop [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]]"
+    }
   
     ## Run the implementation
     if { $doimpl == 1 } {

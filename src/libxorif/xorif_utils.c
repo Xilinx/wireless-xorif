@@ -24,27 +24,39 @@
 
 #include <stdio.h>
 #include <dirent.h>
+#include <endian.h>
 #include "xorif_api.h"
+#include "xorif_system.h"
 #include "xorif_fh_func.h"
 #include "xorif_common.h"
 #include "xorif_utils.h"
 
-const reg_info_t *find_register(const reg_info_t *ptr, const char *name)
+/**
+ * @brief Comparator function for bsearch algorithm.
+ * @param[in] key Key to look for
+ * @param[in] data Data element that we're comparing against
+ * @returns
+ *      - <0 if key is before data
+ *      - =0 if key is equal to data
+ *      - >0 if key is after data
+ */
+static int reg_comparator(const void *key, const void *data)
 {
-    // Note, this basic implementation performs linear search
-    // TODO change to binary search for performance
-    while (ptr->name)
-    {
-        if (strcmp(name, ptr->name) == 0)
-        {
-            return ptr;
-        }
-        ++ptr;
-    }
-    return NULL;
+    return strcmp((const char *)key, ((const reg_info_t *)data)->name);
 }
 
-uint32_t read_reg_raw(struct metal_io_region *io, uint32_t addr, uint32_t mask, uint16_t shift)
+const reg_info_t *find_register(const reg_info_t *reg_map, int num, const char *name)
+{
+    void *result = bsearch((const void *)name,
+                           (const void *)reg_map,
+                           num,
+                           sizeof(reg_info_t),
+                           reg_comparator);
+
+    return (const reg_info_t *)result;
+}
+
+uint32_t read_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr)
 {
     ASSERT(io);
     if (!io)
@@ -54,11 +66,24 @@ uint32_t read_reg_raw(struct metal_io_region *io, uint32_t addr, uint32_t mask, 
         return 0;
     }
 
-    uint32_t value = (metal_io_read32(io, addr) & mask) >> shift;
+    // Libmetal read
+    uint32_t value = metal_io_read32(io, addr);
+
+#ifdef DEBUG
+    if (xorif_trace == 3)
+    {
+        // Special formatting option
+        printf("READ_REG:  %-35s (0x%04X)[%2d:%-2d] => 0x%X (%u)\n", name, addr, 0, 31, value, value);
+    }
+    else
+    {
+        TRACE("READ_REG: %s (0x%04X) => 0x%X (%u)\n", name, addr, value, value);
+    }
+#endif
     return value;
 }
 
-void write_reg_raw(struct metal_io_region *io, uint32_t addr, uint32_t mask, uint16_t shift, uint32_t value)
+void write_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t value)
 {
     ASSERT(io);
     if (!io)
@@ -68,50 +93,91 @@ void write_reg_raw(struct metal_io_region *io, uint32_t addr, uint32_t mask, uin
         return;
     }
 
+    // Libmetal write
+    metal_io_write32(io, addr, value);
+
+#ifdef DEBUG
+    if (xorif_trace == 3)
+    {
+        // Special formatting option
+        printf("WRITE_REG: %-35s (0x%04X)[%2d:%-2d] <= 0x%X (%u)\n", name, addr, 0, 31, value, value);
+    }
+    else
+    {
+        TRACE("WRITE_REG: %s (0x%04X) <= 0x%X (%u)\n", name, addr, value, value);
+    }
+#endif
+}
+
+uint32_t read_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)
+{
+    ASSERT(io);
+    if (!io)
+    {
+        // The device and/or IO region is not active, return
+        PERROR("Libmetal device and/or IO region is not initialized\n");
+        return 0;
+    }
+
+    // Libmetal read
+    uint32_t value = (metal_io_read32(io, addr) & mask) >> shift;
+
+#ifdef DEBUG
+    if (xorif_trace == 3)
+    {
+        // Special formatting option
+        printf("READ_REG:  %-35s (0x%04X)[%2d:%-2d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+    }
+    else
+    {
+        TRACE("READ_REG: %s (0x%04X)[%d:%d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+    }
+#endif
+
+    return value;
+}
+
+void write_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)
+{
+    ASSERT(io);
+    if (!io)
+    {
+        // The device and/or IO region is not active, return
+        PERROR("Libmetal device and/or IO region is not initialized\n");
+        return;
+    }
+
+    // Libmetal read / modify / write
     uint32_t x = metal_io_read32(io, addr);
     x &= ~mask;
     x |= (value << shift) & mask;
     metal_io_write32(io, addr, x);
+
+#ifdef DEBUG
+    if (xorif_trace == 3)
+    {
+        // Special formatting option
+        printf("WRITE_REG: %-35s (0x%04X)[%2d:%-2d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+    }
+    else
+    {
+        TRACE("WRITE_REG: %s (0x%04X)[%d:%d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+    }
+#endif
 }
 
-uint32_t read_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift)
-{
-    uint32_t value = read_reg_raw(io, addr, mask, shift);
-    TRACE("READ_REG: %s [0x%x] => 0x%x (%d)\n", name, addr, value, value);
-    return value;
-}
-
-uint32_t read_reg_offset(struct metal_io_region *io, const char *name, uint32_t addr, uint16_t offset, uint32_t mask, uint16_t shift)
-{
-    uint32_t value = read_reg_raw(io, addr + offset, mask, shift);
-    TRACE("READ_REG_OFFSET: %s [0x%x] => 0x%x (%d)\n", name, addr + offset, value, value);
-    return value;
-}
-
-void write_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint32_t value)
-{
-    write_reg_raw(io, addr, mask, shift, value);
-    TRACE("WRITE_REG: %s [0x%x] <= 0x%x (%d)\n", name, addr, value, value);
-}
-
-void write_reg_offset(struct metal_io_region *io, const char *name, uint32_t addr, uint16_t offset, uint32_t mask, uint16_t shift, uint32_t value)
-{
-    write_reg_raw(io, addr + offset, mask, shift, value);
-    TRACE("WRITE_REG_OFFSET: %s [0x%x] <= 0x%x (%d)\n", name, addr + offset, value, value);
-}
-
-int get_device_name(const char *path, const char *short_name, char *full_name, int max_chars)
+const char *get_device_name(const char *short_name)
 {
     DIR *folder;
     struct dirent *entry;
-    int result = 0;
+    static char buff[256];
 
     // Open directory
-    folder = opendir(path);
+    folder = opendir("/sys/bus/platform/devices/");
     if (folder == NULL)
     {
-        PERROR("Unable to read directory %s\n", path);
-        return 0;
+        PERROR("Unable to open '%s'\n", "/sys/bus/platform/devices/");
+        return NULL;
     }
 
     // Iterate through files in directory
@@ -122,16 +188,50 @@ int get_device_name(const char *path, const char *short_name, char *full_name, i
         if (s != NULL && strlen(s) == strlen(short_name))
         {
             // Match found, copy the full device name
-            strncpy(full_name, entry->d_name, max_chars);
-            result = 1;
-            break;
+            strncpy(buff, entry->d_name, 255);
+            buff[255] = '\0';
+
+            // Close the directory and return result
+            closedir(folder);
+            return &buff[0];
         }
     }
 
-    // Close the directory
+    // Close the directory and return NULL
     closedir(folder);
+    return NULL;
+}
 
-    return result;
+int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value)
+{
+    FILE *fp;
+    char buff[256];
+
+    // Create filepath for property
+    sprintf(buff, "/sys/bus/platform/devices/%s/of_node/%s", dev_name, prop_name);
+
+    // Try to open file
+    fp = fopen(buff, "rb");
+    if (fp == NULL)
+    {
+        PERROR("Unable to open '%s'\n", buff);
+        return 0;
+    }
+
+    uint32_t temp;
+    if (fread(&temp, sizeof(uint32_t), 1, fp) == 1)
+    {
+        // Value read, convert endianness
+        *value = be32toh(temp);
+
+        // Close the file and return success
+        fclose(fp);
+        return 1;
+    }
+
+    // Close the file and return failure
+    fclose(fp);
+    return 0;
 }
 
 int add_device(struct xorif_device_info *device, const char *bus_name, const char *dev_name)
@@ -144,7 +244,7 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
     device->status = 0;
 
     // Open a device
-    TRACE("Opening device '%s'\n", dev_name);
+    INFO("Opening device '%s'\n", dev_name);
     if (metal_device_open(bus_name, dev_name, &(device->dev)))
     {
         PERROR("Failed to open device '%s'\n", dev_name);
@@ -152,7 +252,7 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
     }
 
     // Map the device to IO region
-    TRACE("Mapping IO region for device '%s'\n", dev_name);
+    INFO("Mapping IO region for device '%s'\n", dev_name);
     device->io = metal_device_io_region(device->dev, 0);
     if (device->io == NULL)
     {
@@ -167,19 +267,80 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
     return XORIF_SUCCESS;
 }
 
-int check_numerology(uint16_t numerology)
+int check_numerology(uint16_t numerology, uint16_t extended_cp)
 {
-    return (caps.numerologies & (1 << numerology));
+    if (extended_cp && (numerology != 2))
+    {
+        // Extended CP requested for numerology other than 2
+        return 0;
+    }
+    else if (extended_cp && !caps.extended_cp)
+    {
+        // Extended CP requested when it's not supported
+        return 0;
+    }
+    else
+    {
+        // Check requested numerology against support mask
+        return ((1 << numerology) & caps.numerologies);
+    }
 }
 
-int check_iq_comp_mode(enum xorif_iq_comp comp_meth)
+int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method)
 {
-    return (caps.iq_comp_methods & (1 << comp_meth));
+    if (bit_width > 16)
+    {
+        // Unsupported compression width
+        return 0;
+    }
+    else
+    {
+        // Check requested compression mode against support mask
+        return ((1 << comp_method) & caps.iq_comp_methods);
+    }
 }
 
-int check_bw_comp_mode(enum xorif_bw_comp comp_meth)
+int check_bw_comp_mode(uint16_t bit_width, enum xorif_bw_comp comp_method)
 {
-    return (caps.bw_comp_methods & (1 << comp_meth));
+    if (bit_width != 12)
+    {
+        // Unsupported compression width
+        return 0;
+    }
+    else
+    {
+        // Check requested compression mode against support mask
+        return ((1 << comp_method) & caps.bw_comp_methods);
+    }
+}
+
+const char *binary_string(uint32_t value, uint16_t length)
+{
+    static char s[33];
+
+    for (int i = 0; i < length; ++i)
+    {
+        s[length - 1 - i] = (value & 1) ? '1' : '0';
+        value >>= 1;
+    }
+    s[length] = '\0';
+
+    return s;
+}
+
+const char *binary_mask_string(uint32_t value, uint32_t mask, uint16_t length)
+{
+    static char s[33];
+
+    for (int i = 0; i < length; ++i)
+    {
+        s[length - 1 - i] = (mask & 1) ? ((value & 1) ? '1' : '0') : '-';
+        value >>= 1;
+        mask >>= 1;
+    }
+    s[length] = '\0';
+
+    return s;
 }
 
 /** @} */

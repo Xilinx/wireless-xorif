@@ -3,15 +3,15 @@
 * C Header bank BASE definitions
 *------------------------------------------------------------------------------
 */
-#define ORAN_RADIO_IF_V1_0_CFG_BASE_ADDR 0x0 /* 0 */
-#define ORAN_RADIO_IF_V1_0_FRAM_BASE_ADDR 0x2000 /* 8192 */
-#define ORAN_RADIO_IF_V1_0_DEFM_BASE_ADDR 0x6000 /* 24576 */
-#define ORAN_RADIO_IF_V1_0_ETH_BASE_ADDR 0xa000 /* 40960 */
-#define ORAN_RADIO_IF_V1_0_STATS_BASE_ADDR 0xc000 /* 49152 */
-#define ORAN_RADIO_IF_V1_0_ORAN_BASE_ADDR 0xe000 /* 57344 */
+#define ORAN_RADIO_IF_V1_1_CFG_BASE_ADDR 0x0 /* 0 */
+#define ORAN_RADIO_IF_V1_1_FRAM_BASE_ADDR 0x2000 /* 8192 */
+#define ORAN_RADIO_IF_V1_1_DEFM_BASE_ADDR 0x6000 /* 24576 */
+#define ORAN_RADIO_IF_V1_1_ETH_BASE_ADDR 0xa000 /* 40960 */
+#define ORAN_RADIO_IF_V1_1_STATS_BASE_ADDR 0xc000 /* 49152 */
+#define ORAN_RADIO_IF_V1_1_ORAN_BASE_ADDR 0xe000 /* 57344 */
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_cfg 
+* C Header bank register definitions for bank oran_radio_if_v1_1_cfg 
 * with prefix cfg_ @ address 0x0
 *------------------------------------------------------------------------------
 */
@@ -379,9 +379,44 @@
 #define CFG_CONFIG_XRAN_PRACH_C_PORTS_WIDTH 0x10 /* 16 */
 #define CFG_CONFIG_XRAN_PRACH_C_PORTS_DEFAULT 0x0 /* 0 */
 
+/* Type = roSig  */
+#define CFG_CONFIG_LIMIT_RU_I_W_ADDR 0x100 /* 256 */
+#define CFG_CONFIG_LIMIT_RU_I_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_LIMIT_RU_I_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_LIMIT_RU_I_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_LIMIT_RU_I_W_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_CONFIG_LIMIT_RU_O_W_ADDR 0x104 /* 260 */
+#define CFG_CONFIG_LIMIT_RU_O_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_LIMIT_RU_O_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_LIMIT_RU_O_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_LIMIT_RU_O_W_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_CONFIG_LIMIT_CC_W_ADDR 0x108 /* 264 */
+#define CFG_CONFIG_LIMIT_CC_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_LIMIT_CC_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_LIMIT_CC_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_LIMIT_CC_W_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_CONFIG_LIMIT_BS_W_ADDR 0x10c /* 268 */
+#define CFG_CONFIG_LIMIT_BS_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_LIMIT_BS_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_LIMIT_BS_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_LIMIT_BS_W_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_CONFIG_LIMIT_DU_W_ADDR 0x110 /* 272 */
+#define CFG_CONFIG_LIMIT_DU_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_LIMIT_DU_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_LIMIT_DU_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_LIMIT_DU_W_DEFAULT 0x0 /* 0 */
+
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_fram 
+* C Header bank register definitions for bank oran_radio_if_v1_1_fram 
 * with prefix fram_ @ address 0x2000
 *------------------------------------------------------------------------------
 */
@@ -450,7 +485,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_defm 
+* C Header bank register definitions for bank oran_radio_if_v1_1_defm 
 * with prefix defm_ @ address 0x6000
 *------------------------------------------------------------------------------
 */
@@ -475,26 +510,222 @@
 #define DEFM_ERR_PACKET_FILTER_WIDTH 0x2 /* 2 */
 #define DEFM_ERR_PACKET_FILTER_DEFAULT 0x0 /* 0 */
 
-/* Type = roCst  */
-#define DEFM_XRAN_RU_PORT_ID_FIELD_WIDTH_ADDR 0x6080 /* 24704 */
-#define DEFM_XRAN_RU_PORT_ID_FIELD_WIDTH_MASK 0xf /* 15 */
-#define DEFM_XRAN_RU_PORT_ID_FIELD_WIDTH_OFFSET 0x0 /* 0 */
-#define DEFM_XRAN_RU_PORT_ID_FIELD_WIDTH_WIDTH 0x4 /* 4 */
-#define DEFM_XRAN_RU_PORT_ID_FIELD_WIDTH_DEFAULT 0x4 /* 4 */
+/* Type = rw  */
+#define DEFM_USE_ONE_SYMBOL_STROBE_ADDR 0x6008 /* 24584 */
+#define DEFM_USE_ONE_SYMBOL_STROBE_MASK 0x1 /* 1 */
+#define DEFM_USE_ONE_SYMBOL_STROBE_OFFSET 0x0 /* 0 */
+#define DEFM_USE_ONE_SYMBOL_STROBE_WIDTH 0x1 /* 1 */
+#define DEFM_USE_ONE_SYMBOL_STROBE_DEFAULT 0x0 /* 0 */
 
-/* Type = roCst  */
-#define DEFM_XRAN_CC_ID_FIELD_WIDTH_ADDR 0x6080 /* 24704 */
-#define DEFM_XRAN_CC_ID_FIELD_WIDTH_MASK 0xf0 /* 240 */
-#define DEFM_XRAN_CC_ID_FIELD_WIDTH_OFFSET 0x4 /* 4 */
-#define DEFM_XRAN_CC_ID_FIELD_WIDTH_WIDTH 0x4 /* 4 */
-#define DEFM_XRAN_CC_ID_FIELD_WIDTH_DEFAULT 0x4 /* 4 */
+/* Type = wPlsH  */
+#define DEFM_SNAP_SHOT_ADDR 0x6010 /* 24592 */
+#define DEFM_SNAP_SHOT_MASK 0x1 /* 1 */
+#define DEFM_SNAP_SHOT_OFFSET 0x0 /* 0 */
+#define DEFM_SNAP_SHOT_WIDTH 0x1 /* 1 */
+#define DEFM_SNAP_SHOT_DEFAULT 0x0 /* 0 */
 
-/* Type = roCst  */
-#define DEFM_XRAN_BANDSECTOR_FIELD_WIDTH_ADDR 0x6080 /* 24704 */
-#define DEFM_XRAN_BANDSECTOR_FIELD_WIDTH_MASK 0xf00 /* 3840 */
-#define DEFM_XRAN_BANDSECTOR_FIELD_WIDTH_OFFSET 0x8 /* 8 */
-#define DEFM_XRAN_BANDSECTOR_FIELD_WIDTH_WIDTH 0x4 /* 4 */
-#define DEFM_XRAN_BANDSECTOR_FIELD_WIDTH_DEFAULT 0x4 /* 4 */
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E0_E_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E0_E_MASK 0x10 /* 16 */
+#define DEFM_CTRL_SS_RESET_E0_E_OFFSET 0x4 /* 4 */
+#define DEFM_CTRL_SS_RESET_E0_E_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E0_E_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E0_RWIN_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E0_RWIN_MASK 0x20 /* 32 */
+#define DEFM_CTRL_SS_RESET_E0_RWIN_OFFSET 0x5 /* 5 */
+#define DEFM_CTRL_SS_RESET_E0_RWIN_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E0_RWIN_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E0_RCOR_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E0_RCOR_MASK 0x40 /* 64 */
+#define DEFM_CTRL_SS_RESET_E0_RCOR_OFFSET 0x6 /* 6 */
+#define DEFM_CTRL_SS_RESET_E0_RCOR_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E0_RCOR_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E0_T_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E0_T_MASK 0x80 /* 128 */
+#define DEFM_CTRL_SS_RESET_E0_T_OFFSET 0x7 /* 7 */
+#define DEFM_CTRL_SS_RESET_E0_T_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E0_T_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E1_E_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E1_E_MASK 0x100 /* 256 */
+#define DEFM_CTRL_SS_RESET_E1_E_OFFSET 0x8 /* 8 */
+#define DEFM_CTRL_SS_RESET_E1_E_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E1_E_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E1_RWIN_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E1_RWIN_MASK 0x200 /* 512 */
+#define DEFM_CTRL_SS_RESET_E1_RWIN_OFFSET 0x9 /* 9 */
+#define DEFM_CTRL_SS_RESET_E1_RWIN_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E1_RWIN_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E1_RCOR_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E1_RCOR_MASK 0x400 /* 1024 */
+#define DEFM_CTRL_SS_RESET_E1_RCOR_OFFSET 0xa /* 10 */
+#define DEFM_CTRL_SS_RESET_E1_RCOR_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E1_RCOR_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E1_T_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E1_T_MASK 0x800 /* 2048 */
+#define DEFM_CTRL_SS_RESET_E1_T_OFFSET 0xb /* 11 */
+#define DEFM_CTRL_SS_RESET_E1_T_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E1_T_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E2_E_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E2_E_MASK 0x1000 /* 4096 */
+#define DEFM_CTRL_SS_RESET_E2_E_OFFSET 0xc /* 12 */
+#define DEFM_CTRL_SS_RESET_E2_E_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E2_E_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E2_RWIN_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E2_RWIN_MASK 0x2000 /* 8192 */
+#define DEFM_CTRL_SS_RESET_E2_RWIN_OFFSET 0xd /* 13 */
+#define DEFM_CTRL_SS_RESET_E2_RWIN_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E2_RWIN_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E2_RCOR_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E2_RCOR_MASK 0x4000 /* 16384 */
+#define DEFM_CTRL_SS_RESET_E2_RCOR_OFFSET 0xe /* 14 */
+#define DEFM_CTRL_SS_RESET_E2_RCOR_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E2_RCOR_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E2_T_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E2_T_MASK 0x8000 /* 32768 */
+#define DEFM_CTRL_SS_RESET_E2_T_OFFSET 0xf /* 15 */
+#define DEFM_CTRL_SS_RESET_E2_T_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E2_T_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E3_E_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E3_E_MASK 0x10000 /* 65536 */
+#define DEFM_CTRL_SS_RESET_E3_E_OFFSET 0x10 /* 16 */
+#define DEFM_CTRL_SS_RESET_E3_E_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E3_E_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E3_RWIN_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E3_RWIN_MASK 0x20000 /* 131072 */
+#define DEFM_CTRL_SS_RESET_E3_RWIN_OFFSET 0x11 /* 17 */
+#define DEFM_CTRL_SS_RESET_E3_RWIN_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E3_RWIN_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E3_RCOR_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E3_RCOR_MASK 0x40000 /* 262144 */
+#define DEFM_CTRL_SS_RESET_E3_RCOR_OFFSET 0x12 /* 18 */
+#define DEFM_CTRL_SS_RESET_E3_RCOR_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E3_RCOR_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CTRL_SS_RESET_E3_T_ADDR 0x6010 /* 24592 */
+#define DEFM_CTRL_SS_RESET_E3_T_MASK 0x80000 /* 524288 */
+#define DEFM_CTRL_SS_RESET_E3_T_OFFSET 0x13 /* 19 */
+#define DEFM_CTRL_SS_RESET_E3_T_WIDTH 0x1 /* 1 */
+#define DEFM_CTRL_SS_RESET_E3_T_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_CC_SHIFT_ADDR 0x6020 /* 24608 */
+#define DEFM_CID_CC_SHIFT_MASK 0xf /* 15 */
+#define DEFM_CID_CC_SHIFT_OFFSET 0x0 /* 0 */
+#define DEFM_CID_CC_SHIFT_WIDTH 0x4 /* 4 */
+#define DEFM_CID_CC_SHIFT_DEFAULT 0x8 /* 8 */
+
+/* Type = rw  */
+#define DEFM_CID_CC_MASK_ADDR 0x6024 /* 24612 */
+#define DEFM_CID_CC_MASK_MASK 0x3f /* 63 */
+#define DEFM_CID_CC_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_CC_MASK_WIDTH 0x6 /* 6 */
+#define DEFM_CID_CC_MASK_DEFAULT 0x7 /* 7 */
+
+/* Type = rw  */
+#define DEFM_CID_BS_SHIFT_ADDR 0x6028 /* 24616 */
+#define DEFM_CID_BS_SHIFT_MASK 0xf /* 15 */
+#define DEFM_CID_BS_SHIFT_OFFSET 0x0 /* 0 */
+#define DEFM_CID_BS_SHIFT_WIDTH 0x4 /* 4 */
+#define DEFM_CID_BS_SHIFT_DEFAULT 0xb /* 11 */
+
+/* Type = rw  */
+#define DEFM_CID_BS_MASK_ADDR 0x602c /* 24620 */
+#define DEFM_CID_BS_MASK_MASK 0x3f /* 63 */
+#define DEFM_CID_BS_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_BS_MASK_WIDTH 0x6 /* 6 */
+#define DEFM_CID_BS_MASK_DEFAULT 0x1 /* 1 */
+
+/* Type = rw  */
+#define DEFM_CID_DU_SHIFT_ADDR 0x6030 /* 24624 */
+#define DEFM_CID_DU_SHIFT_MASK 0xf /* 15 */
+#define DEFM_CID_DU_SHIFT_OFFSET 0x0 /* 0 */
+#define DEFM_CID_DU_SHIFT_WIDTH 0x4 /* 4 */
+#define DEFM_CID_DU_SHIFT_DEFAULT 0xc /* 12 */
+
+/* Type = rw  */
+#define DEFM_CID_DU_MASK_ADDR 0x6034 /* 24628 */
+#define DEFM_CID_DU_MASK_MASK 0x3f /* 63 */
+#define DEFM_CID_DU_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_DU_MASK_WIDTH 0x6 /* 6 */
+#define DEFM_CID_DU_MASK_DEFAULT 0xf /* 15 */
+
+/* Type = rw  */
+#define DEFM_CID_SS_MASK_ADDR 0x6038 /* 24632 */
+#define DEFM_CID_SS_MASK_MASK 0xff /* 255 */
+#define DEFM_CID_SS_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_SS_MASK_WIDTH 0x8 /* 8 */
+#define DEFM_CID_SS_MASK_DEFAULT 0x1f /* 31 */
+
+/* Type = rw  */
+#define DEFM_CID_U_MASK_ADDR 0x603c /* 24636 */
+#define DEFM_CID_U_MASK_MASK 0xff /* 255 */
+#define DEFM_CID_U_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_U_MASK_WIDTH 0x8 /* 8 */
+#define DEFM_CID_U_MASK_DEFAULT 0xc0 /* 192 */
+
+/* Type = rw  */
+#define DEFM_CID_U_VALUE_ADDR 0x6040 /* 24640 */
+#define DEFM_CID_U_VALUE_MASK 0xff /* 255 */
+#define DEFM_CID_U_VALUE_OFFSET 0x0 /* 0 */
+#define DEFM_CID_U_VALUE_WIDTH 0x8 /* 8 */
+#define DEFM_CID_U_VALUE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_PRACH_MASK_ADDR 0x6044 /* 24644 */
+#define DEFM_CID_PRACH_MASK_MASK 0xff /* 255 */
+#define DEFM_CID_PRACH_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_PRACH_MASK_WIDTH 0x8 /* 8 */
+#define DEFM_CID_PRACH_MASK_DEFAULT 0xc0 /* 192 */
+
+/* Type = rw  */
+#define DEFM_CID_PRACH_VALUE_ADDR 0x6048 /* 24648 */
+#define DEFM_CID_PRACH_VALUE_MASK 0xff /* 255 */
+#define DEFM_CID_PRACH_VALUE_OFFSET 0x0 /* 0 */
+#define DEFM_CID_PRACH_VALUE_WIDTH 0x8 /* 8 */
+#define DEFM_CID_PRACH_VALUE_DEFAULT 0x80 /* 128 */
+
+/* Type = rw  */
+#define DEFM_CID_SSB_MASK_ADDR 0x604c /* 24652 */
+#define DEFM_CID_SSB_MASK_MASK 0xff /* 255 */
+#define DEFM_CID_SSB_MASK_OFFSET 0x0 /* 0 */
+#define DEFM_CID_SSB_MASK_WIDTH 0x8 /* 8 */
+#define DEFM_CID_SSB_MASK_DEFAULT 0xc0 /* 192 */
+
+/* Type = rw  */
+#define DEFM_CID_SSB_VALUE_ADDR 0x6050 /* 24656 */
+#define DEFM_CID_SSB_VALUE_MASK 0xff /* 255 */
+#define DEFM_CID_SSB_VALUE_OFFSET 0x0 /* 0 */
+#define DEFM_CID_SSB_VALUE_WIDTH 0x8 /* 8 */
+#define DEFM_CID_SSB_VALUE_DEFAULT 0x40 /* 64 */
 
 /* Type = rwpdef  repeats using C_ETH_W @ multiples of 0x100 */
 #define DEFM_USER_DATA_FILTER_W0_31_0_ADDR 0x6100 /* 24832 */
@@ -638,7 +869,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_eth 
+* C Header bank register definitions for bank oran_radio_if_v1_1_eth 
 * with prefix eth_ @ address 0xa000
 *------------------------------------------------------------------------------
 */
@@ -875,104 +1106,251 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_stats 
+* C Header bank register definitions for bank oran_radio_if_v1_1_stats 
 * with prefix stats_ @ address 0xc000
 *------------------------------------------------------------------------------
 */
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_ADDR 0xc000 /* 49152 */
-#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L_ADDR 0xc000 /* 49152 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_ADDR 0xc004 /* 49156 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H_ADDR 0xc004 /* 49156 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_ADDR 0xc008 /* 49160 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L_ADDR 0xc008 /* 49160 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT_ADDR 0xc00c /* 49164 */
-#define STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_DATA_RX_PACKETS_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H_ADDR 0xc00c /* 49164 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_DATA_RX_GOOD_PKT_CNT_ADDR 0xc010 /* 49168 */
-#define STATS_ETH_STATS_USER_DATA_RX_GOOD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_DATA_RX_GOOD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_DATA_RX_GOOD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_DATA_RX_GOOD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L_ADDR 0xc010 /* 49168 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_PKT_CNT_ADDR 0xc014 /* 49172 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H_ADDR 0xc014 /* 49172 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_FCS_CNT_ADDR 0xc018 /* 49176 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_FCS_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_FCS_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_FCS_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_DATA_RX_BAD_FCS_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BIT_RATE_ADDR 0xc018 /* 49176 */
+#define STATS_ETH_STATS_TOTAL_RX_BIT_RATE_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_TOTAL_RX_BIT_RATE_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_TOTAL_RX_BIT_RATE_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_TOTAL_RX_BIT_RATE_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PACKETS_CNT_ADDR 0xc01c /* 49180 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PACKETS_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PACKETS_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PACKETS_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PACKETS_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ETH_STATS_ORAN_RX_BIT_RATE_ADDR 0xc01c /* 49180 */
+#define STATS_ETH_STATS_ORAN_RX_BIT_RATE_MASK 0xffffffff /* 4294967295 */
+#define STATS_ETH_STATS_ORAN_RX_BIT_RATE_OFFSET 0x0 /* 0 */
+#define STATS_ETH_STATS_ORAN_RX_BIT_RATE_WIDTH 0x20 /* 32 */
+#define STATS_ETH_STATS_ORAN_RX_BIT_RATE_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_CTRL_RX_GOOD_PKT_CNT_ADDR 0xc020 /* 49184 */
-#define STATS_ETH_STATS_USER_CTRL_RX_GOOD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_CTRL_RX_GOOD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_CTRL_RX_GOOD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_CTRL_RX_GOOD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_L_ADDR 0xc020 /* 49184 */
+#define STATS_ORAN_RX_TOTAL_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_TOTAL_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_TOTAL_L_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_PKT_CNT_ADDR 0xc024 /* 49188 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_PKT_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_PKT_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_PKT_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_PKT_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_H_ADDR 0xc024 /* 49188 */
+#define STATS_ORAN_RX_TOTAL_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_TOTAL_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_TOTAL_H_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_FCS_CNT_ADDR 0xc028 /* 49192 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_FCS_CNT_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_FCS_CNT_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_FCS_CNT_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_CTRL_RX_BAD_FCS_CNT_DEFAULT 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_L_ADDR 0xc028 /* 49192 */
+#define STATS_ORAN_RX_ON_TIME_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ON_TIME_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ON_TIME_L_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE_ADDR 0xc02c /* 49196 */
-#define STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_DATA_RX_PKTS_RATE_DEFAULT 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_H_ADDR 0xc02c /* 49196 */
+#define STATS_ORAN_RX_ON_TIME_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ON_TIME_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ON_TIME_H_DEFAULT 0x0 /* 0 */
 
 /* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PKTS_RATE_ADDR 0xc030 /* 49200 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PKTS_RATE_MASK 0xffffffff /* 4294967295 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PKTS_RATE_OFFSET 0x0 /* 0 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PKTS_RATE_WIDTH 0x20 /* 32 */
-#define STATS_ETH_STATS_USER_CTRL_RX_PKTS_RATE_DEFAULT 0x0 /* 0 */
+#define STATS_ORAN_RX_EARLY_L_ADDR 0xc030 /* 49200 */
+#define STATS_ORAN_RX_EARLY_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_EARLY_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_EARLY_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_EARLY_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_EARLY_H_ADDR 0xc034 /* 49204 */
+#define STATS_ORAN_RX_EARLY_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_EARLY_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_EARLY_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_EARLY_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_LATE_L_ADDR 0xc038 /* 49208 */
+#define STATS_ORAN_RX_LATE_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_LATE_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_LATE_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_LATE_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_LATE_H_ADDR 0xc03c /* 49212 */
+#define STATS_ORAN_RX_LATE_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_LATE_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_LATE_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_LATE_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_TOTAL_C_L_ADDR 0xc040 /* 49216 */
+#define STATS_ORAN_RX_TOTAL_C_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_TOTAL_C_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_C_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_TOTAL_C_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_TOTAL_C_H_ADDR 0xc044 /* 49220 */
+#define STATS_ORAN_RX_TOTAL_C_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_TOTAL_C_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_TOTAL_C_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_TOTAL_C_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_ON_TIME_C_L_ADDR 0xc048 /* 49224 */
+#define STATS_ORAN_RX_ON_TIME_C_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ON_TIME_C_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_C_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ON_TIME_C_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_ON_TIME_C_H_ADDR 0xc04c /* 49228 */
+#define STATS_ORAN_RX_ON_TIME_C_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ON_TIME_C_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ON_TIME_C_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ON_TIME_C_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_EARLY_C_L_ADDR 0xc050 /* 49232 */
+#define STATS_ORAN_RX_EARLY_C_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_EARLY_C_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_EARLY_C_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_EARLY_C_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_EARLY_C_H_ADDR 0xc054 /* 49236 */
+#define STATS_ORAN_RX_EARLY_C_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_EARLY_C_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_EARLY_C_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_EARLY_C_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_LATE_C_L_ADDR 0xc058 /* 49240 */
+#define STATS_ORAN_RX_LATE_C_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_LATE_C_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_LATE_C_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_LATE_C_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_LATE_C_H_ADDR 0xc05c /* 49244 */
+#define STATS_ORAN_RX_LATE_C_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_LATE_C_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_LATE_C_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_LATE_C_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_CORRUPT_L_ADDR 0xc060 /* 49248 */
+#define STATS_ORAN_RX_CORRUPT_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_CORRUPT_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_CORRUPT_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_CORRUPT_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_CORRUPT_H_ADDR 0xc064 /* 49252 */
+#define STATS_ORAN_RX_CORRUPT_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_CORRUPT_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_CORRUPT_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_CORRUPT_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_ERROR_DROP_L_ADDR 0xc068 /* 49256 */
+#define STATS_ORAN_RX_ERROR_DROP_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ERROR_DROP_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ERROR_DROP_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ERROR_DROP_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_RX_ERROR_DROP_H_ADDR 0xc06c /* 49260 */
+#define STATS_ORAN_RX_ERROR_DROP_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_RX_ERROR_DROP_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_RX_ERROR_DROP_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_RX_ERROR_DROP_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_TX_TOTAL_L_ADDR 0xc070 /* 49264 */
+#define STATS_ORAN_TX_TOTAL_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_TX_TOTAL_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_TX_TOTAL_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_TX_TOTAL_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_TX_TOTAL_H_ADDR 0xc074 /* 49268 */
+#define STATS_ORAN_TX_TOTAL_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_TX_TOTAL_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_TX_TOTAL_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_TX_TOTAL_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_TX_TOTAL_C_L_ADDR 0xc078 /* 49272 */
+#define STATS_ORAN_TX_TOTAL_C_L_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_TX_TOTAL_C_L_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_TX_TOTAL_C_L_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_TX_TOTAL_C_L_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_ORAN_TX_TOTAL_C_H_ADDR 0xc07c /* 49276 */
+#define STATS_ORAN_TX_TOTAL_C_H_MASK 0xffffffff /* 4294967295 */
+#define STATS_ORAN_TX_TOTAL_C_H_OFFSET 0x0 /* 0 */
+#define STATS_ORAN_TX_TOTAL_C_H_WIDTH 0x20 /* 32 */
+#define STATS_ORAN_TX_TOTAL_C_H_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_OFFSET_EARLIEST_U_PKT_ADDR 0xc080 /* 49280 */
+#define STATS_OFFSET_EARLIEST_U_PKT_MASK 0xfff /* 4095 */
+#define STATS_OFFSET_EARLIEST_U_PKT_OFFSET 0x0 /* 0 */
+#define STATS_OFFSET_EARLIEST_U_PKT_WIDTH 0xc /* 12 */
+#define STATS_OFFSET_EARLIEST_U_PKT_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define STATS_OFFSET_EARLIEST_C_PKT_ADDR 0xc084 /* 49284 */
+#define STATS_OFFSET_EARLIEST_C_PKT_MASK 0xfff /* 4095 */
+#define STATS_OFFSET_EARLIEST_C_PKT_OFFSET 0x0 /* 0 */
+#define STATS_OFFSET_EARLIEST_C_PKT_WIDTH 0xc /* 12 */
+#define STATS_OFFSET_EARLIEST_C_PKT_DEFAULT 0x0 /* 0 */
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v1_0_oran 
+* C Header bank register definitions for bank oran_radio_if_v1_1_oran 
 * with prefix oran_ @ address 0xe000
 *------------------------------------------------------------------------------
 */
@@ -1214,6 +1592,13 @@
 #define ORAN_STRIP_FCS_WIDTH 0x1 /* 1 */
 #define ORAN_STRIP_FCS_DEFAULT 0x0 /* 0 */
 
+/* Type = wPlsH  */
+#define ORAN_SETUP_SY_COUNTER_ADDR 0xe604 /* 58884 */
+#define ORAN_SETUP_SY_COUNTER_MASK 0x2 /* 2 */
+#define ORAN_SETUP_SY_COUNTER_OFFSET 0x1 /* 1 */
+#define ORAN_SETUP_SY_COUNTER_WIDTH 0x1 /* 1 */
+#define ORAN_SETUP_SY_COUNTER_DEFAULT 0x0 /* 0 */
+
 /* Type = rw  */
 #define ORAN_SETUP_SF_ADDR 0xe608 /* 58888 */
 #define ORAN_SETUP_SF_MASK 0xf /* 15 */
@@ -1234,5 +1619,117 @@
 #define ORAN_SETUP_SY_OFFSET 0x0 /* 0 */
 #define ORAN_SETUP_SY_WIDTH 0x4 /* 4 */
 #define ORAN_SETUP_SY_DEFAULT 0x7 /* 7 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_SYMPERSLOT_ADDR 0xe900 /* 59648 */
+#define ORAN_CC_SSB_SYMPERSLOT_MASK 0x1000000 /* 16777216 */
+#define ORAN_CC_SSB_SYMPERSLOT_OFFSET 0x18 /* 24 */
+#define ORAN_CC_SSB_SYMPERSLOT_WIDTH 0x1 /* 1 */
+#define ORAN_CC_SSB_SYMPERSLOT_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_NUMEROLOGY_ADDR 0xe900 /* 59648 */
+#define ORAN_CC_SSB_NUMEROLOGY_MASK 0x70000 /* 458752 */
+#define ORAN_CC_SSB_NUMEROLOGY_OFFSET 0x10 /* 16 */
+#define ORAN_CC_SSB_NUMEROLOGY_WIDTH 0x3 /* 3 */
+#define ORAN_CC_SSB_NUMEROLOGY_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_NUMRBS_ADDR 0xe900 /* 59648 */
+#define ORAN_CC_SSB_NUMRBS_MASK 0x1ff /* 511 */
+#define ORAN_CC_SSB_NUMRBS_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_NUMRBS_WIDTH 0x9 /* 9 */
+#define ORAN_CC_SSB_NUMRBS_DEFAULT 0x10 /* 16 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_CTRL_OFFSETS_ADDR 0xe904 /* 59652 */
+#define ORAN_CC_SSB_CTRL_OFFSETS_MASK 0xffff /* 65535 */
+#define ORAN_CC_SSB_CTRL_OFFSETS_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_CTRL_OFFSETS_WIDTH 0x10 /* 16 */
+#define ORAN_CC_SSB_CTRL_OFFSETS_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_DATA_SYM_START_INDEX_ADDR 0xe914 /* 59668 */
+#define ORAN_CC_SSB_DATA_SYM_START_INDEX_MASK 0x3f /* 63 */
+#define ORAN_CC_SSB_DATA_SYM_START_INDEX_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_DATA_SYM_START_INDEX_WIDTH 0x6 /* 6 */
+#define ORAN_CC_SSB_DATA_SYM_START_INDEX_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_NUM_DATA_SYM_PER_CC_ADDR 0xe914 /* 59668 */
+#define ORAN_CC_SSB_NUM_DATA_SYM_PER_CC_MASK 0x3f00 /* 16128 */
+#define ORAN_CC_SSB_NUM_DATA_SYM_PER_CC_OFFSET 0x8 /* 8 */
+#define ORAN_CC_SSB_NUM_DATA_SYM_PER_CC_WIDTH 0x6 /* 6 */
+#define ORAN_CC_SSB_NUM_DATA_SYM_PER_CC_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_NUM_SYM_PER_CC_ADDR 0xe914 /* 59668 */
+#define ORAN_CC_SSB_NUM_SYM_PER_CC_MASK 0x3f0000 /* 4128768 */
+#define ORAN_CC_SSB_NUM_SYM_PER_CC_OFFSET 0x10 /* 16 */
+#define ORAN_CC_SSB_NUM_SYM_PER_CC_WIDTH 0x6 /* 6 */
+#define ORAN_CC_SSB_NUM_SYM_PER_CC_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_UD_IQ_WIDTH_ADDR 0xe91c /* 59676 */
+#define ORAN_CC_SSB_UD_IQ_WIDTH_MASK 0xf /* 15 */
+#define ORAN_CC_SSB_UD_IQ_WIDTH_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_UD_IQ_WIDTH_WIDTH 0x4 /* 4 */
+#define ORAN_CC_SSB_UD_IQ_WIDTH_DEFAULT 0x9 /* 9 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_UD_COMP_METH_ADDR 0xe91c /* 59676 */
+#define ORAN_CC_SSB_UD_COMP_METH_MASK 0xf0 /* 240 */
+#define ORAN_CC_SSB_UD_COMP_METH_OFFSET 0x4 /* 4 */
+#define ORAN_CC_SSB_UD_COMP_METH_WIDTH 0x4 /* 4 */
+#define ORAN_CC_SSB_UD_COMP_METH_DEFAULT 0x1 /* 1 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_MPLANE_UDCOMP_PARAM_ADDR 0xe91c /* 59676 */
+#define ORAN_CC_SSB_MPLANE_UDCOMP_PARAM_MASK 0x100 /* 256 */
+#define ORAN_CC_SSB_MPLANE_UDCOMP_PARAM_OFFSET 0x8 /* 8 */
+#define ORAN_CC_SSB_MPLANE_UDCOMP_PARAM_WIDTH 0x1 /* 1 */
+#define ORAN_CC_SSB_MPLANE_UDCOMP_PARAM_DEFAULT 0x1 /* 1 */
+
+/* Type = rwpdef  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_SETUP_C_ABS_SYMBOL_ADDR 0xe930 /* 59696 */
+#define ORAN_CC_SSB_SETUP_C_ABS_SYMBOL_MASK 0xfff /* 4095 */
+#define ORAN_CC_SSB_SETUP_C_ABS_SYMBOL_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_SETUP_C_ABS_SYMBOL_WIDTH 0xc /* 12 */
+#define ORAN_CC_SSB_SETUP_C_ABS_SYMBOL_DEFAULT 0x0 /* 0 */
+
+/* Type = rwpdef  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_SETUP_C_CYCLES_ADDR 0xe934 /* 59700 */
+#define ORAN_CC_SSB_SETUP_C_CYCLES_MASK 0x1ffff /* 131071 */
+#define ORAN_CC_SSB_SETUP_C_CYCLES_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_SETUP_C_CYCLES_WIDTH 0x11 /* 17 */
+#define ORAN_CC_SSB_SETUP_C_CYCLES_DEFAULT 0x0 /* 0 */
+
+/* Type = rwpdef  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_SETUP_D_CYCLES_ADDR 0xe938 /* 59704 */
+#define ORAN_CC_SSB_SETUP_D_CYCLES_MASK 0x1ffff /* 131071 */
+#define ORAN_CC_SSB_SETUP_D_CYCLES_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_SETUP_D_CYCLES_WIDTH 0x11 /* 17 */
+#define ORAN_CC_SSB_SETUP_D_CYCLES_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC_ADDR 0xe960 /* 59744 */
+#define ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC_MASK 0xffff /* 65535 */
+#define ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC_OFFSET 0x0 /* 0 */
+#define ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC_WIDTH 0x10 /* 16 */
+#define ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC_DEFAULT 0x10 /* 16 */
+
+/* Type = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
+#define ORAN_CC_SSB_SECTS_X_SYMBOLS_ADDR 0xe968 /* 59752 */
+#define ORAN_CC_SSB_SECTS_X_SYMBOLS_MASK 0xffff /* 65535 */
+#define ORAN_CC_SSB_SECTS_X_SYMBOLS_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_SECTS_X_SYMBOLS_WIDTH 0x10 /* 16 */
+#define ORAN_CC_SSB_SECTS_X_SYMBOLS_DEFAULT 0x40 /* 64 */
+
+/* Type = rw  repeats using C_MAX_DL_SYMS @ multiples of 0x04 */
+#define ORAN_CC_SSB_DATA_UNROLL_OFFSET_ADDR 0xed00 /* 60672 */
+#define ORAN_CC_SSB_DATA_UNROLL_OFFSET_MASK 0xffff /* 65535 */
+#define ORAN_CC_SSB_DATA_UNROLL_OFFSET_OFFSET 0x0 /* 0 */
+#define ORAN_CC_SSB_DATA_UNROLL_OFFSET_WIDTH 0x10 /* 16 */
+#define ORAN_CC_SSB_DATA_UNROLL_OFFSET_DEFAULT 0x0 /* 0 */
 
 
