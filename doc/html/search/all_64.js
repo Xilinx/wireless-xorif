@@ -24,7 +24,7 @@ var searchData=
   ['dl_5fdata_5fsym_5fstart',['dl_data_sym_start',['../structxorif__cc__alloc.html#a8b0ad603cdb7bbddfd88b54182517f5f',1,'xorif_cc_alloc']]],
   ['do_5fcommand',['do_command',['../group__xorif-app.html#ga6cc48169e4e3185abea297b9d921c0da',1,'xorif_command.c']]],
   ['do_5ffile',['do_file',['../group__xorif-app.html#ga5bfa1b34c59b4bbd5844c62a00f412c5',1,'xorif_file.c']]],
-  ['do_5fmenu',['do_menu',['../group__xorif-app.html#ga2bb087e6f0f213e651cdac5b5eefbf9b',1,'xorif_menu.c']]],
+  ['do_5fmenu',['do_menu',['../group__xorif-app.html#ga2bb087e6f0f213e651cdac5b5eefbf9b',1,'xorif_app.h']]],
   ['do_5fsocket',['do_socket',['../group__xorif-app.html#ga59606f2183f205263419f3b7d9bc9667',1,'xorif_socket.c']]],
   ['du_5fid_5flimit',['du_id_limit',['../structxorif__fhi__caps.html#a76ef2e11484f4586b261ebf13bb983c0',1,'xorif_fhi_caps']]]
 ];

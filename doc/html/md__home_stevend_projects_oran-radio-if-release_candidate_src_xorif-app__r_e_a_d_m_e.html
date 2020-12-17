@@ -86,7 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface and Beam-Former hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).</li>
 <li>The xorif-app can operate as either a "server" or a "client".<ul>
 <li>As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).</li>
-<li>As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode", "menu mode", or "file mode".</li>
+<li>As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".</li>
 <li>Only the xorif-app server mode can communicate directly with the h/w via the libxorif library.</li>
 </ul>
 </li>
@@ -104,14 +104,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 </ul>
 <h3>Usage</h3>
-<div class="fragment"><div class="line">Usage: [-bhiv] [-c | -f &lt;file&gt; | -m | -s] [-n &lt;ip_addr&gt;] [-p &lt;port&gt;] [-e &lt;device&gt;] [-F &lt;fhi_dev_name&gt;] {<span class="stringliteral">&quot;&lt;command&gt; {&lt;arguments&gt;}&quot;</span>}</div>
+<div class="fragment"><div class="line">Usage: [-bhiv] [-c | -f &lt;file&gt; | -s] [-n &lt;ip_addr&gt;] [-p &lt;port&gt;] [-e &lt;device&gt;] [-F &lt;fhi_dev_name&gt;] {<span class="stringliteral">&quot;&lt;command&gt; {&lt;arguments&gt;}&quot;</span>}</div>
 <div class="line">    -b Disable banner</div>
 <div class="line">    -c Client mode <span class="keyword">using</span> the command line</div>
 <div class="line">    -e &lt;device&gt; Specified ethernet device (<span class="keywordflow">default</span> eth0)</div>
 <div class="line">    -f &lt;file&gt; Client mode <span class="keyword">using</span> the specified file</div>
 <div class="line">    -h Show help</div>
-<div class="line">    -i Automatically perform <span class="stringliteral">&#39;init&#39;</span> before performing command/file/menu</div>
-<div class="line">    -m Client mode <span class="keyword">using</span> console menu</div>
+<div class="line">    -i Automatically perform <span class="stringliteral">&#39;init&#39;</span> before performing command/file</div>
 <div class="line">    -n &lt;ip_addr&gt; Specified IP address (<span class="keywordflow">for</span> client mode) (defaults to localhost)</div>
 <div class="line">    -p &lt;port&gt; Specified port (defaults to 5001)</div>
 <div class="line">    -s Server mode (<span class="keywordflow">default</span>)</div>
@@ -127,19 +126,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 </li>
 <li>Client mode:<ul>
-<li>Typical usage: <code>xorif-app -n 192.168.0.55 -m</code></li>
-<li>Use <code>-m</code> for "menu mode" (this is a simple console-based menu system)</li>
-<li>Use <code>-c</code> for "command-line mode" (runs commands specified on the command line, e.g. <code>xorif-app -c "get sw_version" "get fhi_hw_version"</code>)</li>
-<li>Use <code>-f</code> for "file mode" (runs commands specified in a text file)</li>
+<li>Typical usage: <code>xorif-app -n 192.168.0.55 ...</code></li>
+<li>Use <code>-c</code> for "command-line mode" (runs commands specified on the command line, e.g. <code>xorif-app -c "get sw_version"</code>)</li>
+<li>Use <code>-f</code> for "file mode" (runs commands specified in a text file, e.g. <code>xorif-app -f config.txt</code>)</li>
 <li>Use <code>-n</code> to set the IP address (default is the localhost, i.e. 127.0.0.1)</li>
 <li>Use <code>-p</code> to change the TCP/IP port number</li>
 </ul>
 </li>
-</ul>
-<h3>Menu Mode</h3>
-<ul>
-<li>This mode allows basic configuration and interaction with the system using a simple text-based menu.</li>
-<li>Note, this mode is no longer fully supported. It is recommended to use the "command-line" mode or "file" mode.</li>
 </ul>
 <h3>Command-Line Mode</h3>
 <ul>

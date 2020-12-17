@@ -8,7 +8,7 @@
 
 * The xorif-app can operate as either a "server" or a "client".
 	* As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
-	* As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode", "menu mode", or "file mode".
+	* As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
 	* Only the xorif-app server mode can communicate directly with the h/w via the libxorif library.
 
 ### Building
@@ -24,14 +24,13 @@
 ### Usage
 
 ~~~
-Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {"<command> {<arguments>}"}
+Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {"<command> {<arguments>}"}
 	-b Disable banner
 	-c Client mode using the command line
 	-e <device> Specified ethernet device (default eth0)
 	-f <file> Client mode using the specified file
 	-h Show help
-	-i Automatically perform 'init' before performing command/file/menu
-	-m Client mode using console menu
+	-i Automatically perform 'init' before performing command/file
 	-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)
 	-p <port> Specified port (defaults to 5001)
 	-s Server mode (default)
@@ -47,17 +46,11 @@ Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device
 	* Use `-e` to change the ethernet device name (when using time-stamping)
 
 * Client mode:
-	* Typical usage: `xorif-app -n 192.168.0.55 -m`
-	* Use `-m` for "menu mode" (this is a simple console-based menu system)
-	* Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version" "get fhi_hw_version"`)
-	* Use `-f` for "file mode" (runs commands specified in a text file)
+	* Typical usage: `xorif-app -n 192.168.0.55 ...`
+	* Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version"`)
+	* Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
 	* Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
 	* Use `-p` to change the TCP/IP port number
-
-### Menu Mode
-
-* This mode allows basic configuration and interaction with the system using a simple text-based menu.
-* Note, this mode is no longer fully supported. It is recommended to use the "command-line" mode or "file" mode.
 
 ### Command-Line Mode
 

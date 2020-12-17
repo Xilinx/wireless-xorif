@@ -32,12 +32,12 @@
 
 // Constants for time advance calculation
 uint32_t XRAN_TIMER_CLK = 2500; // Clock default value (gets set later from register)
-const uint32_t FH_DECAP_DLY = FH_DECAP_DLY_PS; // Downlink delay estimate (see PG370)
-const uint32_t UL_RADIO_CH_DLY = UL_RADIO_CH_DLY_PS; // Uplink delay estimate (see PG370)
+uint32_t FH_DECAP_DLY = FH_DECAP_DLY_PS; // Downlink delay estimate (see PG370)
+uint32_t UL_RADIO_CH_DLY = UL_RADIO_CH_DLY_PS; // Uplink delay estimate (see PG370)
 
 // The following const structure defines the register map for the Front Haul Interface
 // Note, this array is sorted for more efficient access
-const reg_info_t fhi_reg_map[] =
+static const reg_info_t fhi_reg_map[] =
 {
     {"CFG_AXI_TIMEOUT_ENABLE", 0x14, 0x80000000, 31, 1},
     {"CFG_AXI_TIMEOUT_STATUS", 0x18, 0x80000000, 31, 1},
@@ -286,11 +286,11 @@ const reg_info_t fhi_reg_map[] =
 
 // Number of registers in register map
 // Note, the -1 is to skip the NULL terminating entry
-const int fhi_reg_num = (sizeof(fhi_reg_map) / sizeof(reg_info_t)) - 1;
+static const int fhi_reg_num = (sizeof(fhi_reg_map) / sizeof(reg_info_t)) - 1;
 
 // Shadow copy of the component carrier allocation
 // Required, since not all values are stored in h/w registers
-struct xorif_cc_alloc cc_alloc[MAX_NUM_CC];
+static struct xorif_cc_alloc cc_alloc[MAX_NUM_CC];
 
 // Macros to access register map header file
 #define NAME(a) (#a)
@@ -345,7 +345,10 @@ struct xorif_cc_alloc cc_alloc[MAX_NUM_CC];
                        CFG_AXI_TIMEOUT_STATUS_MASK)
 
 // FHI alarm flags
-enum xorif_fhi_alarms fhi_alarm_status;
+static enum xorif_fhi_alarms fhi_alarm_status = 0;
+
+// FHI ISR callback function
+static isr_func_t fhi_callback = NULL;
 
 // Start address of packet filter word
 #define DEFM_USER_DATA_FILTER_ADDR DEFM_USER_DATA_FILTER_W0_31_0_ADDR
@@ -365,9 +368,9 @@ static int fhi_irq_handler(int id, void *data);
 
 // API functions...
 
-void xorif_reset_fhi(void)
+void xorif_reset_fhi(uint16_t mode)
 {
-    TRACE("xorif_reset_fhi()\n");
+    TRACE("xorif_reset_fhi(%d)\n", mode);
 
     // Deactivate / disable
     WRITE_REG(FRAM_DISABLE, 1);
@@ -378,9 +381,12 @@ void xorif_reset_fhi(void)
     xorif_clear_fhi_alarms();
     xorif_clear_fhi_stats();
 
-    // Reactivate / enable
-    WRITE_REG(FRAM_DISABLE, 0);
-    WRITE_REG(DEFM_RESTART, 0);
+    if (mode == 0)
+    {
+        // Reactivate / enable
+        WRITE_REG(FRAM_DISABLE, 0);
+        WRITE_REG(DEFM_RESTART, 0);
+    }
 }
 
 uint32_t xorif_get_fhi_hw_version(void)
@@ -769,16 +775,15 @@ int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t ma
         {
             //int a = (j+1) * 32 - 1;
             //int b = j * 32;
-            uint32_t addr = DEFM_USER_DATA_FILTER_ADDR + (i * 0x20) + (j * 4);
+            uint32_t addr = DEFM_USER_DATA_FILTER_ADDR + (port * 0x100) + (i * 0x20) + (j * 4);
             //INFO("Packet filter word[%d][%d_%d]\n", i, a, b);
             WRITE_REG_RAW_ALT("DEFM_USER_DATA_FILTER_WORD_ADDR", addr, *filter++);
         }
 
         // 1 x 16-bit mask word per packet filter word
-        uint32_t addr = DEFM_USER_DATA_FILTER_ADDR + (i * 0x20) + (4 * 4);
+        uint32_t addr = DEFM_USER_DATA_FILTER_ADDR + (port * 0x100) + (i * 0x20) + (4 * 4);
         //INFO("Packet filter mask[%d]\n", i,);
         WRITE_REG_RAW_ALT("DEFM_USER_DATA_FILTER_MASK_ADDR", addr, *mask++);
-        addr += 4;
     }
 
     return XORIF_SUCCESS;
@@ -945,6 +950,13 @@ int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
     return XORIF_SUCCESS;
 }
 
+int xorif_register_fhi_isr(isr_func_t callback)
+{
+    TRACE("xorif_register_fhi_isr(...)\n");
+    fhi_callback = callback;
+    return XORIF_SUCCESS;
+}
+
 // Non-API functions...
 
 #ifdef ENABLE_INTERRUPTS
@@ -955,65 +967,71 @@ static int fhi_irq_handler(int id, void *data)
     if (device)
     {
         // Check interrupt status
-        uint32_t val = READ_REG_RAW(FHI_INTR_STATUS_ADDR) & FHI_INTR_MASK;
+        uint32_t status = READ_REG_RAW(FHI_INTR_STATUS_ADDR) & FHI_INTR_MASK;
 
-        if (val)
+        if (status)
         {
-            INFO("fhi_irq_handler() status = 0x%X\n", val);
+            INFO("fhi_irq_handler() status = 0x%X\n", status);
 
             // Record the alarm status
-            fhi_alarm_status |= val;
+            fhi_alarm_status |= status;
 
-            if (val & CFG_DEFM_INT_INFIFO_OF_MASK)
+            if (fhi_callback)
             {
-                INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_OF\n");
+                // Handled by registered call-back function
+                (*fhi_callback)(status);
             }
-            if (val & CFG_DEFM_INT_INFIFO_UF_MASK)
+            else
             {
-                INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_UF\n");
-            }
-            if (val & CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK)
-            {
-                INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_C_BUF_OF\n");
-            }
-            if (val & CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK)
-            {
-                INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_TABLE_OF\n");
-            }
-            if (val & CFG_FRAM_INT_OUTFIFO_OF_MASK)
-            {
-                INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_OF\n");
-            }
-            if (val & CFG_FRAM_INT_OUTFIFO_UF_MASK)
-            {
-                INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_UF\n");
-            }
-            if (val & CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK)
-            {
-                INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_OVERFLOW\n");
-            }
-            if (val & CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK)
-            {
-                INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
-            }
-            if (val & CFG_AXI_TIMEOUT_STATUS_MASK)
-            {
-                INFO("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
-            }
+                // Otherwise, default debug handling
+                if (status & CFG_DEFM_INT_INFIFO_OF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_OF\n");
+                }
+                if (status & CFG_DEFM_INT_INFIFO_UF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_UF\n");
+                }
+                if (status & CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_C_BUF_OF\n");
+                }
+                if (status & CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_TABLE_OF\n");
+                }
+                if (status & CFG_FRAM_INT_OUTFIFO_OF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_OF\n");
+                }
+                if (status & CFG_FRAM_INT_OUTFIFO_UF_MASK)
+                {
+                    INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_UF\n");
+                }
+                if (status & CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK)
+                {
+                    INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_OVERFLOW\n");
+                }
+                if (status & CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK)
+                {
+                    INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
+                }
+                if (status & CFG_AXI_TIMEOUT_STATUS_MASK)
+                {
+                    INFO("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
+                }
 
-            // All interrupts are serious error conditions
-            // Reset data-pipe (framer & de-framer)
-            WRITE_REG(FRAM_DISABLE, 1);
-            WRITE_REG(FRAM_DISABLE, 0);
-            WRITE_REG(DEFM_RESTART, 1);
-            WRITE_REG(DEFM_RESTART, 0);
+                // All interrupts are serious error conditions
+                // Reset data-pipe (framer & de-framer)
+                WRITE_REG(FRAM_DISABLE, 1);
+                WRITE_REG(DEFM_RESTART, 1);
+                WRITE_REG(FRAM_DISABLE, 0);
+                WRITE_REG(DEFM_RESTART, 0);
 
-            // Clear interrupts by writing to the "master interrupt"
-            WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
-            WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
-
-            // Handle call-backs if required
-            // TODO
+                // Clear interrupts by writing to the "master interrupt"
+                WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
+                WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
+            }
 
             return METAL_IRQ_HANDLED;
         }
@@ -1026,7 +1044,7 @@ static int fhi_irq_handler(int id, void *data)
 void xorif_fhi_init_device(void)
 {
     // Reset
-    xorif_reset_fhi();
+    xorif_reset_fhi(0);
 
     // Set-up the FHI capabilities
     memset(&fhi_caps, 0, sizeof(fhi_caps));
@@ -1566,6 +1584,9 @@ int xorif_fhi_configure_cc(uint16_t cc)
 
     // Save component carrier allocation information
     memcpy(&cc_alloc[cc], &temp, sizeof(struct xorif_cc_alloc));
+
+    // Disable component carrier
+    xorif_fhi_cc_disable(cc);
 
     // Program the h/w
     xorif_fhi_init_cc_rbs(cc, ptr->num_rbs, ptr->numerology, ptr->extended_cp);

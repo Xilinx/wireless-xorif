@@ -12,7 +12,7 @@ DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/u
 ### CONFIGURATION SECTION ###
 
 # Define targets for "all" here
-#ALL = zcu102_om5_exs zcu102_om5_exd zcu111_om5_exs zcu111_om5_exd vck190_hw vck190_hw_emu
+#ALL = zcu102_om5_exs zcu102_om5_exd zcu111_om5_exs zcu111_om5_exd zcu111_om5_10_slv_exd vck190_hw
 ALL = zcu102_om5_exs zcu111_om5_exs
 
 # Add kernel modules (e.g. drivers) here

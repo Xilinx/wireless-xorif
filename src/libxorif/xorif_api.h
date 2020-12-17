@@ -352,6 +352,11 @@ enum xorif_bf_alarms
 };
 #endif
 
+/**
+ * @brief Type definition for alarm interrupt call-back function.
+ */
+typedef void (*isr_func_t)(uint32_t status);
+
 /**********************************************/
 /*** Function prototypes (common interface) ***/
 /**********************************************/
@@ -635,8 +640,14 @@ const struct xorif_fhi_caps *xorif_get_fhi_capabilities(void);
 
 /**
  * @brief Reset the Front Haul Interface.
+ * @param[in] mode Reset mode (0 = immediate, 1 = hold in reset)
+ * @note
+ * When the mode = 1, the module is held in the reset state. Call the
+ * function again with mode = 0 to release the reset and to reset normally.
+ * This can be useful when coordinating the reset with other devices / modules.
+ * Use mode = 0 to perform the reset immediately.
  */
-void xorif_reset_fhi(void);
+void xorif_reset_fhi(uint16_t mode);
 
 /**
  * @brief Returns the Front Haul Interface h/w version.
@@ -852,6 +863,15 @@ int xorif_set_ru_ports(uint16_t ru_bits,
                        uint16_t prach_val,
                        uint16_t ssb_val);
 
+/**
+ * @brief Register a call-back function for Front Haul Interface alarm interrupts.
+ * @param[in] callback Function pointer for call-back
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_register_fhi_isr(isr_func_t callback);
+
 /*************************************************/
 /*** Function prototypes (Beamformer specific) ***/
 /*************************************************/
@@ -867,8 +887,14 @@ const struct xorif_bf_caps *xorif_get_bf_capabilities(void);
 
 /**
  * @brief Reset the Beaformer.
+ * @param[in] mode Reset mode (0 = immediate, 1 = hold in reset)
+ * @note
+ * When the mode = 1, the module is held in the reset state. Call the
+ * function again with mode = 0 to release the reset normally.
+ * This can be useful when coordinating the reset with other devices / modules.
+ * Use mode = 0 to perform the reset immediately.
  */
-void xorif_reset_bf(void);
+void xorif_reset_bf(uint16_t mode);
 
 /**
  * @brief Returns the Beamformer h/w version.
@@ -1074,6 +1100,15 @@ int xorif_get_bf_stats(struct xorif_bf_stats *ptr);
  * The mask bits are the same as in the enum xorif_bf_alarms.
  */
 int xorif_enable_bf_interrupts(uint32_t mask);
+
+/**
+ * @brief Register a call-back function for Beaformer alarm interrupts.
+ * @param[in] callback Function pointer for call-back
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_register_bf_isr(isr_func_t callback);
 
 #endif // BF_INCLUDED
 

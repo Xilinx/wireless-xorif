@@ -21,5 +21,6 @@ var searchData=
   ['iq_5fcomp_5fu_5flaw_5fsupport',['IQ_COMP_U_LAW_SUPPORT',['../group__libxorif-api.html#ggac42ef3891485579391376bda5ac38175a1fff0e2d81acb56d50e40373a6692bcf',1,'xorif_api.h']]],
   ['iq_5fcomp_5fwidth_5fdl',['iq_comp_width_dl',['../structxorif__cc__config.html#a255afa2a16d6fe566e41d6c0a50bf869',1,'xorif_cc_config']]],
   ['iq_5fcomp_5fwidth_5fssb',['iq_comp_width_ssb',['../structxorif__cc__config.html#a0b0d65f6af7eb68c1eda071b09d703a1',1,'xorif_cc_config']]],
-  ['iq_5fcomp_5fwidth_5ful',['iq_comp_width_ul',['../structxorif__cc__config.html#a03e732c7a8ed11daea132ddfe033a70b',1,'xorif_cc_config']]]
+  ['iq_5fcomp_5fwidth_5ful',['iq_comp_width_ul',['../structxorif__cc__config.html#a03e732c7a8ed11daea132ddfe033a70b',1,'xorif_cc_config']]],
+  ['isr_5ffunc_5ft',['isr_func_t',['../group__libxorif-api.html#ga4e65a1fd5e6083731038ecc831f1e92e',1,'xorif_api.h']]]
 ];

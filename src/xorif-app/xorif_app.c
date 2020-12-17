@@ -45,6 +45,18 @@ const char *eth_device_name = "eth0"; // Default ethernet device
 const char *fhi_dev_name = NULL;
 const char *bf_dev_name = NULL;
 
+#ifdef TEST_CALLBACK
+static void isr_callback1(uint32_t status)
+{
+    TRACE("isr_callback1 %d\n", status);
+}
+
+static void isr_callback2(uint32_t status)
+{
+    TRACE("isr_callback2 %d\n", status);
+}
+#endif
+
 /**
  * @brief Main entry point for XORIF-APP.
  *
@@ -67,9 +79,9 @@ int main(int argc, char *argv[])
     // Process command line options
     opterr = 0;
 #ifdef NO_HW
-    while ((opt = getopt(argc, argv, "bcf:himn:p:v")) != -1)
+    while ((opt = getopt(argc, argv, "bcf:hin:p:v")) != -1)
 #else
-    while ((opt = getopt(argc, argv, "bce:f:himn:p:svF:B:")) != -1)
+    while ((opt = getopt(argc, argv, "bce:f:hin:p:svF:B:")) != -1)
 #endif
     {
         switch (opt)
@@ -93,9 +105,6 @@ int main(int argc, char *argv[])
             break;
         case 'i':
             do_init = 1;
-            break;
-        case 'm':
-            mode = MENU_MODE;
             break;
         case 'n':
             ip_addr_name = optarg;
@@ -150,12 +159,12 @@ int main(int argc, char *argv[])
     if (do_help)
     {
 #ifdef NO_HW
-        printf("Usage: [-bhiv] [-c | -f <file> | -m] [-n <ip_addr>] [-p <port>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file>] [-n <ip_addr>] [-p <port>] {\"<command> {<arguments>}\"}\n");
 #else
 #ifdef BF_INCLUDED
-        printf("Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] [-B <bf_dev_name>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] [-B <bf_dev_name>] {\"<command> {<arguments>}\"}\n");
 #else
-        printf("Usage: [-bhiv] [-c | -f <file> | -m | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {\"<command> {<arguments>}\"}\n");
 #endif
 #endif
         printf("\t-b Disable banner\n");
@@ -165,8 +174,7 @@ int main(int argc, char *argv[])
 #endif
         printf("\t-f <file> Client mode using the specified file\n");
         printf("\t-h Show help\n");
-        printf("\t-i Automatically perform 'init' before performing command/file/menu\n");
-        printf("\t-m Client mode using console menu\n");
+        printf("\t-i Automatically perform 'init' before performing command/file\n");
         printf("\t-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)\n");
         printf("\t-p <port> Specified port (defaults to 5001)\n");
 #ifndef NO_HW
@@ -253,6 +261,7 @@ int main(int argc, char *argv[])
         remote_target = 1;
         return do_file(file);
 
+#if 0 // Menu mode no longer supported
     case MENU_MODE:
         // Menu mode
         TRACE("Menu mode\n");
@@ -266,6 +275,7 @@ int main(int argc, char *argv[])
         remote_host = 0;
         remote_target = 1;
         return do_menu();
+#endif
 
 #ifndef NO_HW
     case SERVER_MODE:
@@ -273,6 +283,15 @@ int main(int argc, char *argv[])
         TRACE("Server mode\n");
         remote_host = 1;
         remote_target = 0;
+
+#ifdef TEST_CALLBACK
+        // Test register call-backs
+        xorif_register_fhi_isr(isr_callback1);
+#ifdef BF_INCLUDED
+        xorif_register_bf_isr(isr_callback2);
+#endif
+#endif
+
         return do_socket();
 #endif
 

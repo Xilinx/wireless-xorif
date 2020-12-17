@@ -154,7 +154,7 @@ const static struct command command_set[] =
     { "help", help, "help [<topic>]" },
     { "init", init, "init [<fhi device> <bf device>]" },
     { "finish", finish, "finish" },
-    { "reset", reset, "reset [fhi | bf]" },
+    { "reset", reset, "reset [fhi | bf] <mode>" },
     { "has", has, "has [fhi | bf]" },
     { "get", get, GET_USAGE },
     { "set", set, SET_USAGE },
@@ -179,7 +179,7 @@ const static struct command command_set[] =
     { "help", help, "help [<topic>]" },
     { "init", init, "init [<fhi device>]" },
     { "finish", finish, "finish" },
-    { "reset", reset, "reset [fhi]" },
+    { "reset", reset, "reset [fhi] <mode>" },
     { "has", has, "has [fhi | bf]" },
     { "get", get, GET_USAGE },
     { "set", set, SET_USAGE },
@@ -388,11 +388,20 @@ int do_command(const char *format, ...)
         // TODO optional formating, e.g. JSON, etc.
         send_to_host(response);
     }
-    else
+
+    if (remote_target)
     {
-        // Local host, send to standard output
-        // TODO optional formating, e.g. error code string expansion, pretty-formating, etc.
-        printf("%s => %s", request, response);
+        // Extract "status" from response
+        int status;
+        if (sscanf(response, "status = %d", &status) == 1)
+        {
+            if (status == 0)
+            {
+                // Local host, send to standard output
+                printf("%s => %s", request, response);
+            }
+            return status;
+        }
     }
 
     return result;
@@ -563,21 +572,22 @@ static int reset(const char *request, char *response)
 #else
     else
     {
-        if (num_tokens == 2)
+        if (num_tokens == 3)
         {
-            // reset [fhi | bf]
+            // reset [fhi | bf] <mode>
             const char *s;
-            if (parse_string(1, &s))
+            unsigned int mode;
+            if (parse_string(1, &s) && parse_integer(2, &mode))
             {
                 if (match(s, "fhi"))
                 {
-                    xorif_reset_fhi();
+                    xorif_reset_fhi(mode);
                     return SUCCESS;
                 }
 #ifdef BF_INCLUDED
                 else if (match(s, "bf"))
                 {
-                    xorif_reset_bf();
+                    xorif_reset_bf(mode);
                     return SUCCESS;
                 }
 #endif // BF_INCLUDED

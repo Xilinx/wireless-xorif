@@ -151,6 +151,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga58c4dcf40c1bac85c7ff288b02b443f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaee305ce2f3aebd3ef8bbd5f8b3d550ac"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="structxorif__fhi__caps.html">xorif_fhi_caps</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaee305ce2f3aebd3ef8bbd5f8b3d550ac">xorif_get_fhi_capabilities</a> (void)</td></tr>
 <tr class="separator:gaee305ce2f3aebd3ef8bbd5f8b3d550ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7973bd0fe873cfcfa392ce6ae81de7ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga7973bd0fe873cfcfa392ce6ae81de7ef">xorif_reset_fhi</a> (uint16_t mode)</td></tr>
+<tr class="separator:ga7973bd0fe873cfcfa392ce6ae81de7ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga325b96c5f53b0bdfb57f535035ffbe8d"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga325b96c5f53b0bdfb57f535035ffbe8d">xorif_get_fhi_hw_version</a> (void)</td></tr>
 <tr class="separator:ga325b96c5f53b0bdfb57f535035ffbe8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf4c3b0ed6a6b7f78410c848687b38a37"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaf4c3b0ed6a6b7f78410c848687b38a37">xorif_get_fhi_hw_revision</a> (void)</td></tr>
@@ -185,8 +187,25 @@ Functions</h2></td></tr>
 <tr class="separator:ga550a91743d3aa995cc2c3c550d3afd72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga857309ea8ff7506568e3111761877eb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val)</td></tr>
 <tr class="separator:ga857309ea8ff7506568e3111761877eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20531a711869b69d9015727d99047531"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga20531a711869b69d9015727d99047531">xorif_register_fhi_isr</a> (<a class="el" href="group__libxorif-api.html#ga4e65a1fd5e6083731038ecc831f1e92e">isr_func_t</a> callback)</td></tr>
+<tr class="separator:ga20531a711869b69d9015727d99047531"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ga4e65a1fd5e6083731038ecc831f1e92e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* isr_func_t)(uint32_t status)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Type definition for alarm interrupt call-back function. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a class="anchor" id="gac33a214f419d570c57917dd5f0251abf"></a>
 <div class="memitem">
@@ -541,7 +560,7 @@ Functions</h2></td></tr>
 
 <p>Clear alarms for Front Haul Interface. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga3d2bb49a3df9c290d17b124276cf3a65">xorif_reset_fhi()</a>.</p>
+<p>Referenced by <a class="el" href="group__libxorif.html#ga7973bd0fe873cfcfa392ce6ae81de7ef">xorif_reset_fhi()</a>.</p>
 
 </div>
 </div>
@@ -563,7 +582,7 @@ Functions</h2></td></tr>
 
 <p>References <a class="el" href="group__libxorif.html#gaa2f5b3d72c170f67fabcc3c5c060ae9e">WRITE_REG_RAW</a>.</p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga3d2bb49a3df9c290d17b124276cf3a65">xorif_reset_fhi()</a>.</p>
+<p>Referenced by <a class="el" href="group__libxorif.html#ga7973bd0fe873cfcfa392ce6ae81de7ef">xorif_reset_fhi()</a>.</p>
 
 </div>
 </div>
@@ -1204,21 +1223,61 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga3d2bb49a3df9c290d17b124276cf3a65"></a>
+<a class="anchor" id="ga20531a711869b69d9015727d99047531"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_register_fhi_isr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__libxorif-api.html#ga4e65a1fd5e6083731038ecc831f1e92e">isr_func_t</a>&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Register a call-back function for Front Haul Interface alarm interrupts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">callback</td><td>Function pointer for call-back </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+<p>References <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa64437c7c5e97f4efece41f66478232d1">XORIF_SUCCESS</a>.</p>
+
+<p>Referenced by <a class="el" href="group__xorif-app.html#ga0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ga7973bd0fe873cfcfa392ce6ae81de7ef"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void xorif_reset_fhi </td>
           <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>mode</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Reset the Front Haul Interface. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>Reset mode (0 = immediate, 1 = hold in reset) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>When the mode = 1, the module is held in the reset state. Call the function again with mode = 0 to release the reset and to reset normally. This can be useful when coordinating the reset with other devices / modules. Use mode = 0 to perform the reset immediately. </dd></dl>
 
 <p>References <a class="el" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>, <a class="el" href="group__libxorif-api.html#ga957933b57af28961b2bc5635aa7b7e28">xorif_clear_fhi_alarms()</a>, and <a class="el" href="group__libxorif-api.html#ga428a788b5c018bbcd535da829b208721">xorif_clear_fhi_stats()</a>.</p>
 

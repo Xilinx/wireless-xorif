@@ -22,6 +22,8 @@
  * @{
  */
 
+#if 0 // Menu mode no longer supported
+
 #include "xorif_app.h"
 
 static char buff[MAX_BUFF_SIZE];
@@ -529,5 +531,7 @@ int do_menu()
 
     return SUCCESS;
 }
+
+#endif
 
 /** @} */
