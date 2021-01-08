@@ -33,10 +33,6 @@ To run all the builds serially in a script, the following sequence can be called
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5        -tclargs implNodateExit
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5        -tclargs implNodateExit
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25     -tclargs implNodateExit
-
-## Add "Exd" to the command args to build the single board test. Move this comment to an internal README
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5_10_slv -tclargs implExdNodateExit
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_10_slv -tclargs implExdNodateExit
 ```
 
 ### PetaLinux build instructions
