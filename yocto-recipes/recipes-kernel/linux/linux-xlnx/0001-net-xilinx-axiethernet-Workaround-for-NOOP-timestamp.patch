@@ -1,0 +1,35 @@
+From 88a6716c34b65aa37745e92f824b350d5f2e8a18 Mon Sep 17 00:00:00 2001
+From: Steven Dickinson <steven.dickinson@xilinx.com>
+Date: Tue, 19 Jan 2021 09:17:38 +0000
+Subject: [PATCH] net: xilinx: axiethernet: Workaround for NOOP timestamps
+
+Test H/W block does not handle NOOP timestamps. This change
+is a temporary workaround to inhibit the sending of these
+messages. It is a workaround only, and not intended for
+production.
+
+Signed-off-by: Steven Dickinson <steven.dickinson@xilinx.com>
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 196f003..f046cfb 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -1206,9 +1206,9 @@ static int axienet_skb_tstsmp(struct sk_buff **__skb, struct axienet_dma_q *q,
+ 	} else if (lp->axienet_config->mactype == XAXIENET_10G_25G ||
+ 		   lp->axienet_config->mactype == XAXIENET_MRMAC) {
+ 			dev_dbg(lp->dev, "tx_tag:NOOP\n");
+-			if (axienet_create_tsheader(lp->tx_ptpheader,
+-						    TX_TS_OP_NOOP, q))
+-				return NETDEV_TX_BUSY;
++			//if (axienet_create_tsheader(lp->tx_ptpheader,
++			//			    TX_TS_OP_NOOP, q))
++			//	return NETDEV_TX_BUSY;
+ 	}
+ 
+ 	return NETDEV_TX_OK;
+-- 
+1.8.3.1
+
