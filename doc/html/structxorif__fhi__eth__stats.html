@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,81 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">xorif_fhi_eth_stats Struct Reference<div class="ingroups"><a class="el" href="group__libxorif-api.html">Libxorif-api</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>Structure for Front-Haul Interface Ethernet statistic information.  
+ <a href="structxorif__fhi__eth__stats.html#details">More...</a></p>
+
+<p><code>#include &lt;xorif_api.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a4522673370409c3b5073b2d12c18522a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a4522673370409c3b5073b2d12c18522a">total_rx_good_pkt_cnt</a></td></tr>
+<tr class="memdesc:a4522673370409c3b5073b2d12c18522a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total received good packets.  <a href="#a4522673370409c3b5073b2d12c18522a">More...</a><br/></td></tr>
+<tr class="separator:a4522673370409c3b5073b2d12c18522a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25d739f1bfb4601861f78faa26653de4"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a25d739f1bfb4601861f78faa26653de4">total_rx_bad_pkt_cnt</a></td></tr>
+<tr class="memdesc:a25d739f1bfb4601861f78faa26653de4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total received bad packets.  <a href="#a25d739f1bfb4601861f78faa26653de4">More...</a><br/></td></tr>
+<tr class="separator:a25d739f1bfb4601861f78faa26653de4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7a1e4d3d25b294bc6b6c258a138019f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#ab7a1e4d3d25b294bc6b6c258a138019f">total_rx_bad_fcs_cnt</a></td></tr>
+<tr class="memdesc:ab7a1e4d3d25b294bc6b6c258a138019f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total received packets with bad FCS.  <a href="#ab7a1e4d3d25b294bc6b6c258a138019f">More...</a><br/></td></tr>
+<tr class="separator:ab7a1e4d3d25b294bc6b6c258a138019f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac14fcf675e208328e294d203408fc682"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#ac14fcf675e208328e294d203408fc682">total_rx_bit_rate</a></td></tr>
+<tr class="memdesc:ac14fcf675e208328e294d203408fc682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Total received packets bit rate.  <a href="#ac14fcf675e208328e294d203408fc682">More...</a><br/></td></tr>
+<tr class="separator:ac14fcf675e208328e294d203408fc682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fad1268922a2113c2afa96e11ca9743"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a6fad1268922a2113c2afa96e11ca9743">oran_rx_bit_rate</a></td></tr>
+<tr class="memdesc:a6fad1268922a2113c2afa96e11ca9743"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) received packets bit rate.  <a href="#a6fad1268922a2113c2afa96e11ca9743">More...</a><br/></td></tr>
+<tr class="separator:a6fad1268922a2113c2afa96e11ca9743"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a381a8b1862565374b6c6a6b9cbfa8e64"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a381a8b1862565374b6c6a6b9cbfa8e64">oran_rx_total</a></td></tr>
+<tr class="memdesc:a381a8b1862565374b6c6a6b9cbfa8e64"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) total received packets.  <a href="#a381a8b1862565374b6c6a6b9cbfa8e64">More...</a><br/></td></tr>
+<tr class="separator:a381a8b1862565374b6c6a6b9cbfa8e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2f2b9460738dc5b7c25f62e70d290b1"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#aa2f2b9460738dc5b7c25f62e70d290b1">oran_rx_on_time</a></td></tr>
+<tr class="memdesc:aa2f2b9460738dc5b7c25f62e70d290b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) on-time received packets.  <a href="#aa2f2b9460738dc5b7c25f62e70d290b1">More...</a><br/></td></tr>
+<tr class="separator:aa2f2b9460738dc5b7c25f62e70d290b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac53051362f0cf7af3c56ca03e99e95bd"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#ac53051362f0cf7af3c56ca03e99e95bd">oran_rx_early</a></td></tr>
+<tr class="memdesc:ac53051362f0cf7af3c56ca03e99e95bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) received packets arrived before the start of time window.  <a href="#ac53051362f0cf7af3c56ca03e99e95bd">More...</a><br/></td></tr>
+<tr class="separator:ac53051362f0cf7af3c56ca03e99e95bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9160404f1b40bed1d2e3cdaf56996a4f"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a9160404f1b40bed1d2e3cdaf56996a4f">oran_rx_late</a></td></tr>
+<tr class="memdesc:a9160404f1b40bed1d2e3cdaf56996a4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) received packets arrived after the end of time window.  <a href="#a9160404f1b40bed1d2e3cdaf56996a4f">More...</a><br/></td></tr>
+<tr class="separator:a9160404f1b40bed1d2e3cdaf56996a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01388b2ecf58052dc3bb85cb57a1b78d"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a01388b2ecf58052dc3bb85cb57a1b78d">oran_rx_total_c</a></td></tr>
+<tr class="memdesc:a01388b2ecf58052dc3bb85cb57a1b78d"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN C-Plane total received packets.  <a href="#a01388b2ecf58052dc3bb85cb57a1b78d">More...</a><br/></td></tr>
+<tr class="separator:a01388b2ecf58052dc3bb85cb57a1b78d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67f7ac2aeca76c99986ed6657f28720a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a67f7ac2aeca76c99986ed6657f28720a">oran_rx_on_time_c</a></td></tr>
+<tr class="memdesc:a67f7ac2aeca76c99986ed6657f28720a"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN C-Plane on-time received packets.  <a href="#a67f7ac2aeca76c99986ed6657f28720a">More...</a><br/></td></tr>
+<tr class="separator:a67f7ac2aeca76c99986ed6657f28720a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e2e72c3b2442e5cd801a48ad34c4afb"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a5e2e72c3b2442e5cd801a48ad34c4afb">oran_rx_early_c</a></td></tr>
+<tr class="memdesc:a5e2e72c3b2442e5cd801a48ad34c4afb"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN C-Plane received packets arrived before the start of time window.  <a href="#a5e2e72c3b2442e5cd801a48ad34c4afb">More...</a><br/></td></tr>
+<tr class="separator:a5e2e72c3b2442e5cd801a48ad34c4afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add6cff843a4820de594026b65a8c0030"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#add6cff843a4820de594026b65a8c0030">oran_rx_late_c</a></td></tr>
+<tr class="memdesc:add6cff843a4820de594026b65a8c0030"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN C-Plane received packets arrived after the end of time window.  <a href="#add6cff843a4820de594026b65a8c0030">More...</a><br/></td></tr>
+<tr class="separator:add6cff843a4820de594026b65a8c0030"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf413a0c2c26b66e3ef3bc0c696aa155"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#acf413a0c2c26b66e3ef3bc0c696aa155">oran_rx_corrupt</a></td></tr>
+<tr class="memdesc:acf413a0c2c26b66e3ef3bc0c696aa155"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) on_time received packets carrying corrupted transport header fields.  <a href="#acf413a0c2c26b66e3ef3bc0c696aa155">More...</a><br/></td></tr>
+<tr class="separator:acf413a0c2c26b66e3ef3bc0c696aa155"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a27adbdf37b2ccfce6f5f194304d397"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a2a27adbdf37b2ccfce6f5f194304d397">oran_rx_error_drop</a></td></tr>
+<tr class="memdesc:a2a27adbdf37b2ccfce6f5f194304d397"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) discarded received packets.  <a href="#a2a27adbdf37b2ccfce6f5f194304d397">More...</a><br/></td></tr>
+<tr class="separator:a2a27adbdf37b2ccfce6f5f194304d397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49b8ede516abdceac0d2070f57dab5cb"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a49b8ede516abdceac0d2070f57dab5cb">oran_tx_total</a></td></tr>
+<tr class="memdesc:a49b8ede516abdceac0d2070f57dab5cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN (either U- or C-Plane) total transmitted packets.  <a href="#a49b8ede516abdceac0d2070f57dab5cb">More...</a><br/></td></tr>
+<tr class="separator:a49b8ede516abdceac0d2070f57dab5cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5d57c0bd49dbec96efc4beaed8fb260"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#aa5d57c0bd49dbec96efc4beaed8fb260">oran_tx_total_c</a></td></tr>
+<tr class="memdesc:aa5d57c0bd49dbec96efc4beaed8fb260"><td class="mdescLeft">&#160;</td><td class="mdescRight">O-RAN C-Plane total transmitted packets.  <a href="#aa5d57c0bd49dbec96efc4beaed8fb260">More...</a><br/></td></tr>
+<tr class="separator:aa5d57c0bd49dbec96efc4beaed8fb260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683b24ccf1c066d763012dca7a4cf31f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#a683b24ccf1c066d763012dca7a4cf31f">offset_earliest_u_pkt</a></td></tr>
+<tr class="memdesc:a683b24ccf1c066d763012dca7a4cf31f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest captured difference between the the symbol number transported by a U-Plane packet and the internal timer counter.  <a href="#a683b24ccf1c066d763012dca7a4cf31f">More...</a><br/></td></tr>
+<tr class="separator:a683b24ccf1c066d763012dca7a4cf31f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4dcbabac029c8741a1495b8590f463a"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__fhi__eth__stats.html#ac4dcbabac029c8741a1495b8590f463a">offset_earliest_c_pkt</a></td></tr>
+<tr class="memdesc:ac4dcbabac029c8741a1495b8590f463a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Largest captured difference between the the symbol number transported by a C-Plane packet and the internal timer counter.  <a href="#ac4dcbabac029c8741a1495b8590f463a">More...</a><br/></td></tr>
+<tr class="separator:ac4dcbabac029c8741a1495b8590f463a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure for Front-Haul Interface Ethernet statistic information. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="ac4dcbabac029c8741a1495b8590f463a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -98,8 +168,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Largest captured difference between the the symbol number transported by a C-Plane packet and the internal timer counter. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -115,8 +183,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Largest captured difference between the the symbol number transported by a U-Plane packet and the internal timer counter. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a6fad1268922a2113c2afa96e11ca9743"></a>
@@ -130,8 +196,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN (either U- or C-Plane) received packets bit rate. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -147,8 +211,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN (either U- or C-Plane) on_time received packets carrying corrupted transport header fields. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ac53051362f0cf7af3c56ca03e99e95bd"></a>
@@ -162,8 +224,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN (either U- or C-Plane) received packets arrived before the start of time window. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -179,8 +239,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN C-Plane received packets arrived before the start of time window. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a2a27adbdf37b2ccfce6f5f194304d397"></a>
@@ -194,8 +252,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN (either U- or C-Plane) discarded received packets. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -211,8 +267,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN (either U- or C-Plane) received packets arrived after the end of time window. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="add6cff843a4820de594026b65a8c0030"></a>
@@ -226,8 +280,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN C-Plane received packets arrived after the end of time window. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -243,8 +295,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN (either U- or C-Plane) on-time received packets. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a67f7ac2aeca76c99986ed6657f28720a"></a>
@@ -258,8 +308,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN C-Plane on-time received packets. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -275,8 +323,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN (either U- or C-Plane) total received packets. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a01388b2ecf58052dc3bb85cb57a1b78d"></a>
@@ -290,8 +336,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN C-Plane total received packets. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -307,8 +351,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>O-RAN (either U- or C-Plane) total transmitted packets. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="aa5d57c0bd49dbec96efc4beaed8fb260"></a>
@@ -322,8 +364,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>O-RAN C-Plane total transmitted packets. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -339,8 +379,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Total received packets with bad FCS. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a25d739f1bfb4601861f78faa26653de4"></a>
@@ -354,8 +392,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Total received bad packets. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
 
 </div>
 </div>
@@ -371,8 +407,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Total received packets bit rate. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a4522673370409c3b5073b2d12c18522a"></a>
@@ -387,10 +421,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Total received good packets. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga1a6fd499b68bfb88d4d3b8d61182ce74">xorif_get_fhi_eth_stats()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="xorif__api_8h.html">xorif_api.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

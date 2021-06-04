@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">ecpri_owdm_msg_s Struct Reference<div class="ingroups"><a class="el" href="group__protocol__ecpri.html">Protocol_ecpri</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>ecpri_owdm_msg_t eCPRI OWDM message structure.  
+ <a href="structecpri__owdm__msg__s.html#details">More...</a></p>
+
+<p><code>#include &lt;ecpri_proto.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:abd443c82f933672dd67f377568a38765"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html#abd443c82f933672dd67f377568a38765">id</a></td></tr>
+<tr class="memdesc:abd443c82f933672dd67f377568a38765"><td class="mdescLeft">&#160;</td><td class="mdescRight">Measurement ID.  <a href="#abd443c82f933672dd67f377568a38765">More...</a><br/></td></tr>
+<tr class="separator:abd443c82f933672dd67f377568a38765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19e2961b6ac0c16caaa0926dac096489"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html#a19e2961b6ac0c16caaa0926dac096489">action_type</a></td></tr>
+<tr class="memdesc:a19e2961b6ac0c16caaa0926dac096489"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action Type.  <a href="#a19e2961b6ac0c16caaa0926dac096489">More...</a><br/></td></tr>
+<tr class="separator:a19e2961b6ac0c16caaa0926dac096489"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac43d4f436a89d8d732d876d554c6ec6e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html#ac43d4f436a89d8d732d876d554c6ec6e">ts_sec</a> [6]</td></tr>
+<tr class="memdesc:ac43d4f436a89d8d732d876d554c6ec6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time-stamp (seconds)  <a href="#ac43d4f436a89d8d732d876d554c6ec6e">More...</a><br/></td></tr>
+<tr class="separator:ac43d4f436a89d8d732d876d554c6ec6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59c619be391aa13d268937e49095406d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html#a59c619be391aa13d268937e49095406d">ts_nsec</a> [4]</td></tr>
+<tr class="memdesc:a59c619be391aa13d268937e49095406d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time-stamp (nano-seconds)  <a href="#a59c619be391aa13d268937e49095406d">More...</a><br/></td></tr>
+<tr class="separator:a59c619be391aa13d268937e49095406d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad82ce6722f71b64371c51e9159855a8c"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html#ad82ce6722f71b64371c51e9159855a8c">comp</a> [8]</td></tr>
+<tr class="memdesc:ad82ce6722f71b64371c51e9159855a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compensation value.  <a href="#ad82ce6722f71b64371c51e9159855a8c">More...</a><br/></td></tr>
+<tr class="separator:ad82ce6722f71b64371c51e9159855a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>ecpri_owdm_msg_t eCPRI OWDM message structure. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="a19e2961b6ac0c16caaa0926dac096489"></a>
 <div class="memitem">
 <div class="memproto">
@@ -98,8 +126,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Action Type. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -115,8 +141,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Compensation value. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="abd443c82f933672dd67f377568a38765"></a>
@@ -130,8 +154,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Measurement ID. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -147,8 +169,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Time-stamp (nano-seconds) </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ac43d4f436a89d8d732d876d554c6ec6e"></a>
@@ -163,10 +183,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Time-stamp (seconds) </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="ecpri__proto_8h.html">ecpri_proto.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

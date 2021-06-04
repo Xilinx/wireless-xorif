@@ -2,7 +2,7 @@ var searchData=
 [
   ['terminate',['TERMINATE',['../group__xorif-app.html#ggabfd51332ef0e0ba71f951a69e68e06bea9aab2d9eae3e9a84d9fed3f0cadd7e22',1,'xorif_app.h']]],
   ['test_5fmesg_5fsend_5frequest',['test_mesg_send_request',['../group__protocol__ecpri.html#gaf17987695a7ab020c967425daa0cb4e5',1,'ecpri.c']]],
-  ['timer_5fclk_5fps',['timer_clk_ps',['../structxorif__fhi__caps.html#a5eb94ea89333e094566c624a58d57cdd',1,'xorif_fhi_caps']]],
+  ['timer_5fclk_5fps',['timer_clk_ps',['../structxorif__caps.html#a29f94e19ce096907abbbbae12f9063db',1,'xorif_caps']]],
   ['to_5fremote',['TO_REMOTE',['../group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a0da71b8706cde373442031bf7a2e1f3c',1,'ecpri_proto.h']]],
   ['token_5fcount_5flimit',['TOKEN_COUNT_LIMIT',['../group__xorif-app.html#ggabfd51332ef0e0ba71f951a69e68e06bea2cb8cf7b5cacf86c261b210aff9fbf06',1,'xorif_app.h']]],
   ['total_5frx_5fbad_5ffcs_5fcnt',['total_rx_bad_fcs_cnt',['../structxorif__fhi__eth__stats.html#ab7a1e4d3d25b294bc6b6c258a138019f',1,'xorif_fhi_eth_stats']]],

@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">ecpri_rma_msg_s Struct Reference<div class="ingroups"><a class="el" href="group__protocol__ecpri.html">Protocol_ecpri</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>ecpri_rma_msg_t eCPRI RMA message structure.  
+ <a href="structecpri__rma__msg__s.html#details">More...</a></p>
+
+<p><code>#include &lt;ecpri_proto.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a510b1c314033023e87a8c83e97b1335b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html#a510b1c314033023e87a8c83e97b1335b">id</a></td></tr>
+<tr class="memdesc:a510b1c314033023e87a8c83e97b1335b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Access ID.  <a href="#a510b1c314033023e87a8c83e97b1335b">More...</a><br/></td></tr>
+<tr class="separator:a510b1c314033023e87a8c83e97b1335b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0aef53dd39dbc68504d5a34844c3d0b"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html#af0aef53dd39dbc68504d5a34844c3d0b">rd_wr_req_resp</a></td></tr>
+<tr class="memdesc:af0aef53dd39dbc68504d5a34844c3d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read/Write nibble | Request/Response nibble.  <a href="#af0aef53dd39dbc68504d5a34844c3d0b">More...</a><br/></td></tr>
+<tr class="separator:af0aef53dd39dbc68504d5a34844c3d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb58edcc589f8cf6f85b542c112188c5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html#acb58edcc589f8cf6f85b542c112188c5">element_id</a></td></tr>
+<tr class="memdesc:acb58edcc589f8cf6f85b542c112188c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Element ID.  <a href="#acb58edcc589f8cf6f85b542c112188c5">More...</a><br/></td></tr>
+<tr class="separator:acb58edcc589f8cf6f85b542c112188c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe7fd10aa1fe3a6c56e0ea929da0ed46"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html#afe7fd10aa1fe3a6c56e0ea929da0ed46">address</a> [6]</td></tr>
+<tr class="memdesc:afe7fd10aa1fe3a6c56e0ea929da0ed46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Memory Address.  <a href="#afe7fd10aa1fe3a6c56e0ea929da0ed46">More...</a><br/></td></tr>
+<tr class="separator:afe7fd10aa1fe3a6c56e0ea929da0ed46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7863231a6ecddf4596cdeaca097dcbc5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html#a7863231a6ecddf4596cdeaca097dcbc5">length</a></td></tr>
+<tr class="memdesc:a7863231a6ecddf4596cdeaca097dcbc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of read/write.  <a href="#a7863231a6ecddf4596cdeaca097dcbc5">More...</a><br/></td></tr>
+<tr class="separator:a7863231a6ecddf4596cdeaca097dcbc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>ecpri_rma_msg_t eCPRI RMA message structure. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="afe7fd10aa1fe3a6c56e0ea929da0ed46"></a>
 <div class="memitem">
 <div class="memproto">
@@ -98,8 +126,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Memory Address. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, and <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
 
 </div>
 </div>
@@ -115,8 +141,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Element ID. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, and <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a510b1c314033023e87a8c83e97b1335b"></a>
@@ -130,8 +154,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Access ID. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, and <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
 
 </div>
 </div>
@@ -147,8 +169,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Length of read/write. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="af0aef53dd39dbc68504d5a34844c3d0b"></a>
@@ -163,10 +183,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Read/Write nibble | Request/Response nibble. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="ecpri__proto_8h.html">ecpri_proto.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

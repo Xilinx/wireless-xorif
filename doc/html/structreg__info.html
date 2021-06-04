@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,12 +82,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">reg_info Struct Reference<div class="ingroups"><a class="el" href="group__libxorif.html">Libxorif</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Structure contains information on device register field.  
+ <a href="structreg__info.html#details">More...</a></p>
+
+<p><code>#include &lt;xorif_utils.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a4a6b00247b1294d70d5a5db2eeb447d2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a></td></tr>
+<tr class="memdesc:a4a6b00247b1294d70d5a5db2eeb447d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register field name.  <a href="#a4a6b00247b1294d70d5a5db2eeb447d2">More...</a><br/></td></tr>
+<tr class="separator:a4a6b00247b1294d70d5a5db2eeb447d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac09e8e43353f0b97e8e84296ba4f9094"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreg__info.html#ac09e8e43353f0b97e8e84296ba4f9094">addr</a></td></tr>
+<tr class="memdesc:ac09e8e43353f0b97e8e84296ba4f9094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register field address.  <a href="#ac09e8e43353f0b97e8e84296ba4f9094">More...</a><br/></td></tr>
+<tr class="separator:ac09e8e43353f0b97e8e84296ba4f9094"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0aa6eab66e00ccb758a637628f97886a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreg__info.html#a0aa6eab66e00ccb758a637628f97886a">mask</a></td></tr>
+<tr class="memdesc:a0aa6eab66e00ccb758a637628f97886a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register field mask.  <a href="#a0aa6eab66e00ccb758a637628f97886a">More...</a><br/></td></tr>
+<tr class="separator:a0aa6eab66e00ccb758a637628f97886a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1e4fb7c603c8c4f18a9ac5a91e8b93b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreg__info.html#af1e4fb7c603c8c4f18a9ac5a91e8b93b">shift</a></td></tr>
+<tr class="memdesc:af1e4fb7c603c8c4f18a9ac5a91e8b93b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register field shift.  <a href="#af1e4fb7c603c8c4f18a9ac5a91e8b93b">More...</a><br/></td></tr>
+<tr class="separator:af1e4fb7c603c8c4f18a9ac5a91e8b93b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d809e32c04051e8b31783fbfef94469"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structreg__info.html#a6d809e32c04051e8b31783fbfef94469">width</a></td></tr>
+<tr class="memdesc:a6d809e32c04051e8b31783fbfef94469"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register field width.  <a href="#a6d809e32c04051e8b31783fbfef94469">More...</a><br/></td></tr>
+<tr class="separator:a6d809e32c04051e8b31783fbfef94469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>/ </p>
+<div class="textblock"><p>Structure contains information on device register field. </p>
+<p>/ </p>
 </div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="ac09e8e43353f0b97e8e84296ba4f9094"></a>
 <div class="memitem">
@@ -100,8 +127,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Register field address. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg()</a>, <a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset()</a>, <a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg()</a>, and <a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset()</a>.</p>
 
 </div>
 </div>
@@ -116,8 +141,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Register field mask. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg()</a>, <a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset()</a>, <a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg()</a>, and <a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset()</a>.</p>
 
 </div>
 </div>
@@ -147,8 +170,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Register field shift. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg()</a>, <a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset()</a>, <a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg()</a>, and <a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a6d809e32c04051e8b31783fbfef94469"></a>
@@ -163,10 +184,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Register field width. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg()</a>, <a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset()</a>, <a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg()</a>, and <a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="xorif__utils_8h.html">xorif_utils.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

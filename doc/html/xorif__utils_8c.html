@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -92,38 +91,74 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">xorif_utils.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+
+<p>Source file for libxorif common utility functions.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
+<code>#include &lt;stdlib.h&gt;</code><br/>
+<code>#include &lt;string.h&gt;</code><br/>
+<code>#include &lt;dirent.h&gt;</code><br/>
+<code>#include &lt;endian.h&gt;</code><br/>
+<code>#include &quot;<a class="el" href="xorif__api_8h.html">xorif_api.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="xorif__system_8h.html">xorif_system.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="xorif__common_8h.html">xorif_common.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="xorif__fh__func_8h.html">xorif_fh_func.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="xorif__utils_8h.html">xorif_utils.h</a>&quot;</code><br/>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structreg__info.html">reg_info_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga93ccdcf33c66e128d56a40a365b6f5ff">find_register</a> (const <a class="el" href="structreg__info.html">reg_info_t</a> *reg_map, int num, const char *name)</td></tr>
+<tr class="memdesc:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find register field in register-map.  <a href="group__libxorif.html#ga93ccdcf33c66e128d56a40a365b6f5ff">More...</a><br/></td></tr>
 <tr class="separator:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9a8153b2e964abf03e53be5888ed2563"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga9a8153b2e964abf03e53be5888ed2563">read_reg_raw</a> (struct metal_io_region *io, const char *name, uint32_t addr)</td></tr>
-<tr class="separator:ga9a8153b2e964abf03e53be5888ed2563"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3877f69258dc703ab1dc74b9ff2f2689"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga3877f69258dc703ab1dc74b9ff2f2689">write_reg_raw</a> (struct metal_io_region *io, const char *name, uint32_t addr, uint32_t value)</td></tr>
-<tr class="separator:ga3877f69258dc703ab1dc74b9ff2f2689"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab6983960fa824bfb6f16f6e4ae1c3c1b"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gab6983960fa824bfb6f16f6e4ae1c3c1b">read_reg</a> (struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)</td></tr>
-<tr class="separator:gab6983960fa824bfb6f16f6e4ae1c3c1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3dfd4563badc02cc622c8d4a6e55237b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga3dfd4563badc02cc622c8d4a6e55237b">write_reg</a> (struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)</td></tr>
-<tr class="separator:ga3dfd4563badc02cc622c8d4a6e55237b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad14c3f09199a5137d32e2bcf00b0be45"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gad14c3f09199a5137d32e2bcf00b0be45">read_reg_raw</a> (void *io, const char *name, uint32_t addr)</td></tr>
+<tr class="memdesc:gad14c3f09199a5137d32e2bcf00b0be45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read from an address in the specified IO region.  <a href="group__libxorif.html#gad14c3f09199a5137d32e2bcf00b0be45">More...</a><br/></td></tr>
+<tr class="separator:gad14c3f09199a5137d32e2bcf00b0be45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade91671bcfa8c4c75272b3274a076b7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gade91671bcfa8c4c75272b3274a076b7a">write_reg_raw</a> (void *io, const char *name, uint32_t addr, uint32_t value)</td></tr>
+<tr class="memdesc:gade91671bcfa8c4c75272b3274a076b7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write to an address in the specified IO region.  <a href="group__libxorif.html#gade91671bcfa8c4c75272b3274a076b7a">More...</a><br/></td></tr>
+<tr class="separator:gade91671bcfa8c4c75272b3274a076b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)</td></tr>
+<tr class="memdesc:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read from a register field in the specified IO region.  <a href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">More...</a><br/></td></tr>
+<tr class="separator:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94282581679146b50f8f9e87adf81944"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)</td></tr>
+<tr class="memdesc:ga94282581679146b50f8f9e87adf81944"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write to a register field in the specified IO region.  <a href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">More...</a><br/></td></tr>
+<tr class="separator:ga94282581679146b50f8f9e87adf81944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga67f74cec87237a9b418df594c4cb0571"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga67f74cec87237a9b418df594c4cb0571">get_device_name</a> (const char *short_name)</td></tr>
+<tr class="memdesc:ga67f74cec87237a9b418df594c4cb0571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the device's full name given the short name.  <a href="group__libxorif.html#ga67f74cec87237a9b418df594c4cb0571">More...</a><br/></td></tr>
 <tr class="separator:ga67f74cec87237a9b418df594c4cb0571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga1e7e0639ba6631ff9b7e0dc32536ca87">get_device_property_u32</a> (const char *dev_name, const char *prop_name, uint32_t *value)</td></tr>
+<tr class="memdesc:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get device 'u32' property from device tree file system.  <a href="group__libxorif.html#ga1e7e0639ba6631ff9b7e0dc32536ca87">More...</a><br/></td></tr>
 <tr class="separator:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacd892b9c931954f60c9dc7929ba632dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device</a> (struct <a class="el" href="structxorif__device__info.html">xorif_device_info</a> *device, const char *bus_name, const char *dev_name)</td></tr>
+<tr class="memdesc:gacd892b9c931954f60c9dc7929ba632dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a device to libmetal framework.  <a href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">More...</a><br/></td></tr>
 <tr class="separator:gacd892b9c931954f60c9dc7929ba632dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga49de484cfbc8e1e1f322d885aa1df4f0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga49de484cfbc8e1e1f322d885aa1df4f0">check_numerology</a> (uint16_t numerology, uint16_t extended_cp)</td></tr>
+<tr class="memdesc:ga49de484cfbc8e1e1f322d885aa1df4f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check that the given numerology is supported.  <a href="group__libxorif.html#ga49de484cfbc8e1e1f322d885aa1df4f0">More...</a><br/></td></tr>
 <tr class="separator:ga49de484cfbc8e1e1f322d885aa1df4f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga38883d0cf05e504644df445df5f73763"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga38883d0cf05e504644df445df5f73763">check_iq_comp_mode</a> (uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_method)</td></tr>
-<tr class="separator:ga38883d0cf05e504644df445df5f73763"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0bb756626bee28a76d92894ea2a8b84b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga0bb756626bee28a76d92894ea2a8b84b">check_bw_comp_mode</a> (uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#gac33a214f419d570c57917dd5f0251abf">xorif_bw_comp</a> comp_method)</td></tr>
-<tr class="separator:ga0bb756626bee28a76d92894ea2a8b84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafe7c0c8e58f4c94338d50b9f92c604e6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gafe7c0c8e58f4c94338d50b9f92c604e6">check_iq_comp_mode</a> (uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_method, enum <a class="el" href="group__libxorif.html#ga39d37b5bd222f3ad8f6bf67e97cb555e">xorif_chan_type</a> chan)</td></tr>
+<tr class="memdesc:gafe7c0c8e58f4c94338d50b9f92c604e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks to see if specified IQ compression mode is supported.  <a href="group__libxorif.html#gafe7c0c8e58f4c94338d50b9f92c604e6">More...</a><br/></td></tr>
+<tr class="separator:gafe7c0c8e58f4c94338d50b9f92c604e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2b795d6633d9bd029649923ac0e56ecf"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga2b795d6633d9bd029649923ac0e56ecf">binary_string</a> (uint32_t value, uint16_t length)</td></tr>
+<tr class="memdesc:ga2b795d6633d9bd029649923ac0e56ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert number to binary string representation.  <a href="group__libxorif.html#ga2b795d6633d9bd029649923ac0e56ecf">More...</a><br/></td></tr>
 <tr class="separator:ga2b795d6633d9bd029649923ac0e56ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaac1a8b0fa9c43406795bdc58ad6a6665"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaac1a8b0fa9c43406795bdc58ad6a6665">binary_mask_string</a> (uint32_t value, uint32_t mask, uint16_t length)</td></tr>
+<tr class="memdesc:gaac1a8b0fa9c43406795bdc58ad6a6665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert number to binary string representation, with mask.  <a href="group__libxorif.html#gaac1a8b0fa9c43406795bdc58ad6a6665">More...</a><br/></td></tr>
 <tr class="separator:gaac1a8b0fa9c43406795bdc58ad6a6665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8dae882df7c50f3aa75c8dba1b5c81c3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga8dae882df7c50f3aa75c8dba1b5c81c3">init_memory_allocator</a> (void **ptr, uint16_t offset, uint16_t size)</td></tr>
+<tr class="memdesc:ga8dae882df7c50f3aa75c8dba1b5c81c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize a memory allocation pointer.  <a href="group__libxorif.html#ga8dae882df7c50f3aa75c8dba1b5c81c3">More...</a><br/></td></tr>
+<tr class="separator:ga8dae882df7c50f3aa75c8dba1b5c81c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f5a52ee9b9b0e4671922450226ba915"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga6f5a52ee9b9b0e4671922450226ba915">alloc_block</a> (void *ptr, uint16_t size, uint16_t tag)</td></tr>
+<tr class="memdesc:ga6f5a52ee9b9b0e4671922450226ba915"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocate a memory block from the total allocation.  <a href="group__libxorif.html#ga6f5a52ee9b9b0e4671922450226ba915">More...</a><br/></td></tr>
+<tr class="separator:ga6f5a52ee9b9b0e4671922450226ba915"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8d933b3e0b35c32973b4bf057efcc335"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga8d933b3e0b35c32973b4bf057efcc335">dealloc_block</a> (void *ptr, uint16_t tag)</td></tr>
+<tr class="memdesc:ga8d933b3e0b35c32973b4bf057efcc335"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deallocate a memory block (using specified tag value).  <a href="group__libxorif.html#ga8d933b3e0b35c32973b4bf057efcc335">More...</a><br/></td></tr>
+<tr class="separator:ga8d933b3e0b35c32973b4bf057efcc335"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab42fa87a33b92612bc338a58c17f4a05"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gab42fa87a33b92612bc338a58c17f4a05">get_alloc_block</a> (void *ptr, uint16_t tag, uint16_t *offset, uint16_t *size)</td></tr>
+<tr class="memdesc:gab42fa87a33b92612bc338a58c17f4a05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the memory allocation offset and size (for specified tag).  <a href="group__libxorif.html#gab42fa87a33b92612bc338a58c17f4a05">More...</a><br/></td></tr>
+<tr class="separator:gab42fa87a33b92612bc338a58c17f4a05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Steven Dickinson </dd></dl>
+<div class="textblock"><p>Source file for libxorif common utility functions. </p>
+<dl class="section author"><dt>Author</dt><dd>Steven Dickinson </dd></dl>
 </div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

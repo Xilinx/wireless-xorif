@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,30 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">ecpri_rmr_msg_s Struct Reference<div class="ingroups"><a class="el" href="group__protocol__ecpri.html">Protocol_ecpri</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>ecpri_rmr_msg_t eCPRI RMR message structure.  
+ <a href="structecpri__rmr__msg__s.html#details">More...</a></p>
+
+<p><code>#include &lt;ecpri_proto.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a196dd7a3f5056522d350755e8c82d941"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rmr__msg__s.html#a196dd7a3f5056522d350755e8c82d941">id</a></td></tr>
+<tr class="memdesc:a196dd7a3f5056522d350755e8c82d941"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset ID.  <a href="#a196dd7a3f5056522d350755e8c82d941">More...</a><br/></td></tr>
+<tr class="separator:a196dd7a3f5056522d350755e8c82d941"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a752a21dce154f066f21fc997f12a56f2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rmr__msg__s.html#a752a21dce154f066f21fc997f12a56f2">code_op</a></td></tr>
+<tr class="memdesc:a752a21dce154f066f21fc997f12a56f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset Operation Code (Request/Indication)  <a href="#a752a21dce154f066f21fc997f12a56f2">More...</a><br/></td></tr>
+<tr class="separator:a752a21dce154f066f21fc997f12a56f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>ecpri_rmr_msg_t eCPRI RMR message structure. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="a752a21dce154f066f21fc997f12a56f2"></a>
 <div class="memitem">
 <div class="memproto">
@@ -98,8 +117,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Reset Operation Code (Request/Indication) </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, <a class="el" href="group__protocol__ecpri.html#gadaddbc2896bddf9c771f66e363763ec1">proto_ecpri_rmr_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request()</a>.</p>
 
 </div>
 </div>
@@ -115,10 +132,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Reset ID. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, and <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="ecpri__proto_8h.html">ecpri_proto.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

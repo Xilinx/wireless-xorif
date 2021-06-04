@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -92,56 +91,98 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">xorif_fh_func.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+
+<p>Header file for libxorif Front-Haul Interface (FHI) functions.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;inttypes.h&gt;</code><br/>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaeedde975991e65feb02db90260b522f1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaeedde975991e65feb02db90260b522f1">xorif_fhi_get_num_ul_spatial_streams</a> (void)</td></tr>
-<tr class="separator:gaeedde975991e65feb02db90260b522f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafceca417642c06ea067ad6016dc70b42"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gafceca417642c06ea067ad6016dc70b42">xorif_fhi_get_num_dl_spatial_streams</a> (void)</td></tr>
-<tr class="separator:gafceca417642c06ea067ad6016dc70b42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad3a090d7d7451b8b5904aab4feccd1c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gad3a090d7d7451b8b5904aab4feccd1c1">xorif_fhi_init_device</a> (void)</td></tr>
+<tr class="memdesc:gad3a090d7d7451b8b5904aab4feccd1c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform default initialization of the device.  <a href="group__libxorif.html#gad3a090d7d7451b8b5904aab4feccd1c1">More...</a><br/></td></tr>
+<tr class="separator:gad3a090d7d7451b8b5904aab4feccd1c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaac3fbb0d7393f9dda092fe3402868231"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaac3fbb0d7393f9dda092fe3402868231">xorif_fhi_get_max_cc</a> (void)</td></tr>
+<tr class="memdesc:gaac3fbb0d7393f9dda092fe3402868231"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of supported component carriers.  <a href="group__libxorif.html#gaac3fbb0d7393f9dda092fe3402868231">More...</a><br/></td></tr>
 <tr class="separator:gaac3fbb0d7393f9dda092fe3402868231"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga507d4c64d5ed91a1ac8f7e2811cc58dd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga507d4c64d5ed91a1ac8f7e2811cc58dd">xorif_fhi_get_num_eth_ports</a> (void)</td></tr>
+<tr class="memdesc:ga507d4c64d5ed91a1ac8f7e2811cc58dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of Ethernet ports.  <a href="group__libxorif.html#ga507d4c64d5ed91a1ac8f7e2811cc58dd">More...</a><br/></td></tr>
 <tr class="separator:ga507d4c64d5ed91a1ac8f7e2811cc58dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09ad49f463c47ce188f09a5e698a98f9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga09ad49f463c47ce188f09a5e698a98f9">xorif_fhi_get_min_numerology</a> (void)</td></tr>
-<tr class="separator:ga09ad49f463c47ce188f09a5e698a98f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga24ff398bb09a97e6a3fa0fe4617bd563"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga24ff398bb09a97e6a3fa0fe4617bd563">xorif_fhi_get_max_numerology</a> (void)</td></tr>
-<tr class="separator:ga24ff398bb09a97e6a3fa0fe4617bd563"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab2bd7877b815fdd472b1d5578a415624"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gab2bd7877b815fdd472b1d5578a415624">xorif_fhi_get_max_dl_symbols</a> (void)</td></tr>
-<tr class="separator:gab2bd7877b815fdd472b1d5578a415624"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga66031d1b512d3203aa230d4ef6375ecc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga66031d1b512d3203aa230d4ef6375ecc">xorif_fhi_cc_reload</a> (uint16_t cc)</td></tr>
+<tr class="memdesc:ga66031d1b512d3203aa230d4ef6375ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Re-load / re-configure the component carrier configuration.  <a href="group__libxorif.html#ga66031d1b512d3203aa230d4ef6375ecc">More...</a><br/></td></tr>
 <tr class="separator:ga66031d1b512d3203aa230d4ef6375ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad16c7b41ff51d41a96dead4a91b0819a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gad16c7b41ff51d41a96dead4a91b0819a">xorif_fhi_cc_enable</a> (uint16_t cc)</td></tr>
+<tr class="memdesc:gad16c7b41ff51d41a96dead4a91b0819a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the component carrier.  <a href="group__libxorif.html#gad16c7b41ff51d41a96dead4a91b0819a">More...</a><br/></td></tr>
 <tr class="separator:gad16c7b41ff51d41a96dead4a91b0819a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga54156338ab048d6a0d2a698dd1a2632e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga54156338ab048d6a0d2a698dd1a2632e">xorif_fhi_cc_disable</a> (uint16_t cc)</td></tr>
+<tr class="memdesc:ga54156338ab048d6a0d2a698dd1a2632e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable the component carrier.  <a href="group__libxorif.html#ga54156338ab048d6a0d2a698dd1a2632e">More...</a><br/></td></tr>
 <tr class="separator:ga54156338ab048d6a0d2a698dd1a2632e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4652c3c769ca7e8f1d5762d434125e26"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga4652c3c769ca7e8f1d5762d434125e26">xorif_fhi_get_enabled_mask</a> (void)</td></tr>
-<tr class="separator:ga4652c3c769ca7e8f1d5762d434125e26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac0447f70af3f31e67e5d3c78af80e47c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gac0447f70af3f31e67e5d3c78af80e47c">xorif_fhi_set_enabled_mask</a> (uint16_t mask)</td></tr>
-<tr class="separator:gac0447f70af3f31e67e5d3c78af80e47c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga182ea4caa119945ec34c7a3813c1cf20"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga182ea4caa119945ec34c7a3813c1cf20">xorif_fhi_get_enabled_mask</a> (void)</td></tr>
+<tr class="memdesc:ga182ea4caa119945ec34c7a3813c1cf20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the "enabled" component carrier bit-map mask.  <a href="group__libxorif.html#ga182ea4caa119945ec34c7a3813c1cf20">More...</a><br/></td></tr>
+<tr class="separator:ga182ea4caa119945ec34c7a3813c1cf20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga68b96ebcebbf5b8ed148190bb128e8a0">xorif_fhi_set_enabled_mask</a> (uint8_t mask)</td></tr>
+<tr class="memdesc:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "enabled" component carrier bit-map mask.  <a href="group__libxorif.html#ga68b96ebcebbf5b8ed148190bb128e8a0">More...</a><br/></td></tr>
+<tr class="separator:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf4102d7cbb97f6e9f0f1caa95a013a23"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaf4102d7cbb97f6e9f0f1caa95a013a23">xorif_fhi_init_cc_symbol_pointers</a> (uint16_t cc, uint16_t dl_data_sym_num, uint16_t dl_data_sym_start_index, uint16_t dl_ctrl_sym_num, uint16_t ul_ctrl_sym_num)</td></tr>
+<tr class="memdesc:gaf4102d7cbb97f6e9f0f1caa95a013a23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the numbers of symbol buckets for each CC.  <a href="group__libxorif.html#gaf4102d7cbb97f6e9f0f1caa95a013a23">More...</a><br/></td></tr>
 <tr class="separator:gaf4102d7cbb97f6e9f0f1caa95a013a23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae61c1280d5b08caed52d433350083e75"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gae61c1280d5b08caed52d433350083e75">xorif_fhi_init_cc_symbol_pointers_ssb</a> (uint16_t cc, uint16_t ssb_data_sym_num, uint16_t ssb_data_sym_start_index, uint16_t ssb_ctrl_sym_num)</td></tr>
+<tr class="memdesc:gae61c1280d5b08caed52d433350083e75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up the numbers of symbol buckets for each CC SSB.  <a href="group__libxorif.html#gae61c1280d5b08caed52d433350083e75">More...</a><br/></td></tr>
+<tr class="separator:gae61c1280d5b08caed52d433350083e75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2594bba9fcea998da7e5124f813e6cee"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga2594bba9fcea998da7e5124f813e6cee">xorif_fhi_init_cc_dl_data_offsets</a> (uint16_t cc, uint16_t dl_data_sym_num, uint16_t dl_data_sym_start_index, uint16_t symbol_buffer_start, uint16_t symbol_buffer_size)</td></tr>
+<tr class="memdesc:ga2594bba9fcea998da7e5124f813e6cee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the data offsets for the DL data buffer.  <a href="group__libxorif.html#ga2594bba9fcea998da7e5124f813e6cee">More...</a><br/></td></tr>
 <tr class="separator:ga2594bba9fcea998da7e5124f813e6cee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3977c76cf85b6ea3a0efd29e32c94e7d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga3977c76cf85b6ea3a0efd29e32c94e7d">xorif_fhi_init_cc_dl_data_offsets_ssb</a> (uint16_t cc, uint16_t ssb_data_sym_num, uint16_t ssb_data_sym_start_index, uint16_t symbol_buffer_start, uint16_t symbol_buffer_size)</td></tr>
+<tr class="memdesc:ga3977c76cf85b6ea3a0efd29e32c94e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the data offsets for the SSB data buffer.  <a href="group__libxorif.html#ga3977c76cf85b6ea3a0efd29e32c94e7d">More...</a><br/></td></tr>
+<tr class="separator:ga3977c76cf85b6ea3a0efd29e32c94e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga41ac63a3096a6ba8aa62f38d2707d91b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga41ac63a3096a6ba8aa62f38d2707d91b">xorif_fhi_init_cc_rbs</a> (uint16_t cc, uint16_t num_rbs, uint16_t numerology, uint16_t sym_per_slot)</td></tr>
+<tr class="memdesc:ga41ac63a3096a6ba8aa62f38d2707d91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the Numerology and RB count for the CC.  <a href="group__libxorif.html#ga41ac63a3096a6ba8aa62f38d2707d91b">More...</a><br/></td></tr>
 <tr class="separator:ga41ac63a3096a6ba8aa62f38d2707d91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9782479a328946d12460703ea21b87eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga9782479a328946d12460703ea21b87eb">xorif_fhi_set_cc_dl_iq_compression</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth)</td></tr>
-<tr class="separator:ga9782479a328946d12460703ea21b87eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac48a38a61fa6f4defa5e53ab96b5b4fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gac48a38a61fa6f4defa5e53ab96b5b4fd">xorif_fhi_set_cc_ul_iq_compression</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth)</td></tr>
-<tr class="separator:gac48a38a61fa6f4defa5e53ab96b5b4fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa25956dfeb6eb323825df7760c41006e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaa25956dfeb6eb323825df7760c41006e">xorif_fhi_init_cc_rbs_ssb</a> (uint16_t cc, uint16_t num_rbs, uint16_t numerology, uint16_t sym_per_slot)</td></tr>
+<tr class="memdesc:gaa25956dfeb6eb323825df7760c41006e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the Numerology and RB count for the CC SSB.  <a href="group__libxorif.html#gaa25956dfeb6eb323825df7760c41006e">More...</a><br/></td></tr>
+<tr class="separator:gaa25956dfeb6eb323825df7760c41006e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa82fd670136b93c0f0415af8caeaf4eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaa82fd670136b93c0f0415af8caeaf4eb">xorif_fhi_set_cc_dl_iq_compression</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth, uint16_t mplane)</td></tr>
+<tr class="memdesc:gaa82fd670136b93c0f0415af8caeaf4eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the downlink IQ compression for the component carrier.  <a href="group__libxorif.html#gaa82fd670136b93c0f0415af8caeaf4eb">More...</a><br/></td></tr>
+<tr class="separator:gaa82fd670136b93c0f0415af8caeaf4eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b01fecd6ec16db640efe6dfc83b96c6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga7b01fecd6ec16db640efe6dfc83b96c6">xorif_fhi_set_cc_ul_iq_compression</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth, uint16_t mplane)</td></tr>
+<tr class="memdesc:ga7b01fecd6ec16db640efe6dfc83b96c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the uplink IQ compression for the component carrier.  <a href="group__libxorif.html#ga7b01fecd6ec16db640efe6dfc83b96c6">More...</a><br/></td></tr>
+<tr class="separator:ga7b01fecd6ec16db640efe6dfc83b96c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafa1bf1b88211dcf9ee162b218803fbcd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gafa1bf1b88211dcf9ee162b218803fbcd">xorif_fhi_set_cc_iq_compression_ssb</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth, uint16_t mplane)</td></tr>
+<tr class="memdesc:gafa1bf1b88211dcf9ee162b218803fbcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the uplink IQ compression for the component carrier SSB.  <a href="group__libxorif.html#gafa1bf1b88211dcf9ee162b218803fbcd">More...</a><br/></td></tr>
+<tr class="separator:gafa1bf1b88211dcf9ee162b218803fbcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabd16fad6eb164b539b739a2fd14551a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gabd16fad6eb164b539b739a2fd14551a8">xorif_fhi_set_cc_iq_compression_prach</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_meth, uint16_t mplane)</td></tr>
+<tr class="memdesc:gabd16fad6eb164b539b739a2fd14551a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the uplink IQ compression for the component carrier PRACH.  <a href="group__libxorif.html#gabd16fad6eb164b539b739a2fd14551a8">More...</a><br/></td></tr>
+<tr class="separator:gabd16fad6eb164b539b739a2fd14551a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa766bcc23e84f1ec4cd607ee04e06172"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaa766bcc23e84f1ec4cd607ee04e06172">xorif_fhi_init_cc_ul_section_mem</a> (uint16_t cc, uint16_t num_ctrl_per_sym_ul, uint16_t ul_ctrl_offset, uint16_t ul_ctrl_base_offset)</td></tr>
+<tr class="memdesc:gaa766bcc23e84f1ec4cd607ee04e06172"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the uplink control memories.  <a href="group__libxorif.html#gaa766bcc23e84f1ec4cd607ee04e06172">More...</a><br/></td></tr>
 <tr class="separator:gaa766bcc23e84f1ec4cd607ee04e06172"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacd5097439890043a2a2a69969e9592bc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gacd5097439890043a2a2a69969e9592bc">xorif_fhi_init_cc_dl_section_mem</a> (uint16_t cc, uint16_t num_ctrl_per_sym_dl, uint16_t dl_ctrl_offset)</td></tr>
+<tr class="memdesc:gacd5097439890043a2a2a69969e9592bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the downlink control memories.  <a href="group__libxorif.html#gacd5097439890043a2a2a69969e9592bc">More...</a><br/></td></tr>
 <tr class="separator:gacd5097439890043a2a2a69969e9592bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga45febd8d51371b3b4df74c4233c1bc3b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga45febd8d51371b3b4df74c4233c1bc3b">xorif_fhi_init_cc_section_mem_ssb</a> (uint16_t cc, uint16_t num_ctrl_per_sym_ssb, uint16_t ssb_ctrl_offset)</td></tr>
+<tr class="memdesc:ga45febd8d51371b3b4df74c4233c1bc3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the SSB control memories.  <a href="group__libxorif.html#ga45febd8d51371b3b4df74c4233c1bc3b">More...</a><br/></td></tr>
+<tr class="separator:ga45febd8d51371b3b4df74c4233c1bc3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga45079c97b83f4def99402910bc3a72a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga45079c97b83f4def99402910bc3a72a8">xorif_fhi_init_cc_ctrl_constants</a> (uint16_t cc, uint16_t dl_ctrl_sym_num, uint16_t num_ctrl_per_sym_dl, uint16_t ul_ctrl_sym_num, uint16_t num_ctrl_per_sym_ul)</td></tr>
+<tr class="memdesc:ga45079c97b83f4def99402910bc3a72a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the control constants.  <a href="group__libxorif.html#ga45079c97b83f4def99402910bc3a72a8">More...</a><br/></td></tr>
 <tr class="separator:ga45079c97b83f4def99402910bc3a72a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga826f63a7efd4f90e2bfc3e693852a64a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga826f63a7efd4f90e2bfc3e693852a64a">xorif_fhi_init_cc_ctrl_constants_ssb</a> (uint16_t cc, uint16_t ssb_ctrl_sym_num, uint16_t num_ctrl_per_sym_ssb)</td></tr>
+<tr class="memdesc:ga826f63a7efd4f90e2bfc3e693852a64a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the control constants for SSB.  <a href="group__libxorif.html#ga826f63a7efd4f90e2bfc3e693852a64a">More...</a><br/></td></tr>
+<tr class="separator:ga826f63a7efd4f90e2bfc3e693852a64a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4316e49d00c4179457c01eb2bf481874"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc</a> (uint16_t cc)</td></tr>
+<tr class="memdesc:ga4316e49d00c4179457c01eb2bf481874"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the specified component carrier.  <a href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">More...</a><br/></td></tr>
 <tr class="separator:ga4316e49d00c4179457c01eb2bf481874"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8556afe11c9b9a1e3a49ebcd5bceec9d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga8556afe11c9b9a1e3a49ebcd5bceec9d">xorif_fhi_configure_time_advance_offsets</a> (uint16_t cc, uint16_t numerology, uint16_t sym_per_slot, uint32_t advance_ul, uint32_t advance_dl)</td></tr>
+<tr class="memdesc:ga8556afe11c9b9a1e3a49ebcd5bceec9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute timing advance for the specified component carrier.  <a href="group__libxorif.html#ga8556afe11c9b9a1e3a49ebcd5bceec9d">More...</a><br/></td></tr>
 <tr class="separator:ga8556afe11c9b9a1e3a49ebcd5bceec9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0f6c622ebb010b48bae4b7e0c9d3f6ff"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga0f6c622ebb010b48bae4b7e0c9d3f6ff">xorif_fhi_configure_time_advance_offsets_ssb</a> (uint16_t cc, uint16_t numerology, uint16_t sym_per_slot, uint32_t advance_dl)</td></tr>
+<tr class="memdesc:ga0f6c622ebb010b48bae4b7e0c9d3f6ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute SSB timing advance for the specified component carrier.  <a href="group__libxorif.html#ga0f6c622ebb010b48bae4b7e0c9d3f6ff">More...</a><br/></td></tr>
+<tr class="separator:ga0f6c622ebb010b48bae4b7e0c9d3f6ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadc0f331e4aab7e340e662cd41f0979bc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gadc0f331e4aab7e340e662cd41f0979bc">xorif_fhi_configure_ul_bid_forward</a> (uint16_t cc, uint16_t numerology, uint16_t sym_per_slot, uint32_t advance)</td></tr>
+<tr class="memdesc:gadc0f331e4aab7e340e662cd41f0979bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute beam-id forward timing advance for the specified component carrier.  <a href="group__libxorif.html#gadc0f331e4aab7e340e662cd41f0979bc">More...</a><br/></td></tr>
+<tr class="separator:gadc0f331e4aab7e340e662cd41f0979bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><dl class="section author"><dt>Author</dt><dd>Steven Dickinson </dd></dl>
+<div class="textblock"><p>Header file for libxorif Front-Haul Interface (FHI) functions. </p>
+<dl class="section author"><dt>Author</dt><dd>Steven Dickinson </dd></dl>
 </div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

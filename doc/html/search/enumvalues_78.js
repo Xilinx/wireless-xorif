@@ -5,7 +5,9 @@ var searchData=
   ['xorif_5fcomp_5fmode_5fnot_5fsupported',['XORIF_COMP_MODE_NOT_SUPPORTED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5a2dddf89e5e2a94e6335821d3329384',1,'xorif_api.h']]],
   ['xorif_5fconfiguration_5ferrors',['XORIF_CONFIGURATION_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2003ba5fea3e33e16b988ed0a86289d0',1,'xorif_api.h']]],
   ['xorif_5ffailure',['XORIF_FAILURE',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa9a03a40b03b36e83d8ebdc2a08ef6df4',1,'xorif_api.h']]],
-  ['xorif_5fframe_5fwork_5ferrors',['XORIF_FRAME_WORK_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa3c77765067a085e84dd47811623c8f14',1,'xorif_api.h']]],
+  ['xorif_5fframework_5ferrors',['XORIF_FRAMEWORK_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa774af89ce327da0f5bb3dad6d0d8f048',1,'xorif_api.h']]],
+  ['xorif_5ffront_5fhaul_5ferrors',['XORIF_FRONT_HAUL_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa1faea537523540ff11fc8bfe9223f320',1,'xorif_api.h']]],
+  ['xorif_5finvalid_5fag',['XORIF_INVALID_AG',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa8fdc834fd2e4fe38a2f8a9459d39c296',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fcc',['XORIF_INVALID_CC',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3facda33b30a8f841b3fcbc3fe8c752eaa9',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fconfig',['XORIF_INVALID_CONFIG',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa451fc990b012558a4b2d8028c781a7dd',1,'xorif_api.h']]],
   ['xorif_5finvalid_5feaxc_5fid',['XORIF_INVALID_EAXC_ID',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faefb2e12b88492d80d7edab5897587ccc',1,'xorif_api.h']]],
@@ -22,5 +24,6 @@ var searchData=
   ['xorif_5fother_5ferrors',['XORIF_OTHER_ERRORS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa58d26412e9ade9963d87f109cc124392',1,'xorif_api.h']]],
   ['xorif_5fregister_5fnot_5ffound',['XORIF_REGISTER_NOT_FOUND',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fac1b123cc4c3536879c23cb11921ed9d0',1,'xorif_api.h']]],
   ['xorif_5fschedule_5ftable_5fexceeded',['XORIF_SCHEDULE_TABLE_EXCEEDED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa831f15721b2160abbf5cc4fe7c719e71',1,'xorif_api.h']]],
-  ['xorif_5fsuccess',['XORIF_SUCCESS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa64437c7c5e97f4efece41f66478232d1',1,'xorif_api.h']]]
+  ['xorif_5fsuccess',['XORIF_SUCCESS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa64437c7c5e97f4efece41f66478232d1',1,'xorif_api.h']]],
+  ['xorif_5ftimeout_5ffail',['XORIF_TIMEOUT_FAIL',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa078386ac24484cbf549961e7a793febc',1,'xorif_api.h']]]
 ];

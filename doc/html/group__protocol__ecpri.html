@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -78,95 +77,301 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">Protocol_ecpri</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>A sample command parser for the RoE Framer software modules.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__header__s.html">ecpri_header_s</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_header_t The eCPRI user-plane message header.  <a href="structecpri__header__s.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rma__msg__s.html">ecpri_rma_msg_s</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_rma_msg_t eCPRI RMA message structure.  <a href="structecpri__rma__msg__s.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__owdm__msg__s.html">ecpri_owdm_msg_s</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_owdm_msg_t eCPRI OWDM message structure.  <a href="structecpri__owdm__msg__s.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structecpri__rmr__msg__s.html">ecpri_rmr_msg_s</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_rmr_msg_t eCPRI RMR message structure.  <a href="structecpri__rmr__msg__s.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga9afef3e7bddcf019011f5262e34e84af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga9afef3e7bddcf019011f5262e34e84af">ECPRI_MAX_COMMANDS</a>&#160;&#160;&#160;9</td></tr>
+<tr class="memdesc:ga9afef3e7bddcf019011f5262e34e84af"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_MAX_COMMANDS Number of commands handled by the ecpri module.  <a href="#ga9afef3e7bddcf019011f5262e34e84af">More...</a><br/></td></tr>
+<tr class="separator:ga9afef3e7bddcf019011f5262e34e84af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaadbb1d24f3e8415210bb5a4d7b42379"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaaadbb1d24f3e8415210bb5a4d7b42379">RMA_READ</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:gaaadbb1d24f3e8415210bb5a4d7b42379"><td class="mdescLeft">&#160;</td><td class="mdescRight">RMA_READ Flag to indicate an RMA read operation.  <a href="#gaaadbb1d24f3e8415210bb5a4d7b42379">More...</a><br/></td></tr>
+<tr class="separator:gaaadbb1d24f3e8415210bb5a4d7b42379"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf089de88aae5fcf5fde9e77c18f95077"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaf089de88aae5fcf5fde9e77c18f95077">RMA_WRITE</a>&#160;&#160;&#160;2</td></tr>
+<tr class="memdesc:gaf089de88aae5fcf5fde9e77c18f95077"><td class="mdescLeft">&#160;</td><td class="mdescRight">RMA_WRITE Flag to indicate an RMA write operation.  <a href="#gaf089de88aae5fcf5fde9e77c18f95077">More...</a><br/></td></tr>
+<tr class="separator:gaf089de88aae5fcf5fde9e77c18f95077"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaacd9554ace2b7dadb8ccc19e0fbd7da7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaacd9554ace2b7dadb8ccc19e0fbd7da7">ECPRI_PROTO_MAGIC_BYTE</a>&#160;&#160;&#160;(0x10)</td></tr>
+<tr class="memdesc:gaacd9554ace2b7dadb8ccc19e0fbd7da7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_PROTO_MAGIC_BYTE Magic eCPRI message byte.  <a href="#gaacd9554ace2b7dadb8ccc19e0fbd7da7">More...</a><br/></td></tr>
+<tr class="separator:gaacd9554ace2b7dadb8ccc19e0fbd7da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3cdbbf3ccc8dc571b93c45615842e947"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga3cdbbf3ccc8dc571b93c45615842e947">ECPRI_PROTO_HEADER_SIZE</a>&#160;&#160;&#160;(4)</td></tr>
+<tr class="memdesc:ga3cdbbf3ccc8dc571b93c45615842e947"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_PROTO_HEADER_SIZE Size of the eCPRI message header.  <a href="#ga3cdbbf3ccc8dc571b93c45615842e947">More...</a><br/></td></tr>
+<tr class="separator:ga3cdbbf3ccc8dc571b93c45615842e947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac88c39f24fcee6fe16a0676d59c5ecf1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac88c39f24fcee6fe16a0676d59c5ecf1">ECPRI_RMA_MSG_READ</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:gac88c39f24fcee6fe16a0676d59c5ecf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_READ eCPRI RMA read flag.  <a href="#gac88c39f24fcee6fe16a0676d59c5ecf1">More...</a><br/></td></tr>
+<tr class="separator:gac88c39f24fcee6fe16a0676d59c5ecf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac62dad3db7017d673c716b05cd500362"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac62dad3db7017d673c716b05cd500362">ECPRI_RMA_MSG_WRITE</a>&#160;&#160;&#160;(0x10)</td></tr>
+<tr class="memdesc:gac62dad3db7017d673c716b05cd500362"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_WRITE eCPRI RMA write flag.  <a href="#gac62dad3db7017d673c716b05cd500362">More...</a><br/></td></tr>
+<tr class="separator:gac62dad3db7017d673c716b05cd500362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga193cb3ec47d746278baec2087e162919"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga193cb3ec47d746278baec2087e162919">ECPRI_RMA_MSG_WR_NO_RESP</a>&#160;&#160;&#160;(0x20)</td></tr>
+<tr class="memdesc:ga193cb3ec47d746278baec2087e162919"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_WR_NO_RESP eCPRI RMA write with no response flag.  <a href="#ga193cb3ec47d746278baec2087e162919">More...</a><br/></td></tr>
+<tr class="separator:ga193cb3ec47d746278baec2087e162919"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaacb7b691a0f309664493aeaae0bbe265"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaacb7b691a0f309664493aeaae0bbe265">ECPRI_RMA_MSG_REQ</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:gaacb7b691a0f309664493aeaae0bbe265"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_REQ eCPRI RMA request flag.  <a href="#gaacb7b691a0f309664493aeaae0bbe265">More...</a><br/></td></tr>
+<tr class="separator:gaacb7b691a0f309664493aeaae0bbe265"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ce3174bfa7d5ee093670a599e47fcf6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga1ce3174bfa7d5ee093670a599e47fcf6">ECPRI_RMA_MSG_RESP</a>&#160;&#160;&#160;(0x1)</td></tr>
+<tr class="memdesc:ga1ce3174bfa7d5ee093670a599e47fcf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_RESP eCPRI RMA response flag.  <a href="#ga1ce3174bfa7d5ee093670a599e47fcf6">More...</a><br/></td></tr>
+<tr class="separator:ga1ce3174bfa7d5ee093670a599e47fcf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga139c26b5b0cb04f691b3f7a7942aa4a0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga139c26b5b0cb04f691b3f7a7942aa4a0">ECPRI_RMA_MSG_FAIL</a>&#160;&#160;&#160;(0x2)</td></tr>
+<tr class="memdesc:ga139c26b5b0cb04f691b3f7a7942aa4a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_MSG_FAIL eCPRI RMA request fail flag.  <a href="#ga139c26b5b0cb04f691b3f7a7942aa4a0">More...</a><br/></td></tr>
+<tr class="separator:ga139c26b5b0cb04f691b3f7a7942aa4a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1461652758e7cfe0189d8324e94705c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gad1461652758e7cfe0189d8324e94705c">ECPRI_OWDM_MSG_ACTION_REQ</a>&#160;&#160;&#160;(0)</td></tr>
+<tr class="memdesc:gad1461652758e7cfe0189d8324e94705c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_REQ eCPRI OWDM action request flag.  <a href="#gad1461652758e7cfe0189d8324e94705c">More...</a><br/></td></tr>
+<tr class="separator:gad1461652758e7cfe0189d8324e94705c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8468c9804d93a5527ee267c19fe98dc6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga8468c9804d93a5527ee267c19fe98dc6">ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP</a>&#160;&#160;&#160;(0x1)</td></tr>
+<tr class="memdesc:ga8468c9804d93a5527ee267c19fe98dc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP eCPRI OWDM action req with follow-up flag.  <a href="#ga8468c9804d93a5527ee267c19fe98dc6">More...</a><br/></td></tr>
+<tr class="separator:ga8468c9804d93a5527ee267c19fe98dc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac208ea0f8bd2725db87638882600ab8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaac208ea0f8bd2725db87638882600ab8">ECPRI_OWDM_MSG_ACTION_RESP</a>&#160;&#160;&#160;(0x2)</td></tr>
+<tr class="memdesc:gaac208ea0f8bd2725db87638882600ab8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_RESP eCPRI OWDM action response flag.  <a href="#gaac208ea0f8bd2725db87638882600ab8">More...</a><br/></td></tr>
+<tr class="separator:gaac208ea0f8bd2725db87638882600ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad9e92665a5a092e6b7b52bc4022c4e0a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gad9e92665a5a092e6b7b52bc4022c4e0a">ECPRI_OWDM_MSG_ACTION_REM_REQ</a>&#160;&#160;&#160;(0x3)</td></tr>
+<tr class="memdesc:gad9e92665a5a092e6b7b52bc4022c4e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_REM_REQ eCPRI OWDM remote action request flag.  <a href="#gad9e92665a5a092e6b7b52bc4022c4e0a">More...</a><br/></td></tr>
+<tr class="separator:gad9e92665a5a092e6b7b52bc4022c4e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gada37aaceba923f850760d31a89a9a51d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gada37aaceba923f850760d31a89a9a51d">ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP</a>&#160;&#160;&#160;(0x4)</td></tr>
+<tr class="memdesc:gada37aaceba923f850760d31a89a9a51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP OWDM rem act req with follow-up flag.  <a href="#gada37aaceba923f850760d31a89a9a51d">More...</a><br/></td></tr>
+<tr class="separator:gada37aaceba923f850760d31a89a9a51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacef69ce4649f0728cc1832bc057ebbcc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gacef69ce4649f0728cc1832bc057ebbcc">ECPRI_OWDM_MSG_ACTION_FOL_UP</a>&#160;&#160;&#160;(0x5)</td></tr>
+<tr class="memdesc:gacef69ce4649f0728cc1832bc057ebbcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_MSG_ACTION_FOL_UP eCPRI OWDM follow-up flag.  <a href="#gacef69ce4649f0728cc1832bc057ebbcc">More...</a><br/></td></tr>
+<tr class="separator:gacef69ce4649f0728cc1832bc057ebbcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1ad201425acccbfaf0a37ac41a3a387b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga1ad201425acccbfaf0a37ac41a3a387b">ECPRI_RMR_MSG_CODE_OP_REM_RESET_REQ</a>&#160;&#160;&#160;(0x1)</td></tr>
+<tr class="memdesc:ga1ad201425acccbfaf0a37ac41a3a387b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMR_MSG_CODE_OP_REM_RESET_REQ eCPRI RMR request flag.  <a href="#ga1ad201425acccbfaf0a37ac41a3a387b">More...</a><br/></td></tr>
+<tr class="separator:ga1ad201425acccbfaf0a37ac41a3a387b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab7cda7e4191ffa1cd680d3f01746a7af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gab7cda7e4191ffa1cd680d3f01746a7af">ECPRI_RMR_MSG_CODE_OP_REM_RESET_RESP</a>&#160;&#160;&#160;(0x2)</td></tr>
+<tr class="memdesc:gab7cda7e4191ffa1cd680d3f01746a7af"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMR_MSG_CODE_OP_REM_RESET_RESP eCPRI RMR response flag.  <a href="#gab7cda7e4191ffa1cd680d3f01746a7af">More...</a><br/></td></tr>
+<tr class="separator:gab7cda7e4191ffa1cd680d3f01746a7af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea5ef8ddb96633d98df129331008536c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaea5ef8ddb96633d98df129331008536c">ECPRI_USAGE_STR</a>&#160;&#160;&#160;&quot;Usage \&quot;ecpri [args]\&quot;, try \&quot;ecpri help\&quot; for command list\n&quot;</td></tr>
+<tr class="memdesc:gaea5ef8ddb96633d98df129331008536c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_USAGE_STR Help text for the ecpri module.  <a href="#gaea5ef8ddb96633d98df129331008536c">More...</a><br/></td></tr>
+<tr class="separator:gaea5ef8ddb96633d98df129331008536c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3c5fe6495d5ecd13623bd74aff1829a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac3c5fe6495d5ecd13623bd74aff1829a">ECPRI_HELP_STR</a>&#160;&#160;&#160;&quot;generates this list of commands\n&quot;</td></tr>
+<tr class="memdesc:gac3c5fe6495d5ecd13623bd74aff1829a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_HELP_STR Help text for the ecpri module "help" option.  <a href="#gac3c5fe6495d5ecd13623bd74aff1829a">More...</a><br/></td></tr>
+<tr class="separator:gac3c5fe6495d5ecd13623bd74aff1829a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabd915f49b2cb7fe0aaa7cac122c0745c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gabd915f49b2cb7fe0aaa7cac122c0745c">ECPRI_OWDM_REQ_STR</a>&#160;&#160;&#160;&quot;ecpri <a class="el" href="group__protocol__ecpri.html#gac3fd9eef210f8d958d51c87ccb3c0565">owdm_req</a> &lt;addr&gt; &lt;type&gt; - Request an OWDM measurement to &lt;addr&gt; of type &lt;to_remote|from_remote&gt;\n&quot;</td></tr>
+<tr class="memdesc:gabd915f49b2cb7fe0aaa7cac122c0745c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_REQ_STR Help text for the ecpri module "owdm_req" option.  <a href="#gabd915f49b2cb7fe0aaa7cac122c0745c">More...</a><br/></td></tr>
+<tr class="separator:gabd915f49b2cb7fe0aaa7cac122c0745c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga883a7bc399c4e160de837b766003102d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga883a7bc399c4e160de837b766003102d">ECPRI_OWDM_RES_STR</a>&#160;&#160;&#160;&quot;ecpri owdm_res - Returns the result of the last OWDM measurement, or \&quot;Pending\&quot; if still underway\n&quot;</td></tr>
+<tr class="memdesc:ga883a7bc399c4e160de837b766003102d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_RES_STR Help text for the ecpri module "owdm_res" option.  <a href="#ga883a7bc399c4e160de837b766003102d">More...</a><br/></td></tr>
+<tr class="separator:ga883a7bc399c4e160de837b766003102d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3d3c2dcf1dfda3a97df93de61e21556e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga3d3c2dcf1dfda3a97df93de61e21556e">ECPRI_OWDM_LIMIT_STR</a>&#160;&#160;&#160;&quot;ecpri owdm_limit - Sets the report threshold of the OWDM measurement (nsecs), or disables reporting if 0\n&quot;</td></tr>
+<tr class="memdesc:ga3d3c2dcf1dfda3a97df93de61e21556e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_OWDM_LIMIT_STR Help text for the ecpri module "owdm_limit" option.  <a href="#ga3d3c2dcf1dfda3a97df93de61e21556e">More...</a><br/></td></tr>
+<tr class="separator:ga3d3c2dcf1dfda3a97df93de61e21556e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac394022b0a560323fa872bf5dcccf27e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac394022b0a560323fa872bf5dcccf27e">ECPRI_RMA_READ_STR</a>&#160;&#160;&#160;&quot;ecpri rma_read &lt;ip_addr&gt; &lt;mem_addr&gt; &lt;length&gt; - Request a read of &lt;length&gt; bytes at &lt;mem_addr&gt; from &lt;ip_addr&gt;\n&quot;</td></tr>
+<tr class="memdesc:gac394022b0a560323fa872bf5dcccf27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_READ_STR Help text for the ecpri module "rma_read" option.  <a href="#gac394022b0a560323fa872bf5dcccf27e">More...</a><br/></td></tr>
+<tr class="separator:gac394022b0a560323fa872bf5dcccf27e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c31460e25f63c59da1bc26190a025a2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga5c31460e25f63c59da1bc26190a025a2">ECPRI_RMA_WRITE_STR</a>&#160;&#160;&#160;&quot;ecpri rma_write &lt;ip_addr&gt; &lt;mem_addr&gt; &lt;length&gt; \&quot;&lt;bytes 1..length&gt;\&quot; - Request a write of &lt;length&gt; &lt;bytes&gt; to &lt;mem_addr&gt; at &lt;ip_addr&gt;\n&quot;</td></tr>
+<tr class="memdesc:ga5c31460e25f63c59da1bc26190a025a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMA_WRITE_STR Help text for the ecpri module "rma_write" option.  <a href="#ga5c31460e25f63c59da1bc26190a025a2">More...</a><br/></td></tr>
+<tr class="separator:ga5c31460e25f63c59da1bc26190a025a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae290e0c26483f0e23ce501fa4bcc0922"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gae290e0c26483f0e23ce501fa4bcc0922">ECPRI_TEST_MESG_STR</a>&#160;&#160;&#160;&quot;ecpri test_mesg &lt;ip_addr&gt; &lt;dest_port&gt; - TESTING - Send a test message to &lt;dest_port&gt;\n&quot;</td></tr>
+<tr class="memdesc:gae290e0c26483f0e23ce501fa4bcc0922"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_TEST_MESG_STR Help text for the ecpri module "test_mesg" option.  <a href="#gae290e0c26483f0e23ce501fa4bcc0922">More...</a><br/></td></tr>
+<tr class="separator:gae290e0c26483f0e23ce501fa4bcc0922"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaebbd75a8e4fbbc25c5c6062f2013eb52"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaebbd75a8e4fbbc25c5c6062f2013eb52">ECPRI_RMR_REQ_STR</a>&#160;&#160;&#160;&quot;ecpri rmr_req &lt;ip_addr&gt; - Request a remote reset of &lt;ip_addr&gt;\n&quot;</td></tr>
+<tr class="memdesc:gaebbd75a8e4fbbc25c5c6062f2013eb52"><td class="mdescLeft">&#160;</td><td class="mdescRight">ECPRI_RMR_REQ_STR Help text for the ecpri module "rmr_req" option.  <a href="#gaebbd75a8e4fbbc25c5c6062f2013eb52">More...</a><br/></td></tr>
+<tr class="separator:gaebbd75a8e4fbbc25c5c6062f2013eb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga728711254649f596039dc56790ad2438"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="group__protocol__ecpri.html#ga9abea8df56c30d3dd77b4367562919a7">owdm_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga728711254649f596039dc56790ad2438">owdm_result_type</a></td></tr>
+<tr class="memdesc:ga728711254649f596039dc56790ad2438"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for holding an OWDM result message.  <a href="#ga728711254649f596039dc56790ad2438">More...</a><br/></td></tr>
+<tr class="separator:ga728711254649f596039dc56790ad2438"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf92ceaecfa5e8dda474153047b18e4d5"><td class="memItemLeft" align="right" valign="top">typedef struct owdm_ts_msg&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaf92ceaecfa5e8dda474153047b18e4d5">owdm_ts_msg_type</a></td></tr>
+<tr class="memdesc:gaf92ceaecfa5e8dda474153047b18e4d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">owdm_ts_msg_type Structure for holding an OWDM timestamp.  <a href="#gaf92ceaecfa5e8dda474153047b18e4d5">More...</a><br/></td></tr>
+<tr class="separator:gaf92ceaecfa5e8dda474153047b18e4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69be2ec2ee3e64097845462bc34e25bd"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="group__protocol__ecpri.html#gadaaacfd96b60fe39c00c9d2b6ab3d8b6">ecpri_message_type_e</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga69be2ec2ee3e64097845462bc34e25bd">ecpri_message_type_t</a></td></tr>
+<tr class="memdesc:ga69be2ec2ee3e64097845462bc34e25bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_message_type_t The types of eCPRI user-plane message.  <a href="#ga69be2ec2ee3e64097845462bc34e25bd">More...</a><br/></td></tr>
+<tr class="separator:ga69be2ec2ee3e64097845462bc34e25bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaed4386bca2efde84d7f3fa5d67ef7713"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structecpri__header__s.html">ecpri_header_s</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaed4386bca2efde84d7f3fa5d67ef7713">ecpri_header_t</a></td></tr>
+<tr class="memdesc:gaed4386bca2efde84d7f3fa5d67ef7713"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_header_t The eCPRI user-plane message header.  <a href="#gaed4386bca2efde84d7f3fa5d67ef7713">More...</a><br/></td></tr>
+<tr class="separator:gaed4386bca2efde84d7f3fa5d67ef7713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5935ad4c8293b78018e93fae124fdac7"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structecpri__rma__msg__s.html">ecpri_rma_msg_s</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga5935ad4c8293b78018e93fae124fdac7">ecpri_rma_msg_t</a></td></tr>
+<tr class="memdesc:ga5935ad4c8293b78018e93fae124fdac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_rma_msg_t eCPRI RMA message structure.  <a href="#ga5935ad4c8293b78018e93fae124fdac7">More...</a><br/></td></tr>
+<tr class="separator:ga5935ad4c8293b78018e93fae124fdac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaea86ebf3e5cae2ce125c815031fa4e20"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structecpri__owdm__msg__s.html">ecpri_owdm_msg_s</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaea86ebf3e5cae2ce125c815031fa4e20">ecpri_owdm_msg_t</a></td></tr>
+<tr class="memdesc:gaea86ebf3e5cae2ce125c815031fa4e20"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_owdm_msg_t eCPRI OWDM message structure.  <a href="#gaea86ebf3e5cae2ce125c815031fa4e20">More...</a><br/></td></tr>
+<tr class="separator:gaea86ebf3e5cae2ce125c815031fa4e20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d7e9d4046ad49df0ac02dee1af85333"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="group__protocol__ecpri.html#ga6d45906fc10273d9dbc00c3d274718c5">ecpri_owdn_direction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga6d7e9d4046ad49df0ac02dee1af85333">ecpri_owdm_direction_type</a></td></tr>
+<tr class="memdesc:ga6d7e9d4046ad49df0ac02dee1af85333"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_owdm_msg_t eCPRI OWDM direction.  <a href="#ga6d7e9d4046ad49df0ac02dee1af85333">More...</a><br/></td></tr>
+<tr class="separator:ga6d7e9d4046ad49df0ac02dee1af85333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5f26af60272fed9e3fe6078efc6c9e76"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structecpri__rmr__msg__s.html">ecpri_rmr_msg_s</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga5f26af60272fed9e3fe6078efc6c9e76">ecpri_rmr_msg_t</a></td></tr>
+<tr class="memdesc:ga5f26af60272fed9e3fe6078efc6c9e76"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_rmr_msg_t eCPRI RMR message structure.  <a href="#ga5f26af60272fed9e3fe6078efc6c9e76">More...</a><br/></td></tr>
+<tr class="separator:ga5f26af60272fed9e3fe6078efc6c9e76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gadaaacfd96b60fe39c00c9d2b6ab3d8b6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gadaaacfd96b60fe39c00c9d2b6ab3d8b6">ecpri_message_type_e</a> { <br/>
+&#160;&#160;<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a6d67e8bc830e286fc9ee8da8576f366a">ECPRI_MSG_IQ_DATA</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a75e88b1632d0f5cfdb26eefcfa36195b">ECPRI_MSG_BIT_SEQ</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a92ab8e7ea39aeaed9ae2b4aa2c7d8b9c">ECPRI_MSG_RTC_DATA</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a9df1e75039d46aeecc4498dfd2112e6f">ECPRI_MSG_GENERIC_DATA</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a3bec8dcc329c77d95aedc531af777d44">ECPRI_MSG_RMA</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ab701164a822eb4230be63d3d4e631fdc">ECPRI_MSG_OWDM</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ae7301cad08c6002648aa6053f157c7a9">ECPRI_MSG_REM_RESET</a>, 
+<a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a07717853c080676e781537a57c1d6303">ECPRI_MSG_EVENT</a>
+<br/>
+ }</td></tr>
+<tr class="memdesc:gadaaacfd96b60fe39c00c9d2b6ab3d8b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_message_type_t The types of eCPRI user-plane message.  <a href="group__protocol__ecpri.html#gadaaacfd96b60fe39c00c9d2b6ab3d8b6">More...</a><br/></td></tr>
+<tr class="separator:gadaaacfd96b60fe39c00c9d2b6ab3d8b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6d45906fc10273d9dbc00c3d274718c5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga6d45906fc10273d9dbc00c3d274718c5">ecpri_owdn_direction</a> { <a class="el" href="group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a0da71b8706cde373442031bf7a2e1f3c">TO_REMOTE</a>, 
+<a class="el" href="group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a9022185f27d6fd42d23867077dae7d3c">FROM_REMOTE</a>
+ }</td></tr>
+<tr class="memdesc:ga6d45906fc10273d9dbc00c3d274718c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_owdm_msg_t eCPRI OWDM direction.  <a href="group__protocol__ecpri.html#ga6d45906fc10273d9dbc00c3d274718c5">More...</a><br/></td></tr>
+<tr class="separator:ga6d45906fc10273d9dbc00c3d274718c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga519c1a09391009e9dcb9d6ce55a27cc9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga519c1a09391009e9dcb9d6ce55a27cc9">ecpri_help_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga519c1a09391009e9dcb9d6ce55a27cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns help strings for eCPRI commands.  <a href="#ga519c1a09391009e9dcb9d6ce55a27cc9">More...</a><br/></td></tr>
 <tr class="separator:ga519c1a09391009e9dcb9d6ce55a27cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8ea7f543d9a91fb37685b5b466afbc93"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga8ea7f543d9a91fb37685b5b466afbc93">ecpri_owdm_req_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga8ea7f543d9a91fb37685b5b466afbc93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests a One-Way Delay Measurement to/from a remote node.  <a href="#ga8ea7f543d9a91fb37685b5b466afbc93">More...</a><br/></td></tr>
 <tr class="separator:ga8ea7f543d9a91fb37685b5b466afbc93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga73cdcece64f4cee7b8a832d32e9e3de7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga73cdcece64f4cee7b8a832d32e9e3de7">ecpri_owdm_res_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga73cdcece64f4cee7b8a832d32e9e3de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the result of the latest One-Way Delay Measurement.  <a href="#ga73cdcece64f4cee7b8a832d32e9e3de7">More...</a><br/></td></tr>
 <tr class="separator:ga73cdcece64f4cee7b8a832d32e9e3de7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga167dd69ca84a83b686aa95f382ee7713"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga167dd69ca84a83b686aa95f382ee7713">ecpri_owdm_limit_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga167dd69ca84a83b686aa95f382ee7713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the reporting limit of the latest One-Way Delay Measurement.  <a href="#ga167dd69ca84a83b686aa95f382ee7713">More...</a><br/></td></tr>
 <tr class="separator:ga167dd69ca84a83b686aa95f382ee7713"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9d914a753d9d70328a0f7935223257e8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga9d914a753d9d70328a0f7935223257e8">ecpri_rma_read_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga9d914a753d9d70328a0f7935223257e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests a Remote Memory read from a remote node.  <a href="#ga9d914a753d9d70328a0f7935223257e8">More...</a><br/></td></tr>
 <tr class="separator:ga9d914a753d9d70328a0f7935223257e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1ae4c755b34d0653e623453876f66b7e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga1ae4c755b34d0653e623453876f66b7e">ecpri_rma_write_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga1ae4c755b34d0653e623453876f66b7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests a Remote Memory write to a remote node.  <a href="#ga1ae4c755b34d0653e623453876f66b7e">More...</a><br/></td></tr>
 <tr class="separator:ga1ae4c755b34d0653e623453876f66b7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab80bb571a74158adc38b9ee3ca72b1b2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gab80bb571a74158adc38b9ee3ca72b1b2">ecpri_test_mesg_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:gab80bb571a74158adc38b9ee3ca72b1b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a test message (generic data) to a remote node.  <a href="#gab80bb571a74158adc38b9ee3ca72b1b2">More...</a><br/></td></tr>
 <tr class="separator:gab80bb571a74158adc38b9ee3ca72b1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad79053e81a8493881189ba10283aee7a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gad79053e81a8493881189ba10283aee7a">ecpri_rmr_req_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:gad79053e81a8493881189ba10283aee7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requests a Remote Reset of a remote node.  <a href="#gad79053e81a8493881189ba10283aee7a">More...</a><br/></td></tr>
 <tr class="separator:gad79053e81a8493881189ba10283aee7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacddb2189cd73128e4049428c2ee64be4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gacddb2189cd73128e4049428c2ee64be4">owdm_send_request</a> (uint8_t type, char *dest_addr)</td></tr>
+<tr class="memdesc:gacddb2189cd73128e4049428c2ee64be4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a One-Way Delay Measurement request to a remote node.  <a href="#gacddb2189cd73128e4049428c2ee64be4">More...</a><br/></td></tr>
 <tr class="separator:gacddb2189cd73128e4049428c2ee64be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad4425b1590047695ed9a9d6d72017ee3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request</a> (int type, char *dest_addr, char *addr, char *length, char *values)</td></tr>
+<tr class="memdesc:gad4425b1590047695ed9a9d6d72017ee3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a Remote Memory Access request to a remote node.  <a href="#gad4425b1590047695ed9a9d6d72017ee3">More...</a><br/></td></tr>
 <tr class="separator:gad4425b1590047695ed9a9d6d72017ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf17987695a7ab020c967425daa0cb4e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaf17987695a7ab020c967425daa0cb4e5">test_mesg_send_request</a> (char *dest_addr, char *dest_port)</td></tr>
+<tr class="memdesc:gaf17987695a7ab020c967425daa0cb4e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a test message (generic data) to a remote node.  <a href="#gaf17987695a7ab020c967425daa0cb4e5">More...</a><br/></td></tr>
 <tr class="separator:gaf17987695a7ab020c967425daa0cb4e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga488452cea1006fbacf70188cf505575e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response</a> (int type, char *addr, int *length, char **values)</td></tr>
+<tr class="memdesc:ga488452cea1006fbacf70188cf505575e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a Remote Memory Access response from a remote node.  <a href="#ga488452cea1006fbacf70188cf505575e">More...</a><br/></td></tr>
 <tr class="separator:ga488452cea1006fbacf70188cf505575e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad1fab91aa052d990a0900d266addfeb5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gad1fab91aa052d990a0900d266addfeb5">rmr_send_request</a> (char *dest_addr)</td></tr>
+<tr class="memdesc:gad1fab91aa052d990a0900d266addfeb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends a Remote Reset request to a remote node.  <a href="#gad1fab91aa052d990a0900d266addfeb5">More...</a><br/></td></tr>
 <tr class="separator:gad1fab91aa052d990a0900d266addfeb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae6d91a7810e2bb32f0630b9e91cecae3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gae6d91a7810e2bb32f0630b9e91cecae3">rmr_get_response</a> (char *addr, char **values)</td></tr>
+<tr class="memdesc:gae6d91a7810e2bb32f0630b9e91cecae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a Remote Reset response from a remote node.  <a href="#gae6d91a7810e2bb32f0630b9e91cecae3">More...</a><br/></td></tr>
 <tr class="separator:gae6d91a7810e2bb32f0630b9e91cecae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5babc84eb1ce6a9861f890572e40f09a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga5babc84eb1ce6a9861f890572e40f09a">ecpri_func</a> (int argc, char **argv, char *resp)</td></tr>
+<tr class="memdesc:ga5babc84eb1ce6a9861f890572e40f09a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the input command string and calls a handler function (if found).  <a href="#ga5babc84eb1ce6a9861f890572e40f09a">More...</a><br/></td></tr>
 <tr class="separator:ga5babc84eb1ce6a9861f890572e40f09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gae5101451cebc5e023ee6a1600cfc665b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma</a> (uint8_t *buffer, uint16_t data_len, int fd, struct sockaddr_in *src)</td></tr>
+<tr class="memdesc:gae5101451cebc5e023ee6a1600cfc665b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an incoming eCPRI Remote Memory Access message.  <a href="#gae5101451cebc5e023ee6a1600cfc665b">More...</a><br/></td></tr>
 <tr class="separator:gae5101451cebc5e023ee6a1600cfc665b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac781654e91f61af7dcd288e233002e5d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm</a> (uint8_t *buffer, uint16_t data_len, int fd, struct sockaddr_in *src, struct timespec *ts)</td></tr>
+<tr class="memdesc:gac781654e91f61af7dcd288e233002e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an incoming eCPRI Remote Memory Access message.  <a href="#gac781654e91f61af7dcd288e233002e5d">More...</a><br/></td></tr>
 <tr class="separator:gac781654e91f61af7dcd288e233002e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacd46a8647c8c029cf723cf8e9a09930e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr</a> (uint8_t *buffer, uint16_t data_len, int fd, struct sockaddr_in *src)</td></tr>
+<tr class="memdesc:gacd46a8647c8c029cf723cf8e9a09930e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an incoming eCPRI Remote Reset message.  <a href="#gacd46a8647c8c029cf723cf8e9a09930e">More...</a><br/></td></tr>
 <tr class="separator:gacd46a8647c8c029cf723cf8e9a09930e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadcf3c8c56cf7fb907608029093b348bb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gadcf3c8c56cf7fb907608029093b348bb">proto_ecpri_handle_incoming_event</a> (uint8_t *buffer, uint16_t data_len, int fd, struct sockaddr_in *src)</td></tr>
+<tr class="memdesc:gadcf3c8c56cf7fb907608029093b348bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an incoming eCPRI event message.  <a href="#gadcf3c8c56cf7fb907608029093b348bb">More...</a><br/></td></tr>
 <tr class="separator:gadcf3c8c56cf7fb907608029093b348bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3769d37713288c825ac7ce672b245c29"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga3769d37713288c825ac7ce672b245c29">proto_ecpri_handle_incoming_test_mesg</a> (uint8_t *buffer, uint16_t data_len, int fd, struct sockaddr_in *src)</td></tr>
+<tr class="memdesc:ga3769d37713288c825ac7ce672b245c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an incoming eCPRI test message (generic data).  <a href="#ga3769d37713288c825ac7ce672b245c29">More...</a><br/></td></tr>
 <tr class="separator:ga3769d37713288c825ac7ce672b245c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gacac3140b20a50ce634ccc804ac0bc616"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send</a> (uint8_t *data, uint16_t length, <a class="el" href="group__protocol__ecpri.html#ga69be2ec2ee3e64097845462bc34e25bd">ecpri_message_type_t</a> type, int sock_d, struct sockaddr_in *dest)</td></tr>
+<tr class="memdesc:gacac3140b20a50ce634ccc804ac0bc616"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an eCPRI protocol message to a remote node.  <a href="#gacac3140b20a50ce634ccc804ac0bc616">More...</a><br/></td></tr>
 <tr class="separator:gacac3140b20a50ce634ccc804ac0bc616"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga80345c32db753dd653e4cf4bffbf59db"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv</a> (uint8_t **data, uint16_t *length, <a class="el" href="group__protocol__ecpri.html#ga69be2ec2ee3e64097845462bc34e25bd">ecpri_message_type_t</a> *type, int sock_d, struct sockaddr_in *src, uint8_t *ts)</td></tr>
+<tr class="memdesc:ga80345c32db753dd653e4cf4bffbf59db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a message on the eCPRI protocol port.  <a href="#ga80345c32db753dd653e4cf4bffbf59db">More...</a><br/></td></tr>
 <tr class="separator:ga80345c32db753dd653e4cf4bffbf59db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4cb2e77548ecfea972059945fcadfc3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaa4cb2e77548ecfea972059945fcadfc3">proto_ecpri_handle_timestamps</a> (int sock_d, int errQueue, uint8_t *ts)</td></tr>
+<tr class="memdesc:gaa4cb2e77548ecfea972059945fcadfc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives a message on the eCPRI protocol port.  <a href="#gaa4cb2e77548ecfea972059945fcadfc3">More...</a><br/></td></tr>
 <tr class="separator:gaa4cb2e77548ecfea972059945fcadfc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5802acbbb7295bbff3bbd1bf5fdab2a2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request</a> (int type, uint16_t data_len, struct sockaddr_in *dest, uint64_t offset, uint8_t *values)</td></tr>
+<tr class="memdesc:ga5802acbbb7295bbff3bbd1bf5fdab2a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends an RMA request to a remote node.  <a href="#ga5802acbbb7295bbff3bbd1bf5fdab2a2">More...</a><br/></td></tr>
 <tr class="separator:ga5802acbbb7295bbff3bbd1bf5fdab2a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94b861c2944d22d3fd147ad3b0435648"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response</a> (int type, int *length, struct sockaddr_in *src, uint8_t **values)</td></tr>
+<tr class="memdesc:ga94b861c2944d22d3fd147ad3b0435648"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receives an RMA response from a remote node.  <a href="#ga94b861c2944d22d3fd147ad3b0435648">More...</a><br/></td></tr>
 <tr class="separator:ga94b861c2944d22d3fd147ad3b0435648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab5e7298839695776363eb2499f4771c6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts</a> (uint8_t *msg, uint16_t len, struct sockaddr_in *dest, int send_ts)</td></tr>
+<tr class="memdesc:gab5e7298839695776363eb2499f4771c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an OWDM request and optionally the tx time-stamp.  <a href="#gab5e7298839695776363eb2499f4771c6">More...</a><br/></td></tr>
 <tr class="separator:gab5e7298839695776363eb2499f4771c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7bf85dd8758228f0e700691403fe09e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request</a> (uint8_t type, struct sockaddr_in *dest)</td></tr>
+<tr class="memdesc:ga7bf85dd8758228f0e700691403fe09e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an OWDM request.  <a href="#ga7bf85dd8758228f0e700691403fe09e5">More...</a><br/></td></tr>
 <tr class="separator:ga7bf85dd8758228f0e700691403fe09e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga761b58eb997263bdff36548a7fb93a32"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga761b58eb997263bdff36548a7fb93a32">ecpri_owdm_calc_delay</a> (<a class="el" href="group__protocol__ecpri.html#gaf92ceaecfa5e8dda474153047b18e4d5">owdm_ts_msg_type</a> *t1, <a class="el" href="group__protocol__ecpri.html#gaf92ceaecfa5e8dda474153047b18e4d5">owdm_ts_msg_type</a> *t2, <a class="el" href="group__protocol__ecpri.html#ga728711254649f596039dc56790ad2438">owdm_result_type</a> *<a class="el" href="group__protocol__ecpri.html#ga9abea8df56c30d3dd77b4367562919a7">owdm_result</a>)</td></tr>
+<tr class="memdesc:ga761b58eb997263bdff36548a7fb93a32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the difference between two time-stamps as an OWDM result.  <a href="#ga761b58eb997263bdff36548a7fb93a32">More...</a><br/></td></tr>
 <tr class="separator:ga761b58eb997263bdff36548a7fb93a32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga72d6940aa0f211f4c5e15ca7a9970fae"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request</a> (struct sockaddr_in *dest)</td></tr>
+<tr class="memdesc:ga72d6940aa0f211f4c5e15ca7a9970fae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a Remote Reset request to a remote node.  <a href="#ga72d6940aa0f211f4c5e15ca7a9970fae">More...</a><br/></td></tr>
 <tr class="separator:ga72d6940aa0f211f4c5e15ca7a9970fae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadaddbc2896bddf9c771f66e363763ec1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gadaddbc2896bddf9c771f66e363763ec1">proto_ecpri_rmr_get_response</a> (struct sockaddr_in *src)</td></tr>
+<tr class="memdesc:gadaddbc2896bddf9c771f66e363763ec1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a Remote Reset response from a remote node.  <a href="#gadaddbc2896bddf9c771f66e363763ec1">More...</a><br/></td></tr>
 <tr class="separator:gadaddbc2896bddf9c771f66e363763ec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafc4e44ea0d37dc9e3be8e7846226fe68"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg</a> (int fd, short revents, char *command)</td></tr>
+<tr class="memdesc:gafc4e44ea0d37dc9e3be8e7846226fe68"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle an eCPRI message received on the UDP/IP socket.  <a href="#gafc4e44ea0d37dc9e3be8e7846226fe68">More...</a><br/></td></tr>
 <tr class="separator:gafc4e44ea0d37dc9e3be8e7846226fe68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga84a76a9ada0b6925b78e35f90020853b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga84a76a9ada0b6925b78e35f90020853b">proto_ecpri_get_owdm_result</a> (int *req_no, int *resp_no, <a class="el" href="group__protocol__ecpri.html#ga6d7e9d4046ad49df0ac02dee1af85333">ecpri_owdm_direction_type</a> *direction, struct in_addr *node, unsigned long long *secs, unsigned long *nsecs)</td></tr>
+<tr class="memdesc:ga84a76a9ada0b6925b78e35f90020853b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the current OWDM result values.  <a href="#ga84a76a9ada0b6925b78e35f90020853b">More...</a><br/></td></tr>
 <tr class="separator:ga84a76a9ada0b6925b78e35f90020853b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga40d1f0d007083472b5dee0bdcb1bf75e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga40d1f0d007083472b5dee0bdcb1bf75e">proto_ecpri_test_mesg_send</a> (struct sockaddr_in *dest)</td></tr>
+<tr class="memdesc:ga40d1f0d007083472b5dee0bdcb1bf75e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send an eCPRI test message (generic data).  <a href="#ga40d1f0d007083472b5dee0bdcb1bf75e">More...</a><br/></td></tr>
 <tr class="separator:ga40d1f0d007083472b5dee0bdcb1bf75e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f2bba82425f39d2121e53248044a3de"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga4f2bba82425f39d2121e53248044a3de">proto_ecpri_set_owdm_limit</a> (long limit)</td></tr>
+<tr class="memdesc:ga4f2bba82425f39d2121e53248044a3de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the reporting threshold for eCPRI OWDM measurements.  <a href="#ga4f2bba82425f39d2121e53248044a3de">More...</a><br/></td></tr>
 <tr class="separator:ga4f2bba82425f39d2121e53248044a3de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gaf69220bfe69b91054b24057ded2f2352"><td class="memItemLeft" align="right" valign="top">commands_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gaf69220bfe69b91054b24057ded2f2352">ecpri_cmds</a> [<a class="el" href="group__protocol__ecpri.html#ga9afef3e7bddcf019011f5262e34e84af">ECPRI_MAX_COMMANDS</a>]</td></tr>
+<tr class="memdesc:gaf69220bfe69b91054b24057ded2f2352"><td class="mdescLeft">&#160;</td><td class="mdescRight">ecpri_cmds The commands handled by the disable module.  <a href="#gaf69220bfe69b91054b24057ded2f2352">More...</a><br/></td></tr>
+<tr class="separator:gaf69220bfe69b91054b24057ded2f2352"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga238c328dacc18e33f4ae32f9638fd012"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga238c328dacc18e33f4ae32f9638fd012">SEQ_NUM</a> = 0</td></tr>
+<tr class="memdesc:ga238c328dacc18e33f4ae32f9638fd012"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sequence number for eCPRI test messages.  <a href="#ga238c328dacc18e33f4ae32f9638fd012">More...</a><br/></td></tr>
+<tr class="separator:ga238c328dacc18e33f4ae32f9638fd012"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac3fd9eef210f8d958d51c87ccb3c0565"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#gac3fd9eef210f8d958d51c87ccb3c0565">owdm_req</a> = 0</td></tr>
+<tr class="memdesc:gac3fd9eef210f8d958d51c87ccb3c0565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of OWDM requests sent by this node.  <a href="#gac3fd9eef210f8d958d51c87ccb3c0565">More...</a><br/></td></tr>
+<tr class="separator:gac3fd9eef210f8d958d51c87ccb3c0565"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9abea8df56c30d3dd77b4367562919a7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__protocol__ecpri.html#ga728711254649f596039dc56790ad2438">owdm_result_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga9abea8df56c30d3dd77b4367562919a7">owdm_result</a></td></tr>
+<tr class="memdesc:ga9abea8df56c30d3dd77b4367562919a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">OWDM result storage.  <a href="#ga9abea8df56c30d3dd77b4367562919a7">More...</a><br/></td></tr>
+<tr class="separator:ga9abea8df56c30d3dd77b4367562919a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b04d633113790837c3a661b24695383"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__protocol__ecpri.html#gaf92ceaecfa5e8dda474153047b18e4d5">owdm_ts_msg_type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga2b04d633113790837c3a661b24695383">owdm_msg</a></td></tr>
+<tr class="memdesc:ga2b04d633113790837c3a661b24695383"><td class="mdescLeft">&#160;</td><td class="mdescRight">OWDM message storage.  <a href="#ga2b04d633113790837c3a661b24695383">More...</a><br/></td></tr>
+<tr class="separator:ga2b04d633113790837c3a661b24695383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63c9d702952032734e815a2f3f1c8e9f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga63c9d702952032734e815a2f3f1c8e9f">owdm_comp</a> [8] = {0, 0, 0, 0, 0, 0, 0, 0}</td></tr>
+<tr class="memdesc:ga63c9d702952032734e815a2f3f1c8e9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">OWDM local delay compensation value.  <a href="#ga63c9d702952032734e815a2f3f1c8e9f">More...</a><br/></td></tr>
+<tr class="separator:ga63c9d702952032734e815a2f3f1c8e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82388cebf26e54b6d23d9793cc63dd51"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__ecpri.html#ga82388cebf26e54b6d23d9793cc63dd51">ecpri_report_limit</a> = 0</td></tr>
+<tr class="memdesc:ga82388cebf26e54b6d23d9793cc63dd51"><td class="mdescLeft">&#160;</td><td class="mdescRight">OWDM measurement reporting limit (nsecs).  <a href="#ga82388cebf26e54b6d23d9793cc63dd51">More...</a><br/></td></tr>
+<tr class="separator:ga82388cebf26e54b6d23d9793cc63dd51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>A sample command parser for the RoE Framer software modules. </p>
 <p>Sample eCPRI protocol library.</p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="gac3c5fe6495d5ecd13623bd74aff1829a"></a>
@@ -209,8 +414,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_OWDM_LIMIT_STR Help text for the ecpri module "owdm_limit" option. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga167dd69ca84a83b686aa95f382ee7713">ecpri_owdm_limit_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gacef69ce4649f0728cc1832bc057ebbcc"></a>
@@ -224,8 +427,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_OWDM_MSG_ACTION_FOL_UP eCPRI OWDM follow-up flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
 
 </div>
 </div>
@@ -241,8 +442,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_OWDM_MSG_ACTION_REM_REQ eCPRI OWDM remote action request flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gada37aaceba923f850760d31a89a9a51d"></a>
@@ -256,8 +455,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP OWDM rem act req with follow-up flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga8ea7f543d9a91fb37685b5b466afbc93">ecpri_owdm_req_func()</a>, <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -273,8 +470,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_OWDM_MSG_ACTION_REQ eCPRI OWDM action request flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga8468c9804d93a5527ee267c19fe98dc6"></a>
@@ -288,8 +483,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP eCPRI OWDM action req with follow-up flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga8ea7f543d9a91fb37685b5b466afbc93">ecpri_owdm_req_func()</a>, <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -305,8 +498,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_OWDM_MSG_ACTION_RESP eCPRI OWDM action response flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gabd915f49b2cb7fe0aaa7cac122c0745c"></a>
@@ -320,8 +511,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_OWDM_REQ_STR Help text for the ecpri module "owdm_req" option. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga8ea7f543d9a91fb37685b5b466afbc93">ecpri_owdm_req_func()</a>.</p>
 
 </div>
 </div>
@@ -337,8 +526,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_OWDM_RES_STR Help text for the ecpri module "owdm_res" option. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga73cdcece64f4cee7b8a832d32e9e3de7">ecpri_owdm_res_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga3cdbbf3ccc8dc571b93c45615842e947"></a>
@@ -353,8 +540,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_PROTO_HEADER_SIZE Size of the eCPRI message header. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv()</a>, and <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaacd9554ace2b7dadb8ccc19e0fbd7da7"></a>
@@ -368,8 +553,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_PROTO_MAGIC_BYTE Magic eCPRI message byte. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv()</a>, and <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>.</p>
 
 </div>
 </div>
@@ -399,8 +582,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_RMA_MSG_READ eCPRI RMA read flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>, <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaacb7b691a0f309664493aeaae0bbe265"></a>
@@ -414,8 +595,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_RMA_MSG_REQ eCPRI RMA request flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>.</p>
 
 </div>
 </div>
@@ -431,8 +610,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_RMA_MSG_RESP eCPRI RMA response flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, and <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga193cb3ec47d746278baec2087e162919"></a>
@@ -446,8 +623,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_RMA_MSG_WR_NO_RESP eCPRI RMA write with no response flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>.</p>
 
 </div>
 </div>
@@ -463,8 +638,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_RMA_MSG_WRITE eCPRI RMA write flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>, <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gac394022b0a560323fa872bf5dcccf27e"></a>
@@ -478,8 +651,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_RMA_READ_STR Help text for the ecpri module "rma_read" option. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga9d914a753d9d70328a0f7935223257e8">ecpri_rma_read_func()</a>.</p>
 
 </div>
 </div>
@@ -495,8 +666,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_RMA_WRITE_STR Help text for the ecpri module "rma_write" option. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga1ae4c755b34d0653e623453876f66b7e">ecpri_rma_write_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga1ad201425acccbfaf0a37ac41a3a387b"></a>
@@ -510,8 +679,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_RMR_MSG_CODE_OP_REM_RESET_REQ eCPRI RMR request flag. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, and <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request()</a>.</p>
 
 </div>
 </div>
@@ -527,8 +694,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_RMR_MSG_CODE_OP_REM_RESET_RESP eCPRI RMR response flag. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, and <a class="el" href="group__protocol__ecpri.html#gadaddbc2896bddf9c771f66e363763ec1">proto_ecpri_rmr_get_response()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaebbd75a8e4fbbc25c5c6062f2013eb52"></a>
@@ -542,8 +707,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_RMR_REQ_STR Help text for the ecpri module "rmr_req" option. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gad79053e81a8493881189ba10283aee7a">ecpri_rmr_req_func()</a>.</p>
 
 </div>
 </div>
@@ -559,8 +722,6 @@ Functions</h2></td></tr>
 
 <p>ECPRI_TEST_MESG_STR Help text for the ecpri module "test_mesg" option. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gab80bb571a74158adc38b9ee3ca72b1b2">ecpri_test_mesg_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaea5ef8ddb96633d98df129331008536c"></a>
@@ -574,8 +735,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>ECPRI_USAGE_STR Help text for the ecpri module. </p>
-
-<p>Referenced by <a class="el" href="group__xorif-app.html#ga5babc84eb1ce6a9861f890572e40f09a">ecpri_func()</a>.</p>
 
 </div>
 </div>
@@ -591,8 +750,6 @@ Functions</h2></td></tr>
 
 <p>RMA_READ Flag to indicate an RMA read operation. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga9d914a753d9d70328a0f7935223257e8">ecpri_rma_read_func()</a>, <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaf089de88aae5fcf5fde9e77c18f95077"></a>
@@ -606,8 +763,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>RMA_WRITE Flag to indicate an RMA write operation. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga1ae4c755b34d0653e623453876f66b7e">ecpri_rma_write_func()</a>.</p>
 
 </div>
 </div>
@@ -834,8 +989,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gaf69220bfe69b91054b24057ded2f2352">ecpri_cmds</a>, and <a class="el" href="group__protocol__ecpri.html#gaea5ef8ddb96633d98df129331008536c">ECPRI_USAGE_STR</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga519c1a09391009e9dcb9d6ce55a27cc9"></a>
@@ -882,8 +1035,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gaf69220bfe69b91054b24057ded2f2352">ecpri_cmds</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga761b58eb997263bdff36548a7fb93a32"></a>
@@ -929,10 +1080,6 @@ Functions</h2></td></tr>
 <li>1. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ga82388cebf26e54b6d23d9793cc63dd51">ecpri_report_limit</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>.</p>
 
 </div>
 </div>
@@ -981,8 +1128,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#ga3d3c2dcf1dfda3a97df93de61e21556e">ECPRI_OWDM_LIMIT_STR</a>, and <a class="el" href="group__protocol__ecpri.html#ga4f2bba82425f39d2121e53248044a3de">proto_ecpri_set_owdm_limit()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga8ea7f543d9a91fb37685b5b466afbc93"></a>
@@ -1028,8 +1173,6 @@ Functions</h2></td></tr>
 <li>0 </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#gada37aaceba923f850760d31a89a9a51d">ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#ga8468c9804d93a5527ee267c19fe98dc6">ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#gabd915f49b2cb7fe0aaa7cac122c0745c">ECPRI_OWDM_REQ_STR</a>, and <a class="el" href="group__protocol__ecpri.html#gacddb2189cd73128e4049428c2ee64be4">owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -1078,8 +1221,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#ga883a7bc399c4e160de837b766003102d">ECPRI_OWDM_RES_STR</a>, <a class="el" href="group__protocol__ecpri.html#ga84a76a9ada0b6925b78e35f90020853b">proto_ecpri_get_owdm_result()</a>, and <a class="el" href="group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a0da71b8706cde373442031bf7a2e1f3c">TO_REMOTE</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga9d914a753d9d70328a0f7935223257e8"></a>
@@ -1125,8 +1266,6 @@ Functions</h2></td></tr>
 <li>0 </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#gac394022b0a560323fa872bf5dcccf27e">ECPRI_RMA_READ_STR</a>, <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>, <a class="el" href="group__protocol__ecpri.html#gaaadbb1d24f3e8415210bb5a4d7b42379">RMA_READ</a>, and <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>.</p>
 
 </div>
 </div>
@@ -1174,8 +1313,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#ga5c31460e25f63c59da1bc26190a025a2">ECPRI_RMA_WRITE_STR</a>, <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>, <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>, and <a class="el" href="group__protocol__ecpri.html#gaf089de88aae5fcf5fde9e77c18f95077">RMA_WRITE</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gad79053e81a8493881189ba10283aee7a"></a>
@@ -1221,8 +1358,6 @@ Functions</h2></td></tr>
 <li>0 </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#gaebbd75a8e4fbbc25c5c6062f2013eb52">ECPRI_RMR_REQ_STR</a>, <a class="el" href="group__protocol__ecpri.html#gae6d91a7810e2bb32f0630b9e91cecae3">rmr_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gad1fab91aa052d990a0900d266addfeb5">rmr_send_request()</a>.</p>
 
 </div>
 </div>
@@ -1270,8 +1405,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gae290e0c26483f0e23ce501fa4bcc0922">ECPRI_TEST_MESG_STR</a>, and <a class="el" href="group__protocol__ecpri.html#gaf17987695a7ab020c967425daa0cb4e5">test_mesg_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gacddb2189cd73128e4049428c2ee64be4"></a>
@@ -1312,10 +1445,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5" title="Send an OWDM request. ">proto_ecpri_owdm_send_request()</a>. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga8ea7f543d9a91fb37685b5b466afbc93">ecpri_owdm_req_func()</a>.</p>
 
 </div>
 </div>
@@ -1380,10 +1509,6 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gac3fd9eef210f8d958d51c87ccb3c0565">owdm_req</a>, and <a class="el" href="group__protocol__ecpri.html#ga9abea8df56c30d3dd77b4367562919a7">owdm_result</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga73cdcece64f4cee7b8a832d32e9e3de7">ecpri_owdm_res_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gadcf3c8c56cf7fb907608029093b348bb"></a>
@@ -1438,8 +1563,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gafc4e44ea0d37dc9e3be8e7846226fe68"></a>
@@ -1488,10 +1611,6 @@ Functions</h2></td></tr>
 <li>0 on unhandled message type or revent not POLLIN or POLLERR. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a75e88b1632d0f5cfdb26eefcfa36195b">ECPRI_MSG_BIT_SEQ</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a07717853c080676e781537a57c1d6303">ECPRI_MSG_EVENT</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a9df1e75039d46aeecc4498dfd2112e6f">ECPRI_MSG_GENERIC_DATA</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a6d67e8bc830e286fc9ee8da8576f366a">ECPRI_MSG_IQ_DATA</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ab701164a822eb4230be63d3d4e631fdc">ECPRI_MSG_OWDM</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ae7301cad08c6002648aa6053f157c7a9">ECPRI_MSG_REM_RESET</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a3bec8dcc329c77d95aedc531af777d44">ECPRI_MSG_RMA</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a92ab8e7ea39aeaed9ae2b4aa2c7d8b9c">ECPRI_MSG_RTC_DATA</a>, <a class="el" href="group__protocol__ecpri.html#gadcf3c8c56cf7fb907608029093b348bb">proto_ecpri_handle_incoming_event()</a>, <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, <a class="el" href="group__protocol__ecpri.html#ga3769d37713288c825ac7ce672b245c29">proto_ecpri_handle_incoming_test_mesg()</a>, <a class="el" href="group__protocol__ecpri.html#gaa4cb2e77548ecfea972059945fcadfc3">proto_ecpri_handle_timestamps()</a>, and <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__xorif-app.html#ga59606f2183f205263419f3b7d9bc9667">do_socket()</a>.</p>
 
 </div>
 </div>
@@ -1554,10 +1673,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="structecpri__owdm__msg__s.html#a19e2961b6ac0c16caaa0926dac096489">ecpri_owdm_msg_s::action_type</a>, <a class="el" href="structecpri__owdm__msg__s.html#ad82ce6722f71b64371c51e9159855a8c">ecpri_owdm_msg_s::comp</a>, <a class="el" href="group__protocol__ecpri.html#ga761b58eb997263bdff36548a7fb93a32">ecpri_owdm_calc_delay()</a>, <a class="el" href="group__protocol__ecpri.html#gacef69ce4649f0728cc1832bc057ebbcc">ECPRI_OWDM_MSG_ACTION_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#gada37aaceba923f850760d31a89a9a51d">ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#ga8468c9804d93a5527ee267c19fe98dc6">ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#gaac208ea0f8bd2725db87638882600ab8">ECPRI_OWDM_MSG_ACTION_RESP</a>, <a class="el" href="group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a9022185f27d6fd42d23867077dae7d3c">FROM_REMOTE</a>, <a class="el" href="structecpri__owdm__msg__s.html#abd443c82f933672dd67f377568a38765">ecpri_owdm_msg_s::id</a>, <a class="el" href="group__protocol__ecpri.html#ga63c9d702952032734e815a2f3f1c8e9f">owdm_comp</a>, <a class="el" href="group__protocol__ecpri.html#ga2b04d633113790837c3a661b24695383">owdm_msg</a>, <a class="el" href="group__protocol__ecpri.html#gac3fd9eef210f8d958d51c87ccb3c0565">owdm_req</a>, <a class="el" href="group__protocol__ecpri.html#ga9abea8df56c30d3dd77b4367562919a7">owdm_result</a>, <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>, <a class="el" href="group__protocol__ecpri.html#gga6d45906fc10273d9dbc00c3d274718c5a0da71b8706cde373442031bf7a2e1f3c">TO_REMOTE</a>, <a class="el" href="structecpri__owdm__msg__s.html#a59c619be391aa13d268937e49095406d">ecpri_owdm_msg_s::ts_nsec</a>, and <a class="el" href="structecpri__owdm__msg__s.html#ac43d4f436a89d8d732d876d554c6ec6e">ecpri_owdm_msg_s::ts_sec</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gae5101451cebc5e023ee6a1600cfc665b"></a>
@@ -1612,10 +1727,6 @@ Functions</h2></td></tr>
 <li>0 on unhandled message type or read success. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="structecpri__rma__msg__s.html#afe7fd10aa1fe3a6c56e0ea929da0ed46">ecpri_rma_msg_s::address</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a3bec8dcc329c77d95aedc531af777d44">ECPRI_MSG_RMA</a>, <a class="el" href="group__protocol__ecpri.html#gac88c39f24fcee6fe16a0676d59c5ecf1">ECPRI_RMA_MSG_READ</a>, <a class="el" href="group__protocol__ecpri.html#ga1ce3174bfa7d5ee093670a599e47fcf6">ECPRI_RMA_MSG_RESP</a>, <a class="el" href="group__protocol__ecpri.html#ga193cb3ec47d746278baec2087e162919">ECPRI_RMA_MSG_WR_NO_RESP</a>, <a class="el" href="group__protocol__ecpri.html#gac62dad3db7017d673c716b05cd500362">ECPRI_RMA_MSG_WRITE</a>, <a class="el" href="structecpri__rma__msg__s.html#acb58edcc589f8cf6f85b542c112188c5">ecpri_rma_msg_s::element_id</a>, <a class="el" href="structecpri__rma__msg__s.html#a510b1c314033023e87a8c83e97b1335b">ecpri_rma_msg_s::id</a>, <a class="el" href="structecpri__rma__msg__s.html#a7863231a6ecddf4596cdeaca097dcbc5">ecpri_rma_msg_s::length</a>, <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>, and <a class="el" href="structecpri__rma__msg__s.html#af0aef53dd39dbc68504d5a34844c3d0b">ecpri_rma_msg_s::rd_wr_req_resp</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>.</p>
 
 </div>
 </div>
@@ -1672,10 +1783,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="structecpri__rmr__msg__s.html#a752a21dce154f066f21fc997f12a56f2">ecpri_rmr_msg_s::code_op</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ae7301cad08c6002648aa6053f157c7a9">ECPRI_MSG_REM_RESET</a>, <a class="el" href="group__protocol__ecpri.html#ga1ad201425acccbfaf0a37ac41a3a387b">ECPRI_RMR_MSG_CODE_OP_REM_RESET_REQ</a>, <a class="el" href="group__protocol__ecpri.html#gab7cda7e4191ffa1cd680d3f01746a7af">ECPRI_RMR_MSG_CODE_OP_REM_RESET_RESP</a>, <a class="el" href="structecpri__rmr__msg__s.html#a196dd7a3f5056522d350755e8c82d941">ecpri_rmr_msg_s::id</a>, and <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga3769d37713288c825ac7ce672b245c29"></a>
@@ -1729,8 +1836,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gaa4cb2e77548ecfea972059945fcadfc3"></a>
@@ -1780,8 +1885,6 @@ Functions</h2></td></tr>
 <li>length of payload otherwise. </li>
 </ul>
 </dd></dl>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
 
 </div>
 </div>
@@ -1839,10 +1942,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="structecpri__owdm__msg__s.html#a19e2961b6ac0c16caaa0926dac096489">ecpri_owdm_msg_s::action_type</a>, <a class="el" href="structecpri__owdm__msg__s.html#ad82ce6722f71b64371c51e9159855a8c">ecpri_owdm_msg_s::comp</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ab701164a822eb4230be63d3d4e631fdc">ECPRI_MSG_OWDM</a>, <a class="el" href="group__protocol__ecpri.html#gacef69ce4649f0728cc1832bc057ebbcc">ECPRI_OWDM_MSG_ACTION_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#ga63c9d702952032734e815a2f3f1c8e9f">owdm_comp</a>, <a class="el" href="group__protocol__ecpri.html#ga2b04d633113790837c3a661b24695383">owdm_msg</a>, <a class="el" href="group__protocol__ecpri.html#gaa4cb2e77548ecfea972059945fcadfc3">proto_ecpri_handle_timestamps()</a>, <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>, <a class="el" href="structecpri__owdm__msg__s.html#a59c619be391aa13d268937e49095406d">ecpri_owdm_msg_s::ts_nsec</a>, and <a class="el" href="structecpri__owdm__msg__s.html#ac43d4f436a89d8d732d876d554c6ec6e">ecpri_owdm_msg_s::ts_sec</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga7bf85dd8758228f0e700691403fe09e5"></a>
@@ -1883,10 +1982,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6" title="Send an OWDM request and optionally the tx time-stamp. ">proto_ecpri_owdm_send_req_get_ts()</a> otherwise. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="structecpri__owdm__msg__s.html#a19e2961b6ac0c16caaa0926dac096489">ecpri_owdm_msg_s::action_type</a>, <a class="el" href="group__protocol__ecpri.html#gad9e92665a5a092e6b7b52bc4022c4e0a">ECPRI_OWDM_MSG_ACTION_REM_REQ</a>, <a class="el" href="group__protocol__ecpri.html#gada37aaceba923f850760d31a89a9a51d">ECPRI_OWDM_MSG_ACTION_REM_REQ_FOL_UP</a>, <a class="el" href="group__protocol__ecpri.html#gad1461652758e7cfe0189d8324e94705c">ECPRI_OWDM_MSG_ACTION_REQ</a>, <a class="el" href="group__protocol__ecpri.html#ga8468c9804d93a5527ee267c19fe98dc6">ECPRI_OWDM_MSG_ACTION_REQ_FOL_UP</a>, <a class="el" href="structecpri__owdm__msg__s.html#abd443c82f933672dd67f377568a38765">ecpri_owdm_msg_s::id</a>, <a class="el" href="group__protocol__ecpri.html#gac3fd9eef210f8d958d51c87ccb3c0565">owdm_req</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gacddb2189cd73128e4049428c2ee64be4">owdm_send_request()</a>.</p>
 
 </div>
 </div>
@@ -1959,10 +2054,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#ga3cdbbf3ccc8dc571b93c45615842e947">ECPRI_PROTO_HEADER_SIZE</a>, <a class="el" href="group__protocol__ecpri.html#gaacd9554ace2b7dadb8ccc19e0fbd7da7">ECPRI_PROTO_MAGIC_BYTE</a>, <a class="el" href="structecpri__header__s.html#ae74f9b2dfd8844955d0de0f92b73ae4b">ecpri_header_s::length</a>, <a class="el" href="structecpri__header__s.html#a107ec590700d7fcb1baf8b0362193147">ecpri_header_s::magic</a>, and <a class="el" href="structecpri__header__s.html#a7a7696bd5b3da1f954039ff9c889565b">ecpri_header_s::type</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gafc4e44ea0d37dc9e3be8e7846226fe68">proto_ecpri_handle_incoming_msg()</a>, <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gadaddbc2896bddf9c771f66e363763ec1">proto_ecpri_rmr_get_response()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga94b861c2944d22d3fd147ad3b0435648"></a>
@@ -2017,10 +2108,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db" title="Receives a message on the eCPRI protocol port. ">proto_ecpri_recv()</a> if not an RMA message. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a3bec8dcc329c77d95aedc531af777d44">ECPRI_MSG_RMA</a>, <a class="el" href="group__protocol__ecpri.html#gac88c39f24fcee6fe16a0676d59c5ecf1">ECPRI_RMA_MSG_READ</a>, <a class="el" href="group__protocol__ecpri.html#ga1ce3174bfa7d5ee093670a599e47fcf6">ECPRI_RMA_MSG_RESP</a>, <a class="el" href="structecpri__rma__msg__s.html#a7863231a6ecddf4596cdeaca097dcbc5">ecpri_rma_msg_s::length</a>, <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv()</a>, and <a class="el" href="structecpri__rma__msg__s.html#af0aef53dd39dbc68504d5a34844c3d0b">ecpri_rma_msg_s::rd_wr_req_resp</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga488452cea1006fbacf70188cf505575e">rma_get_response()</a>.</p>
 
 </div>
 </div>
@@ -2083,10 +2170,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="structecpri__rma__msg__s.html#afe7fd10aa1fe3a6c56e0ea929da0ed46">ecpri_rma_msg_s::address</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a3bec8dcc329c77d95aedc531af777d44">ECPRI_MSG_RMA</a>, <a class="el" href="group__protocol__ecpri.html#gaacb7b691a0f309664493aeaae0bbe265">ECPRI_RMA_MSG_REQ</a>, <a class="el" href="group__protocol__ecpri.html#gac62dad3db7017d673c716b05cd500362">ECPRI_RMA_MSG_WRITE</a>, <a class="el" href="structecpri__rma__msg__s.html#acb58edcc589f8cf6f85b542c112188c5">ecpri_rma_msg_s::element_id</a>, <a class="el" href="structecpri__rma__msg__s.html#a510b1c314033023e87a8c83e97b1335b">ecpri_rma_msg_s::id</a>, <a class="el" href="structecpri__rma__msg__s.html#a7863231a6ecddf4596cdeaca097dcbc5">ecpri_rma_msg_s::length</a>, <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>, and <a class="el" href="structecpri__rma__msg__s.html#af0aef53dd39dbc68504d5a34844c3d0b">ecpri_rma_msg_s::rd_wr_req_resp</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gad4425b1590047695ed9a9d6d72017ee3">rma_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gadaddbc2896bddf9c771f66e363763ec1"></a>
@@ -2117,10 +2200,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="structecpri__rmr__msg__s.html#a752a21dce154f066f21fc997f12a56f2">ecpri_rmr_msg_s::code_op</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ae7301cad08c6002648aa6053f157c7a9">ECPRI_MSG_REM_RESET</a>, <a class="el" href="group__protocol__ecpri.html#gab7cda7e4191ffa1cd680d3f01746a7af">ECPRI_RMR_MSG_CODE_OP_REM_RESET_RESP</a>, and <a class="el" href="group__protocol__ecpri.html#ga80345c32db753dd653e4cf4bffbf59db">proto_ecpri_recv()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae6d91a7810e2bb32f0630b9e91cecae3">rmr_get_response()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga72d6940aa0f211f4c5e15ca7a9970fae"></a>
@@ -2149,10 +2228,6 @@ Functions</h2></td></tr>
 <li>return value of <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616" title="Sends an eCPRI protocol message to a remote node. ">proto_ecpri_send()</a> otherwise. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="structecpri__rmr__msg__s.html#a752a21dce154f066f21fc997f12a56f2">ecpri_rmr_msg_s::code_op</a>, <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6ae7301cad08c6002648aa6053f157c7a9">ECPRI_MSG_REM_RESET</a>, <a class="el" href="group__protocol__ecpri.html#ga1ad201425acccbfaf0a37ac41a3a387b">ECPRI_RMR_MSG_CODE_OP_REM_RESET_REQ</a>, <a class="el" href="structecpri__rmr__msg__s.html#a196dd7a3f5056522d350755e8c82d941">ecpri_rmr_msg_s::id</a>, and <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gad1fab91aa052d990a0900d266addfeb5">rmr_send_request()</a>.</p>
 
 </div>
 </div>
@@ -2216,10 +2291,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#ga3cdbbf3ccc8dc571b93c45615842e947">ECPRI_PROTO_HEADER_SIZE</a>, <a class="el" href="group__protocol__ecpri.html#gaacd9554ace2b7dadb8ccc19e0fbd7da7">ECPRI_PROTO_MAGIC_BYTE</a>, <a class="el" href="structecpri__header__s.html#ae74f9b2dfd8844955d0de0f92b73ae4b">ecpri_header_s::length</a>, <a class="el" href="structecpri__header__s.html#a107ec590700d7fcb1baf8b0362193147">ecpri_header_s::magic</a>, and <a class="el" href="structecpri__header__s.html#a7a7696bd5b3da1f954039ff9c889565b">ecpri_header_s::type</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gae5101451cebc5e023ee6a1600cfc665b">proto_ecpri_handle_incoming_rma()</a>, <a class="el" href="group__protocol__ecpri.html#gacd46a8647c8c029cf723cf8e9a09930e">proto_ecpri_handle_incoming_rmr()</a>, <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>, <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>, <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request()</a>, and <a class="el" href="group__protocol__ecpri.html#ga40d1f0d007083472b5dee0bdcb1bf75e">proto_ecpri_test_mesg_send()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga4f2bba82425f39d2121e53248044a3de"></a>
@@ -2243,10 +2314,6 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ga82388cebf26e54b6d23d9793cc63dd51">ecpri_report_limit</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga167dd69ca84a83b686aa95f382ee7713">ecpri_owdm_limit_func()</a>.</p>
 
 </div>
 </div>
@@ -2277,10 +2344,6 @@ Functions</h2></td></tr>
 <li>return value of <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616" title="Sends an eCPRI protocol message to a remote node. ">proto_ecpri_send()</a> otherwise. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ggadaaacfd96b60fe39c00c9d2b6ab3d8b6a9df1e75039d46aeecc4498dfd2112e6f">ECPRI_MSG_GENERIC_DATA</a>, <a class="el" href="group__protocol__ecpri.html#gacac3140b20a50ce634ccc804ac0bc616">proto_ecpri_send()</a>, and <a class="el" href="group__protocol__ecpri.html#ga238c328dacc18e33f4ae32f9638fd012">SEQ_NUM</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gaf17987695a7ab020c967425daa0cb4e5">test_mesg_send_request()</a>.</p>
 
 </div>
 </div>
@@ -2335,10 +2398,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648" title="Receives an RMA response from a remote node. ">proto_ecpri_rma_get_response()</a>. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#gac88c39f24fcee6fe16a0676d59c5ecf1">ECPRI_RMA_MSG_READ</a>, <a class="el" href="group__protocol__ecpri.html#gac62dad3db7017d673c716b05cd500362">ECPRI_RMA_MSG_WRITE</a>, <a class="el" href="group__protocol__ecpri.html#ga94b861c2944d22d3fd147ad3b0435648">proto_ecpri_rma_get_response()</a>, and <a class="el" href="group__protocol__ecpri.html#gaaadbb1d24f3e8415210bb5a4d7b42379">RMA_READ</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga9d914a753d9d70328a0f7935223257e8">ecpri_rma_read_func()</a>, and <a class="el" href="group__protocol__ecpri.html#ga1ae4c755b34d0653e623453876f66b7e">ecpri_rma_write_func()</a>.</p>
 
 </div>
 </div>
@@ -2403,10 +2462,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gac88c39f24fcee6fe16a0676d59c5ecf1">ECPRI_RMA_MSG_READ</a>, <a class="el" href="group__protocol__ecpri.html#gac62dad3db7017d673c716b05cd500362">ECPRI_RMA_MSG_WRITE</a>, <a class="el" href="group__protocol__ecpri.html#ga5802acbbb7295bbff3bbd1bf5fdab2a2">proto_ecpri_rma_send_request()</a>, and <a class="el" href="group__protocol__ecpri.html#gaaadbb1d24f3e8415210bb5a4d7b42379">RMA_READ</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga9d914a753d9d70328a0f7935223257e8">ecpri_rma_read_func()</a>, and <a class="el" href="group__protocol__ecpri.html#ga1ae4c755b34d0653e623453876f66b7e">ecpri_rma_write_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gae6d91a7810e2bb32f0630b9e91cecae3"></a>
@@ -2447,10 +2502,6 @@ Functions</h2></td></tr>
 </ul>
 </dd></dl>
 
-<p>References <a class="el" href="group__protocol__ecpri.html#gadaddbc2896bddf9c771f66e363763ec1">proto_ecpri_rmr_get_response()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gad79053e81a8493881189ba10283aee7a">ecpri_rmr_req_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="gad1fab91aa052d990a0900d266addfeb5"></a>
@@ -2480,10 +2531,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae" title="Send a Remote Reset request to a remote node. ">proto_ecpri_rmr_send_request()</a>. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ga72d6940aa0f211f4c5e15ca7a9970fae">proto_ecpri_rmr_send_request()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gad79053e81a8493881189ba10283aee7a">ecpri_rmr_req_func()</a>.</p>
 
 </div>
 </div>
@@ -2525,10 +2572,6 @@ Functions</h2></td></tr>
 <li>Return value of <a class="el" href="group__protocol__ecpri.html#ga40d1f0d007083472b5dee0bdcb1bf75e" title="Send an eCPRI test message (generic data). ">proto_ecpri_test_mesg_send()</a>. </li>
 </ul>
 </dd></dl>
-
-<p>References <a class="el" href="group__protocol__ecpri.html#ga40d1f0d007083472b5dee0bdcb1bf75e">proto_ecpri_test_mesg_send()</a>.</p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gab80bb571a74158adc38b9ee3ca72b1b2">ecpri_test_mesg_func()</a>.</p>
 
 </div>
 </div>
@@ -2575,8 +2618,6 @@ Functions</h2></td></tr>
 </div><!-- fragment -->
 <p>ecpri_cmds The commands handled by the disable module. </p>
 
-<p>Referenced by <a class="el" href="group__xorif-app.html#ga5babc84eb1ce6a9861f890572e40f09a">ecpri_func()</a>, and <a class="el" href="group__protocol__ecpri.html#ga519c1a09391009e9dcb9d6ce55a27cc9">ecpri_help_func()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga82388cebf26e54b6d23d9793cc63dd51"></a>
@@ -2590,8 +2631,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>OWDM measurement reporting limit (nsecs). </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga761b58eb997263bdff36548a7fb93a32">ecpri_owdm_calc_delay()</a>, and <a class="el" href="group__protocol__ecpri.html#ga4f2bba82425f39d2121e53248044a3de">proto_ecpri_set_owdm_limit()</a>.</p>
 
 </div>
 </div>
@@ -2607,8 +2646,6 @@ Functions</h2></td></tr>
 
 <p>OWDM local delay compensation value. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga2b04d633113790837c3a661b24695383"></a>
@@ -2622,8 +2659,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>OWDM message storage. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#gab5e7298839695776363eb2499f4771c6">proto_ecpri_owdm_send_req_get_ts()</a>.</p>
 
 </div>
 </div>
@@ -2639,8 +2674,6 @@ Functions</h2></td></tr>
 
 <p>Number of OWDM requests sent by this node. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga84a76a9ada0b6925b78e35f90020853b">proto_ecpri_get_owdm_result()</a>, <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>, and <a class="el" href="group__protocol__ecpri.html#ga7bf85dd8758228f0e700691403fe09e5">proto_ecpri_owdm_send_request()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga9abea8df56c30d3dd77b4367562919a7"></a>
@@ -2655,8 +2688,6 @@ Functions</h2></td></tr>
 
 <p>OWDM result storage. </p>
 
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga84a76a9ada0b6925b78e35f90020853b">proto_ecpri_get_owdm_result()</a>, and <a class="el" href="group__protocol__ecpri.html#gac781654e91f61af7dcd288e233002e5d">proto_ecpri_handle_incoming_owdm()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ga238c328dacc18e33f4ae32f9638fd012"></a>
@@ -2670,8 +2701,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Sequence number for eCPRI test messages. </p>
-
-<p>Referenced by <a class="el" href="group__protocol__ecpri.html#ga40d1f0d007083472b5dee0bdcb1bf75e">proto_ecpri_test_mesg_send()</a>.</p>
 
 </div>
 </div>

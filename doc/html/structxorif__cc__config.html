@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,105 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">xorif_cc_config Struct Reference<div class="ingroups"><a class="el" href="group__libxorif-api.html">Libxorif-api</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>Structure for the requested component carrier configuration.  
+ <a href="structxorif__cc__config.html#details">More...</a></p>
+
+<p><code>#include &lt;xorif_api.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a24ef9909f0a1e732f95f0111905c0586"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a24ef9909f0a1e732f95f0111905c0586">num_rbs</a></td></tr>
+<tr class="memdesc:a24ef9909f0a1e732f95f0111905c0586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of RBs.  <a href="#a24ef9909f0a1e732f95f0111905c0586">More...</a><br/></td></tr>
+<tr class="separator:a24ef9909f0a1e732f95f0111905c0586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab532c29eb47d3f926dca650dc07f0405"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#ab532c29eb47d3f926dca650dc07f0405">num_rbs_ssb</a></td></tr>
+<tr class="memdesc:ab532c29eb47d3f926dca650dc07f0405"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of RBs for SSB (should always be 20)  <a href="#ab532c29eb47d3f926dca650dc07f0405">More...</a><br/></td></tr>
+<tr class="separator:ab532c29eb47d3f926dca650dc07f0405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac84fa34977ebd1d5d9f9c70e0de1926e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#ac84fa34977ebd1d5d9f9c70e0de1926e">numerology</a></td></tr>
+<tr class="memdesc:ac84fa34977ebd1d5d9f9c70e0de1926e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Numerology.  <a href="#ac84fa34977ebd1d5d9f9c70e0de1926e">More...</a><br/></td></tr>
+<tr class="separator:ac84fa34977ebd1d5d9f9c70e0de1926e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f54c795e34de718d6d3111bd54dfa04"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a1f54c795e34de718d6d3111bd54dfa04">extended_cp</a></td></tr>
+<tr class="memdesc:a1f54c795e34de718d6d3111bd54dfa04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extended CP (numerology 2 only)  <a href="#a1f54c795e34de718d6d3111bd54dfa04">More...</a><br/></td></tr>
+<tr class="separator:a1f54c795e34de718d6d3111bd54dfa04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aafc63836b1f7fa29ed52d584970c9ee8"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#aafc63836b1f7fa29ed52d584970c9ee8">numerology_ssb</a></td></tr>
+<tr class="memdesc:aafc63836b1f7fa29ed52d584970c9ee8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Numerology for SSB.  <a href="#aafc63836b1f7fa29ed52d584970c9ee8">More...</a><br/></td></tr>
+<tr class="separator:aafc63836b1f7fa29ed52d584970c9ee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c1002bb5d60439b583f65f2f6e6ab21"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a1c1002bb5d60439b583f65f2f6e6ab21">extended_cp_ssb</a></td></tr>
+<tr class="memdesc:a1c1002bb5d60439b583f65f2f6e6ab21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extended CP for SSB (numerology 2 only)  <a href="#a1c1002bb5d60439b583f65f2f6e6ab21">More...</a><br/></td></tr>
+<tr class="separator:a1c1002bb5d60439b583f65f2f6e6ab21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79fe71214bac815a385de313318c499b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a79fe71214bac815a385de313318c499b">iq_comp_meth_ul</a></td></tr>
+<tr class="memdesc:a79fe71214bac815a385de313318c499b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compression method for uplink.  <a href="#a79fe71214bac815a385de313318c499b">More...</a><br/></td></tr>
+<tr class="separator:a79fe71214bac815a385de313318c499b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03e732c7a8ed11daea132ddfe033a70b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a03e732c7a8ed11daea132ddfe033a70b">iq_comp_width_ul</a></td></tr>
+<tr class="memdesc:a03e732c7a8ed11daea132ddfe033a70b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compressed width for uplink.  <a href="#a03e732c7a8ed11daea132ddfe033a70b">More...</a><br/></td></tr>
+<tr class="separator:a03e732c7a8ed11daea132ddfe033a70b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af768cd7cdb4b475c0eb8974b915d2a7b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#af768cd7cdb4b475c0eb8974b915d2a7b">iq_comp_mplane_ul</a></td></tr>
+<tr class="memdesc:af768cd7cdb4b475c0eb8974b915d2a7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating M-plane compression for uplink.  <a href="#af768cd7cdb4b475c0eb8974b915d2a7b">More...</a><br/></td></tr>
+<tr class="separator:af768cd7cdb4b475c0eb8974b915d2a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fc7c81f6f6854a3a799b8af783f4a07"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a0fc7c81f6f6854a3a799b8af783f4a07">iq_comp_meth_dl</a></td></tr>
+<tr class="memdesc:a0fc7c81f6f6854a3a799b8af783f4a07"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compression method for downlink.  <a href="#a0fc7c81f6f6854a3a799b8af783f4a07">More...</a><br/></td></tr>
+<tr class="separator:a0fc7c81f6f6854a3a799b8af783f4a07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a255afa2a16d6fe566e41d6c0a50bf869"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a255afa2a16d6fe566e41d6c0a50bf869">iq_comp_width_dl</a></td></tr>
+<tr class="memdesc:a255afa2a16d6fe566e41d6c0a50bf869"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compressed width for downlink.  <a href="#a255afa2a16d6fe566e41d6c0a50bf869">More...</a><br/></td></tr>
+<tr class="separator:a255afa2a16d6fe566e41d6c0a50bf869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a532105664966d4d2c0fabf8021797841"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a532105664966d4d2c0fabf8021797841">iq_comp_mplane_dl</a></td></tr>
+<tr class="memdesc:a532105664966d4d2c0fabf8021797841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating M-plane compression for downlink.  <a href="#a532105664966d4d2c0fabf8021797841">More...</a><br/></td></tr>
+<tr class="separator:a532105664966d4d2c0fabf8021797841"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3009482ed07fba9f94d571b91b81fddf"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a3009482ed07fba9f94d571b91b81fddf">iq_comp_meth_ssb</a></td></tr>
+<tr class="memdesc:a3009482ed07fba9f94d571b91b81fddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compression method for SSB.  <a href="#a3009482ed07fba9f94d571b91b81fddf">More...</a><br/></td></tr>
+<tr class="separator:a3009482ed07fba9f94d571b91b81fddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b0d65f6af7eb68c1eda071b09d703a1"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a0b0d65f6af7eb68c1eda071b09d703a1">iq_comp_width_ssb</a></td></tr>
+<tr class="memdesc:a0b0d65f6af7eb68c1eda071b09d703a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compressed width for SSB.  <a href="#a0b0d65f6af7eb68c1eda071b09d703a1">More...</a><br/></td></tr>
+<tr class="separator:a0b0d65f6af7eb68c1eda071b09d703a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a136bd38dedb7005f05cbac061a80291e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a136bd38dedb7005f05cbac061a80291e">iq_comp_mplane_ssb</a></td></tr>
+<tr class="memdesc:a136bd38dedb7005f05cbac061a80291e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating M-plane compression for SSB.  <a href="#a136bd38dedb7005f05cbac061a80291e">More...</a><br/></td></tr>
+<tr class="separator:a136bd38dedb7005f05cbac061a80291e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cdda47d992de3d0133b1183b553029f"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a9cdda47d992de3d0133b1183b553029f">iq_comp_meth_prach</a></td></tr>
+<tr class="memdesc:a9cdda47d992de3d0133b1183b553029f"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compression method for PRACH.  <a href="#a9cdda47d992de3d0133b1183b553029f">More...</a><br/></td></tr>
+<tr class="separator:a9cdda47d992de3d0133b1183b553029f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95be8da23dd81a00737483df7ac576cc"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a95be8da23dd81a00737483df7ac576cc">iq_comp_width_prach</a></td></tr>
+<tr class="memdesc:a95be8da23dd81a00737483df7ac576cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">IQ compressed width for PRACH.  <a href="#a95be8da23dd81a00737483df7ac576cc">More...</a><br/></td></tr>
+<tr class="separator:a95be8da23dd81a00737483df7ac576cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a794ca40617336501a58e4fc2276caad7"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a794ca40617336501a58e4fc2276caad7">iq_comp_mplane_prach</a></td></tr>
+<tr class="memdesc:a794ca40617336501a58e4fc2276caad7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating M-plane compression for PRACH.  <a href="#a794ca40617336501a58e4fc2276caad7">More...</a><br/></td></tr>
+<tr class="separator:a794ca40617336501a58e4fc2276caad7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9808a68cecfc939b85de470af0117344"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a9808a68cecfc939b85de470af0117344">deskew</a></td></tr>
+<tr class="memdesc:a9808a68cecfc939b85de470af0117344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum deskew time (in microseconds)  <a href="#a9808a68cecfc939b85de470af0117344">More...</a><br/></td></tr>
+<tr class="separator:a9808a68cecfc939b85de470af0117344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4975dc313bf8a37c824c9f29e2ed56c1"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a4975dc313bf8a37c824c9f29e2ed56c1">advance_ul</a></td></tr>
+<tr class="memdesc:a4975dc313bf8a37c824c9f29e2ed56c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Control advance in uplink (in microseconds)  <a href="#a4975dc313bf8a37c824c9f29e2ed56c1">More...</a><br/></td></tr>
+<tr class="separator:a4975dc313bf8a37c824c9f29e2ed56c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8663ef3211f16acfd88ea2db2f72a1f"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#af8663ef3211f16acfd88ea2db2f72a1f">advance_dl</a></td></tr>
+<tr class="memdesc:af8663ef3211f16acfd88ea2db2f72a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Control advance in downlink (in microseconds)  <a href="#af8663ef3211f16acfd88ea2db2f72a1f">More...</a><br/></td></tr>
+<tr class="separator:af8663ef3211f16acfd88ea2db2f72a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a516a252f5b4a7f6f1178ac9e7cfb3c86"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a516a252f5b4a7f6f1178ac9e7cfb3c86">ul_bid_forward</a></td></tr>
+<tr class="memdesc:a516a252f5b4a7f6f1178ac9e7cfb3c86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uplink beam-id forward advance (in microseconds)  <a href="#a516a252f5b4a7f6f1178ac9e7cfb3c86">More...</a><br/></td></tr>
+<tr class="separator:a516a252f5b4a7f6f1178ac9e7cfb3c86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6af4701fbb2e422379e9a3847df8aaab"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a6af4701fbb2e422379e9a3847df8aaab">num_ctrl_per_sym_ul</a></td></tr>
+<tr class="memdesc:a6af4701fbb2e422379e9a3847df8aaab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of sections per symbol in uplink.  <a href="#a6af4701fbb2e422379e9a3847df8aaab">More...</a><br/></td></tr>
+<tr class="separator:a6af4701fbb2e422379e9a3847df8aaab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51e04b59ae018f5fa92cf1813ae06710"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a51e04b59ae018f5fa92cf1813ae06710">num_ctrl_per_sym_dl</a></td></tr>
+<tr class="memdesc:a51e04b59ae018f5fa92cf1813ae06710"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of sections per symbol in downlink.  <a href="#a51e04b59ae018f5fa92cf1813ae06710">More...</a><br/></td></tr>
+<tr class="separator:a51e04b59ae018f5fa92cf1813ae06710"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa853e90e5788d32fc3ec290c7926d821"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#aa853e90e5788d32fc3ec290c7926d821">num_ctrl_per_sym_ssb</a></td></tr>
+<tr class="memdesc:aa853e90e5788d32fc3ec290c7926d821"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of sections per symbol for SSB.  <a href="#aa853e90e5788d32fc3ec290c7926d821">More...</a><br/></td></tr>
+<tr class="separator:aa853e90e5788d32fc3ec290c7926d821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e86b25ba49a8ed3856d6c5a4c9c7806"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a4e86b25ba49a8ed3856d6c5a4c9c7806">num_frames_per_sym</a></td></tr>
+<tr class="memdesc:a4e86b25ba49a8ed3856d6c5a4c9c7806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Ethernet frames per symbol in downlink.  <a href="#a4e86b25ba49a8ed3856d6c5a4c9c7806">More...</a><br/></td></tr>
+<tr class="separator:a4e86b25ba49a8ed3856d6c5a4c9c7806"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650df5957f181b8fa1bd06530e317b4e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__cc__config.html#a650df5957f181b8fa1bd06530e317b4e">num_frames_per_sym_ssb</a></td></tr>
+<tr class="memdesc:a650df5957f181b8fa1bd06530e317b4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of Ethernet frames per symbol for SSB.  <a href="#a650df5957f181b8fa1bd06530e317b4e">More...</a><br/></td></tr>
+<tr class="separator:a650df5957f181b8fa1bd06530e317b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure for the requested component carrier configuration. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="af8663ef3211f16acfd88ea2db2f72a1f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -97,9 +191,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>Maximum control advance in downlink (in microseconds) </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga9a94902547afdfa15e3da94ce510e670">xorif_set_cc_time_advance()</a>.</p>
+<p>Control advance in downlink (in microseconds) </p>
 
 </div>
 </div>
@@ -113,41 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>Maximum control advance in uplink (in microseconds) </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga9a94902547afdfa15e3da94ce510e670">xorif_set_cc_time_advance()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a2248449ff6d11d2158bfb79c8cbf872f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t xorif_cc_config::bw_comp_meth</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Beam-weight compression method. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#gaea0a86aa5fe854390a6a6a9238bff307">xorif_set_cc_bw_compression()</a>, and <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae33ce682193da15932b293e283d5df81"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t xorif_cc_config::bw_comp_width</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Beam-weight compressed width. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#gaea0a86aa5fe854390a6a6a9238bff307">xorif_set_cc_bw_compression()</a>, and <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>.</p>
+<p>Control advance in uplink (in microseconds) </p>
 
 </div>
 </div>
@@ -163,8 +221,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Maximum deskew time (in microseconds) </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga9a94902547afdfa15e3da94ce510e670">xorif_set_cc_time_advance()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a1f54c795e34de718d6d3111bd54dfa04"></a>
@@ -178,8 +234,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Extended CP (numerology 2 only) </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, <a class="el" href="group__libxorif.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology()</a>, and <a class="el" href="group__libxorif.html#gac3373c25f26f3e81c2cd24f22f1ff807">xorif_set_cc_numerology_ssb()</a>.</p>
 
 </div>
 </div>
@@ -195,8 +249,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Extended CP for SSB (numerology 2 only) </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#gac3373c25f26f3e81c2cd24f22f1ff807">xorif_set_cc_numerology_ssb()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a0fc7c81f6f6854a3a799b8af783f4a07"></a>
@@ -209,9 +261,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>IQ compression method in downlink. </p>
+<p>IQ compression method for downlink. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga1a85c04cd2f85b5d3cd5ebad4d0b3856">xorif_set_cc_dl_iq_compression()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a9cdda47d992de3d0133b1183b553029f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_meth_prach</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>IQ compression method for PRACH. </p>
 
 </div>
 </div>
@@ -227,8 +291,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>IQ compression method for SSB. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga543ca827c9ba7102dda4006db768fc58">xorif_set_cc_iq_compression_ssb()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a79fe71214bac815a385de313318c499b"></a>
@@ -241,9 +303,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>IQ compression method in uplink. </p>
+<p>IQ compression method for uplink. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga1057ed436133eed1763968e38061645a">xorif_set_cc_ul_iq_compression()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a532105664966d4d2c0fabf8021797841"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_mplane_dl</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating M-plane compression for downlink. </p>
+
+</div>
+</div>
+<a class="anchor" id="a794ca40617336501a58e4fc2276caad7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_mplane_prach</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating M-plane compression for PRACH. </p>
+
+</div>
+</div>
+<a class="anchor" id="a136bd38dedb7005f05cbac061a80291e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_mplane_ssb</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating M-plane compression for SSB. </p>
+
+</div>
+</div>
+<a class="anchor" id="af768cd7cdb4b475c0eb8974b915d2a7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_mplane_ul</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Flag indicating M-plane compression for uplink. </p>
 
 </div>
 </div>
@@ -257,9 +373,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>IQ compressed width in downlink. </p>
+<p>IQ compressed width for downlink. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga1a85c04cd2f85b5d3cd5ebad4d0b3856">xorif_set_cc_dl_iq_compression()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a95be8da23dd81a00737483df7ac576cc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t xorif_cc_config::iq_comp_width_prach</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>IQ compressed width for PRACH. </p>
 
 </div>
 </div>
@@ -275,8 +403,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>IQ compressed width for SSB. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga543ca827c9ba7102dda4006db768fc58">xorif_set_cc_iq_compression_ssb()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a03e732c7a8ed11daea132ddfe033a70b"></a>
@@ -289,9 +415,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </table>
 </div><div class="memdoc">
 
-<p>IQ compressed width in uplink. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#ga1057ed436133eed1763968e38061645a">xorif_set_cc_ul_iq_compression()</a>.</p>
+<p>IQ compressed width for uplink. </p>
 
 </div>
 </div>
@@ -307,8 +431,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Number of sections per symbol in downlink. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga1dc74d09ad8a24068cf946b1715187fb">xorif_set_cc_dl_sections_per_symbol()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="aa853e90e5788d32fc3ec290c7926d821"></a>
@@ -322,8 +444,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Number of sections per symbol for SSB. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga9134c19e37ea0de1753275532eaa6eca">xorif_set_cc_sections_per_symbol_ssb()</a>.</p>
 
 </div>
 </div>
@@ -339,8 +459,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Number of sections per symbol in uplink. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#gac48101999aecfda9319ecee281a62bf0">xorif_set_cc_ul_sections_per_symbol()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a4e86b25ba49a8ed3856d6c5a4c9c7806"></a>
@@ -354,8 +472,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Number of Ethernet frames per symbol in downlink. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga891c7e0622f34429e09023f7d64e54d0">xorif_set_cc_frames_per_symbol()</a>.</p>
 
 </div>
 </div>
@@ -371,8 +487,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Number of Ethernet frames per symbol for SSB. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#ga58c4dcf40c1bac85c7ff288b02b443f3">xorif_set_cc_frames_per_symbol_ssb()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a24ef9909f0a1e732f95f0111905c0586"></a>
@@ -386,8 +500,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Number of RBs. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc()</a>, <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#gac5bb9cbc4aae17d9db299f7a7595efa0">xorif_set_cc_num_rbs()</a>.</p>
 
 </div>
 </div>
@@ -403,8 +515,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Number of RBs for SSB (should always be 20) </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, and <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ac84fa34977ebd1d5d9f9c70e0de1926e"></a>
@@ -418,8 +528,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Numerology. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc()</a>, <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, <a class="el" href="group__libxorif.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology()</a>, and <a class="el" href="group__libxorif.html#gac3373c25f26f3e81c2cd24f22f1ff807">xorif_set_cc_numerology_ssb()</a>.</p>
 
 </div>
 </div>
@@ -435,10 +543,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Numerology for SSB. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc()</a>, <a class="el" href="group__libxorif.html#ga4316e49d00c4179457c01eb2bf481874">xorif_fhi_configure_cc()</a>, <a class="el" href="group__libxorif.html#gac1d5dac7afa71df8f746640e91814d77">xorif_set_cc_config()</a>, and <a class="el" href="group__libxorif.html#gac3373c25f26f3e81c2cd24f22f1ff807">xorif_set_cc_numerology_ssb()</a>.</p>
+</div>
+</div>
+<a class="anchor" id="a516a252f5b4a7f6f1178ac9e7cfb3c86"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t xorif_cc_config::ul_bid_forward</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Uplink beam-id forward advance (in microseconds) </p>
 
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="xorif__api_8h.html">xorif_api.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

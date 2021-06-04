@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -63,6 +62,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
       <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
     </ul>
   </div>
@@ -82,11 +82,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 </div><!-- top -->
 <div class="header">
+  <div class="summary">
+<a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
 <div class="title">xorif_device_info Struct Reference<div class="ingroups"><a class="el" href="group__libxorif.html">Libxorif</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
-<h2 class="groupheader">Field Documentation</h2>
+
+<p>Structure for device related information, including libmetal pointers.  
+ <a href="structxorif__device__info.html#details">More...</a></p>
+
+<p><code>#include &lt;xorif_common.h&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Data Fields</h2></td></tr>
+<tr class="memitem:a2550c3a8884c79dffe3dcc52b3643531"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__device__info.html#a2550c3a8884c79dffe3dcc52b3643531">status</a></td></tr>
+<tr class="memdesc:a2550c3a8884c79dffe3dcc52b3643531"><td class="mdescLeft">&#160;</td><td class="mdescRight">Status (0 = bad, 1 = good)  <a href="#a2550c3a8884c79dffe3dcc52b3643531">More...</a><br/></td></tr>
+<tr class="separator:a2550c3a8884c79dffe3dcc52b3643531"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b8b2cf80ea0e794cff78c3ed4752344"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__device__info.html#a1b8b2cf80ea0e794cff78c3ed4752344">bus_name</a></td></tr>
+<tr class="memdesc:a1b8b2cf80ea0e794cff78c3ed4752344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bus name.  <a href="#a1b8b2cf80ea0e794cff78c3ed4752344">More...</a><br/></td></tr>
+<tr class="separator:a1b8b2cf80ea0e794cff78c3ed4752344"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c8bad5160b3122812cb63704d81ee64"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__device__info.html#a5c8bad5160b3122812cb63704d81ee64">dev_name</a></td></tr>
+<tr class="memdesc:a5c8bad5160b3122812cb63704d81ee64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device name.  <a href="#a5c8bad5160b3122812cb63704d81ee64">More...</a><br/></td></tr>
+<tr class="separator:a5c8bad5160b3122812cb63704d81ee64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa24b891a199e30f1c320cd9a4bf97105"><td class="memItemLeft" align="right" valign="top">struct metal_device *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__device__info.html#aa24b891a199e30f1c320cd9a4bf97105">dev</a></td></tr>
+<tr class="memdesc:aa24b891a199e30f1c320cd9a4bf97105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to libmetal device.  <a href="#aa24b891a199e30f1c320cd9a4bf97105">More...</a><br/></td></tr>
+<tr class="separator:aa24b891a199e30f1c320cd9a4bf97105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a427e9284870e6e71e11b876996f95d61"><td class="memItemLeft" align="right" valign="top">struct metal_io_region *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__device__info.html#a427e9284870e6e71e11b876996f95d61">io</a></td></tr>
+<tr class="memdesc:a427e9284870e6e71e11b876996f95d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to libmetal IO region.  <a href="#a427e9284870e6e71e11b876996f95d61">More...</a><br/></td></tr>
+<tr class="separator:a427e9284870e6e71e11b876996f95d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Structure for device related information, including libmetal pointers. </p>
+</div><h2 class="groupheader">Field Documentation</h2>
 <a class="anchor" id="a1b8b2cf80ea0e794cff78c3ed4752344"></a>
 <div class="memitem">
 <div class="memproto">
@@ -98,8 +126,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Bus name. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device()</a>.</p>
 
 </div>
 </div>
@@ -115,8 +141,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Pointer to libmetal device. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device()</a>, <a class="el" href="group__libxorif.html#gad3a090d7d7451b8b5904aab4feccd1c1">xorif_fhi_init_device()</a>, <a class="el" href="group__libxorif.html#ga14608b52109708bd77364f9b7b19e3c1">xorif_finish()</a>, and <a class="el" href="group__libxorif.html#ga354bba5bbf86cb1a6ea346e47590cb5b">xorif_has_front_haul_interface()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a5c8bad5160b3122812cb63704d81ee64"></a>
@@ -130,8 +154,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><div class="memdoc">
 
 <p>Device name. </p>
-
-<p>Referenced by <a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device()</a>, <a class="el" href="group__libxorif.html#gad3a090d7d7451b8b5904aab4feccd1c1">xorif_fhi_init_device()</a>, and <a class="el" href="group__libxorif.html#ga14608b52109708bd77364f9b7b19e3c1">xorif_finish()</a>.</p>
 
 </div>
 </div>
@@ -147,8 +169,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Pointer to libmetal IO region. </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device()</a>, <a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg()</a>, <a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset()</a>, <a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg()</a>, and <a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a2550c3a8884c79dffe3dcc52b3643531"></a>
@@ -163,10 +183,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Status (0 = bad, 1 = good) </p>
 
-<p>Referenced by <a class="el" href="group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd">add_device()</a>, and <a class="el" href="group__libxorif.html#ga354bba5bbf86cb1a6ea346e47590cb5b">xorif_has_front_haul_interface()</a>.</p>
-
 </div>
 </div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li><a class="el" href="xorif__common_8h.html">xorif_common.h</a></li>
+</ul>
 </div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
