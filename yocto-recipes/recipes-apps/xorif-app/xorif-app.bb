@@ -2,7 +2,7 @@
 # This file is the xorif-app recipe.
 #
 
-SUMMARY = "Simple xorif application"
+SUMMARY = "O-RAN Radio Interface and Beamformer Test application"
 SECTION = "PETALINUX/apps"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
@@ -12,7 +12,6 @@ SRC_URI = " \
 	file://xorif_app.c \
 	file://xorif_app.h \
 	file://xorif_file.c \
-	file://xorif_menu.c \
 	file://xorif_command.c \
 	file://xorif_socket.c \
 	file://ecpri.c \
@@ -23,7 +22,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}"
 
-DEPENDS = "libxorif"
+DEPENDS = "libxorif libmetal"
 
 do_compile() {
 	oe_runmake

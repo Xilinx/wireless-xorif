@@ -2,7 +2,7 @@
 # This file is the libxorif recipe.
 #
 
-SUMMARY = "Simple xorif library"
+SUMMARY = "O-RAN Radio Interface library"
 SECTION = "PETALINUX/libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
@@ -17,7 +17,7 @@ SRC_URI = " \
 	file://xorif_fh_func.h \
 	file://xorif_utils.c \
 	file://xorif_utils.h \
-	file://oran_radio_if_v1_1_ctrl.h \
+	file://oran_radio_if_v2_0_ctrl.h \
 	"
 
 S = "${WORKDIR}"

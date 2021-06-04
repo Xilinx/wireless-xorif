@@ -12,14 +12,15 @@ DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/u
 ### CONFIGURATION SECTION ###
 
 # Define targets for "all" here
-#ALL = zcu102_om5_exs zcu102_om5_exd zcu111_om5_exs zcu111_om5_exd zcu111_om5_10_slv_exd vck190_hw
-ALL = zcu102_om5_exs zcu111_om5_exs
+ALL += zcu102_om5_exs zcu111_om5_exs zcu111_om5_25_exs
+#ALL += zcu102_om5_exd zcu102_om5_10_slv_exd zcu111_om5_exd zcu111_om5_10_slv_exd
 
 # Add kernel modules (e.g. drivers) here
 override MODULES += xlnx-ptp-timer
 
 # Add apps / libs here
 override APPS += libxorif
+#override APPS += libxobf
 override APPS += xorif-app
 
 # Add scripts here
@@ -41,6 +42,14 @@ override ROOTFS_Y += python3-dev
 override ROOTFS_Y += netcat
 override ROOTFS_Y += tcpdump
 override ROOTFS_Y += libmetal
+override ROOTFS_Y += libmetal-dev
+override ROOTFS_Y += libmetal-dbg
+override ROOTFS_Y += libxorif-dev
+override ROOTFS_Y += libxorif-dbg
+#override ROOTFS_Y += libxobf-dev
+#override ROOTFS_Y += libxobf-dbg
+override ROOTFS_Y += xorif-app-dev
+override ROOTFS_Y += xorif-app-dbg
 ifeq ($(DBG),1)
 override ROOTFS_Y += git
 override ROOTFS_Y += packagegroup-core-buildessential
@@ -51,12 +60,6 @@ override ROOTFS_Y += libstdcPLUSPLUS
 override ROOTFS_Y += libstdcPLUSPLUS-dev
 override ROOTFS_Y += gdb
 override ROOTFS_Y += gdbserver
-override ROOTFS_Y += libmetal-dev
-override ROOTFS_Y += libmetal-dbg
-override ROOTFS_Y += libxorif-dev
-override ROOTFS_Y += libxorif-dbg
-override ROOTFS_Y += xorif-app-dev
-override ROOTFS_Y += xorif-app-dbg
 endif
 
 # Add rootfs (=N) config options here
@@ -69,8 +72,8 @@ override EXTRAS += perl-modules
 override EXTRAS += perl-module-findbin
 override EXTRAS += perl-module-carp
 override EXTRAS += perl-module-lib
-#override EXTRAS += python3-modules
-#override EXTRAS += oran-codec
+override EXTRAS += python3-modules
+override EXTRAS += oran-codec
 
 # Add help / usage guide here
 usage:
@@ -159,8 +162,8 @@ $(MODULES):
 	petalinux-create --project $(PLX_DIR) --type modules --name $@ --enable --force
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/$@.c
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/$@.bb
-	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/.
-	cp -p $(RCP_DIR)/recipes-modules/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/.
+	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/files/.
+	-cp -p $(RCP_DIR)/recipes-modules/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-modules/$@/.
 
 # Recipe to add app / lib
 $(APPS):
@@ -168,8 +171,8 @@ $(APPS):
 	petalinux-create --project $(PLX_DIR) --type apps --template c --name $@ --enable --force
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
-	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
-	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	-cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
 	echo CONFIG_$@-dbg >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 	echo CONFIG_$@-dev >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
@@ -179,8 +182,8 @@ $(INSTALL):
 	petalinux-create --project $(PLX_DIR) --type apps --template install --name $@ --enable --force
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
-	cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
-	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	-cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
 
 # Recipe for rootfs (=Y) config option
 $(ROOTFS_Y):
@@ -216,6 +219,9 @@ else ifeq ($(BOARD),vck190)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_MACHINE_NAME.*/CONFIG_SUBSYSTEM_MACHINE_NAME=""/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_YOCTO_MACHINE_NAME.*/CONFIG_YOCTO_MACHINE_NAME="vck190-versal"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_versal_virt_defconfig"/' $(PLX_DIR)/project-spec/configs/config
+endif
+ifeq ($(PLNX_VER),2021.1)
+	echo CONFIG_YOCTO_BUILDTOOLS_EXTENDED=y >> $(PLX_DIR)/project-spec/configs/config
 endif
 
 # Update with the hardware description (e.g. HDF or XSA) if it exists
@@ -282,6 +288,10 @@ ifeq ($(BOARD),vck190)
 else
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --fpga --force
 endif
+ifeq ($(PLNX_VER),2021.1)
+	cd $(PLX_DIR); petalinux-package --wic --extra-bootfiles "ramdisk.cpio.gz.u-boot"
+	gzip -f $(PLX_DIR)/images/linux/*.wic
+endif
 
 # Clean build area
 clean:
@@ -318,22 +328,27 @@ vck190_bsp:
 	package
 
 zcu102_om5_exd:
-	$(MAKE) BOARD=zcu102 TARGET=$@ DBG=1 \
+	$(MAKE) BOARD=zcu102 TARGET=$@ \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 zcu102_om5_exs:
-	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 DBG=1 \
+	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 zcu102_om5_e4_exs:
-	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 DBG=1 \
+	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu102_om5_10_slv_exd:
+	$(MAKE) BOARD=zcu102 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 zcu111_om5_exd:
-	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
+	$(MAKE) BOARD=zcu111 TARGET=$@ \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
@@ -343,22 +358,27 @@ zcu111_om5_10_slv_exd:
 	package
 
 zcu111_om5_exs:
-	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 DBG=1 \
+	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu111_om5_25_exs:
+	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 zcu111_om5_e4_exs:
-	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 DBG=1 \
+	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 vck190_hw:
-	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
+	$(MAKE) BOARD=vck190 TARGET=$@ \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
 vck190_hw_emu:
-	$(MAKE) BOARD=vck190 TARGET=$@ DBG=1 \
+	$(MAKE) BOARD=vck190 TARGET=$@ \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 

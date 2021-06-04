@@ -16,7 +16,7 @@ Once loaded, review the printed help. When you are familiar with the flow and wa
 ## script what mode it should built in. Note. case is ignored.
 ## 
 ## 1st TCLARGS = board to use (zcu111|zcu102)
-## 2nd TCLARGS = Ip Mode to select (om5)
+## 2nd TCLARGS = Ip Mode to select (om0|om5)
 ## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
@@ -68,7 +68,9 @@ It uses "mrproper" which performs a deep-clean of the project and removes the `<
 
 The PetaLinux project directory is created as `../output/<target>_<tool version>/petalinux/`, e.g. `../output/zcu111_om5_exs_2020_1/petalinux/`.
 
-The boot images (typically BOOT.bin and image.ub) are created inside the PetaLinux project directory at the usual location, i.e. `<plnx-proj-root>/images/linux/`
+The boot images and rootfs are created inside the PetaLinux project directory at the usual location, i.e. `<plnx-proj-root>/images/linux/`
+
+NOTE: From PetaLinux version 2021.1, the default build process builds an EXT4 based rootfs. The makefile creates a "wic" file which can be used to burn an SD-card with the boot partition (FAT32) and the rootfs partition (EXT4) using appropriate application software.
 
 For more information on PetaLinux refer to:
 * [UG1157](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug1157-petalinux-tools-command-line-guide.pdf)
