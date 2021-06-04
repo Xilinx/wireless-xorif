@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
  * @addtogroup libxorif-api
  * @{
  *
- * C Library API for the Xilinx ORAN Radio Interface (libxorif)
+ * "C" API for the Xilinx ORAN Radio Interface (libxorif)
  */
 
 #ifndef XORIF_API_H
@@ -35,35 +35,41 @@
 /*** Constants / macros / structs / etc. ***/
 /*******************************************/
 
+#ifndef XORIF_COMMON_ERROR_CODES
+#define XORIF_COMMON_ERROR_CODES
 /**
- * @brief Enumerated type for error/status codes
+ * @brief Enumerated type for error/status codes.
  */
 enum xorif_error_codes
 {
-    XORIF_OPERATIONAL_ERRORS = -3000,   /**< (Place holder for operational errors) */
+    XORIF_OPERATIONAL_ERRORS = -3000,   /**< (Place-holder for operational errors) */
     XORIF_NULL_POINTER,                 /**< Attempt to access memory with null pointer */
     XORIF_REGISTER_NOT_FOUND,           /**< Unknown register name */
     XORIF_MEMORY_ALLOCATION_FAIL,       /**< Memory allocation fail */
-    XORIF_CONFIGURATION_ERRORS = -2000, /**< (Place holder for configuration errors) */
+    XORIF_TIMEOUT_FAIL,                 /**< Timeout fail */
+    XORIF_CONFIGURATION_ERRORS = -2000, /**< (Place-holder for configuration errors) */
     XORIF_INVALID_CC,                   /**< Component carrier instance is not valid */
     XORIF_INVALID_RBS,                  /**< Number of RBs is not valid */
     XORIF_INVALID_CONFIG,               /**< Invalid configuration (general error) */
     XORIF_NUMEROLOGY_NOT_SUPPORTED,     /**< Requested numerology is not supported */
     XORIF_COMP_MODE_NOT_SUPPORTED,      /**< Requested compression mode is not supported */
+    XORIF_FRONT_HAUL_ERRORS = -1500,    /**< (Place-holder for Front-Haul specific errors) */
     XORIF_MAX_CTRL_SYM_EXCEEDED,        /**< Number of control symbols exceeds available space */
     XORIF_MAX_DATA_SYM_EXCEEDED,        /**< Number of data symbols exceeds available space */
     XORIF_BUFFER_SPACE_EXCEEDED,        /**< Required buffer space exceeds available space */
     XORIF_INVALID_ETH_PORT,             /**< Invalid ethernet port number */
     XORIF_INVALID_EAXC_ID,              /**< The specified eAxC ID is invalid */
-    XORIF_BEAMFORMER_ERRORS = -1500,    /**< (Place holder for beamformer-specific errors) */
-    XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in beamformer schedule table */
-    XORIF_FRAME_WORK_ERRORS = -1000,    /**< (Place holder for library / libmetal errors) */
+    XORIF_BEAMFORMER_ERRORS = -1400,    /**< (Place-holder for Beamformer-specific errors) */
+    XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in Beamformer schedule table */
+    XORIF_INVALID_AG,                   /**< Antenna group is not valid */
+    XORIF_FRAMEWORK_ERRORS = -1000,     /**< (Place holder for library / libmetal framwork errors) */
     XORIF_LIBMETAL_ERROR,               /**< Error with libmetal framework */
-    XORIF_OTHER_ERRORS = -500,          /**< (Place holder for other errors) */
+    XORIF_OTHER_ERRORS = -500,          /**< (Place-holder for other errors) */
     XORIF_INVALID_RESULT = -1,          /**< Represents an invalid result */
     XORIF_SUCCESS = 0,                  /**< Success! No error! */
     XORIF_FAILURE = 1,                  /**< Failure return code */
 };
+#endif // XORIF_COMMON_ERROR_CODES
 
 /**
  * @brief Enumerated type for IQ compression modes (ORAN values).
@@ -75,18 +81,6 @@ enum xorif_iq_comp
     IQ_COMP_BLOCK_SCALE, /**< Block scaling compression */
     IQ_COMP_U_LAW,       /**< U-Law compression */
     IQ_COMP_MODULATION,  /**< Modulation compression */
-};
-
-/**
- * @brief Enumerated type for beam-weight compression modes (ORAN values).
- */
-enum xorif_bw_comp
-{
-    BW_COMP_NONE = 0,    /**< No compression */
-    BW_COMP_BLOCK_FP,    /**< Block floating point compression */
-    BW_COMP_BLOCK_SCALE, /**< Block scaling compression */
-    BW_COMP_U_LAW,       /**< U-Law compression */
-    BW_COMP_BEAMSPACE,   /**< Beamspace compression */
 };
 
 /**
@@ -102,49 +96,19 @@ enum xorif_iq_comp_flags
 };
 
 /**
- * @brief Enumerated type for supported beam-weight compression modes (bit-map).
- */
-enum xorif_bw_comp_flags
-{
-    BW_COMP_NONE_SUPPORT = 0x01,        /**< No compression */
-    BW_COMP_BLOCK_FP_SUPPORT = 0x02,    /**< Block floating point compression */
-    BW_COMP_BLOCK_SCALE_SUPPORT = 0x04, /**< Block scaling compression */
-    BW_COMP_U_LAW_SUPPORT = 0x08,       /**< U-Law compression */
-    BW_COMP_BEAMSPACE_SUPPORT = 0x10,   /**< Beamspace compression */
-};
-
-/**
- * @brief Enumerated type for supported numerologies (bit-map)
- */
-enum xorif_numerology_flags
-{
-    NUMEROLOGY_0_SUPPORT = 0x01, /**< Numerology 0 (15kHz) supported */
-    NUMEROLOGY_1_SUPPORT = 0x02, /**< Numerology 1 (30kHz) supported */
-    NUMEROLOGY_2_SUPPORT = 0x04, /**< Numerology 2 (60kHz) supported */
-    NUMEROLOGY_3_SUPPORT = 0x08, /**< Numerology 3 (120kHz) supported */
-    NUMEROLOGY_4_SUPPORT = 0x10, /**< Numerology 4 (240kHz) supported */
-};
-
-/**
  * @brief Structure for supported capabilities.
  */
 struct xorif_caps
 {
-    uint16_t max_cc;          /**< Maximum number of supported component carriers */
-    uint16_t num_eth_ports;   /**< Maximum number of Ethernet ports */
-    uint16_t numerologies;    /**< Supported numerologies (bit-map, see #xorif_numerology_flags) */
-    uint16_t extended_cp;     /**< Extended CP supported (0 = no, 1 = yes) */
-    uint16_t iq_comp_methods; /**< Supported IQ compression modes (bit-map, see #xorif_iq_comp_flags) */
-    uint16_t bw_comp_methods; /**< Supported beam-weight compression modes (bit-map, see #xorif_bw_comp_flags) */
-};
-
-/**
- * @brief Structure for Front-Haul Interface supported capabilities.
- */
-struct xorif_fhi_caps
-{
     uint16_t max_cc;                    /**< Number of supported component carriers */
-    uint16_t num_eth_ports;             /**< Number of Ethernet ports */
+    uint16_t num_eth_ports;             /**< Number of supported Ethernet ports */
+    uint16_t numerologies;              /**< Supported numerologies (bit-map: bit0 = u0, bit1 = u1, etc.) */
+    uint16_t extended_cp;               /**< Extended CP supported (0 = no, 1 = yes) */
+    uint16_t iq_de_comp_methods;        /**< Supported IQ de-compression modes (bit-map, see #xorif_iq_comp_flags) */
+    uint16_t iq_de_comp_bfp_widths;     /**< Supported bit-widths for BFP de-compression */
+    uint16_t iq_de_comp_mod_widths;     /**< Supported bit-widths for modulation de-compression */
+    uint16_t iq_comp_methods;           /**< Supported IQ compression modes (bit-map, see #xorif_iq_comp_flags) */
+    uint16_t iq_comp_bfp_widths;        /**< Supported bit-widths for BFP compression */
     uint16_t no_framer_ss;              /**< Number of "framer" spatial streams */
     uint16_t no_deframer_ss;            /**< Number of "de-framer" spatial streams */
     uint16_t max_framer_ethernet_pkt;   /**< Maximum size of ethernet payload for "framer" */
@@ -167,26 +131,6 @@ struct xorif_fhi_caps
     uint16_t ss_id_limit;               /**< Maximum size (in bits) of the spatial stream id */
 };
 
-#ifdef BF_INCLUDED
-/**
- * @brief Structure for Beamformer supported capabilities.
- */
-struct xorif_bf_caps
-{
-    uint16_t max_cc;            /**< Number of supported component carriers */
-    uint16_t num_eth_ports;     /**< Number of Ethernet ports */
-    uint16_t uram_cache;        /**< Number of URAMs per beamweight cache */
-    uint16_t num_antennas;      /**< Number of supported antennas */
-    uint16_t num_dfes;          /**< Number of supported DFEs */
-    uint16_t num_ss_dl;         /**< Number of supported down-link spatial streams */
-    uint16_t num_ss_ul;         /**< Number of supportedup-link spatial streams */
-    uint16_t external_bw_store; /**< Flag indicates if external beamweight store is supported (0 = no, 1 = yes) */
-    uint16_t cache_clk;         /**< Flag indicates that the cache clock is driven by beamformer (0 = no, 1 = yes) */
-    uint16_t aie_if_clk;        /**< Flag indicates that the AIE interface clock is driven by beamformer (0 = no, 1 = yes) */
-    uint16_t max_bw_ids;        /**< Maximum number of beam weights ids */
-};
-#endif
-
 /**
  * @brief Structure for the requested component carrier configuration.
  */
@@ -198,17 +142,22 @@ struct xorif_cc_config
     uint16_t extended_cp;            /**< Extended CP (numerology 2 only) */
     uint16_t numerology_ssb;         /**< Numerology for SSB */
     uint16_t extended_cp_ssb;        /**< Extended CP for SSB (numerology 2 only) */
-    uint16_t iq_comp_meth_ul;        /**< IQ compression method in uplink */
-    uint16_t iq_comp_width_ul;       /**< IQ compressed width in uplink */
-    uint16_t iq_comp_meth_dl;        /**< IQ compression method in downlink */
-    uint16_t iq_comp_width_dl;       /**< IQ compressed width in downlink */
+    uint16_t iq_comp_meth_ul;        /**< IQ compression method for uplink */
+    uint16_t iq_comp_width_ul;       /**< IQ compressed width for uplink */
+    uint16_t iq_comp_mplane_ul;      /**< Flag indicating M-plane compression for uplink */
+    uint16_t iq_comp_meth_dl;        /**< IQ compression method for downlink */
+    uint16_t iq_comp_width_dl;       /**< IQ compressed width for downlink */
+    uint16_t iq_comp_mplane_dl;      /**< Flag indicating M-plane compression for downlink */
     uint16_t iq_comp_meth_ssb;       /**< IQ compression method for SSB */
     uint16_t iq_comp_width_ssb;      /**< IQ compressed width for SSB */
-    uint16_t bw_comp_meth;           /**< Beam-weight compression method */
-    uint16_t bw_comp_width;          /**< Beam-weight compressed width */
+    uint16_t iq_comp_mplane_ssb;     /**< Flag indicating M-plane compression for SSB */
+    uint16_t iq_comp_meth_prach;     /**< IQ compression method for PRACH */
+    uint16_t iq_comp_width_prach;    /**< IQ compressed width for PRACH */
+    uint16_t iq_comp_mplane_prach;   /**< Flag indicating M-plane compression for PRACH */
     uint32_t deskew;                 /**< Maximum deskew time (in microseconds) */
-    uint32_t advance_ul;             /**< Maximum control advance in uplink (in microseconds) */
-    uint32_t advance_dl;             /**< Maximum control advance in downlink (in microseconds) */
+    uint32_t advance_ul;             /**< Control advance in uplink (in microseconds) */
+    uint32_t advance_dl;             /**< Control advance in downlink (in microseconds) */
+    uint32_t ul_bid_forward;         /**< Uplink beam-id forward advance (in microseconds) */
     uint16_t num_ctrl_per_sym_ul;    /**< Number of sections per symbol in uplink */
     uint16_t num_ctrl_per_sym_dl;    /**< Number of sections per symbol in downlink */
     uint16_t num_ctrl_per_sym_ssb;   /**< Number of sections per symbol for SSB */
@@ -221,25 +170,27 @@ struct xorif_cc_config
  */
 struct xorif_cc_alloc
 {
-    uint16_t ul_ctrl_sym_num;          /**< Number of uplink ctrl symbols */
-    uint16_t dl_ctrl_sym_num;          /**< Number of downlink ctrl symbols */
-    uint16_t dl_data_sym_num;          /**< Number of downlink data symbols */
-    uint16_t ssb_ctrl_sym_num;         /**< Number of SSB ctrl symbols */
-    uint16_t ssb_data_sym_num;         /**< Number of SSB data symbols */
-    uint16_t ul_ctrl_offset;           /**< Uplink ctrl offset */
-    uint16_t ul_ctrl_offset_size;      /**< Size of uplink ctrl offset (per symbol) */
-    uint16_t ul_ctrl_base_offset;      /**< Uplink base offset */
-    uint16_t ul_ctrl_base_offset_size; /**< Size of uplink base offset */
-    uint16_t dl_ctrl_offset;           /**< Downlink ctrl offset */
-    uint16_t dl_ctrl_offset_size;      /**< Size of downlink ctrl offset (per symbol) */
-    uint16_t dl_data_sym_start;        /**< Downlink data symbol pointer start */
-    uint16_t dl_data_buff_start;       /**< Downlink data buffer start */
-    uint16_t dl_data_buff_size;        /**< Downlink data buffer size (per symbol) */
-    uint16_t ssb_ctrl_offset;          /**< SSB ctrl offset */
-    uint16_t ssb_ctrl_offset_size;     /**< Size of SSB ctrl offset */
-    uint16_t ssb_data_sym_start;       /**< SSB data symbol pointer start */
-    uint16_t ssb_data_buff_start;      /**< SSB data buffer start */
-    uint16_t ssb_data_buff_size;       /**< SSB data buffer size (per symbol) */
+    uint16_t ul_ctrl_sym_num;      /**< Number of uplink ctrl symbols */
+    uint16_t dl_ctrl_sym_num;      /**< Number of downlink ctrl symbols */
+    uint16_t dl_data_sym_num;      /**< Number of downlink data symbols */
+    uint16_t ssb_ctrl_sym_num;     /**< Number of SSB ctrl symbols */
+    uint16_t ssb_data_sym_num;     /**< Number of SSB data symbols */
+    uint16_t ul_ctrl_offset;       /**< Uplink ctrl (section memory) offset */
+    uint16_t ul_ctrl_size;         /**< Uplink ctrl (section memory) size */
+    uint16_t ul_ctrl_base_offset;  /**< Uplink base (packet forming buffer) offset */
+    uint16_t ul_ctrl_base_size;    /**< Uplink base (packet forming buffer) size */
+    uint16_t dl_ctrl_offset;       /**< Downlink ctrl (section memory) offset */
+    uint16_t dl_ctrl_size;         /**< Downlink ctrl (section memory) offset size */
+    uint16_t dl_data_ptrs_offset;  /**< Downlink data symbol pointers offset */
+    uint16_t dl_data_ptrs_size;    /**< Downlink data symbol pointers size */
+    uint16_t dl_data_buff_offset;  /**< Downlink data symbol buffer offset */
+    uint16_t dl_data_buff_size;    /**< Downlink data symbol buffer size  */
+    uint16_t ssb_ctrl_offset;      /**< SSB ctrl offset */
+    uint16_t ssb_ctrl_size;        /**< SSB ctrl offset size */
+    uint16_t ssb_data_ptrs_offset; /**< SSB data symbol pointers offset */
+    uint16_t ssb_data_ptrs_size;   /**< SSB data symbol pointers size */
+    uint16_t ssb_data_buff_offset; /**< SSB data buffer offset */
+    uint16_t ssb_data_buff_size;   /**< SSB data buffer size */
 };
 
 /**
@@ -296,7 +247,7 @@ enum xorif_transport_protocol
 };
 
 /**
- * @brief Enumerations for supported Front-Haul IP modes.
+ * @brief Enumerations for supported Front-Haul Interface IP modes.
  */
 enum xorif_ip_mode
 {
@@ -304,53 +255,6 @@ enum xorif_ip_mode
     IP_MODE_IPV4 = 1, /**< IPv4 */
     IP_MODE_IPV6 = 3, /**< IPv6 */
 };
-
-#ifdef BF_INCLUDED
-/**
- * @brief Structure for Beamformer statistic information.
- */
-struct xorif_bf_stats
-{
-    uint32_t cache_miss_count; /**< Cache miss counter */
-};
-
-/**
- * @brief Enumerations for Beamformer alarm/status information.
- */
-enum xorif_bf_alarms
-{
-    CACHE_DL_MISS = 0x1,            /**< Requested downlink beamweights was not found in the cache */
-    CACHE_UL_MISS = 0x2,            /**< Requested uplink beamweights was not found in the cache */
-    FHI_DL_U_OF = 0x4,              /**< Downlink U-plane FIFO for FHI data was full when a packet was received */
-    FHI_DL_C_OF = 0x8,              /**< Downlink C-plane FIFO for FHI input was full when a packet was received */
-    FHI_UL_U_OF = 0x10,             /**< Uplink U-plane FIFO for FHI data requests was full when a packet was received */
-    FHI_UL_C_OF = 0x20,             /**< Uplink C-plane FIFO for FHI input was full when a packet was received */
-    CPLANE_DL_NO_DESC = 0x40,       /**< Downlink C-plane packet exceeded the system limit on overlapping descriptors */
-    CPLANE_UL_NO_DESC = 0x80,       /**< Uplink C-plane packet exceeded the system limit on overlapping descriptors */
-    BF_DL_RE_MUTEX = 0x100,         /**< Downlink RB had multiple overlapping RE masks which were not mutually exclusive */
-    BF_UL_RE_MUTEX = 0x200,         /**< Uplink RB had multiple overlapping RE masks which were not mutually exclusive */
-    BWM_DL_BID_UF = 0x400,          /**< Downlink beamweight manager beam ID interface buffer experienced an underflow condition */
-    BWM_DL_BID_OF = 0x800,          /**< Downlink beamweight manager beam ID interface buffer experienced an overflow condition */
-    BWM_DL_BW_UF = 0x1000,          /**< Downlink beamweight manager beamweight interface buffer experienced an underflow condition */
-    BWM_DL_BW_OF = 0x2000,          /**< Downlink beamweight manager beamweight interface buffer experienced an overflow condition */
-    BWM_DL_NEXT_BIDN_UF = 0x4000,   /**< Downlink beamweight manager ran out of spare cache addresses */
-    BWM_DL_NEXT_BIDN_OF = 0x8000,   /**< Downlink beamweight manager cache address FIFO overflowed */
-    BWM_DL_CACHE_W_UF = 0x10000,    /**< Cache write FIFO experienced an underflow condition */
-    BWM_DL_CACHE_W_OF = 0x20000,    /**< Cache write FIFO experienced an overflow condition */
-    BWM_UL_BID_UF = 0x40000,        /**< Uplink beamweight manager beam ID interface buffer experienced an underflow condition */
-    BWM_UL_BID_OF = 0x80000,        /**< Uplink beamweight manager beam ID interface buffer experienced an overflow condition */
-    BWM_UL_BW_UF = 0x100000,        /**< Uplink beamweight manager beamweight interface buffer experienced an underflow condition */
-    BWM_UL_BW_OF = 0x200000,        /**< Uplink beamweight manager beamweight interface buffer experienced an overflow condition */
-    BWM_UL_NEXT_BIDN_UF = 0x400000, /**< Uplink beamweight manager ran out of spare cache addresses */
-    BWM_UL_NEXT_BIDN_OF = 0x800000, /**< Uplink beamweight manager cache address FIFO overflowed */
-    BWM_UL_CACHE_W_UF = 0x1000000,  /**< Cache write FIFO experienced an underflow condition */
-    BWM_UL_CACHE_W_OF = 0x2000000,  /**< Cache write FIFO experienced an overflow condition */
-    BWC_DL_BIDN_OF = 0x4000000,     /**< Downlink cache FIFO experienced an overflow condition */
-    BWC_UL_BIDN_OF = 0x8000000,     /**< Uplink cache FIFO experienced an overflow condition */
-    PRACH = 0x10000000,             /**< PRACH error condition */
-    SSB = 0x20000000,               /**< SSB error condition */
-};
-#endif
 
 /**
  * @brief Type definition for alarm interrupt call-back function.
@@ -377,13 +281,16 @@ void xorif_debug(int level);
 
 /**
  * @brief Initialize the API s/w.
- * @param[in] fh_dev_name Device name of the Front Haul Interface (leave as NULL for default)
- * @param[in] bf_dev_name Device name of the Beamformer (leave as NULL for default)
+ * @param[in] device_name Device name of the Front-Haul Interface (leave as NULL for automatic)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * If the device_name is left as NULL, then the library will search the devices
+ * for the most appropriate one. Specify the exact device name if you want to
+ * override this behavior.
  */
-int xorif_init(const char *fh_dev_name, const char *bf_dev_name);
+int xorif_init(const char *device_name);
 
 /**
  * @brief Finalize / close the API s/w.
@@ -398,27 +305,19 @@ void xorif_finish(void);
 uint32_t xorif_get_sw_version(void);
 
 /**
- * @brief Get ORAN Radio Interface capabilities.
+ * @brief Get Front-Haul Interface capabilities.
  * @returns
  *      - Pointer to capabilities structure
  */
 const struct xorif_caps *xorif_get_capabilities(void);
 
 /**
- * @brief Check if there is a front-haul interface in the system.
+ * @brief Check if there is a Front-Haul Interface in the system.
  * @returns
  *      - 0 = false (no)
  *      - 1 = true (yes)
  */
 int xorif_has_front_haul_interface(void);
-
-/**
- * @brief Check if there is a beamformer in the system.
- * @returns
- *      - 0 = false (no)
- *      - 1 = true (yes)
- */
-int xorif_has_beamformer(void);
 
 /**
  * @brief Configure a component carrier.
@@ -430,8 +329,8 @@ int xorif_has_beamformer(void);
 int xorif_configure_cc(uint16_t cc);
 
 /**
- * @brief Enables the specified component carrier
- * @param [in] cc Component carrier to configure
+ * @brief Enables the specified component carrier.
+ * @param[in] cc Component carrier to configure
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -439,13 +338,23 @@ int xorif_configure_cc(uint16_t cc);
 int xorif_enable_cc(uint16_t cc);
 
 /**
- * @brief Disables the specified component carrier
- * @param [in] cc Component carrier to configure
+ * @brief Disables the specified component carrier.
+ * @param[in] cc Component carrier to configure
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
 int xorif_disable_cc(uint16_t cc);
+
+/**
+ * @brief Gets a bit-map of enabled component carriers.
+ * @returns
+ *      - Bit-map of the enabled component carriers
+ * @note
+ * bit n == 0 means component carrier n disabled
+ * bit n == 1 means component carrier n enabled
+ */
+uint8_t xorif_get_enabled_cc_mask(void);
 
 /**
  * @brief Set the configuration for the component carrier.
@@ -485,8 +394,6 @@ int xorif_set_cc_num_rbs(uint16_t cc, uint16_t num_rbs);
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
- * @note This function also sets the same numerology for the SSB. If SSB requires a
- * different numerology, then this can be specified explicitly.
  */
 int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_cp);
 
@@ -498,7 +405,6 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
- * @note This function is used to specify a numerology when different to the UL/DL numerology.
  */
 int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t extended_cp);
 
@@ -506,11 +412,13 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
  * @brief Set the maximum deskew and control advance timing for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] deskew Maximum deskew time (in microseconds)
- * @param[in] advance_ul Maximum control advance in uplink (in microseconds)
- * @param[in] advance_dl Maximum control advance in downlink (in microseconds)
+ * @param[in] advance_ul Control advance in uplink (in microseconds)
+ * @param[in] advance_dl Control advance in downlink (in microseconds)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * See PG370 for details.
  */
 int xorif_set_cc_time_advance(uint16_t cc,
                               uint32_t deskew,
@@ -518,64 +426,107 @@ int xorif_set_cc_time_advance(uint16_t cc,
                               uint32_t advance_dl);
 
 /**
+ * @brief Set the uplink beam-id forward advance for the component carrier.
+ * @param[in] cc Component carrier to configure
+ * @param[in] advance Uplink beam-id forward advance (in nanoseconds)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure.
+ * See PG370 for details.
+ */
+int xorif_set_ul_bid_forward(uint16_t cc, uint32_t advance);
+
+/**
  * @brief Configure the downlink IQ compression for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] bit_width Bit width (0-16)
- * @param[in] comp_method Compression method
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
  * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
+ * With static configuration, the M-plane is used to configure the compression
+ * mode using the supplied values (bit_width and comp_method). With dynamic
+ * configuration, the C-plane is used to configure the compression. However, the
+ * supplied values (bit_width and comp_method) are still used for internal
+ * buffer sizing.
  */
 int xorif_set_cc_dl_iq_compression(uint16_t cc,
                                    uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method);
+                                   enum xorif_iq_comp comp_method,
+                                   uint16_t mplane);
 
 /**
  * @brief Configure the uplink IQ compression for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] bit_width Bit width (0-16)
- * @param[in] comp_method Compression method
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
  * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
+ * With static configuration, the M-plane is used to configure the compression
+ * mode using the supplied values (bit_width and comp_method). With dynamic
+ * configuration, the C-plane is used to configure the compression. However, the
+ * supplied values (bit_width and comp_method) are still used for internal
+ * buffer sizing.
  */
 int xorif_set_cc_ul_iq_compression(uint16_t cc,
                                    uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method);
+                                   enum xorif_iq_comp comp_method,
+                                   uint16_t mplane);
 
 /**
  * @brief Configure the SSB compression for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] bit_width Bit width (0-16)
- * @param[in] comp_method Compression method
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
  * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
+ * With static configuration, the M-plane is used to configure the compression
+ * mode using the supplied values (bit_width and comp_method). With dynamic
+ * configuration, the C-plane is used to configure the compression. However, the
+ * supplied values (bit_width and comp_method) are still used for internal
+ * buffer sizing.
  */
 int xorif_set_cc_iq_compression_ssb(uint16_t cc,
-                                   uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method);
+                                    uint16_t bit_width,
+                                    enum xorif_iq_comp comp_method,
+                                    uint16_t mplane);
 
 /**
- * @brief Configure the beam-weight compression for the component carrier.
+ * @brief Configure the PRACH compression for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] bit_width Bit width (0-16)
- * @param[in] comp_method Compression method
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
  * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
+ * With static configuration, the M-plane is used to configure the compression
+ * mode using the supplied values (bit_width and comp_method). With dynamic
+ * configuration, the C-plane is used to configure the compression. However, the
+ * supplied values (bit_width and comp_method) are still used for internal
+ * buffer sizing.
  */
-int xorif_set_cc_bw_compression(uint16_t cc,
-                                uint16_t bit_width,
-                                enum xorif_bw_comp comp_method);
+int xorif_set_cc_iq_compression_prach(uint16_t cc,
+                                      uint16_t bit_width,
+                                      enum xorif_iq_comp comp_method,
+                                      uint16_t mplane);
 
 /**
  * @brief Configure the number of sections allowed per downlink symbol.
@@ -627,56 +578,49 @@ int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc, uint16_t num_sections);
  */
 int xorif_set_cc_frames_per_symbol_ssb(uint16_t cc, uint16_t num_frames);
 
-/***********************************************************/
-/*** Function prototypes (Front-Haul Interface specific) ***/
-/***********************************************************/
-
 /**
- * @brief Get capabilities from Front-Haul Interface.
- * @returns
- *      - Pointer to capabilities structure
- */
-const struct xorif_fhi_caps *xorif_get_fhi_capabilities(void);
-
-/**
- * @brief Reset the Front Haul Interface.
+ * @brief Reset the Front-Haul Interface.
  * @param[in] mode Reset mode (0 = immediate, 1 = hold in reset)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
  * @note
  * When the mode = 1, the module is held in the reset state. Call the
  * function again with mode = 0 to release the reset and to reset normally.
  * This can be useful when coordinating the reset with other devices / modules.
  * Use mode = 0 to perform the reset immediately.
+ * The reset operation should always succeed.
  */
-void xorif_reset_fhi(uint16_t mode);
+int xorif_reset_fhi(uint16_t mode);
 
 /**
- * @brief Returns the Front Haul Interface h/w version.
+ * @brief Returns the Front-Haul Interface h/w version.
  * @returns
  *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
  */
 uint32_t xorif_get_fhi_hw_version(void);
 
 /**
- * @brief Returns the Front Haul Interface h/w internal revision number.
+ * @brief Returns the Front-Haul Interface h/w internal revision number.
  * @returns
- *      - Revision
+ *      - Internal revision
  */
-uint32_t xorif_get_fhi_hw_revision(void);
+uint32_t xorif_get_fhi_hw_internal_rev(void);
 
 /**
- * @brief Get alarms for Front Haul Interface.
+ * @brief Get alarms for Front-Haul Interface.
  * @returns
  *      - Bit-map of alarm status (see enum xorif_fhi_alarms)
  */
 uint32_t xorif_get_fhi_alarms(void);
 
 /**
- * @brief Clear alarms for Front Haul Interface.
+ * @brief Clear alarms for Front-Haul Interface.
  */
 void xorif_clear_fhi_alarms(void);
 
 /**
- * @brief Clear stats / counters for Front Haul Interface.
+ * @brief Clear stats / counters for Front-Haul Interface.
  */
 void xorif_clear_fhi_stats(void);
 
@@ -687,11 +631,12 @@ void xorif_clear_fhi_stats(void);
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note This is mainly for debug / testing.
  */
 int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr);
 
 /**
- * @brief Utility function to read a field from the Front Haul Interface register map.
+ * @brief Utility function to read a field from the Front-Haul Interface register map.
  * @param[in] name Register field name
  * @param[in,out] val Pointer to write back the read value
  * @returns
@@ -701,7 +646,7 @@ int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr);
 int xorif_read_fhi_reg(const char *name, uint32_t *val);
 
 /**
- * @brief Utility function to read a field from the Front Haul Interface register map.
+ * @brief Utility function to read a field from the Front-Haul Interface register map.
  * @param[in] name Register field name
  * @param[in] offset Offset to be used with register (useful for repeated register banks)
  * @param[in,out] val Pointer to write back the read value
@@ -712,7 +657,7 @@ int xorif_read_fhi_reg(const char *name, uint32_t *val);
 int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val);
 
 /**
- * @brief Utility function to write a field to the Front Haul Interface regsiter map.
+ * @brief Utility function to write a field to the Front-Haul Interface regsiter map.
  * @param[in] name Register field name
  * @param[in] value The value to write to the register
  * @returns
@@ -722,7 +667,7 @@ int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val);
 int xorif_write_fhi_reg(const char *name, uint32_t value);
 
 /**
- * @brief Utility function to write a field to the Front Haul Interface regsiter map.
+ * @brief Utility function to write a field to the Front-Haul Interface regsiter map.
  * @param[in] name Register field name
  * @param[in] offset Offset to be used with register (useful for repeated register banks)
  * @param[in] value The value to write to the register
@@ -733,7 +678,7 @@ int xorif_write_fhi_reg(const char *name, uint32_t value);
 int xorif_write_fhi_reg_offset(const char *name, uint16_t offset, uint32_t value);
 
 /**
- * @brief Get Front Haul Interface Ethernet statistics for the specified port.
+ * @brief Get Front-Haul Interface Ethernet statistics for the specified port.
  * @param[in] port Ethernet port
  * @param[in,out] ptr Pointer to component statistics data structure
  * @returns
@@ -783,12 +728,14 @@ int xorif_set_fhi_protocol(enum xorif_transport_protocol transport,
 /**
  * @brief Set the VLAN tag for the specified port.
  * @param[in] port Ethernet port
- * @param[in] tag VLAN tag (ID bits 0-11; DEI bit 12; PCP bits 13-15)
+ * @param[in] id VLAN ID
+ * @param[in] dei VLAN DEI
+ * @param[in] pcp VLAN PCP
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
-int xorif_set_fhi_vlan_tag(int port, uint16_t tag);
+int xorif_set_fhi_vlan_tag(int port, uint16_t id, uint16_t dei, uint16_t pcp);
 
 /**
  * @brief Set the packet filter for the specified port.
@@ -809,17 +756,6 @@ int xorif_set_fhi_vlan_tag(int port, uint16_t tag);
 int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t mask[4]);
 
 /**
- * @brief Enable / disable Front Haul Interface interrupts.
- * @param[in] mask Mask (bit-map of interrupt sources)
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- * @note
- * The mask bits are the same as in the enum xorif_fhi_alarms.
- */
-int xorif_enable_fhi_interrupts(uint32_t mask);
-
-/**
  * @brief Set the eAxC ID (c.f. ecpriRtcid and ecpriPcid)
  * @param[in] du_bits DU ID length (in bits)
  * @param[in] bs_bits BS ID length (in bits)
@@ -838,7 +774,7 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
                           uint16_t ru_bits);
 
 /**
- * @brief Set the RU port ID bits (as either user/PRACH/SSB spatial streams).
+ * @brief Set the RU port ID bits.
  * @param[in] ru_bits RU ID length (in bits)
  * @param[in] ss_bits Spatial stream length (in bits)
  * @param[in] mask Mask used when testing for user/PRACH/SSB value
@@ -850,11 +786,16 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
  *      - Error code on failure
  * @note
  * The RU bits defined by the call to #xorif_set_fhi_eaxc_id. The present function defines
- * additional masks/values which are used to split the RU ports into user/PRACH/SSB spatial
- * streams.
+ * additional masks/values which are used to split the RU ports into user/PRACH/SSB/...
+ * spatial streams.
  * The ru_bits define the total size of the RU ID field; the ss_bits define the number of
- * LSBs that are used the specify the spatial stream ID; the remaining MSBs (ru_bits - ss_bits)
- * define a mask which identifies the spatial stream as user/PRACH/SSB/...
+ * LSBs that are used the specify the spatial stream ID; the remaining MSBs (ru_bits -
+ * ss_bits) define a mask which identifies the spatial stream as user/PRACH/SSB/etc.
+ * For example, if mask is 0xC0 and ssb_val is 0x80, then if the (ID & 0xC0) == 0x80
+ * then the ID relates to SSB spatial streams.
+ * ID mapping can be easily disabled for a particular stream, by simply setting the "val"
+ * to be greater than "mask". For example, if mask is 0xC0, then setting ssb_val to 0xFFFF
+ * causes SSB ID mapping to be disabled.
  */
 int xorif_set_ru_ports(uint16_t ru_bits,
                        uint16_t ss_bits,
@@ -864,7 +805,45 @@ int xorif_set_ru_ports(uint16_t ru_bits,
                        uint16_t ssb_val);
 
 /**
- * @brief Register a call-back function for Front Haul Interface alarm interrupts.
+ * @brief Set the RU port ID bits (alternative API, including LTE).
+ * @param[in] ru_bits RU ID length (in bits)
+ * @param[in] ss_bits Spatial stream length (in bits)
+ * @param[in] mask Mask used when testing for user/PRACH/SSB value
+ * @param[in] user_val User ID value (identifies regular U-plane spatial streams)
+ * @param[in] prach_val PRACH ID value (identifies PRACH spatial streams)
+ * @param[in] ssb_val SSB ID value (identifies SSB spatial streams)
+ * @param[in] lte_val LTE ID value (identifies LTE spatial streams)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * The RU bits defined by the call to #xorif_set_fhi_eaxc_id. The present function defines
+ * additional masks/values which are used to split the RU ports into user/PRACH/SSB/...
+ * spatial streams.
+ * This function is an alternative to #xorif_set_ru_ports, which also provides mapping for
+ * LTE spatial streams.
+ */
+int xorif_set_ru_ports_alt1(uint16_t ru_bits,
+                            uint16_t ss_bits,
+                            uint16_t mask,
+                            uint16_t user_val,
+                            uint16_t prach_val,
+                            uint16_t ssb_val,
+                            uint16_t lte_val);
+
+/**
+ * @brief Enable / disable Front-Haul Interface interrupts.
+ * @param[in] mask Mask (bit-map of interrupt sources)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * The mask bits are the same as in the enum xorif_fhi_alarms.
+ */
+int xorif_enable_fhi_interrupts(uint32_t mask);
+
+/**
+ * @brief Register a call-back function for Front-Haul Interface alarm interrupts.
  * @param[in] callback Function pointer for call-back
  * @returns
  *      - XORIF_SUCCESS on success
@@ -872,245 +851,17 @@ int xorif_set_ru_ports(uint16_t ru_bits,
  */
 int xorif_register_fhi_isr(isr_func_t callback);
 
-/*************************************************/
-/*** Function prototypes (Beamformer specific) ***/
-/*************************************************/
-
-#ifdef BF_INCLUDED
-
 /**
- * @brief Get capabilities from Beamformer.
- * @returns
- *      - Pointer to capabilities structure
- */
-const struct xorif_bf_caps *xorif_get_bf_capabilities(void);
-
-/**
- * @brief Reset the Beaformer.
- * @param[in] mode Reset mode (0 = immediate, 1 = hold in reset)
- * @note
- * When the mode = 1, the module is held in the reset state. Call the
- * function again with mode = 0 to release the reset normally.
- * This can be useful when coordinating the reset with other devices / modules.
- * Use mode = 0 to perform the reset immediately.
- */
-void xorif_reset_bf(uint16_t mode);
-
-/**
- * @brief Returns the Beamformer h/w version.
- * @returns
- *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
- */
-uint32_t xorif_get_bf_hw_version(void);
-
-/**
- * @brief Returns the Beamformer h/w internal revision number.
- * @returns
- *      - Revision
- */
-uint32_t xorif_get_bf_hw_revision(void);
-
-/**
- * @brief Load beam-weight set.
- * @note This function takes un-packed beam-weight data and control information.
- * @note The function does not compress the data.
- * @param[in] bid Beam-id
- * @param[in] comp_width Compression width (e.g. 12 bits)
- * @param[in] comp_meth Compression method (e.g. BW_COMP_BLOCK_FP = 1)
- * @param[in] comp_param Compression paratemer (related to the compression method)
- * @param[in] num_weights Number of beam-weights to load
- * @param[in] data Pointer to data (array of 32-bit words; I-value as 16 LSBs, and Q-value as 16 MSBs)
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_load_bf_beam_weights(uint16_t bid,
-                               uint16_t comp_width,
-                               uint16_t comp_meth,
-                               uint16_t comp_param,
-                               uint16_t num_weights,
-                               const uint32_t *data);
-
-/**
- * @brief Load beam-weight set (alternative API, for test/debug when no external store)
- * @note This function takes un-packed beam-weight data and control information.
- * @note The function does not compress the data.
- * @param[in] bid Beam-id
- * @param[in] comp_width Compression width (e.g. 12 bits)
- * @param[in] comp_meth Compression method (e.g. BW_COMP_BLOCK_FP = 1)
- * @param[in] comp_param Compression paratemer (related to the compression method)
- * @param[in] ss Spatial stream
- * @param[in] dir Direction (0 = uplink, 1 = downlink)
- * @param[in] type (0 = U-plane, 1 = PRACH, 2 = SSB)
- * @param[in] num_weights Number of beam-weights to load
- * @param[in] data Pointer to data (array of 32-bit words; I-value as 16 LSBs, and Q-value as 16 MSBs)
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_load_bf_beam_weights_alt1(uint16_t bid,
-                                    uint16_t comp_width,
-                                    uint16_t comp_meth,
-                                    uint16_t comp_param,
-                                    uint16_t ss,
-                                    uint16_t dir,
-                                    uint16_t type,
-                                    uint16_t num_weights,
-                                    const uint32_t *data);
-
-/**
- * @brief Load beam-weight set (alternative API, for SSB test/debug when no external store)
- * @note This function takes un-packed beam-weight data and control information.
- * @note The function does not compress the data.
- * @param[in] bid Beam-id (note, beam-id is ignored for this use-case)
- * @param[in] comp_width Compression width (e.g. 12 bits)
- * @param[in] comp_meth Compression method (e.g. BW_COMP_BLOCK_FP = 1)
- * @param[in] comp_param Compression paratemer (related to the compression method)
- * @param[in] cc Component carrier
- * @param[in] sym Symbol number
- * @param[in] srb Start RB
- * @param[in] nrb Number of RBs
- * @param[in] num_weights Number of beam-weights to load
- * @param[in] data Pointer to data (array of 32-bit words; I-value as 16 LSBs, and Q-value as 16 MSBs)
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_load_bf_beam_weights_alt2(uint16_t bid,
-                                    uint16_t comp_width,
-                                    uint16_t comp_meth,
-                                    uint16_t comp_param,
-                                    uint16_t cc,
-                                    uint16_t sym,
-                                    uint16_t srb,
-                                    uint16_t nrb,
-                                    uint16_t num_weights,
-                                    const uint32_t *data);
-
-/**
- * @brief Get alarms for Beamformer.
- * @returns
- *      - Bit-map of alarm status (see enum xorif_bf_alarms)
- */
-uint32_t xorif_get_bf_alarms(void);
-
-/**
- * @brief Clear alarms for Beamformer.
- */
-void xorif_clear_bf_alarms(void);
-
-/**
- * @brief Clear stats / counters for Beamformer.
- */
-void xorif_clear_bf_stats(void);
-
-/**
- * @brief Utility function to read a field from the Beamformer register map.
- * @param[in] name Register field name
- * @param[in,out] val Pointer to write back the read value
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_read_bf_reg(const char *name, uint32_t *val);
-
-/**
- * @brief Utility function to read a field from the Beamformer register map.
- * @param[in] name Register field name
- * @param[in] offset Offset to be used with register (useful for repeated register banks)
- * @param[in,out] val Pointer to write back the read value
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_read_bf_reg_offset(const char *name, uint16_t offset, uint32_t *val);
-
-/**
- * @brief Utility function to write a field to the Beamformer regsiter map.
- * @param[in] name Register field name
- * @param[in] value The value to write to the register
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_write_bf_reg(const char *name, uint32_t value);
-
-/**
- * @brief Utility function to write a field to the Beamformer regsiter map.
- * @param[in] name Register field name
- * @param[in] offset Offset to be used with register (useful for repeated register banks)
- * @param[in] value The value to write to the register
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_write_bf_reg_offset(const char *name, uint16_t offset, uint32_t value);
-
-/**
- * @brief Configure beamformer (including component carriers and schedule table).
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_configure_bf(void);
-
-/**
- * @brief Load static PRACH configuration.
- * @param ptr Pointer to configuration data array
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- * @details
- * The PRACH configuration is static, and default values are loaded during initialization
- * of the beam-former. This API allows alternative values to be used. The function should
- * be called after beam-former initialization, but before configuration and use.
- * The configuration data consists of an array of 64 x 32-bit words. Each pair of words
- * represents the configuration data for a particular PRACH format.
- * Word N
- *      - bits [4:0] - CP length
- *      - bits [5:8] - Number of channels
- *      - bits [9:12] - Number of sequence repetitions
- *      - bits [13:22] - Sequence length
- *      - bits [23:27] - Format ID
- *      - bits [28:31] - Reservered (set to 0)
- * Word N+1
- *      - bits [0:7] - Timeout value 15kHz
- *      - bits [8:15] - Timeout value 30kHz
- *      - bits [16:23] - Computed number of PRBs 15kHz
- *      - bits [24:31] - Computed number of PRBs 30kHz
- */
-int xorif_load_bf_prach_config(const uint32_t *ptr);
-
-/**
- * @brief Get statistics from Beamformer.
- * @param[in,out] ptr Pointer to component statistics data structure
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_get_bf_stats(struct xorif_bf_stats *ptr);
-
-/**
- * @brief Enable / disable Beamformer interrupts.
- * @param[in] mask Mask (bit-map of interrupt sources)
- * @returns
+ * @brief Set system timing "constants".
+ * @param[in] fh_decap_dly Estimate of downlink delay (in picoseconds).
+ * @param[in] ul_radio_ch_dly Estimate of uplink delay (in picoseconds).
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * The mask bits are the same as in the enum xorif_bf_alarms.
+ * These should be set before configuring component carriers.
+ * See PG370 for details.
  */
-int xorif_enable_bf_interrupts(uint32_t mask);
-
-/**
- * @brief Register a call-back function for Beaformer alarm interrupts.
- * @param[in] callback Function pointer for call-back
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_register_bf_isr(isr_func_t callback);
-
-#endif // BF_INCLUDED
+int xorif_set_timing_constants(uint32_t fh_decap_dly, uint32_t ul_radio_ch_dly);
 
 #endif // XORIF_API_H
 

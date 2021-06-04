@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,74 +21,30 @@
  * @addtogroup libxorif
  * @{
  *
- * C Library for the Xilinx ORAN Radio Interface (libxorif)
+ * "C" code for the Xilinx ORAN Radio Interface (libxorif)
  */
 
 #include <stdio.h>
 #include <string.h>
 #include "xorif_api.h"
 #include "xorif_system.h"
-#include "xorif_fh_func.h"
-#ifdef BF_INCLUDED
-#include "xorif_bf_func.h"
-#endif // BF_INCLUDED
 #include "xorif_common.h"
+#include "xorif_fh_func.h"
 #include "xorif_utils.h"
 
 // Software version number
-#define SW_MAJ_VER 1
-#define SW_MIN_VER 1
-#define SW_REVISION 1
-
-// Supported IQ compression modes
-#define DEFAULT_IQ_COMP (IQ_COMP_NONE | IQ_COMP_BLOCK_FP)
-#define DEFAULT_BW_COMP (BW_COMP_BLOCK_FP)
+#define SW_MAJ_VER 2
+#define SW_MIN_VER 0
+#define SW_REVISION 0
 
 // Globals
 uint16_t xorif_state;
 int xorif_trace = 0;
-struct xorif_device_info fh_device;
-struct xorif_fhi_caps fhi_caps;
-#ifdef BF_INCLUDED
-struct xorif_device_info bf_device;
-struct xorif_bf_caps bf_caps;
-#endif // BF_INCLUDED
+struct xorif_caps fhi_caps;
 struct xorif_cc_config cc_config[MAX_NUM_CC];
-struct xorif_caps caps;
-const int sc_spacing[NUM_NUMEROLOGY] = {15, 30, 60, 120, 240};
-const int slots_per_subframe[NUM_NUMEROLOGY] = {1, 2, 4, 8, 16};
-
-// Simple macro to return minimum of two values
-#define MIN(a, b) (a) < (b) ? (a) : (b)
-
-/**
- * @brief Initialize capabilities structure.
- */
-static void initialize_capabilities(void)
-{
-    // Populate structure
-    memset(&caps, 0, sizeof(struct xorif_caps));
-#ifdef BF_INCLUDED
-    if (xorif_has_beamformer())
-    {
-        // When beamformer is present use the minimum values
-        caps.max_cc = MIN(xorif_fhi_get_max_cc(), xorif_bf_get_max_cc());
-        caps.num_eth_ports = MIN(xorif_fhi_get_num_eth_ports(), xorif_bf_get_num_eth_ports());
-        caps.numerologies = NUMEROLOGY_0_SUPPORT | NUMEROLOGY_1_SUPPORT;
-    }
-    else
+#ifndef NO_HW
+struct xorif_device_info fh_device;
 #endif
-    {
-        caps.max_cc = xorif_fhi_get_max_cc();
-        caps.num_eth_ports = xorif_fhi_get_num_eth_ports();
-        caps.numerologies = NUMEROLOGY_0_SUPPORT | NUMEROLOGY_1_SUPPORT | NUMEROLOGY_2_SUPPORT |
-                            NUMEROLOGY_3_SUPPORT | NUMEROLOGY_4_SUPPORT;
-    }
-
-    caps.extended_cp = 0;
-    caps.iq_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
-    caps.bw_comp_methods = BW_COMP_BLOCK_FP_SUPPORT;
-}
 
 /**
  * @brief Initialize the configuration data.
@@ -96,31 +52,36 @@ static void initialize_capabilities(void)
 static void initialize_configuration(void)
 {
     // Initialize the component carrier state and configuration
+    memset(cc_config, 0, sizeof(cc_config));
     for (int i = 0; i < MAX_NUM_CC; ++i)
     {
         // Populate structure with defaults
-        memset(&cc_config[i], 0, sizeof(struct xorif_cc_config));
         cc_config[i].num_rbs = 0;
+        cc_config[i].num_rbs_ssb = 20;
         cc_config[i].numerology = 0;
         cc_config[i].extended_cp = 0;
+        cc_config[i].numerology_ssb = 0;
+        cc_config[i].extended_cp_ssb = 0;
+        cc_config[i].iq_comp_meth_ul = IQ_COMP_NONE;
+        cc_config[i].iq_comp_width_ul = 16;
+        cc_config[i].iq_comp_mplane_ul = 1;
+        cc_config[i].iq_comp_meth_dl = IQ_COMP_NONE;
+        cc_config[i].iq_comp_width_dl = 16;
+        cc_config[i].iq_comp_mplane_dl = 1;
+        cc_config[i].iq_comp_meth_ssb = IQ_COMP_NONE;
+        cc_config[i].iq_comp_width_ssb = 16;
+        cc_config[i].iq_comp_mplane_ssb = 1;
+        cc_config[i].iq_comp_meth_prach = IQ_COMP_NONE;
+        cc_config[i].iq_comp_width_prach = 16;
+        cc_config[i].iq_comp_mplane_prach = 1;
         cc_config[i].deskew = DEFAULT_DESKEW_TIME;
         cc_config[i].advance_ul = DEFAULT_ADVANCE_UL;
         cc_config[i].advance_dl = DEFAULT_ADVANCE_DL;
-        cc_config[i].iq_comp_meth_ul = IQ_COMP_NONE;
-        cc_config[i].iq_comp_width_ul = 16;
-        cc_config[i].iq_comp_meth_dl = IQ_COMP_NONE;
-        cc_config[i].iq_comp_width_dl = 16;
-        cc_config[i].bw_comp_meth = BW_COMP_BLOCK_FP;
-        cc_config[i].bw_comp_width = 12;
+        cc_config[i].ul_bid_forward = DEFAULT_UL_BIDF;
         cc_config[i].num_ctrl_per_sym_ul = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_dl = DEFAULT_CTRL_PER_SYM;
-        cc_config[i].num_frames_per_sym = DEFAULT_FRAMES_PER_SYM;
-        cc_config[i].num_rbs_ssb = 20;
-        cc_config[i].numerology_ssb = 0;
-        cc_config[i].extended_cp_ssb = 0;
-        cc_config[i].iq_comp_meth_ssb = IQ_COMP_NONE;
-        cc_config[i].iq_comp_width_ssb = 16;
         cc_config[i].num_ctrl_per_sym_ssb = DEFAULT_CTRL_PER_SYM_SSB;
+        cc_config[i].num_frames_per_sym = DEFAULT_FRAMES_PER_SYM;
         cc_config[i].num_frames_per_sym_ssb = DEFAULT_FRAMES_PER_SYM_SSB;
     }
 }
@@ -137,9 +98,9 @@ void xorif_debug(int level)
     xorif_trace = level;
 }
 
-int xorif_init(const char *fh_dev_name, const char *bf_dev_name)
+int xorif_init(const char *fh_dev_name)
 {
-    TRACE("xorif_init(%s, %s)\n", fh_dev_name ? fh_dev_name : "NULL", bf_dev_name ? bf_dev_name : "NULL");
+    TRACE("xorif_init(%s)\n", fh_dev_name ? fh_dev_name : "NULL");
 
     // See if we're already initialized
     if (xorif_state != 0)
@@ -154,6 +115,7 @@ int xorif_init(const char *fh_dev_name, const char *bf_dev_name)
         xorif_state = 0;
     }
 
+#ifndef NO_HW
     // Parameters define log handlers and log level for libmetal
     struct metal_init_params init_param =
         {
@@ -185,46 +147,15 @@ int xorif_init(const char *fh_dev_name, const char *bf_dev_name)
         PERROR("No FHI device found\n");
         return XORIF_LIBMETAL_ERROR;
     }
-    else if (add_device(&fh_device, "platform", fh_dev_name) == XORIF_SUCCESS)
-    {
-        // Initialize FHI device
-        xorif_fhi_init_device();
-    }
-    else
+    else if (add_device(&fh_device, "platform", fh_dev_name) != XORIF_SUCCESS)
     {
         PERROR("Failed to add FHI device '%s'\n", fh_dev_name);
         return XORIF_LIBMETAL_ERROR;
     }
+#endif
 
-#ifdef BF_INCLUDED
-    // Get BF device name
-    if (bf_dev_name == NULL)
-    {
-        // No device name specified, so search for it in /sys/bus/platform/devices
-        if ((bf_dev_name = get_device_name("beamformer")) != NULL)
-        {
-            INFO("BF device is '%s'\n", bf_dev_name);
-        }
-    }
-
-    // Add BF device
-    if (bf_dev_name == NULL)
-    {
-        INFO("No BF device found\n");
-    }
-    else if (add_device(&bf_device, "platform", bf_dev_name) == XORIF_SUCCESS)
-    {
-        // Initialize BF device
-        xorif_bf_init_device();
-    }
-    else
-    {
-        INFO("Failed to add BF device '%s'\n", bf_dev_name);
-    }
-#endif // BF_INCLUDED
-
-    // Initialize the capabilities structure
-    initialize_capabilities();
+    // Initialize FHI device
+    xorif_fhi_init_device();
 
     // Initialize the configuration
     initialize_configuration();
@@ -242,6 +173,7 @@ void xorif_finish(void)
 
     if (xorif_state != 0)
     {
+#ifndef NO_HW
         // Close FHI device
         if (fh_device.dev != NULL)
         {
@@ -256,26 +188,10 @@ void xorif_finish(void)
             metal_device_close(fh_device.dev);
         }
 
-#ifdef BF_INCLUDED
-        // Close BF device
-        if (bf_device.dev != NULL)
-        {
-            INFO("Closing BF device %s\n", bf_device.dev_name);
-            int irq = (intptr_t)bf_device.dev->irq_info;
-            if (irq != -1)
-            {
-                metal_irq_disable(irq);
-                metal_irq_unregister(irq);
-                INFO("BF IRQ de-registered\n");
-            }
-            metal_device_close(bf_device.dev);
-        }
-#endif
-
         // Close libmetal
         INFO("Finishing libmetal framework\n");
         metal_finish();
-
+#endif
         // Set state to 'not operational'
         xorif_state = 0;
     }
@@ -290,88 +206,52 @@ uint32_t xorif_get_sw_version(void)
 const struct xorif_caps *xorif_get_capabilities(void)
 {
     TRACE("xorif_get_capabilities()\n");
-    return &caps;
+    return &fhi_caps;
 }
 
 int xorif_has_front_haul_interface(void)
 {
     TRACE("xorif_has_front_haul_interface()\n");
 
-    if (fh_device.dev != NULL && fh_device.status != 0)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-int xorif_has_beamformer(void)
-{
-    TRACE("xorif_has_beamformer()\n");
-#ifdef BF_INCLUDED
-    if (bf_device.dev != NULL && bf_device.status != 0)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+#ifdef NO_HW
+    // Always fake it, when compiled with NO_HW
+    return 1;
 #else
+    if (fh_device.dev != NULL)
+    {
+        // Device exists
+        return 1;
+    }
+
+    if (get_device_name("oran_radio_if") != NULL)
+    {
+        // Oran-radio-if device exists in /sys/bus/platform/devices
+        return 1;
+    }
+
     return 0;
-#endif // BF_INCLUDED
+#endif
 }
 
 int xorif_configure_cc(uint16_t cc)
 {
     TRACE("xorif_configure_cc(%d)\n", cc);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
     }
 
-    // Additional check for the beamformer configuration
-#ifdef BF_INCLUDED
-    if (xorif_has_beamformer())
-    {
-        // Check that the combination of numerology and number of RBs is valid
-        const struct xorif_cc_config *ptr = &cc_config[cc];
-        if (xorif_bf_get_config_index(ptr->numerology, ptr->num_rbs, CHAN_UL_DL) == -1)
-        {
-            PERROR("Invalid beamformer configuration (UL/DL)\n");
-            return XORIF_INVALID_CONFIG;
-        }
-        if (xorif_bf_get_config_index(ptr->numerology_ssb, 20, CHAN_SSB) == -1)
-        {
-            PERROR("Invalid beamformer configuration (SSB)\n");
-            return XORIF_INVALID_CONFIG;
-        }
-    }
-#endif
-
     // Configure the FHI
-    int result = xorif_fhi_configure_cc(cc);
-
-#ifdef BF_INCLUDED
-    if (result == XORIF_SUCCESS && xorif_has_beamformer())
-    {
-        // Configure the BF
-        result = xorif_bf_configure_cc(cc);
-    }
-#endif
-
-    return result;
+    return xorif_fhi_configure_cc(cc);
 }
 
 int xorif_enable_cc(uint16_t cc)
 {
     TRACE("xorif_enable_cc(%d)\n", cc);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -386,7 +266,7 @@ int xorif_disable_cc(uint16_t cc)
 {
     TRACE("xorif_disable_cc(%d)\n", cc);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -397,6 +277,12 @@ int xorif_disable_cc(uint16_t cc)
     }
 }
 
+uint8_t xorif_get_enabled_cc_mask(void)
+{
+    TRACE("xorif_get_enabled_cc_mask()\n");
+    return xorif_fhi_get_enabled_mask();
+}
+
 int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
 {
     TRACE("xorif_set_cc_config(%d, ...)\n", cc);
@@ -404,10 +290,10 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
     // Check for valid configuration
     if (config == NULL)
     {
-        PERROR("Invalid configuration\n");
+        PERROR("Null pointer\n");
         return XORIF_NULL_POINTER;
     }
-    else if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    else if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -422,19 +308,14 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
         PERROR("Invalid numerology\n");
         return XORIF_NUMEROLOGY_NOT_SUPPORTED;
     }
-    else if (!check_iq_comp_mode(config->iq_comp_width_ul, config->iq_comp_meth_ul))
+    else if (!check_iq_comp_mode(config->iq_comp_width_ul, config->iq_comp_meth_ul, CHAN_UL))
     {
-        PERROR("IQ compression mode not supported (uplink)\n");
+        PERROR("IQ compression mode not supported (UL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    else if (!check_iq_comp_mode(config->iq_comp_width_dl, config->iq_comp_meth_dl))
+    else if (!check_iq_comp_mode(config->iq_comp_width_dl, config->iq_comp_meth_dl, CHAN_DL))
     {
-        PERROR("IQ compression mode not supported (downlink)\n");
-        return XORIF_COMP_MODE_NOT_SUPPORTED;
-    }
-    else if (!check_bw_comp_mode(config->bw_comp_width, config->bw_comp_meth))
-    {
-        PERROR("Beam-weight compression mode not supported\n");
+        PERROR("IQ compression mode not supported (DL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
     else if (config->num_rbs_ssb  != SSB_NUM_RBS)
@@ -447,27 +328,16 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
         PERROR("Invalid numerology (SSB)\n");
         return XORIF_NUMEROLOGY_NOT_SUPPORTED;
     }
-    else if (!check_iq_comp_mode(config->iq_comp_width_ssb, config->iq_comp_meth_ssb))
+    else if (!check_iq_comp_mode(config->iq_comp_width_ssb, config->iq_comp_meth_ssb, CHAN_SSB))
     {
         PERROR("IQ compression mode not supported (SSB)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-#ifdef BF_INCLUDED
-    else if (xorif_has_beamformer())
+    else if (!check_iq_comp_mode(config->iq_comp_width_prach, config->iq_comp_meth_prach, CHAN_PRACH))
     {
-        // Check that the combination of numerology and number of RBs is valid
-        if (xorif_bf_get_config_index(config->numerology, config->num_rbs, CHAN_UL_DL) == -1)
-        {
-            PERROR("Invalid beamformer configuration (UL/DL)\n");
-            return XORIF_INVALID_CONFIG;
-        }
-        if (xorif_bf_get_config_index(config->numerology_ssb, 20, CHAN_SSB) == -1)
-        {
-            PERROR("Invalid beamformer configuration (SSB)\n");
-            return XORIF_INVALID_CONFIG;
-        }
+        PERROR("IQ compression mode not supported (PRACH)\n");
+        return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-#endif
 
     memcpy(&cc_config[cc], config, sizeof(struct xorif_cc_config));
 
@@ -478,7 +348,7 @@ int xorif_set_cc_num_rbs(uint16_t cc, uint16_t num_rbs)
 {
     TRACE("xorif_set_cc_num_rbs(%d, %d)\n", cc, num_rbs);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -498,7 +368,7 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
 {
     TRACE("xorif_set_cc_numerology(%d, %d, %d)\n", cc, numerology, extended_cp);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -519,7 +389,7 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
 {
     TRACE("xorif_set_cc_numerology_ssb(%d, %d, %d)\n", cc, numerology, extended_cp);
 
-    if (cc >= MAX_NUM_CC || cc >= caps.max_cc)
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
@@ -556,94 +426,117 @@ int xorif_set_cc_time_advance(uint16_t cc,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_dl_iq_compression(uint16_t cc,
-                                   uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method)
+int xorif_set_ul_bid_forward(uint16_t cc, uint32_t ul_bid_forward)
 {
-    TRACE("xorif_set_cc_dl_iq_compression(%d, %d, %d)\n", cc, bit_width, comp_method);
+    TRACE("xorif_set_ul_bid_forward(%d, %u)\n", cc, ul_bid_forward);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
     }
-    else if (!check_iq_comp_mode(bit_width, comp_method))
+
+    cc_config[cc].ul_bid_forward = ul_bid_forward;
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_cc_dl_iq_compression(uint16_t cc,
+                                   uint16_t bit_width,
+                                   enum xorif_iq_comp comp_method,
+                                   uint16_t mplane)
+{
+    TRACE("xorif_set_cc_dl_iq_compression(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
-        PERROR("IQ compression mode not supported\n");
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_DL))
+    {
+        PERROR("IQ compression mode not supported (DL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
     cc_config[cc].iq_comp_width_dl = bit_width;
     cc_config[cc].iq_comp_meth_dl = comp_method;
+    cc_config[cc].iq_comp_mplane_dl = mplane;
 
     return XORIF_SUCCESS;
 }
 
 int xorif_set_cc_ul_iq_compression(uint16_t cc,
                                    uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method)
+                                   enum xorif_iq_comp comp_method,
+                                   uint16_t mplane)
 {
-    TRACE("xorif_set_cc_ul_iq_compression(%d, %d, %d)\n", cc, bit_width, comp_method);
+    TRACE("xorif_set_cc_ul_iq_compression(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
     }
-    else if (!check_iq_comp_mode(bit_width, comp_method))
+    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_UL))
     {
-        PERROR("IQ compression mode not supported\n");
+        PERROR("IQ compression mode not supported (UL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
     cc_config[cc].iq_comp_width_ul = bit_width;
     cc_config[cc].iq_comp_meth_ul = comp_method;
+    cc_config[cc].iq_comp_mplane_ul = mplane;
 
     return XORIF_SUCCESS;
 }
 
 int xorif_set_cc_iq_compression_ssb(uint16_t cc,
-                                   uint16_t bit_width,
-                                   enum xorif_iq_comp comp_method)
+                                    uint16_t bit_width,
+                                    enum xorif_iq_comp comp_method,
+                                    uint16_t mplane)
 {
-    TRACE("xorif_set_cc_iq_compression_ssb(%d, %d, %d)\n", cc, bit_width, comp_method);
+    TRACE("xorif_set_cc_iq_compression_ssb(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
     }
-    else if (!check_iq_comp_mode(bit_width, comp_method))
+    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_SSB))
     {
-        PERROR("IQ compression mode not supported\n");
+        PERROR("IQ compression mode not supported (SSB)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
     cc_config[cc].iq_comp_width_ssb = bit_width;
     cc_config[cc].iq_comp_meth_ssb = comp_method;
+    cc_config[cc].iq_comp_mplane_ssb = mplane;
 
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_bw_compression(uint16_t cc,
-                                uint16_t bit_width,
-                                enum xorif_bw_comp comp_method)
+int xorif_set_cc_iq_compression_prach(uint16_t cc,
+                                      uint16_t bit_width,
+                                      enum xorif_iq_comp comp_method,
+                                      uint16_t mplane)
 {
-    TRACE("xorif_set_cc_bw_compression(%d, %d, %d)\n", cc, bit_width, comp_method);
+    TRACE("xorif_set_cc_iq_compression_prach(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
         PERROR("Invalid CC value\n");
         return XORIF_INVALID_CC;
     }
-    else if (!check_bw_comp_mode(bit_width, comp_method))
+    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_PRACH))
     {
-        PERROR("Beam-weight compression mode not supported\n");
+        PERROR("IQ compression mode not supported (PRACH)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
-    cc_config[cc].bw_comp_width = bit_width;
-    cc_config[cc].bw_comp_meth = comp_method;
+    cc_config[cc].iq_comp_width_prach = bit_width;
+    cc_config[cc].iq_comp_meth_prach = comp_method;
+    cc_config[cc].iq_comp_mplane_prach = mplane;
 
     return XORIF_SUCCESS;
 }

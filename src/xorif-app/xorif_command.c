@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,13 @@
  */
 
 #include "xorif_app.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 
 // Constants, enums, typedefs, structures, etc.
 #define MAX_TOKENS 64
+#define PRACH_CONFIG_LENGTH 64
 
 // Signature of function pointer used for all parsed commands
 typedef int (*func_ptr)(const char *, char *);
@@ -62,144 +66,156 @@ static int poke(const char *request, char *response);
 static int debug(const char *request, char *response);
 int ecpri_func(int argc, char **argv, char *resp);
 #ifdef BF_INCLUDED
-static int configure_bf(const char *request, char *response);
-#endif
+static int schedule_bf(const char *request, char *response);
 static int load(const char *request, char *response);
 static int load_beam_weight_file(const char *name);
+static int load_prach_config(const char *name);
+#endif
 
 // Variables
 static char *token[MAX_TOKENS];
 static int num_tokens = 0;
 
 // Usage strings
+#define GET_USAGE_1 "get..."                                \
+                    "\n\tget fhi_sw_version"                \
+                    "\n\tget fhi_hw_version"                \
+                    "\n\tget fhi_hw_internal_rev"           \
+                    "\n\tget [fhi_capabilities | fhi_caps]" \
+                    "\n\tget fhi_cc_config <cc>"            \
+                    "\n\tget fhi_cc_alloc <cc>"             \
+                    "\n\tget fhi_stats <port>"              \
+                    "\n\tget fhi_alarms"                    \
+                    "\n\tget fhi_state"                     \
+                    "\n\tget fhi_enabled"
+
 #ifdef BF_INCLUDED
-#define GET_USAGE "get..." \
-                  "\n\tget sw_version" \
-                  "\n\tget fhi_hw_version" \
-                  "\n\tget fhi_hw_revision" \
-                  "\n\tget bf_hw_version" \
-                  "\n\tget bf_hw_revision" \
-                  "\n\tget [capabilities | caps]" \
-                  "\n\tget [fhi_capabilities | fhi_caps]" \
-                  "\n\tget [bf_capabilities | bf_caps]" \
-                  "\n\tget cc_config <cc>" \
-                  "\n\tget fhi_cc_alloc <cc>" \
-                  "\n\tget fhi_stats <port>" \
-                  "\n\tget bf_stats" \
-                  "\n\tget state" \
-                  "\n\tget fhi_alarms" \
-                  "\n\tget bf_alarms"
+#define GET_USAGE_2 "\n\tget bf_sw_version"               \
+                    "\n\tget bf_hw_version"               \
+                    "\n\tget bf_hw_internal_rev"          \
+                    "\n\tget [bf_capabilities | bf_caps]" \
+                    "\n\tget bf_cc_config <cc>"           \
+                    "\n\tget bf_cc_alloc <cc>"            \
+                    "\n\tget bf_stats"                    \
+                    "\n\tget bf_alarms"                   \
+                    "\n\tget bf_state"                    \
+                    "\n\tget bf_enabled"
+#endif
 
-#define SET_USAGE "set..." \
-                  "\n\tset num_rbs <cc> <number of rbs>" \
-                  "\n\tset numerology <cc> <numerology> <extended CP = 0 | 1>" \
-                  "\n\tset numerology_ssb <cc> <numerology> <extended CP = 0 | 1>" \
-                  "\n\tset time_advance <cc> <deskew> <advance up-link> <advance down-link>" \
-                  "\n\tset [dl_iq_compression | dl_iq_comp] <cc> <width> <method>" \
-                  "\n\tset [ul_iq_compression | ul_iq_comp] <cc> <width> <method>" \
-                  "\n\tset [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method>" \
-                  "\n\tset [bw_compression | bw_comp] <cc> <width> <method>" \
-                  "\n\tset dl_sections_per_sym <cc> <num sections>" \
-                  "\n\tset ul_sections_per_sym <cc> <num sections>" \
-                  "\n\tset ssb_sections_per_sym <cc> <num sections>" \
-                  "\n\tset frames_per_sym <cc> <num frames>" \
-                  "\n\tset frames_per_sym_ssb <cc> <num frames>" \
-                  "\n\tset dest_mac_addr <port> <address>" \
-                  "\n\tset src_mac_addr <port> <address>" \
-                  "\n\tset protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>" \
-                  "\n\tset eAxC_id <DU bits> <BS bits> <CC bits> <RU bits>" \
-                  "\n\tset ru_ports <RU bits> <ss bits> <mask> <user value> <PRACH value> <SSB value>"
+#define SET_USAGE_1 "set..."                                                                                \
+                    "\n\tset num_rbs <cc> <number_of_rbs>"                                                  \
+                    "\n\tset numerology <cc> <numerology> <extended_cp = 0 | 1>"                            \
+                    "\n\tset numerology_ssb <cc> <numerology> <extended_cp = 0 | 1>"                        \
+                    "\n\tset time_advance <cc> <deskew> <advance_uplink> <advance_downlink>"                \
+                    "\n\tset ul_bid_forward <cc> <advance>"                                                 \
+                    "\n\tset ul_bid_forward_fine <cc> <symbols> <cycles>"                                   \
+                    "\n\tset [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
+                    "\n\tset [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
+                    "\n\tset [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"     \
+                    "\n\tset [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>" \
+                    "\n\tset dl_sections_per_sym <cc> <number_of_sections>"                                 \
+                    "\n\tset ul_sections_per_sym <cc> <number_of_sections>"                                 \
+                    "\n\tset ssb_sections_per_sym <cc> <number_of_sections>"                                \
+                    "\n\tset frames_per_sym <cc> <number_of_frames>"                                        \
+                    "\n\tset frames_per_sym_ssb <cc> <number_of_frames>"                                    \
+                    "\n\tset dest_mac_addr <port> <address>"                                                \
+                    "\n\tset src_mac_addr <port> <address>"                                                 \
+                    "\n\tset protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>"                  \
+                    "\n\tset vlan <port> <id> <dei> <pcp>"                                                  \
+                    "\n\tset eaxc_id <DU bits> <BS bits> <CC bits> <RU bits>"                               \
+                    "\n\tset ru_ports <RU bits> <ss bits> <mask> <user_value> <prach_value> <ssb_value>"    \
+                    "\n\tset fhi_enabled <mask>"
 
-#else
-
-#define GET_USAGE "get..." \
-                  "\n\tget sw_version" \
-                  "\n\tget fhi_hw_version" \
-                  "\n\tget fhi_hw_revision" \
-                  "\n\tget [capabilities | caps]" \
-                  "\n\tget [fhi_capabilities | fhi_caps]" \
-                  "\n\tget cc_config <cc>" \
-                  "\n\tget fhi_cc_alloc <cc>" \
-                  "\n\tget fhi_stats <port>" \
-                  "\n\tget state" \
-                  "\n\tget fhi_alarms"
-
-#define SET_USAGE "set..." \
-                  "\n\tset num_rbs <cc> <number of rbs>" \
-                  "\n\tset numerology <cc> <numerology> <extended CP = 0 | 1>" \
-                  "\n\tset numerology_ssb <cc> <numerology> <extended CP = 0 | 1>" \
-                  "\n\tset time_advance <cc> <deskew> <advance up-link> <advance down-link>" \
-                  "\n\tset [dl_iq_compression | dl_iq_comp] <cc> <width> <method>" \
-                  "\n\tset [ul_iq_compression | ul_iq_comp] <cc> <width> <method>" \
-                  "\n\tset [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method>" \
-                  "\n\tset dl_sections_per_sym <cc> <num sections>" \
-                  "\n\tset ul_sections_per_sym <cc> <num sections>" \
-                  "\n\tset ssb_sections_per_sym <cc> <num sections>" \
-                  "\n\tset frames_per_sym <cc> <num frames>" \
-                  "\n\tset frames_per_sym_ssb <cc> <num frames>" \
-                  "\n\tset dest_mac_addr <port> <address>" \
-                  "\n\tset src_mac_addr <port> <address>" \
-                  "\n\tset protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>" \
-                  "\n\tset eAxC_id <DU bits> <BS bits> <CC bits> <RU bits>" \
-                  "\n\tset ru_ports <RU bits> <ss bits> <mask> <user value> <PRACH value> <SSB value>"
-
-#endif // BF_INCLUDED
+#ifdef BF_INCLUDED
+#define SET_USAGE_2 "\n\tset [bw_compression | bw_comp] <cc> <width> <method>" \
+                    "\n\tset bf_enabled <mask>"
+#endif
 
 #define ECPRI_USAGE "(Use 'ecpri help' for additional help and usage information)"
 
 // Set of commands (must be terminated with NULLs)
 const static struct command command_set[] =
 {
+    {"help", help, "help [<topic>]"},
+    {"debug", debug, "debug <level = 0..2>"},
 #ifdef BF_INCLUDED
-    { "help", help, "help [<topic>]" },
-    { "init", init, "init [<fhi device> <bf device>]" },
-    { "finish", finish, "finish" },
-    { "reset", reset, "reset [fhi | bf] <mode>" },
-    { "has", has, "has [fhi | bf]" },
-    { "get", get, GET_USAGE },
-    { "set", set, SET_USAGE },
-    { "clear", clear, "clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]" },
-    { "configure", configure, "configure <cc>" },
-    { "enable", enable, "enable <cc>" },
-    { "disable", disable, "disable <c>" },
-    { "configure_bf", configure_bf, "configure_bf" },
-    { "load", load, "load [bf_weights <file>]"},
-    { "read_reg", read_reg, "read_reg [fhi | bf] <name>" },
-    { "read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf] <name> <offset>" },
-    { "write_reg", write_reg, "write_reg [fhi | bf] <name> <value>" },
-    { "write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf] <name> <offset> <value>" },
-    { "quit", quit, "quit" },
-    { "ecpri", ecpri, ECPRI_USAGE },
-    { "peek", peek, "peek <address>" },
-    { "poke", poke, "poke <address> <value>" },
-    { "debug", debug, "debug <level = 0..2>" },
-    // Last line must be all NULL's
-    { NULL, NULL, NULL }
+    {"init", init, "init [fhi | bf] [<device_name>]"},
+    {"finish", finish, "finish [fhi | bf]"},
+    {"get", get, GET_USAGE_1 GET_USAGE_2},
+    {"set", set, SET_USAGE_1 SET_USAGE_2},
+    {"reset", reset, "reset [fhi | bf] <mode>"},
+    {"clear", clear, "clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]"},
+    {"has", has, "has [fhi | bf]"},
+    {"configure", configure, "configure [fhi | bf] <cc>"},
+    {"enable", enable, "enable [fhi | bf] <cc>"},
+    {"disable", disable, "disable [fhi | bf] <cc>"},
+    {"schedule_bf", schedule_bf, "schedule_bf"},
+    {"load", load, "load [beam_weights | prach_config] <file>"},
+    {"read_reg", read_reg, "read_reg [fhi | bf] <name>"},
+    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf] <name> <offset>"},
+    {"write_reg", write_reg, "write_reg [fhi | bf] <name> <value>"},
+    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf] <name> <offset> <value>"},
 #else
-    { "help", help, "help [<topic>]" },
-    { "init", init, "init [<fhi device>]" },
-    { "finish", finish, "finish" },
-    { "reset", reset, "reset [fhi] <mode>" },
-    { "has", has, "has [fhi | bf]" },
-    { "get", get, GET_USAGE },
-    { "set", set, SET_USAGE },
-    { "clear", clear, "clear [fhi_alarms | fhi_stats]" },
-    { "configure", configure, "configure <cc>" },
-    { "enable", enable, "enable <cc>" },
-    { "disable", disable, "disable <c>" },
-    { "read_reg", read_reg, "read_reg [fhi] <name>" },
-    { "read_reg_offset", read_reg_offset, "read_reg_offset [fhi] <name> <offset>" },
-    { "write_reg", write_reg, "write_reg [fhi] <name> <value>" },
-    { "write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>" },
-    { "quit", quit, "quit" },
-    { "ecpri", ecpri, ECPRI_USAGE },
-    { "peek", peek, "peek <address>" },
-    { "poke", poke, "poke <address> <value>" },
-    { "debug", debug, "debug <level = 0..2>" },
-    // Last line must be all NULL's
-    { NULL, NULL, NULL }
+    {"init", init, "init [<device_name>]"}, 
+    {"finish", finish, "finish"},
+    {"get", get, GET_USAGE_1},
+    {"set", set, SET_USAGE_1},
+    {"reset", reset, "reset <mode>"},
+    {"clear", clear, "clear [fhi_alarms | fhi_stats]"},
+    {"has", has, "has fhi"},
+    {"configure", configure, "configure <cc>"},
+    {"enable", enable, "enable <cc>"},
+    {"disable", disable, "disable <cc>"},
+    {"read_reg", read_reg, "read_reg [fhi] <name>"},
+    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi] <name> <offset>"},
+    {"write_reg", write_reg, "write_reg [fhi] <name> <value>"},
+    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>"},
 #endif
+    {"ecpri", ecpri, ECPRI_USAGE},
+    {"peek", peek, "peek <address>"},
+    {"poke", poke, "poke <address> <value>"},
+    {"quit", quit, "quit"},
+    // Last line must be all NULL's
+    {NULL, NULL, NULL}
 };
+
+#ifndef NO_HW
+/**
+ * @brief Has FHI device been detected.
+ * @returns
+ *      - 0 if no
+ *      - 1 if yes
+ */
+static int has_fhi(void)
+{
+    static int has_fhi_flag = -1;
+
+    if (has_fhi_flag == -1)
+    {
+        has_fhi_flag = no_fhi ? 0 : xorif_has_front_haul_interface();
+    }
+    return has_fhi_flag;
+}
+
+#ifdef BF_INCLUDED
+/**
+ * @brief Has BF device been detected.
+ * @returns
+ *      - 0 if no
+ *      - 1 if yes
+ */
+static int has_bf(void)
+{
+    static int has_bf_flag = -1;
+
+    if (has_bf_flag == -1)
+    {
+        has_bf_flag = no_bf ? 0 : xobf_has_beamformer();
+    }
+    return has_bf_flag;
+}
+#endif // BF_INCLUDED
+#endif // NO_HW
 
 /**
  * @brief Match two strings.
@@ -467,12 +483,23 @@ static int help(const char *request, char *response)
  */
 static int quit(const char *request, char *response)
 {
-    if (num_tokens == 1)
+    if (remote_target)
     {
-        // quit
-        return TERMINATE;
+        return send_to_target(request, response);
     }
-    return MALFORMED_COMMAND;
+#ifdef NO_HW
+    return NO_HARDWARE;
+#else
+    else
+    {
+        if (num_tokens == 1)
+        {
+            // quit
+            return TERMINATE;
+        }
+        return MALFORMED_COMMAND;
+    }
+#endif
 }
 
 /**
@@ -497,25 +524,53 @@ static int init(const char *request, char *response)
         if (num_tokens == 1)
         {
             // init
-            return xorif_init(NULL, NULL);
+            int result = xorif_init(NULL);
+#ifdef BF_INCLUDED
+            if (result == XORIF_SUCCESS)
+            {
+                if (has_bf())
+                {
+                    return xobf_init(NULL);
+                }
+            }
+#endif
+            return result;
         }
         else if (num_tokens == 2)
         {
-            // init <fhi device>
+            // init [fhi | bf]
             const char *s;
             if (parse_string(1, &s))
             {
-                return xorif_init(s, NULL);
+                if (match(s, "fhi"))
+                {
+                    return xorif_init(NULL);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    return xobf_init(NULL);
+                }
+#endif
             }
         }
         else if (num_tokens == 3)
         {
-            // init <fhi device> <bf device>
+            // init [fhi | bf] <device_name>
             const char *s1;
             const char *s2;
             if (parse_string(1, &s1) && parse_string(2, &s2))
             {
-                return xorif_init(s1, s2);
+                if (match(s1, "fhi"))
+                {
+                    return xorif_init(s2);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s1, "bf"))
+                {
+                    return xobf_init(s2);
+                }
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -546,7 +601,33 @@ static int finish(const char *request, char *response)
         {
             // finish
             xorif_finish();
+#ifdef BF_INCLUDED
+            if (has_bf())
+            {
+                xobf_finish();
+            }
+#endif
             return SUCCESS;
+        }
+        else if (num_tokens == 2)
+        {
+            // finish [fhi | bf]
+            const char *s;
+            if (parse_string(1, &s))
+            {
+                if (match(s, "fhi"))
+                {
+                    xorif_finish();
+                    return SUCCESS;
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    xobf_finish();
+                    return SUCCESS;
+                }
+#endif
+            }
         }
         return MALFORMED_COMMAND;
     }
@@ -572,7 +653,40 @@ static int reset(const char *request, char *response)
 #else
     else
     {
-        if (num_tokens == 3)
+        if (num_tokens == 1)
+        {
+            // reset
+            int result = xorif_reset_fhi(0);
+#ifdef BF_INCLUDED
+            if (result == XORIF_SUCCESS)
+            {
+                if (has_bf())
+                {
+                    return xobf_reset_bf(0);
+                }
+            }
+#endif
+            return result;
+        }
+        else if (num_tokens == 2)
+        {
+            // reset [fhi | bf]
+            const char *s;
+            if (parse_string(1, &s))
+            {
+                if (match(s, "fhi"))
+                {
+                    return xorif_reset_fhi(0);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    return xobf_reset_bf(0);
+                }
+#endif
+            }
+        }
+        else if (num_tokens == 3)
         {
             // reset [fhi | bf] <mode>
             const char *s;
@@ -581,16 +695,14 @@ static int reset(const char *request, char *response)
             {
                 if (match(s, "fhi"))
                 {
-                    xorif_reset_fhi(mode);
-                    return SUCCESS;
+                    return xorif_reset_fhi(mode);
                 }
 #ifdef BF_INCLUDED
                 else if (match(s, "bf"))
                 {
-                    xorif_reset_bf(mode);
-                    return SUCCESS;
+                    return xobf_reset_bf(mode);
                 }
-#endif // BF_INCLUDED
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -632,7 +744,12 @@ static int has(const char *request, char *response)
                 }
                 else if (match(s, "bf"))
                 {
-                    int result = xorif_has_beamformer();
+                    int result;
+#ifdef BF_INCLUDED
+                    result = no_bf ? 0 : xobf_has_beamformer();
+#else
+                    result = 0;
+#endif
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "result = %s\n", result ? "true" : "false");
                     return SUCCESS;
@@ -668,58 +785,51 @@ static int get(const char *request, char *response)
             const char *s;
             if (parse_string(1, &s))
             {
-                if (match(s, "state") && num_tokens == 2)
-                {
-                    // get state
-                    int result = xorif_get_state();
-                    response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "state = %d\n", result);
-                    return SUCCESS;
-                }
-                else if (match(s, "sw_version") && num_tokens == 2)
+                if (match(s, "sw_version") && num_tokens == 2)
                 {
                     // get sw_version
-                    uint32_t result = xorif_get_sw_version();
                     response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "result = 0x%08X\n", result);
+                    response += sprintf(response, "fhi_version = 0x%08X\n", xorif_get_sw_version());
+#ifdef BF_INCLUDED
+                    response += sprintf(response, "bf_version = 0x%08X\n", xobf_get_sw_version());
+#endif
+                    return SUCCESS;
+                }
+                else if (match(s, "fhi_sw_version") && num_tokens == 2)
+                {
+                    // get fhi_sw_version
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%08X\n", xorif_get_sw_version());
                     return SUCCESS;
                 }
                 else if (match(s, "fhi_hw_version") && num_tokens == 2)
                 {
                     // get fhi_hw_version
-                    uint32_t result = xorif_get_fhi_hw_version();
                     response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "result = 0x%08X\n", result);
+                    response += sprintf(response, "result = 0x%08X\n", xorif_get_fhi_hw_version());
                     return SUCCESS;
                 }
-                else if (match(s, "fhi_hw_revision") && num_tokens == 2)
+                else if (match(s, "fhi_hw_internal_rev") && num_tokens == 2)
                 {
-                    // get fhi_hw_revision
-                    uint32_t result = xorif_get_fhi_hw_revision();
+                    // get fhi_hw_internal_rev
                     response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "result = 0x%08X\n", result);
+                    response += sprintf(response, "result = 0x%08X\n", xorif_get_fhi_hw_internal_rev());
                     return SUCCESS;
                 }
-                else if ((match(s, "capabilities") || match(s, "caps")) && num_tokens == 2)
+                else if ((match(s, "fhi_capabilities") || match(s, "fhi_caps")) && num_tokens == 2)
                 {
-                    // get [capabilities | caps]
+                    // get [fhi_capabilities | fhi_caps]
                     const struct xorif_caps *ptr = xorif_get_capabilities();
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "max_cc = %d\n", ptr->max_cc);
                     response += sprintf(response, "num_eth_ports = %d\n", ptr->num_eth_ports);
                     response += sprintf(response, "numerologies = 0x%X\n", ptr->numerologies);
                     response += sprintf(response, "extended_cp = %s\n", ptr->extended_cp ? "true" : "false");
+                    response += sprintf(response, "iq_de_comp_methods = 0x%X\n", ptr->iq_de_comp_methods);
+                    response += sprintf(response, "iq_de_comp_bfp_widths = 0x%X\n", ptr->iq_de_comp_bfp_widths);
+                    response += sprintf(response, "iq_de_comp_mod_widths = 0x%X\n", ptr->iq_de_comp_mod_widths);
                     response += sprintf(response, "iq_comp_methods = 0x%X\n", ptr->iq_comp_methods);
-                    response += sprintf(response, "bw_comp_methods = 0x%X\n", ptr->bw_comp_methods);
-                    return SUCCESS;
-                }
-                else if ((match(s, "fhi_capabilities") || match(s, "fhi_caps")) && num_tokens == 2)
-                {
-                    // get [fhi_capabilities | fhi_caps]
-                    const struct xorif_fhi_caps *ptr = xorif_get_fhi_capabilities();
-                    response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "max_cc = %d\n", ptr->max_cc);
-                    response += sprintf(response, "num_eth_ports = %d\n", ptr->num_eth_ports);
+                    response += sprintf(response, "iq_comp_bfp_widths = 0x%X\n", ptr->iq_comp_bfp_widths);
                     response += sprintf(response, "no_framer_ss = %d\n", ptr->no_framer_ss);
                     response += sprintf(response, "no_deframer_ss = %d\n", ptr->no_deframer_ss);
                     response += sprintf(response, "max_framer_ethernet_pkt = %d\n", ptr->max_framer_ethernet_pkt);
@@ -783,9 +893,9 @@ static int get(const char *request, char *response)
                         }
                     }
                 }
-                else if (match(s, "cc_config") && num_tokens == 3)
+                else if (match(s, "fhi_cc_config") && num_tokens == 3)
                 {
-                    // get cc_config <cc>
+                    // get fhi_cc_config <cc>
                     unsigned int cc;
                     if (parse_integer(2, &cc))
                     {
@@ -802,15 +912,20 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "extended_cp_ssb = %s\n", config.extended_cp_ssb ? "true" : "false");
                             response += sprintf(response, "iq_comp_meth_ul = %d\n", config.iq_comp_meth_ul);
                             response += sprintf(response, "iq_comp_width_ul = %d\n", config.iq_comp_width_ul);
+                            response += sprintf(response, "iq_comp_mplane_ul = %d\n", config.iq_comp_mplane_ul);
                             response += sprintf(response, "iq_comp_meth_dl = %d\n", config.iq_comp_meth_dl);
                             response += sprintf(response, "iq_comp_width_dl = %d\n", config.iq_comp_width_dl);
+                            response += sprintf(response, "iq_comp_mplane_dl = %d\n", config.iq_comp_mplane_dl);
                             response += sprintf(response, "iq_comp_meth_ssb = %d\n", config.iq_comp_meth_ssb);
                             response += sprintf(response, "iq_comp_width_ssb = %d\n", config.iq_comp_width_ssb);
-                            response += sprintf(response, "bw_comp_meth = %d\n", config.bw_comp_meth);
-                            response += sprintf(response, "bw_comp_width = %d\n", config.bw_comp_width);
+                            response += sprintf(response, "iq_comp_mplane_ssb = %d\n", config.iq_comp_mplane_ssb);
+                            response += sprintf(response, "iq_comp_meth_prach = %d\n", config.iq_comp_meth_prach);
+                            response += sprintf(response, "iq_comp_width_prach = %d\n", config.iq_comp_width_prach);
+                            response += sprintf(response, "iq_comp_mplane_prach = %d\n", config.iq_comp_mplane_prach);
                             response += sprintf(response, "deskew = %d\n", config.deskew);
                             response += sprintf(response, "advance_ul = %d\n", config.advance_ul);
                             response += sprintf(response, "advance_dl = %d\n", config.advance_dl);
+                            response += sprintf(response, "ul_bid_forward = %d\n", config.ul_bid_forward);
                             response += sprintf(response, "num_ctrl_per_sym_ul = %d\n", config.num_ctrl_per_sym_ul);
                             response += sprintf(response, "num_ctrl_per_sym_dl = %d\n", config.num_ctrl_per_sym_dl);
                             response += sprintf(response, "num_ctrl_per_sym_ssb = %d\n", config.num_ctrl_per_sym_ssb);
@@ -837,47 +952,73 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "ssb_ctrl_sym_num = %d\n", alloc.ssb_ctrl_sym_num);
                             response += sprintf(response, "ssb_data_sym_num = %d\n", alloc.ssb_data_sym_num);
                             response += sprintf(response, "ul_ctrl_offset = %d\n", alloc.ul_ctrl_offset);
-                            response += sprintf(response, "ul_ctrl_offset_size = %d\n", alloc.ul_ctrl_offset_size);
+                            response += sprintf(response, "ul_ctrl_size = %d\n", alloc.ul_ctrl_size);
                             response += sprintf(response, "ul_ctrl_base_offset = %d\n", alloc.ul_ctrl_base_offset);
-                            response += sprintf(response, "ul_ctrl_base_offset_size = %d\n", alloc.ul_ctrl_base_offset_size);
+                            response += sprintf(response, "ul_ctrl_base_size = %d\n", alloc.ul_ctrl_base_size);
                             response += sprintf(response, "dl_ctrl_offset = %d\n", alloc.dl_ctrl_offset);
-                            response += sprintf(response, "dl_ctrl_offset_size = %d\n", alloc.dl_ctrl_offset_size);
-                            response += sprintf(response, "dl_data_sym_start = %d\n", alloc.dl_data_sym_start);
-                            response += sprintf(response, "dl_data_buff_start = %d\n", alloc.dl_data_buff_start);
+                            response += sprintf(response, "dl_ctrl_size = %d\n", alloc.dl_ctrl_size);
+                            response += sprintf(response, "dl_data_ptrs_offset = %d\n", alloc.dl_data_ptrs_offset);
+                            response += sprintf(response, "dl_data_ptrs_size = %d\n", alloc.dl_data_ptrs_size);
+                            response += sprintf(response, "dl_data_buff_offset = %d\n", alloc.dl_data_buff_offset);
                             response += sprintf(response, "dl_data_buff_size = %d\n", alloc.dl_data_buff_size);
                             response += sprintf(response, "ssb_ctrl_offset = %d\n", alloc.ssb_ctrl_offset);
-                            response += sprintf(response, "ssb_ctrl_offset_size = %d\n", alloc.ssb_ctrl_offset_size);
-                            response += sprintf(response, "ssb_data_sym_start = %d\n", alloc.ssb_data_sym_start);
-                            response += sprintf(response, "ssb_data_buff_start = %d\n", alloc.ssb_data_buff_start);
+                            response += sprintf(response, "ssb_ctrl_size = %d\n", alloc.ssb_ctrl_size);
+                            response += sprintf(response, "ssb_data_ptrs_offset = %d\n", alloc.ssb_data_ptrs_offset);
+                            response += sprintf(response, "ssb_data_ptrs_size = %d\n", alloc.ssb_data_ptrs_size);
+                            response += sprintf(response, "ssb_data_buff_offset = %d\n", alloc.ssb_data_buff_offset);
                             response += sprintf(response, "ssb_data_buff_size = %d\n", alloc.ssb_data_buff_size);
                             return SUCCESS;
                         }
                     }
                 }
-#ifdef BF_INCLUDED
-                else if (match(s, "bf_hw_version") && num_tokens == 2)
+                else if (match(s, "fhi_state") && num_tokens == 2)
                 {
-                    // get bf_hw_version
-                    uint32_t result = xorif_get_bf_hw_version();
+                    // get fhi_state
+                    uint32_t result = xorif_get_state();
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "result = 0x%08X\n", result);
                     return SUCCESS;
                 }
-                else if (match(s, "bf_hw_revision") && num_tokens == 2)
+                else if (match(s, "fhi_enabled") && num_tokens == 2)
                 {
-                    // get bf_hw_revision
-                    uint32_t result = xorif_get_bf_hw_revision();
+                    // get fhi_enabled
+                    uint8_t result = xorif_get_enabled_cc_mask();
                     response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "result = 0x%08X\n", result);
+                    response += sprintf(response, "result = 0x%02X\n", result);
+                    return SUCCESS;
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf_sw_version") && num_tokens == 2)
+                {
+                    // get bf_sw_version
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "version = 0x%08X\n", xobf_get_sw_version());
+                    return SUCCESS;
+                }
+                else if (match(s, "bf_hw_version") && num_tokens == 2)
+                {
+                    // get bf_hw_version
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%08X\n", xobf_get_bf_hw_version());
+                    return SUCCESS;
+                }
+                else if (match(s, "bf_hw_internal_rev") && num_tokens == 2)
+                {
+                    // get bf_hw_internal_rev
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%08X\n", xobf_get_bf_hw_internal_rev());
                     return SUCCESS;
                 }
                 else if ((match(s, "bf_capabilities") || match(s, "bf_caps")) && num_tokens == 2)
                 {
                     // get [bf_capabilities | bf_caps]
-                    const struct xorif_bf_caps *ptr = xorif_get_bf_capabilities();
+                    const struct xobf_caps *ptr = xobf_get_capabilities();
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "max_cc = %d\n", ptr->max_cc);
                     response += sprintf(response, "num_eth_ports = %d\n", ptr->num_eth_ports);
+                    response += sprintf(response, "numerologies = 0x%X\n", ptr->numerologies);
+                    response += sprintf(response, "extended_cp = %s\n", ptr->extended_cp ? "true" : "false");
+                    response += sprintf(response, "bw_comp_methods = 0x%X\n", ptr->bw_comp_methods);
                     response += sprintf(response, "uram_cache = %d\n", ptr->uram_cache);
                     response += sprintf(response, "num_antennas = %d\n", ptr->num_antennas);
                     response += sprintf(response, "num_dfes = %d\n", ptr->num_dfes);
@@ -886,12 +1027,55 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "external_bw_store = %s\n", ptr->external_bw_store ? "true" : "false");
                     response += sprintf(response, "cache_clk = %s\n", ptr->cache_clk ? "true" : "false");
                     response += sprintf(response, "aie_if_clk = %s\n", ptr->aie_if_clk ? "true" : "false");
+                    response += sprintf(response, "max_bw_ids = %d\n", ptr->max_bw_ids);
                     return SUCCESS;
+                }
+                else if (match(s, "bf_cc_config") && num_tokens == 3)
+                {
+                    // get bf_cc_config <cc>
+                    unsigned int cc;
+                    if (parse_integer(2, &cc))
+                    {
+                        struct xobf_cc_config config;
+                        int result = xobf_get_cc_config(cc, &config);
+                        if (result == XORIF_SUCCESS)
+                        {
+                            response += sprintf(response, "status = 0\n");
+                            response += sprintf(response, "num_rbs = %d\n", config.num_rbs);
+                            response += sprintf(response, "num_rbs_ssb = %d\n", config.num_rbs_ssb);
+                            response += sprintf(response, "numerology = %d\n", config.numerology);
+                            response += sprintf(response, "extended_cp = %s\n", config.extended_cp ? "true" : "false");
+                            response += sprintf(response, "numerology_ssb = %d\n", config.numerology_ssb);
+                            response += sprintf(response, "extended_cp_ssb = %s\n", config.extended_cp_ssb ? "true" : "false");
+                            response += sprintf(response, "bw_comp_meth = %d\n", config.bw_comp_meth);
+                            response += sprintf(response, "bw_comp_width = %d\n", config.bw_comp_width);
+                            return SUCCESS;
+                        }
+                    }
+                }
+                else if (match(s, "bf_cc_alloc") && num_tokens == 3)
+                {
+                    // get bf_cc_alloc <cc>
+                    unsigned int cc;
+                    if (parse_integer(2, &cc))
+                    {
+                        struct xobf_cc_alloc config;
+                        int result = xobf_get_bf_cc_alloc(cc, &config);
+                        if (result == XORIF_SUCCESS)
+                        {
+                            response += sprintf(response, "status = 0\n");
+                            response += sprintf(response, "ud_symbol_offset = %d\n", config.ud_symbol_offset);
+                            response += sprintf(response, "ud_symbol_size = %d\n", config.ud_symbol_size);
+                            response += sprintf(response, "ssb_symbol_offset = %d\n", config.ssb_symbol_offset);
+                            response += sprintf(response, "ssb_symbol_size = %d\n", config.ssb_symbol_size);
+                            return SUCCESS;
+                        }
+                    }
                 }
                 else if (match(s, "bf_alarms") && num_tokens == 2)
                 {
                     // get bf_alarms
-                    uint32_t result = xorif_get_bf_alarms();
+                    uint32_t result = xobf_get_bf_alarms();
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "result = 0x%X\n", result);
                     return SUCCESS;
@@ -899,14 +1083,30 @@ static int get(const char *request, char *response)
                 else if (match(s, "bf_stats") && num_tokens == 2)
                 {
                     // get bf_stats
-                    struct xorif_bf_stats stats;
-                    int result = xorif_get_bf_stats(&stats);
+                    struct xobf_bf_stats stats;
+                    int result = xobf_get_bf_stats(&stats);
                     if (result == XORIF_SUCCESS)
                     {
                         response += sprintf(response, "status = 0\n");
                         response += sprintf(response, "cache_miss_count = %d\n", stats.cache_miss_count);
                         return SUCCESS;
                     }
+                }
+                else if (match(s, "bf_state") && num_tokens == 2)
+                {
+                    // get bf_state
+                    uint32_t result = xobf_get_state();
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%08X\n", result);
+                    return SUCCESS;
+                }
+                else if (match(s, "bf_enabled") && num_tokens == 2)
+                {
+                    // get bf_enabled
+                    uint8_t result = xobf_get_enabled_cc_mask();
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%02X\n", result);
+                    return SUCCESS;
                 }
 #endif // BF_INCLUDED
             }
@@ -946,7 +1146,17 @@ static int set(const char *request, char *response)
                     unsigned int cc, val;
                     if (parse_integer(2, &cc) && parse_integer(3, &val))
                     {
-                        return xorif_set_cc_num_rbs(cc, val);
+                        int result = xorif_set_cc_num_rbs(cc, val);
+#ifdef BF_INCLUDED
+                        if (result == XORIF_SUCCESS)
+                        {
+                            if (has_bf())
+                            {
+                                return xobf_set_cc_num_rbs(cc, val);
+                            }
+                        }
+#endif
+                        return result;
                     }
                 }
                 else if (match(s, "numerology") && num_tokens == 5)
@@ -955,7 +1165,17 @@ static int set(const char *request, char *response)
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_numerology(cc, val1, val2);
+                        int result = xorif_set_cc_numerology(cc, val1, val2);
+#ifdef BF_INCLUDED
+                        if (result == XORIF_SUCCESS)
+                        {
+                            if (has_bf())
+                            {
+                                return xobf_set_cc_numerology(cc, val1, val2);
+                            }
+                        }
+#endif
+                        return result;
                     }
                 }
                 else if (match(s, "numerology_ssb") && num_tokens == 5)
@@ -964,7 +1184,17 @@ static int set(const char *request, char *response)
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_numerology_ssb(cc, val1, val2);
+                        int result = xorif_set_cc_numerology_ssb(cc, val1, val2);
+#ifdef BF_INCLUDED
+                        if (result == XORIF_SUCCESS)
+                        {
+                            if (has_bf())
+                            {
+                                return xobf_set_cc_numerology_ssb(cc, val1, val2);
+                            }
+                        }
+#endif
+                        return result;
                     }
                 }
                 else if (match(s, "time_advance") && num_tokens == 6)
@@ -976,13 +1206,43 @@ static int set(const char *request, char *response)
                         return xorif_set_cc_time_advance(cc, val1, val2, val3);
                     }
                 }
+                else if (match(s, "ul_bid_forward") && num_tokens == 4)
+                {
+                    // set ul_bid_forward <cc> <advance>
+                    unsigned int cc, val;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val))
+                    {
+                        return xorif_set_ul_bid_forward(cc, val);
+                    }
+                }
+                else if (match(s, "ul_bid_forward_fine") && num_tokens == 5)
+                {
+                    // set ul_bid_forward_fine <cc> <symbols> <cycles>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        // No API call for this, instead use register writes
+                        xorif_write_fhi_reg_offset("ORAN_CC_UL_BIDF_C_ABS_SYMBOL", 0x70 * cc, val1);
+                        xorif_write_fhi_reg_offset("ORAN_CC_UL_BIDF_C_CYCLES", 0x70 * cc, val2);
+                        return XORIF_SUCCESS;
+                    }
+                }
                 else if ((match(s, "dl_iq_compression") || match(s, "dl_iq_comp")) && num_tokens == 5)
                 {
                     // set [dl_iq_compression | dl_iq_comp] <cc> <width> <method>
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_dl_iq_compression(cc, val1, val2);
+                        return xorif_set_cc_dl_iq_compression(cc, val1, val2, 1);
+                    }
+                }
+                else if ((match(s, "dl_iq_compression") || match(s, "dl_iq_comp")) && num_tokens == 6)
+                {
+                    // set [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+                    unsigned int cc, val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    {
+                        return xorif_set_cc_dl_iq_compression(cc, val1, val2, val3);
                     }
                 }
                 else if ((match(s, "ul_iq_compression") || match(s, "ul_iq_comp")) && num_tokens == 5)
@@ -991,7 +1251,16 @@ static int set(const char *request, char *response)
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_ul_iq_compression(cc, val1, val2);
+                        return xorif_set_cc_ul_iq_compression(cc, val1, val2, 1);
+                    }
+                }
+                else if ((match(s, "ul_iq_compression") || match(s, "ul_iq_comp")) && num_tokens == 6)
+                {
+                    // set [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+                    unsigned int cc, val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    {
+                        return xorif_set_cc_ul_iq_compression(cc, val1, val2, val3);
                     }
                 }
                 else if ((match(s, "ssb_iq_compression") || match(s, "ssb_iq_comp")) && num_tokens == 5)
@@ -1000,18 +1269,47 @@ static int set(const char *request, char *response)
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_iq_compression_ssb(cc, val1, val2);
+                        return xorif_set_cc_iq_compression_ssb(cc, val1, val2, 1);
                     }
                 }
+                else if ((match(s, "ssb_iq_compression") || match(s, "ssb_iq_comp")) && num_tokens == 6)
+                {
+                    // set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+                    unsigned int cc, val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    {
+                        return xorif_set_cc_iq_compression_ssb(cc, val1, val2, val3);
+                    }
+                }
+                else if ((match(s, "prach_iq_compression") || match(s, "prach_iq_comp")) && num_tokens == 5)
+                {
+                    // set [prach_iq_compression | prach_iq_comp] <cc> <width> <method>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        return xorif_set_cc_iq_compression_prach(cc, val1, val2, 1);
+                    }
+                }
+                else if ((match(s, "prach_iq_compression") || match(s, "prach_iq_comp")) && num_tokens == 6)
+                {
+                    // set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <method> <mplane = 0 | 1>
+                    unsigned int cc, val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    {
+                        return xorif_set_cc_iq_compression_prach(cc, val1, val2, val3);
+                    }
+                }
+#ifdef BF_INCLUDED
                 else if ((match(s, "bw_compression") || match(s, "bw_comp")) && num_tokens == 5)
                 {
                     // set [bw_compression | bw_comp] <cc> <width> <method>
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_bw_compression(cc, val1, val2);
+                        return xobf_set_cc_bw_compression(cc, val1, val2);
                     }
                 }
+#endif
                 else if (match(s, "dl_sections_per_sym") && num_tokens == 4)
                 {
                     // set dl_sections_per_sym <cc> <num sections>
@@ -1139,6 +1437,19 @@ static int set(const char *request, char *response)
                         }
                     }
                 }
+                else if (match(s, "vlan") && num_tokens == 6)
+                {
+                    // set vlan <port> <id> <dei> <pcp>
+                    unsigned int port;
+                    unsigned int id;
+                    unsigned int dei;
+                    unsigned int pcp;
+                    if (parse_integer(2, &port) && parse_integer(3, &id) &&
+                        parse_integer(4, &dei) && parse_integer(5, &pcp))
+                    {
+                        return xorif_set_fhi_vlan_tag(port, id, dei, pcp);
+                    }
+                }
                 else if (match(s, "eAxC_id") && num_tokens == 6)
                 {
                     // set eAxC_id <DU bits> <BS bits> <CC bits> <RU bits>
@@ -1166,6 +1477,24 @@ static int set(const char *request, char *response)
                         parse_integer(6, &prach_val) && parse_integer(7, &ssb_val))
                     {
                         return xorif_set_ru_ports(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val);
+                    }
+                }
+                else if (match(s, "ru_ports") && num_tokens == 9)
+                {
+                    // set ru_ports <RU bits> <ss bits> <mask> <user value> <PRACH value> <SSB value> <LTE value>
+                    unsigned int ru_bits;
+                    unsigned int ss_bits;
+                    unsigned int mask;
+                    unsigned int user_val;
+                    unsigned int prach_val;
+                    unsigned int ssb_val;
+                    unsigned int lte_val;
+                    if (parse_integer(2, &ru_bits) && parse_integer(3, &ss_bits) &&
+                        parse_integer(4, &mask) && parse_integer(5, &user_val) &&
+                        parse_integer(6, &prach_val) && parse_integer(7, &ssb_val) &&
+                        parse_integer(8, &lte_val))
+                    {
+                        return xorif_set_ru_ports_alt1(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
                     }
                 }
             }
@@ -1215,13 +1544,13 @@ static int clear(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s, "bf_alarms"))
                 {
-                    xorif_clear_bf_alarms();
+                    xobf_clear_bf_alarms();
                     response += sprintf(response, "status = 0\n");
                     return SUCCESS;
                 }
                 else if (match(s, "bf_stats"))
                 {
-                    xorif_clear_bf_stats();
+                    xobf_clear_bf_stats();
                     response += sprintf(response, "status = 0\n");
                     return SUCCESS;
                 }
@@ -1252,11 +1581,41 @@ static int configure(const char *request, char *response)
     {
         if (num_tokens == 2)
         {
+            // Note: might deprecate this in favour of the separate commands
             // configure <cc>
             unsigned int cc;
             if (parse_integer(1, &cc))
             {
-                return xorif_configure_cc(cc);
+                int result = xorif_configure_cc(cc);
+#ifdef BF_INCLUDED
+                if (result == XORIF_SUCCESS)
+                {
+                    if (has_bf())
+                    {
+                        return xobf_configure_cc(cc);
+                    }
+                }
+#endif
+                return result;
+            }
+        }
+        else if (num_tokens == 3)
+        {
+            // configure [fhi | bf] <cc>
+            const char *s;
+            unsigned int cc;
+            if (parse_string(1, &s) && parse_integer(2, &cc))
+            {
+                if (match(s, "fhi"))
+                {
+                    return xorif_configure_cc(cc);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    return xobf_configure_cc(cc);
+                }
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -1289,7 +1648,36 @@ static int enable(const char *request, char *response)
             unsigned int cc;
             if (parse_integer(1, &cc))
             {
-                return xorif_enable_cc(cc);
+                int result = xorif_enable_cc(cc);
+#ifdef BF_INCLUDED
+                if (result == XORIF_SUCCESS)
+                {
+                    if (has_bf())
+                    {
+                        return xobf_enable_cc(cc);
+                    }
+                }
+#endif
+                return result;
+            }
+        }
+        else if (num_tokens == 3)
+        {
+            // enable [fhi | bf] <cc>
+            const char *s;
+            unsigned int cc;
+            if (parse_string(1, &s) && parse_integer(2, &cc))
+            {
+                if (match(s, "fhi"))
+                {
+                    return xorif_enable_cc(cc);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    return xobf_enable_cc(cc);
+                }
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -1322,7 +1710,36 @@ static int disable(const char *request, char *response)
             unsigned int cc;
             if (parse_integer(1, &cc))
             {
-                return xorif_disable_cc(cc);
+                int result = xorif_disable_cc(cc);
+#ifdef BF_INCLUDED
+                if (result == XORIF_SUCCESS)
+                {
+                    if (has_bf())
+                    {
+                        return xobf_disable_cc(cc);
+                    }
+                }
+#endif
+                return result;
+            }
+        }
+        else if (num_tokens == 3)
+        {
+            // disable [fhi | bf] <cc>
+            const char *s;
+            unsigned int cc;
+            if (parse_string(1, &s) && parse_integer(2, &cc))
+            {
+                if (match(s, "fhi"))
+                {
+                    return xorif_disable_cc(cc);
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf"))
+                {
+                    return xobf_disable_cc(cc);
+                }
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -1365,7 +1782,7 @@ static int read_reg(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s1, "bf"))
                 {
-                    result = xorif_read_bf_reg(s2, &val);
+                    result = xobf_read_bf_reg(s2, &val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1426,7 +1843,7 @@ static int read_reg_offset(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s1, "bf"))
                 {
-                    result = xorif_read_bf_reg_offset(s2, offset, &val);
+                    result = xobf_read_bf_reg_offset(s2, offset, &val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1486,7 +1903,7 @@ static int write_reg(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s1, "bf"))
                 {
-                    result = xorif_write_bf_reg(s2, val);
+                    result = xobf_write_bf_reg(s2, val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1539,7 +1956,7 @@ static int write_reg_offset(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s1, "bf"))
                 {
-                    result = xorif_write_bf_reg_offset(s2, offset, val);
+                    result = xobf_write_bf_reg_offset(s2, offset, val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1597,7 +2014,9 @@ static int peek(const char *request, char *response)
             unsigned int addr;
             if (parse_integer(1, &addr))
             {
+#if 0 // Using "peek" tool
                 int result = FAILURE;
+
                 char buff[256];
 
                 // Create name for temporary file which will store the output
@@ -1651,6 +2070,51 @@ static int peek(const char *request, char *response)
                 remove(tmpName);
 
                 return result;
+
+#else // Using mmap
+
+                int result = FAILURE;
+                int devmem = -1;
+                unsigned int value = 0;
+                unsigned char *buffer;
+                unsigned int page_size;
+                unsigned int mapped_size;
+                unsigned int offset;
+                unsigned int width = 4; // 32 bit memory access
+
+                devmem = open("/dev/mem", O_RDONLY | O_SYNC);
+                if (devmem >= 0)
+                {
+                    mapped_size = page_size = getpagesize();
+                    offset = addr & (page_size - 1);
+                    if ((offset + width) > page_size)
+                    {
+                        // Memory access spans 2 pages
+                        mapped_size *= 2;
+                    }
+                    buffer = mmap(0, mapped_size, PROT_READ, MAP_SHARED, devmem, addr & ~(page_size - 1));
+                    if (buffer != MAP_FAILED)
+                    {
+                        value = *(unsigned int *)(buffer + offset);
+                        munmap(buffer, mapped_size);
+
+                        // Success
+                        result = SUCCESS;
+                        response += sprintf(response, "status = %d\n", result);
+                        response += sprintf(response, "result = 0x%08X\n", value);
+                    }
+                    close(devmem);
+                }
+
+                if (result != SUCCESS)
+                {
+                    // Failure
+                    result = MEMORY_ACCESS_ERROR;
+                    response += sprintf(response, "status = %d\n", result);
+                    response += sprintf(response, "result = N/A\n");
+                }
+                return result;
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -1681,14 +2145,15 @@ static int poke(const char *request, char *response)
         {
             // poke <address> <value>
             unsigned int addr;
-            unsigned int val;
-            if (parse_integer(1, &addr) && parse_integer(2, &val))
+            unsigned int value;
+            if (parse_integer(1, &addr) && parse_integer(2, &value))
             {
+#if 0 // Using "poke" tool
                 int result = FAILURE;
                 char buff[256];
 
                 // Construct the command string for the 'system' call
-                sprintf(buff, "poke 0x%X 0x%X", addr, val);
+                sprintf(buff, "poke 0x%X 0x%X", addr, value);
 
                 // Perform the 'system' call
                 if (system(buff) == 0)
@@ -1705,6 +2170,48 @@ static int poke(const char *request, char *response)
                 }
 
                 return result;
+
+#else // Using mmap
+
+                int result = FAILURE;
+                int devmem = -1;
+                unsigned char *buffer;
+                unsigned int page_size;
+                unsigned int mapped_size;
+                unsigned int offset;
+                unsigned int width = 4; // 32 bit memory access
+
+                devmem = open("/dev/mem", O_RDWR | O_SYNC);
+                if (devmem >= 0)
+                {
+                    mapped_size = page_size = getpagesize();
+                    offset = addr & (page_size - 1);
+                    if ((offset + width) > page_size)
+                    {
+                        // Memory access spans 2 pages
+                        mapped_size *= 2;
+                    }
+                    buffer = mmap(0, mapped_size, PROT_READ | PROT_WRITE, MAP_SHARED, devmem, addr & ~(page_size - 1));
+                    if (buffer != MAP_FAILED)
+                    {
+                        *(unsigned int *)(buffer + offset) = value;
+                        munmap(buffer, mapped_size);
+
+                        // Success
+                        result = SUCCESS;
+                        response += sprintf(response, "status = %d\n", result);
+                    }
+                    close(devmem);
+                }
+
+                if (result != SUCCESS)
+                {
+                    // Failure
+                    result = MEMORY_ACCESS_ERROR;
+                    response += sprintf(response, "status = %d\n", result);
+                }
+                return result;
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -1738,6 +2245,9 @@ static int debug(const char *request, char *response)
             if (parse_integer(1, &level))
             {
                 xorif_debug(level);
+#ifdef BF_INCLUDED
+                xobf_debug(level);
+#endif
                 return SUCCESS;
             }
         }
@@ -1748,12 +2258,12 @@ static int debug(const char *request, char *response)
 
 #ifdef BF_INCLUDED
 /**
- * @brief "configure_bf" command.
+ * @brief "schedule_bf" command.
  * @returns
  *      - 0 if successful
  *      - Error code if not successful
  */
-static int configure_bf(const char *request, char *response)
+static int schedule_bf(const char *request, char *response)
 {
     if (remote_target)
     {
@@ -1766,8 +2276,57 @@ static int configure_bf(const char *request, char *response)
     {
         if (num_tokens == 1)
         {
-            // configure_bf
-            return xorif_configure_bf();
+            // schedule_bf
+            return xobf_schedule_bf();
+        }
+        else if (num_tokens > 2)
+        {
+            // schedule_bf [ud | ssb] {CxAx | Cx}
+            // e.g. schedule_bf ud C0 C1 C0
+            // e.g. schedule_bf ssb C0A0 C0A1 C1 C0A0 C0A1
+            const char *s;
+            if (parse_string(1, &s))
+            {
+                if (match(s, "ud") || match(s, "ssb"))
+                {
+                    struct xobf_schedule_info *ptr;
+                    int count = num_tokens - 2;
+                    ptr = calloc(count, sizeof(struct xobf_schedule_info));
+                    if (ptr)
+                    {
+                        for (int i = 0; i < count; ++i)
+                        {
+                            int cc, ag;
+                            if (sscanf(token[i + 2],"C%dA%d", &cc, &ag) == 2)
+                            {
+                                ptr[i].cc = cc;
+                                ptr[i].ag = ag;
+                            }
+                            else if (sscanf(token[i + 2],"C%d", &cc) == 1)
+                            {
+                                ptr[i].cc = cc;
+                                ptr[i].ag = 2; // NUM_ANTENNA_GROUPS
+                            }
+                            else
+                            {
+                                return MALFORMED_COMMAND;
+                            }
+                        }
+
+                        int result;
+                        if (match(s, "ud"))
+                        {
+                            result = xobf_populate_bf_schedule(count, ptr);
+                        }
+                        else
+                        {
+                            result = xobf_populate_bf_schedule_ssb(count, ptr);
+                        }
+                        free(ptr);
+                        return result;
+                    }
+                }
+            }
         }
         return MALFORMED_COMMAND;
     }
@@ -1775,6 +2334,7 @@ static int configure_bf(const char *request, char *response)
 }
 #endif // BF_INCLUDED
 
+#ifdef BF_INCLUDED
 /**
  * @brief "load" command.
  * @param[in] request Pointer to request string
@@ -1796,23 +2356,34 @@ static int load(const char *request, char *response)
     {
         if (num_tokens == 3)
         {
-            // load [bf_weights <file>]
+            // load [beam_weights | prach_config] <file>
             const char *s1;
             const char *s2;
             if (parse_string(1, &s1) && parse_string(2, &s2))
             {
-#ifdef BF_INCLUDED
-                if (match(s1, "bf_weights"))
+                if (match(s1, "beam_weights") || match(s1, "bf_weights"))
                 {
                     return load_beam_weight_file(s2);
                 }
-#endif
+                else if (match(s1, "prach_config"))
+                {
+                    if (match(s2, "null"))
+                    {
+                        // Using NULL for default config
+                        return xobf_load_bf_prach_config(NULL);
+                    }
+                    else
+                    {
+                        return load_prach_config(s2);
+                    }
+                }
             }
         }
         return MALFORMED_COMMAND;
     }
 #endif
 }
+#endif // BF_INCLUDED
 
 #ifdef BF_INCLUDED
 #ifndef NO_HW
@@ -1861,7 +2432,7 @@ static int load(const char *request, char *response)
  */
 static int load_beam_weight_file(const char *name)
 {
-    int result = XORIF_FAILURE;
+    int result = FILE_READ_ERROR;
     char buff[MAX_BUFF_SIZE];
     int mode = 0;
     int beam_id = 0;
@@ -1954,19 +2525,19 @@ static int load_beam_weight_file(const char *name)
                 if (beam_id == 0)
                 {
                     // Cache-based SSB BMV (no external store)
-                    result = xorif_load_bf_beam_weights_alt2(beam_id, comp_width, comp_method, comp_param, cc, sym, srb, nrb, num_weights, data);
+                    result = xobf_load_bf_beam_weights_alt2(beam_id, comp_width, comp_method, comp_param, cc, sym, srb, nrb, num_weights, data);
                 }
                 else
                 {
                     if (type == -1)
                     {
                         // Normal (external store)
-                        result = xorif_load_bf_beam_weights(beam_id, comp_width, comp_method, comp_param, num_weights, data);
+                        result = xobf_load_bf_beam_weights(beam_id, comp_width, comp_method, comp_param, num_weights, data);
                     }
                     else
                     {
                         // Cache-based BMV (no external store)
-                        result = xorif_load_bf_beam_weights_alt1(beam_id, comp_width, comp_method, comp_param, ss, dir, type, num_weights, data);
+                        result = xobf_load_bf_beam_weights_alt1(beam_id, comp_width, comp_method, comp_param, ss, dir, type, num_weights, data);
                     }
                 }
 
@@ -1986,6 +2557,76 @@ static int load_beam_weight_file(const char *name)
     if (data)
     {
         free(data);
+    }
+
+    // Close file
+    fclose(fp);
+
+    return result;
+}
+
+/**
+ * @brief Load config data for beamformer PRACH processing.
+ * @param name Name of file
+ * @returns
+ *      - 0 if successful
+ *      - Error code if not successful
+ * @note
+ * The input file should contain 64 32-bit hexadecimal numbers.
+ */
+static int load_prach_config(const char *name)
+{
+    int result = FILE_READ_ERROR;
+    char buff[MAX_BUFF_SIZE];
+    uint32_t data[PRACH_CONFIG_LENGTH];
+    int count = 0;
+    uint32_t number1, number2;
+
+    // Open file
+    FILE *fp = fopen(name, "r");
+    if (fp == NULL)
+    {
+        return FILE_NOT_FOUND;
+    }
+
+    // Reset line count
+    int num_lines = 0;
+
+    // Read lines
+    while (fgets(buff, MAX_BUFF_SIZE, fp) != NULL)
+    {
+        // Remove any trailing newline character
+        if (buff[strlen(buff) - 1] == '\n')
+        {
+            buff[strlen(buff) - 1] = '\0';
+        }
+
+        // Count lines for debug / error reporting
+        ++num_lines;
+
+        if (sscanf(buff, "0x%x 0x%x", &number1, &number2) == 2)
+        {
+            // 2 words per line (low / high)
+            if (count < (PRACH_CONFIG_LENGTH - 1))
+            {
+                data[count++] = number1;
+                data[count++] = number2;
+            }
+        }
+        else if (sscanf(buff, "0x%x", &number1) == 1)
+        {
+            // 1 word per line (low / high)
+            if (count < PRACH_CONFIG_LENGTH)
+            {
+                data[count++] = number1;
+            }
+        }
+
+        if (count >= PRACH_CONFIG_LENGTH)
+        {
+            result = xobf_load_bf_prach_config(data);
+            break;
+        }
     }
 
     // Close file

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,19 @@
  * @{
  */
 
+#include <string.h>
 #include <math.h>
 #include "xorif_api.h"
 #include "xorif_system.h"
-#include "xorif_fh_func.h"
 #include "xorif_common.h"
+#include "xorif_fh_func.h"
 #include "xorif_utils.h"
-#include "oran_radio_if_v1_1_ctrl.h"
+#include "oran_radio_if_v2_0_ctrl.h"
 
 // Constants for time advance calculation
-uint32_t XRAN_TIMER_CLK = 2500; // Clock default value (gets set later from register)
-uint32_t FH_DECAP_DLY = FH_DECAP_DLY_PS; // Downlink delay estimate (see PG370)
-uint32_t UL_RADIO_CH_DLY = UL_RADIO_CH_DLY_PS; // Uplink delay estimate (see PG370)
+static uint32_t XRAN_TIMER_CLK = 2500;                    // Clock default value (gets set later from register)
+static uint32_t FH_DECAP_DLY = DEFAULT_FH_DECAP_DLY;      // Downlink delay estimate (see PG370)
+static uint32_t UL_RADIO_CH_DLY = DEFAUT_UL_RADIO_CH_DLY; // Uplink delay estimate (see PG370)
 
 // The following const structure defines the register map for the Front Haul Interface
 // Note, this array is sorted for more efficient access
@@ -49,6 +50,21 @@ static const reg_info_t fhi_reg_map[] =
     {"CFG_CONFIG_NO_OF_DEFM_ANTS", 0x20, 0xffff0000, 16, 16},
     {"CFG_CONFIG_NO_OF_ETH_PORTS", 0x24, 0x3ff, 0, 10},
     {"CFG_CONFIG_NO_OF_FRAM_ANTS", 0x20, 0xffff, 0, 16},
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP", 0x88, 0x20000, 17, 1}, // NEW
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_SELRE", 0x88, 0x200000, 21, 1}, // NEW
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS", 0x8c, 0xffff, 0, 16}, // NEW
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED", 0x28, 0x20, 5, 1}, // NEW
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP", 0x88, 0x10000, 16, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP", 0x80, 0x2, 1, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_SELRE", 0x80, 0x20, 5, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS", 0x84, 0xffff, 0, 16}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC", 0x80, 0x4, 2, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED", 0x28, 0x10, 4, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP", 0x80, 0x10, 4, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP_SELRE", 0x80, 0x40, 6, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS", 0x84, 0x3f0000, 16, 6}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU", 0x80, 0x8, 3, 1}, // NEW
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP", 0x80, 0x1, 0, 1}, // NEW
     {"CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX", 0x44, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_ETH_SS_BUF_PKT_PTRS", 0x70, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_ETH_SS_BUF_WORD_DEPTH", 0x6c, 0xffff, 0, 16},
@@ -58,14 +74,13 @@ static const reg_info_t fhi_reg_map[] =
     {"CFG_CONFIG_XRAN_MAX_CTRL_SYMBOLS", 0x4c, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS", 0x54, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS", 0x58, 0xffff, 0, 16},
-    {"CFG_CONFIG_XRAN_MAX_DL_SECT_PER_SYMBOL", 0x60, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_DL_SYMBOLS", 0x30, 0x1f, 0, 5},
     {"CFG_CONFIG_XRAN_MAX_NUMEROLOGY", 0x34, 0x7, 0, 3},
     {"CFG_CONFIG_XRAN_MAX_SCS", 0x48, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS", 0x50, 0xffff, 0, 16},
-    {"CFG_CONFIG_XRAN_MAX_UL_SECT_PER_SYMBOL", 0x64, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MIN_NUMEROLOGY", 0x38, 0x7, 0, 3},
     {"CFG_CONFIG_XRAN_PRACH_C_PORTS", 0x74, 0xffff, 0, 16},
+    {"CFG_CONFIG_XRAN_PRECODING_EXT3_PORT", 0x28, 0x40, 6, 1}, // NEW
     {"CFG_CONFIG_XRAN_SUPPORT_MODE", 0x28, 0xf, 0, 4},
     {"CFG_CONFIG_XRAN_TIMER_CLK_PS", 0x5c, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM", 0x68, 0xffff, 0, 16},
@@ -102,6 +117,8 @@ static const reg_info_t fhi_reg_map[] =
     {"DEFM_CID_CC_SHIFT", 0x6020, 0xf, 0, 4},
     {"DEFM_CID_DU_MASK", 0x6034, 0x3f, 0, 6},
     {"DEFM_CID_DU_SHIFT", 0x6030, 0xf, 0, 4},
+    {"DEFM_CID_LTE_MASK", 0x6054, 0xff, 0, 8},
+    {"DEFM_CID_LTE_VALUE", 0x6058, 0xff, 0, 8},
     {"DEFM_CID_PRACH_MASK", 0x6044, 0xff, 0, 8},
     {"DEFM_CID_PRACH_VALUE", 0x6048, 0xff, 0, 8},
     {"DEFM_CID_SSB_MASK", 0x604c, 0xff, 0, 8},
@@ -198,7 +215,7 @@ static const reg_info_t fhi_reg_map[] =
     {"ORAN_CC_DL_DATA_SYM_NUM_INDEX", 0xe114, 0x3f00, 8, 6},
     {"ORAN_CC_DL_DATA_SYM_START_INDEX", 0xe114, 0x3f, 0, 6},
     {"ORAN_CC_DL_DATA_UNROLL_OFFSET", 0xe500, 0xffff, 0, 16},
-    {"ORAN_CC_DL_MPLANE_UDCOMP_PARAM", 0xe11c, 0x100, 8, 1},
+    {"ORAN_CC_DL_MPLANE_UDCOMP_HDR_SEL", 0xe11c, 0x100, 8, 1},
     {"ORAN_CC_DL_SETUP_C_ABS_SYMBOL", 0xe130, 0xfff, 0, 12},
     {"ORAN_CC_DL_SETUP_C_CYCLES", 0xe134, 0x1ffff, 0, 17},
     {"ORAN_CC_DL_SETUP_D_CYCLES", 0xe138, 0x1ffff, 0, 17},
@@ -217,7 +234,7 @@ static const reg_info_t fhi_reg_map[] =
     {"ORAN_CC_SSB_CTRL_OFFSETS", 0xe904, 0xffff, 0, 16},
     {"ORAN_CC_SSB_DATA_SYM_START_INDEX", 0xe914, 0x3f, 0, 6},
     {"ORAN_CC_SSB_DATA_UNROLL_OFFSET", 0xed00, 0xffff, 0, 16},
-    {"ORAN_CC_SSB_MPLANE_UDCOMP_PARAM", 0xe91c, 0x100, 8, 1},
+    {"ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL", 0xe91c, 0x100, 8, 1},
     {"ORAN_CC_SSB_NUMEROLOGY", 0xe900, 0x70000, 16, 3},
     {"ORAN_CC_SSB_NUMRBS", 0xe900, 0x1ff, 0, 9},
     {"ORAN_CC_SSB_NUM_DATA_SYM_PER_CC", 0xe914, 0x3f00, 8, 6},
@@ -231,10 +248,12 @@ static const reg_info_t fhi_reg_map[] =
     {"ORAN_CC_SSB_UD_IQ_WIDTH", 0xe91c, 0xf, 0, 4},
     {"ORAN_CC_SYMPERSLOT", 0xe100, 0x1000000, 24, 1},
     {"ORAN_CC_UL_BASE_OFFSET", 0xe140, 0xffff, 0, 16},
+    {"ORAN_CC_UL_BIDF_C_ABS_SYMBOL", 0xe144, 0xfff, 0, 12},
+    {"ORAN_CC_UL_BIDF_C_CYCLES", 0xe148, 0x1ffff, 0, 17},
     {"ORAN_CC_UL_CTRL_OFFSETS", 0xe10c, 0xffff, 0, 16},
     {"ORAN_CC_UL_CTRL_SYM_NUM_INDEX", 0xe114, 0x3f000000, 24, 6},
     {"ORAN_CC_UL_CTRL_UNROLLED_OFFSETS", 0xe110, 0xffff, 0, 16},
-    {"ORAN_CC_UL_MPLANE_UDCOMP_PARAM", 0xe118, 0x100, 8, 1},
+    {"ORAN_CC_UL_MPLANE_UDCOMP_HDR_SEL", 0xe118, 0x100, 8, 1},
     {"ORAN_CC_UL_SETUP_C_ABS_SYMBOL", 0xe120, 0xfff, 0, 12},
     {"ORAN_CC_UL_SETUP_C_CYCLES", 0xe124, 0x1ffff, 0, 17},
     {"ORAN_CC_UL_SETUP_D_CYCLES", 0xe128, 0x1ffff, 0, 17},
@@ -288,10 +307,6 @@ static const reg_info_t fhi_reg_map[] =
 // Note, the -1 is to skip the NULL terminating entry
 static const int fhi_reg_num = (sizeof(fhi_reg_map) / sizeof(reg_info_t)) - 1;
 
-// Shadow copy of the component carrier allocation
-// Required, since not all values are stored in h/w registers
-static struct xorif_cc_alloc cc_alloc[MAX_NUM_CC];
-
 // Macros to access register map header file
 #define NAME(a) (#a)
 #define ADDR(a) (a##_ADDR)
@@ -299,37 +314,44 @@ static struct xorif_cc_alloc cc_alloc[MAX_NUM_CC];
 #define SHIFT(a) (a##_OFFSET)
 #define WIDTH(a) (a##_WIDTH)
 
+#ifdef NO_HW
+uint32_t fake_reg_bank[0x10000 / 4]; // Fake register bank
+#define DEVICE (fake_reg_bank)
+#else
+#define DEVICE (fh_device.io)
+#endif
+
 /**
  * @brief Macro handles read from specified register field.
  */
-#define READ_REG(a) read_reg(fh_device.io, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a))
+#define READ_REG(a) read_reg(DEVICE, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a))
 
 /**
  * @brief Macro handles read from specified register field (address + offset).
  */
-#define READ_REG_OFFSET(a, o) read_reg(fh_device.io, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a))
+#define READ_REG_OFFSET(a, o) read_reg(DEVICE, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a))
 
 /**
  * @brief Macro handles raw read from specified register address.
  */
-#define READ_REG_RAW(a) read_reg_raw(fh_device.io, #a, a)
-#define READ_REG_RAW_ALT(s, a) read_reg_raw(fh_device.io, s, a)
+#define READ_REG_RAW(a) read_reg_raw(DEVICE, #a, a)
+#define READ_REG_RAW_ALT(s, a) read_reg_raw(DEVICE, s, a)
 
 /**
  * @brief Macro handles write to specified register field.
  */
-#define WRITE_REG(a, v) write_reg(fh_device.io, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a), v)
+#define WRITE_REG(a, v) write_reg(DEVICE, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a), v)
 
 /**
  * @brief Macro handles write to specified register field (address + offset).
  */
-#define WRITE_REG_OFFSET(a, o, v) write_reg(fh_device.io, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a), v)
+#define WRITE_REG_OFFSET(a, o, v) write_reg(DEVICE, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a), v)
 
 /**
  * @brief Macro handles raw write to specified register address.
  */
-#define WRITE_REG_RAW(a, v) write_reg_raw(fh_device.io, #a, a, v)
-#define WRITE_REG_RAW_ALT(s, a, v) write_reg_raw(fh_device.io, s, a, v)
+#define WRITE_REG_RAW(a, v) write_reg_raw(DEVICE, #a, a, v)
+#define WRITE_REG_RAW_ALT(s, a, v) write_reg_raw(DEVICE, s, a, v)
 
 // Interrupt macros
 #define FHI_INTR_ENABLE_ADDR CFG_DEFM_INT_ENA_INFIFO_OF_ADDR
@@ -350,43 +372,74 @@ static enum xorif_fhi_alarms fhi_alarm_status = 0;
 // FHI ISR callback function
 static isr_func_t fhi_callback = NULL;
 
+// Slots per sub-frame definition, used for various calculations
+static const int slots_per_subframe[NUM_NUMEROLOGY] = {1, 2, 4, 8, 16};
+
+// Memory allocation pointers
+static void *ul_ctrl_memory = NULL;
+static void *ul_ctrl_base_memory = NULL;
+static void *dl_ctrl_memory = NULL;
+static void *dl_data_ptrs_memory = NULL;
+static void *dl_data_buff_memory = NULL;
+static void *ssb_ctrl_memory = NULL;
+static void *ssb_data_ptrs_memory = NULL;
+static void *ssb_data_buff_memory = NULL;
+
 // Start address of packet filter word
 #define DEFM_USER_DATA_FILTER_ADDR DEFM_USER_DATA_FILTER_W0_31_0_ADDR
 
 // Local function prototypes...
-static int get_left_cc(uint16_t cc);
-static int get_right_cc(uint16_t cc);
 static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, uint32_t time);
 static uint16_t calc_data_buff_size(uint16_t num_rbs,
                                     enum xorif_iq_comp comp_mode,
                                     uint16_t comp_width,
                                     uint16_t num_sections,
                                     uint16_t num_frames);
-#ifdef ENABLE_INTERRUPTS
+static void deallocate_memory(int cc);
+
+#if defined(ENABLE_INTERRUPTS) && !defined(NO_HW)
 static int fhi_irq_handler(int id, void *data);
+#endif
+
+#ifdef NO_HW
+static void init_fake_reg_bank(void);
 #endif
 
 // API functions...
 
-void xorif_reset_fhi(uint16_t mode)
+int xorif_reset_fhi(uint16_t mode)
 {
     TRACE("xorif_reset_fhi(%d)\n", mode);
 
-    // Deactivate / disable
+    // Reset framer/de-framer
     WRITE_REG(FRAM_DISABLE, 1);
     WRITE_REG(DEFM_RESTART, 1);
+
+    // Reset enabled component carrier bit-map
     WRITE_REG(ORAN_CC_ENABLE, 0);
 
     // Clear alarms and counters
     xorif_clear_fhi_alarms();
     xorif_clear_fhi_stats();
 
+    // Initialize the memory allocation pointers
+    init_memory_allocator(&ul_ctrl_memory, 0, 1024 * fhi_caps.max_ul_ctrl_1kwords);
+    init_memory_allocator(&ul_ctrl_base_memory, 0, fhi_caps.max_subcarriers / RE_PER_RB);
+    init_memory_allocator(&dl_ctrl_memory, 0, 1024 * fhi_caps.max_dl_ctrl_1kwords);
+    init_memory_allocator(&dl_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+    init_memory_allocator(&dl_data_buff_memory, 0, 1024 * fhi_caps.max_dl_data_1kwords);
+    init_memory_allocator(&ssb_ctrl_memory, 0, 512 * fhi_caps.max_ssb_ctrl_512words);
+    init_memory_allocator(&ssb_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+    init_memory_allocator(&ssb_data_buff_memory, 0, 512 * fhi_caps.max_ssb_data_512words);
+
     if (mode == 0)
     {
-        // Reactivate / enable
+        // Enable framer/de-framer
         WRITE_REG(FRAM_DISABLE, 0);
         WRITE_REG(DEFM_RESTART, 0);
     }
+
+    return XORIF_SUCCESS;
 }
 
 uint32_t xorif_get_fhi_hw_version(void)
@@ -400,9 +453,9 @@ uint32_t xorif_get_fhi_hw_version(void)
     return major << 24 | minor << 16 | revision;
 }
 
-uint32_t xorif_get_fhi_hw_revision(void)
+uint32_t xorif_get_fhi_hw_internal_rev(void)
 {
-    TRACE("xorif_get_fhi_hw_revision()\n");
+    TRACE("xorif_get_fhi_hw_internal_rev()\n");
     return READ_REG(CFG_INTERNAL_REVISION);
 }
 
@@ -439,7 +492,7 @@ int xorif_read_fhi_reg(const char *name, uint32_t *val)
     }
     else
     {
-        *val = read_reg(fh_device.io, name, ptr->addr, ptr->mask, ptr->shift, ptr->width);
+        *val = read_reg(DEVICE, name, ptr->addr, ptr->mask, ptr->shift, ptr->width);
         return XORIF_SUCCESS;
     }
 }
@@ -457,7 +510,7 @@ int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val)
     }
     else
     {
-        *val = read_reg(fh_device.io, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width);
+        *val = read_reg(DEVICE, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width);
         return XORIF_SUCCESS;
     }
 }
@@ -475,7 +528,7 @@ int xorif_write_fhi_reg(const char *name, uint32_t value)
     }
     else
     {
-        write_reg(fh_device.io, name, ptr->addr, ptr->mask, ptr->shift, ptr->width, value);
+        write_reg(DEVICE, name, ptr->addr, ptr->mask, ptr->shift, ptr->width, value);
         return XORIF_SUCCESS;
     }
 }
@@ -493,7 +546,7 @@ int xorif_write_fhi_reg_offset(const char *name, uint16_t offset, uint32_t value
     }
     else
     {
-        write_reg(fh_device.io, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width, value);
+        write_reg(DEVICE, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width, value);
         return XORIF_SUCCESS;
     }
 }
@@ -515,53 +568,53 @@ int xorif_get_fhi_eth_stats(int port, struct xorif_fhi_eth_stats *ptr)
 
         // Read stat counters...
         ptr->total_rx_good_pkt_cnt = (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H, port * 0x100) << 32;
+                                     (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_GOOD_PKT_CNT_H, port * 0x100) << 32;
 
         ptr->total_rx_bad_pkt_cnt = (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H, port * 0x100) << 32;
+                                    (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_PKT_CNT_H, port * 0x100) << 32;
 
         ptr->total_rx_bad_fcs_cnt = (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H, port * 0x100) << 32;
+                                    (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H, port * 0x100) << 32;
 
         ptr->total_rx_bit_rate = (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_TOTAL_RX_BIT_RATE, port * 0x100) * 64;
 
         ptr->oran_rx_bit_rate = (uint64_t)READ_REG_OFFSET(STATS_ETH_STATS_ORAN_RX_BIT_RATE, port * 0x100) * 64;
 
         ptr->oran_rx_total = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_H, port * 0x100) << 32;
+                             (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_H, port * 0x100) << 32;
 
         ptr->oran_rx_on_time = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_H, port * 0x100) << 32;
+                               (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_H, port * 0x100) << 32;
 
         ptr->oran_rx_early = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_H, port * 0x100) << 32;
+                             (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_H, port * 0x100) << 32;
 
         ptr->oran_rx_late = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_H, port * 0x100) << 32;
+                            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_H, port * 0x100) << 32;
 
         ptr->oran_rx_total_c = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_C_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_C_H, port * 0x100) << 32;
+                               (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_TOTAL_C_H, port * 0x100) << 32;
 
         ptr->oran_rx_on_time_c = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_C_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_C_H, port * 0x100) << 32;
+                                 (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ON_TIME_C_H, port * 0x100) << 32;
 
         ptr->oran_rx_early_c = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_C_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_C_H, port * 0x100) << 32;
+                               (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_EARLY_C_H, port * 0x100) << 32;
 
         ptr->oran_rx_late_c = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_C_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_C_H, port * 0x100) << 32;
+                              (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_LATE_C_H, port * 0x100) << 32;
 
         ptr->oran_rx_corrupt = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_CORRUPT_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_CORRUPT_H, port * 0x100) << 32;
+                               (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_CORRUPT_H, port * 0x100) << 32;
 
         ptr->oran_rx_error_drop = (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ERROR_DROP_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ERROR_DROP_H, port * 0x100) << 32;
+                                  (uint64_t)READ_REG_OFFSET(STATS_ORAN_RX_ERROR_DROP_H, port * 0x100) << 32;
 
         ptr->oran_tx_total = (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_H, port * 0x100) << 32;
+                             (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_H, port * 0x100) << 32;
 
         ptr->oran_tx_total_c = (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_C_L, port * 0x100) |
-            (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_C_H, port * 0x100) << 32;
+                               (uint64_t)READ_REG_OFFSET(STATS_ORAN_TX_TOTAL_C_H, port * 0x100) << 32;
 
         ptr->offset_earliest_u_pkt = READ_REG_OFFSET(STATS_OFFSET_EARLIEST_U_PKT, port * 0x100);
 
@@ -570,66 +623,6 @@ int xorif_get_fhi_eth_stats(int port, struct xorif_fhi_eth_stats *ptr)
         return XORIF_SUCCESS;
     }
     return XORIF_FAILURE;
-}
-
-#if 0
-// Note, we used to read the allocation from h/w registers, but with the
-// modified buffer size formula, it is not possible to glean this information
-// from h/w registers. So, we need to keep a shadow copy in s/w. It seems better
-// to keep all in shadow copy to ensure consistency rather than having a
-// mix of sources. As such, this function is no longer required.
-int xorif_fhi_get_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
-{
-    if (ptr)
-    {
-        // Get enabled status
-        ptr->enabled = (READ_REG(ORAN_CC_ENABLE) & (1 << cc)) != 0;
-
-        // Get the number of RBs
-        ptr->num_rbs = READ_REG_OFFSET(ORAN_CC_NUMRBS, cc * 0x70);
-        
-        // Get numerology & extended CP
-        ptr->numerology = READ_REG_OFFSET(ORAN_CC_NUMEROLOGY, cc * 0x70);
-        ptr->extended_cp = READ_REG_OFFSET(ORAN_CC_SYMPERSLOT, cc * 0x70);
-
-        // Uplink compression
-        ptr->iq_comp_meth_ul = READ_REG_OFFSET(ORAN_CC_UL_UD_COMP_METH, cc * 0x70);
-        ptr->iq_comp_width_ul = READ_REG_OFFSET(ORAN_CC_UL_UD_IQ_WIDTH, cc * 0x70);
-
-        // Downlink compression
-        ptr->iq_comp_meth_dl = READ_REG_OFFSET(ORAN_CC_DL_UD_COMP_METH, cc * 0x70);
-        ptr->iq_comp_width_dl = READ_REG_OFFSET(ORAN_CC_DL_UD_IQ_WIDTH, cc * 0x70);
-
-        // Sections per symbol
-        ptr->num_ctrl_per_sym_ul = READ_REG_OFFSET(ORAN_CC_NUM_CTRL_PER_SYMBOL_UL, cc * 0x70);
-        ptr->num_ctrl_per_sym_dl = READ_REG_OFFSET(ORAN_CC_NUM_CTRL_PER_SYMBOL_DL, cc * 0x70);
-
-        // Uplink control
-        ptr->ul_ctrl_sym_num = READ_REG_OFFSET(ORAN_CC_UL_CTRL_SYM_NUM_INDEX, cc * 0x70);
-        ptr->ul_ctrl_base_offset = READ_REG_OFFSET(ORAN_CC_UL_BASE_OFFSET, cc * 0x70);
-        ptr->ul_ctrl_offset = READ_REG_OFFSET(ORAN_CC_UL_CTRL_OFFSETS, cc * 0x70);
-
-        // Downlink control
-        ptr->dl_ctrl_sym_num = READ_REG_OFFSET(ORAN_CC_DL_CTRL_SYM_NUM_INDEX, cc * 0x70);
-        ptr->dl_ctrl_offset = READ_REG_OFFSET(ORAN_CC_DL_CTRL_OFFSETS, cc * 0x70);
-
-        // Downlink data
-        ptr->dl_data_sym_num = READ_REG_OFFSET(ORAN_CC_DL_DATA_SYM_NUM_INDEX, cc * 0x70);
-        ptr->dl_data_sym_start = READ_REG_OFFSET(ORAN_CC_DL_DATA_SYM_START_INDEX, cc * 0x70);
-        ptr->dl_data_buff_start = READ_REG_OFFSET(ORAN_CC_DL_DATA_UNROLL_OFFSET, ptr->dl_data_sym_start * 0x4);
-        ptr->dl_data_buff_size = calc_data_buff_size(ptr->num_rbs, ptr->iq_comp_meth_dl, ptr->iq_comp_width_dl);
-
-        // Modvals
-        ptr->ul_modvals = READ_REG_OFFSET(ORAN_CC_MODVALS_UL, cc * 0x70);
-        ptr->dl_modvals = READ_REG_OFFSET(ORAN_CC_MODVALS_DL, cc * 0x70);
-    }
-}
-#endif
-
-const struct xorif_fhi_caps *xorif_get_fhi_capabilities(void)
-{
-    TRACE("xorif_get_fhi_capabilities()\n");
-    return &fhi_caps;
 }
 
 int xorif_set_fhi_dest_mac_addr(int port, const uint8_t address[])
@@ -714,7 +707,7 @@ int xorif_set_fhi_protocol(enum xorif_transport_protocol transport,
                 filter[3] = 0xFFFFFEAE;
             }
             break;
-        
+
         case PROTOCOL_IEEE_1914_3:
             if (vlan)
             {
@@ -743,9 +736,9 @@ int xorif_set_fhi_protocol(enum xorif_transport_protocol transport,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_fhi_vlan_tag(int port, uint16_t tag)
+int xorif_set_fhi_vlan_tag(int port, uint16_t id, uint16_t dei, uint16_t pcp)
 {
-    TRACE("xorif_set_fhi_vlan_tag(%d, %d)\n", port, tag);
+    TRACE("xorif_set_fhi_vlan_tag(%d, %d, %d, %d)\n", port, id, dei, pcp);
 
     if (port >= xorif_fhi_get_num_eth_ports())
     {
@@ -753,7 +746,11 @@ int xorif_set_fhi_vlan_tag(int port, uint16_t tag)
         return XORIF_INVALID_ETH_PORT;
     }
 
-    WRITE_REG_OFFSET(ETH_VLAN_ID, port * 0x100, tag);
+    // VLAN tag (ID bits 0-11; DEI bit 12; PCP bits 13-15)
+    WRITE_REG_OFFSET(ETH_VLAN_ID, port * 0x100, id);
+    WRITE_REG_OFFSET(ETH_VLAN_DEI, port * 0x100, dei);
+    WRITE_REG_OFFSET(ETH_VLAN_PCP, port * 0x100, pcp);
+
     return XORIF_SUCCESS;
 }
 
@@ -789,19 +786,6 @@ int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t ma
     return XORIF_SUCCESS;
 }
 
-int xorif_enable_fhi_interrupts(uint32_t mask)
-{
-    TRACE("xorif_enable_fhi_interrupts(0x%X)\n", mask);
-
-    // Setup interrupts (enable / disable according to mask value)
-    WRITE_REG_RAW(FHI_INTR_ENABLE_ADDR, mask);
-
-    // Finally enable the master interrupt
-    WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
-
-    return XORIF_SUCCESS;
-}
-
 int xorif_set_fhi_eaxc_id(uint16_t du_bits,
                           uint16_t bs_bits,
                           uint16_t cc_bits,
@@ -815,7 +799,7 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
         return XORIF_INVALID_EAXC_ID;
     }
     else if ((du_bits > fhi_caps.du_id_limit) || (bs_bits > fhi_caps.bs_id_limit) ||
-        (cc_bits > fhi_caps.cc_id_limit) || (ru_bits > fhi_caps.ru_id_limit))
+             (cc_bits > fhi_caps.cc_id_limit) || (ru_bits > fhi_caps.ru_id_limit))
     {
         PERROR("Number of ID bits is larger than allowed\n");
         return XORIF_INVALID_EAXC_ID;
@@ -854,22 +838,22 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
         {
             if (i >= du_shift)
             {
-                s[15-i] = 'D';
+                s[15 - i] = 'D';
             }
             else if (i >= bs_shift)
             {
-                s[15-i] = 'B';
+                s[15 - i] = 'B';
             }
             else if (i >= cc_shift)
             {
-                s[15-i] = 'C';
+                s[15 - i] = 'C';
             }
             else if (i >= ru_shift)
             {
-                s[15-i] = 'R';
+                s[15 - i] = 'R';
             }
         }
-        s[16] ='\0';
+        s[16] = '\0';
         INFO("eAxC ID bits: %s\n", s);
         INFO("DU mask:      %s\n", binary_mask_string(du_mask << du_shift, du_mask << du_shift, 16));
         INFO("BS mask:      %s\n", binary_mask_string(bs_mask << bs_shift, bs_mask << bs_shift, 16));
@@ -912,8 +896,22 @@ int xorif_set_ru_ports(uint16_t ru_bits,
     WRITE_REG(DEFM_CID_U_VALUE, user_val & xx_mask);
     WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
     WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
-    WRITE_REG(DEFM_CID_SSB_MASK, xx_mask);
-    WRITE_REG(DEFM_CID_SSB_VALUE, ssb_val & xx_mask);
+
+    if (ssb_val > mask)
+    {
+        // Disable SSB mapping (since masking with 0x00 can never == 0xFF)
+        WRITE_REG(DEFM_CID_SSB_MASK, 0x00);
+        WRITE_REG(DEFM_CID_SSB_VALUE, 0xFF);
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_SSB_MASK, xx_mask);
+        WRITE_REG(DEFM_CID_SSB_VALUE, ssb_val & xx_mask);
+    }
+
+    // Disable LTE mapping (sonce masking with 0x00 can never == 0xFF)
+    WRITE_REG(DEFM_CID_LTE_MASK, 0x00);
+    WRITE_REG(DEFM_CID_LTE_VALUE, 0xFF);
 
 #ifdef DEBUG
     if (xorif_trace >= 2)
@@ -923,7 +921,89 @@ int xorif_set_ru_ports(uint16_t ru_bits,
         INFO("Mask:        %s\n", binary_mask_string(xx_mask, xx_mask, 16));
         INFO("User value:  %s\n", binary_mask_string(user_val & xx_mask, xx_mask, 16));
         INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
-        INFO("SSB value:   %s\n", binary_mask_string(ssb_val & xx_mask, xx_mask, 16));
+        if (ssb_val <= mask)
+        {
+            INFO("SSB value:   %s\n", binary_mask_string(ssb_val & xx_mask, xx_mask, 16));
+        }
+    }
+#endif
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_ru_ports_alt1(uint16_t ru_bits,
+                            uint16_t ss_bits,
+                            uint16_t mask,
+                            uint16_t user_val,
+                            uint16_t prach_val,
+                            uint16_t ssb_val,
+                            uint16_t lte_val)
+{
+    TRACE("xorif_set_ru_ports_alt1(%d, %d, %d, %d, %d, %d, %d)\n", ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
+
+    if (ss_bits > ru_bits)
+    {
+        PERROR("Invalid RU port assignment.\n");
+        return XORIF_INVALID_EAXC_ID;
+    }
+    else if (ss_bits > fhi_caps.ss_id_limit)
+    {
+        PERROR("Invalid RU port assignment.\n");
+        return XORIF_INVALID_EAXC_ID;
+    }
+
+    // Create masks
+    uint16_t ru_mask = (1 << ru_bits) - 1;
+    uint16_t ss_mask = (1 << ss_bits) - 1;
+    uint16_t xx_mask = ru_mask & mask;
+
+    // Program the masks and values
+    WRITE_REG(DEFM_CID_SS_MASK, ss_mask);
+    WRITE_REG(DEFM_CID_U_MASK, xx_mask);
+    WRITE_REG(DEFM_CID_U_VALUE, user_val & xx_mask);
+    WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
+    WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
+
+    if (ssb_val > mask)
+    {
+        // Disable SSB mapping (since masking with 0x00 can never == 0xFF)
+        WRITE_REG(DEFM_CID_SSB_MASK, 0x00);
+        WRITE_REG(DEFM_CID_SSB_VALUE, 0xFF);
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_SSB_MASK, xx_mask);
+        WRITE_REG(DEFM_CID_SSB_VALUE, ssb_val & xx_mask);
+    }
+
+    if (lte_val > mask)
+    {
+        // Disable LTE mapping (since masking with 0x00 can never == 0xFF)
+        WRITE_REG(DEFM_CID_LTE_MASK, 0x00);
+        WRITE_REG(DEFM_CID_LTE_VALUE, 0xFF);
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_LTE_MASK, xx_mask);
+        WRITE_REG(DEFM_CID_LTE_VALUE, lte_val & xx_mask);
+    }
+
+#ifdef DEBUG
+    if (xorif_trace >= 2)
+    {
+        INFO("RU mask:     %s\n", binary_mask_string(ru_mask, ru_mask, 16));
+        INFO("SS mask:     %s\n", binary_mask_string(ss_mask, ss_mask, 16));
+        INFO("Mask:        %s\n", binary_mask_string(xx_mask, xx_mask, 16));
+        INFO("User value:  %s\n", binary_mask_string(user_val & xx_mask, xx_mask, 16));
+        INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
+        if (ssb_val <= mask)
+        {
+            INFO("SSB value:   %s\n", binary_mask_string(ssb_val & xx_mask, xx_mask, 16));
+        }
+        if (lte_val <= mask)
+        {
+            INFO("LTE value:   %s\n", binary_mask_string(lte_val & xx_mask, xx_mask, 16));
+        }
     }
 #endif
 
@@ -945,7 +1025,35 @@ int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
         return XORIF_NULL_POINTER;
     }
 
-    memcpy(ptr, &cc_alloc[cc], sizeof(struct xorif_cc_alloc));
+    // Number of symbols
+    ptr->ul_ctrl_sym_num = READ_REG_OFFSET(ORAN_CC_UL_CTRL_SYM_NUM_INDEX, cc * 0x70);
+    ptr->dl_ctrl_sym_num = READ_REG_OFFSET(ORAN_CC_DL_CTRL_SYM_NUM_INDEX, cc * 0x70);
+    ptr->dl_data_sym_num = READ_REG_OFFSET(ORAN_CC_DL_DATA_SYM_NUM_INDEX, cc * 0x70);
+    ptr->ssb_ctrl_sym_num = READ_REG_OFFSET(ORAN_CC_SSB_NUM_SYM_PER_CC, cc * 0x70);
+    ptr->ssb_data_sym_num = READ_REG_OFFSET(ORAN_CC_SSB_NUM_DATA_SYM_PER_CC, cc * 0x70);
+
+    // Retrieve memory allocation
+    get_alloc_block(ul_ctrl_memory, cc, &ptr->ul_ctrl_offset, &ptr->ul_ctrl_size);
+    get_alloc_block(ul_ctrl_base_memory, cc, &ptr->ul_ctrl_base_offset, &ptr->ul_ctrl_base_size);
+    get_alloc_block(dl_ctrl_memory, cc, &ptr->dl_ctrl_offset, &ptr->dl_ctrl_size);
+    get_alloc_block(dl_data_ptrs_memory, cc, &ptr->dl_data_ptrs_offset, &ptr->dl_data_ptrs_size);
+    get_alloc_block(dl_data_buff_memory, cc, &ptr->dl_data_buff_offset, &ptr->dl_data_buff_size);
+    get_alloc_block(ssb_ctrl_memory, cc, &ptr->ssb_ctrl_offset, &ptr->ssb_ctrl_size);
+    get_alloc_block(ssb_data_ptrs_memory, cc, &ptr->ssb_data_ptrs_offset, &ptr->ssb_data_ptrs_size);
+    get_alloc_block(ssb_data_buff_memory, cc, &ptr->ssb_data_buff_offset, &ptr->ssb_data_buff_size);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_enable_fhi_interrupts(uint32_t mask)
+{
+    TRACE("xorif_enable_fhi_interrupts(0x%X)\n", mask);
+
+    // Setup interrupts (enable / disable according to mask value)
+    WRITE_REG_RAW(FHI_INTR_ENABLE_ADDR, mask);
+
+    // Finally enable the master interrupt
+    WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
 
     return XORIF_SUCCESS;
 }
@@ -959,7 +1067,7 @@ int xorif_register_fhi_isr(isr_func_t callback)
 
 // Non-API functions...
 
-#ifdef ENABLE_INTERRUPTS
+#if defined(ENABLE_INTERRUPTS) && !defined(NO_HW)
 static int fhi_irq_handler(int id, void *data)
 {
     struct xorif_device_info *device = (struct xorif_device_info *)data;
@@ -1043,15 +1151,47 @@ static int fhi_irq_handler(int id, void *data)
 
 void xorif_fhi_init_device(void)
 {
-    // Reset
-    xorif_reset_fhi(0);
+#ifdef NO_HW
+    // Initialize fake register bank
+    init_fake_reg_bank();
+#endif
 
     // Set-up the FHI capabilities
     memset(&fhi_caps, 0, sizeof(fhi_caps));
+    fhi_caps.max_cc = READ_REG(CFG_CONFIG_XRAN_MAX_CC);
+    fhi_caps.num_eth_ports = READ_REG(CFG_CONFIG_NO_OF_ETH_PORTS);
+    fhi_caps.numerologies = 0x1F; // bit-map: u0 - u4
+    fhi_caps.extended_cp = 0;
+#if 0
+    // De-compression is downlink
+    fhi_caps.iq_de_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT | IQ_COMP_MODULATION_SUPPORT;
+    fhi_caps.iq_de_comp_bfp_widths = 0x5200); // 9, 12, 14
+    fhi_caps.iq_de_comp_mod_widths = 0x3E; // 1, 2, 3, 4, 5
+
+    // Compression is Uplink
+    fhi_caps.iq_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
+    fhi_caps.iq_de_comp_bfp_widths = 0x5200); // 9, 12, 14
+#else
+    // De-compression is downlink
+    int de_comp = 0;
+    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
+    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
+    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC) ? IQ_COMP_BLOCK_SCALE_SUPPORT : 0;
+    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU) ? IQ_COMP_U_LAW_SUPPORT : 0;
+    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP) ? IQ_COMP_MODULATION_SUPPORT : 0;
+    fhi_caps.iq_de_comp_methods = de_comp;
+    fhi_caps.iq_de_comp_bfp_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS);
+    fhi_caps.iq_de_comp_mod_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS);
+
+    // Compression is Uplink
+    int comp = 0;
+    comp |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
+    comp |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
+    fhi_caps.iq_comp_methods = comp;
+    fhi_caps.iq_comp_bfp_widths = READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS);
+#endif
     fhi_caps.no_framer_ss = READ_REG(CFG_CONFIG_NO_OF_FRAM_ANTS);
     fhi_caps.no_deframer_ss = READ_REG(CFG_CONFIG_NO_OF_DEFM_ANTS);
-    fhi_caps.num_eth_ports = READ_REG(CFG_CONFIG_NO_OF_ETH_PORTS);
-    fhi_caps.max_cc = READ_REG(CFG_CONFIG_XRAN_MAX_CC);
     fhi_caps.max_framer_ethernet_pkt = READ_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX);
     fhi_caps.max_deframer_ethernet_pkt = READ_REG(CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX);
     fhi_caps.max_subcarriers = READ_REG(CFG_CONFIG_XRAN_MAX_SCS);
@@ -1060,8 +1200,8 @@ void xorif_fhi_init_device(void)
     fhi_caps.max_ul_ctrl_1kwords = READ_REG(CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS);
     fhi_caps.max_dl_ctrl_1kwords = READ_REG(CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS);
     fhi_caps.max_dl_data_1kwords = READ_REG(CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS);
-    fhi_caps.max_ssb_ctrl_512words = 0; // TODO add register when available
-    fhi_caps.max_ssb_data_512words = 0; // TODO add register when available
+    fhi_caps.max_ssb_ctrl_512words = 1; // TODO add register read when available
+    fhi_caps.max_ssb_data_512words = 2; // TODO add register read when available
     fhi_caps.timer_clk_ps = READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
     fhi_caps.num_unsolicited_ports = READ_REG(CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM);
     fhi_caps.num_prach_ports = READ_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS);
@@ -1075,6 +1215,8 @@ void xorif_fhi_init_device(void)
     XRAN_TIMER_CLK = fhi_caps.timer_clk_ps; //READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
 
     // Additional properties extracted from device node
+#ifndef NO_HW
+    // TODO these might be replaced by registers in future release
     uint32_t temp;
     if (get_device_property_u32(fh_device.dev_name, "xlnx,xran-max-ssb-ctrl-512words", &temp))
     {
@@ -1084,15 +1226,12 @@ void xorif_fhi_init_device(void)
     {
         fhi_caps.max_ssb_data_512words = temp;
     }
+#endif
 
-    // Initialize the component carrier allocation
-    for (int i = 0; i < MAX_NUM_CC; ++i)
-    {
-        // Populate structure with defaults
-        memset(&cc_alloc[i], 0, sizeof(struct xorif_cc_alloc));
-    }
+    // Reset everything
+    xorif_reset_fhi(0);
 
-#ifdef ENABLE_INTERRUPTS
+#if defined(ENABLE_INTERRUPTS) && !defined(NO_HW)
     // Register and enable ISR
     int num = fh_device.dev->irq_num;
     if (num > 0)
@@ -1104,7 +1243,8 @@ void xorif_fhi_init_device(void)
             metal_irq_enable(irq);
             INFO("FHI IRQ registered (%d)\n", irq);
 
-            // Setup interrupts (all disabled by default)
+            // Setup interrupts *** all disabled by default ***
+            // Use xorif_enable_fhi_interrupts() to enable
             WRITE_REG_RAW(FHI_INTR_ENABLE_ADDR, 0);
 
             // Finally enable the master interrupt
@@ -1112,18 +1252,6 @@ void xorif_fhi_init_device(void)
         }
     }
 #endif
-}
-
-int xorif_fhi_get_num_ul_spatial_streams(void)
-{
-    // Note, number of U/L spatial streams = number of "framer antennas"
-    return fhi_caps.no_framer_ss; //READ_REG(CFG_CONFIG_NO_OF_FRAM_ANTS);
-}
-
-int xorif_fhi_get_num_dl_spatial_streams(void)
-{
-    // Note, number of D/L spatial streams = number of "de-framer antennas"
-    return fhi_caps.no_deframer_ss; //READ_REG(CFG_CONFIG_NO_OF_DEFM_ANTS);
 }
 
 int xorif_fhi_get_max_cc(void)
@@ -1134,21 +1262,6 @@ int xorif_fhi_get_max_cc(void)
 int xorif_fhi_get_num_eth_ports(void)
 {
     return fhi_caps.num_eth_ports; //READ_REG(CFG_CONFIG_NO_OF_ETH_PORTS);
-}
-
-int xorif_fhi_get_min_numerology(void)
-{
-    return 0; //READ_REG(CFG_CONFIG_XRAN_MIN_NUMEROLOGY);
-}
-
-int xorif_fhi_get_max_numerology(void)
-{
-    return 4; //READ_REG(CFG_CONFIG_XRAN_MAX_NUMEROLOGY);
-}
-
-int xorif_fhi_get_max_dl_symbols(void)
-{
-    return fhi_caps.max_data_symbols; //READ_REG(CFG_CONFIG_XRAN_MAX_DL_SYMBOLS);
 }
 
 int xorif_fhi_cc_reload(uint16_t cc)
@@ -1167,19 +1280,25 @@ int xorif_fhi_cc_enable(uint16_t cc)
 
 int xorif_fhi_cc_disable(uint16_t cc)
 {
+    // Disable the component carrier
     uint32_t val = READ_REG(ORAN_CC_ENABLE);
     val &= ~(1 << cc);
     WRITE_REG(ORAN_CC_ENABLE, val);
+
+    // Deallocate any memory associated with this component carrier
+    deallocate_memory(cc);
+
     return XORIF_SUCCESS;
 }
 
-uint16_t xorif_fhi_get_enabled_mask(void)
+uint8_t xorif_fhi_get_enabled_mask(void)
 {
-    return READ_REG(ORAN_CC_ENABLE);
+    return (uint8_t)READ_REG(ORAN_CC_ENABLE);
 }
 
-void xorif_fhi_set_enabled_mask(uint16_t mask)
+void xorif_fhi_set_enabled_mask(uint8_t mask)
 {
+    // TODO - need to deallocate memory if doing this way, or remove this API!
     WRITE_REG(ORAN_CC_ENABLE, mask);
 }
 
@@ -1316,31 +1435,46 @@ int xorif_fhi_init_cc_ctrl_constants_ssb(uint16_t cc,
 
 int xorif_fhi_set_cc_dl_iq_compression(uint16_t cc,
                                        uint16_t bit_width,
-                                       enum xorif_iq_comp comp_meth)
+                                       enum xorif_iq_comp comp_meth,
+                                       uint16_t mplane)
 {
     WRITE_REG_OFFSET(ORAN_CC_DL_UD_IQ_WIDTH, cc * 0x70, (bit_width & 0xF));
     WRITE_REG_OFFSET(ORAN_CC_DL_UD_COMP_METH, cc * 0x70, comp_meth);
-    WRITE_REG_OFFSET(ORAN_CC_DL_MPLANE_UDCOMP_PARAM, cc * 0x70, 1);
+    WRITE_REG_OFFSET(ORAN_CC_DL_MPLANE_UDCOMP_HDR_SEL, cc * 0x70, (mplane & 0x1));
     return XORIF_SUCCESS;
 }
 
 int xorif_fhi_set_cc_ul_iq_compression(uint16_t cc,
                                        uint16_t bit_width,
-                                       enum xorif_iq_comp comp_meth)
+                                       enum xorif_iq_comp comp_meth,
+                                       uint16_t mplane)
 {
     WRITE_REG_OFFSET(ORAN_CC_UL_UD_IQ_WIDTH, cc * 0x70, (bit_width & 0xF));
     WRITE_REG_OFFSET(ORAN_CC_UL_UD_COMP_METH, cc * 0x70, comp_meth);
-    WRITE_REG_OFFSET(ORAN_CC_UL_MPLANE_UDCOMP_PARAM, cc * 0x70, 1);
+    WRITE_REG_OFFSET(ORAN_CC_UL_MPLANE_UDCOMP_HDR_SEL, cc * 0x70, (mplane & 0x1));
     return XORIF_SUCCESS;
 }
 
 int xorif_fhi_set_cc_iq_compression_ssb(uint16_t cc,
                                         uint16_t bit_width,
-                                        enum xorif_iq_comp comp_meth)
+                                        enum xorif_iq_comp comp_meth,
+                                        uint16_t mplane)
 {
     WRITE_REG_OFFSET(ORAN_CC_SSB_UD_IQ_WIDTH, cc * 0x70, (bit_width & 0xF));
     WRITE_REG_OFFSET(ORAN_CC_SSB_UD_COMP_METH, cc * 0x70, comp_meth);
-    WRITE_REG_OFFSET(ORAN_CC_SSB_MPLANE_UDCOMP_PARAM, cc * 0x70, 1);
+    WRITE_REG_OFFSET(ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL, cc * 0x70, (mplane & 0x1));
+    return XORIF_SUCCESS;
+}
+
+int xorif_fhi_set_cc_iq_compression_prach(uint16_t cc,
+                                          uint16_t bit_width,
+                                          enum xorif_iq_comp comp_meth,
+                                          uint16_t mplane)
+{
+    // TODO - these registers have been removed, need to know what to do to the API
+    //WRITE_REG_OFFSET(ORAN_CC_PRACH_UD_IQ_WIDTH, cc * 0x70, (bit_width & 0xF));
+    //WRITE_REG_OFFSET(ORAN_CC_PRACH_UD_COMP_METH, cc * 0x70, comp_meth);
+    //WRITE_REG_OFFSET(ORAN_CC_PRACH_MPLANE_UDCOMP_PARAM, cc * 0x70, (mplane & 0x1));
     return XORIF_SUCCESS;
 }
 
@@ -1404,10 +1538,42 @@ int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
     // Intermediate values used in the calculation
     uint32_t DL_CTRL_RXWIN_ADV_CP = (FH_DECAP_DLY + TCP_ADV_DL) / XRAN_TIMER_CLK;
 
-    // Downlink settings
+    // SSB settings
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD - (FH_DECAP_DLY / XRAN_TIMER_CLK));
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (DL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_ABS_SYMBOL, cc * 0x70, (DL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 1);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
+                                       uint16_t numerology,
+                                       uint16_t sym_per_slot,
+                                       uint32_t advance)
+{
+    // Compute number of symbols per second based on numerology
+    // Note, 10 sub-frames per frame, 100 frames per second
+    int num = 100 * 10 * slots_per_subframe[numerology] * (sym_per_slot ? 12 : 14);
+
+    // Symbol period in picoseconds = 1e12 / num
+    double sym_period = 1e12 / num;
+
+    // Adjust symbol period to be in clock cycles
+    // Note, rounding-down / truncating here
+    uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
+
+    // Convert time advance from nanoseconds to picoseconds
+    uint32_t T2A_MIN_CP_UL = advance * 1e3;
+
+    // Intermediate values used in the calculation
+    //uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
+    // Apparently UL_RADIO_CH_DLY not relevant for UL BIDF calculation
+    uint32_t UL_CTRL_RXWIN_ADV_CP = T2A_MIN_CP_UL / XRAN_TIMER_CLK;
+
+    // BIDF settings
+    //WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_D_CYCLES, cc * 0x70, ACTUAL_PERIOD);
+    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
+    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_ABS_SYMBOL, cc * 0x70, (UL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 2);
 
     return XORIF_SUCCESS;
 }
@@ -1417,273 +1583,164 @@ int xorif_fhi_configure_cc(uint16_t cc)
     // Set up pointer to configuration data
     const struct xorif_cc_config *ptr = &cc_config[cc];
 
-    // Temp variable to store component carrier allocation information
-    struct xorif_cc_alloc temp;
-
     // Calculate required number of symbols
-    temp.ul_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_ul);
-    temp.dl_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_dl);
-    temp.dl_data_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew) + 1;
-    temp.ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew + ptr->advance_dl);
-    temp.ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew) + 1;
+    uint16_t ul_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_ul);
+    uint16_t dl_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_dl);
+    uint16_t dl_data_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew) + 1;
+    uint16_t ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew + ptr->advance_dl);
+    uint16_t ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew) + 1;
 
     // Check number ctrl symbols
-    if ((temp.ul_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
-        (temp.dl_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
-        (temp.ssb_ctrl_sym_num > fhi_caps.max_ctrl_symbols))
+    if ((ul_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
+        (dl_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
+        (ssb_ctrl_sym_num > fhi_caps.max_ctrl_symbols))
     {
         PERROR("Configuration exceeds max control symbols\n");
         return XORIF_MAX_CTRL_SYM_EXCEEDED;
     }
 
     // Check number data symbols
-    if ((temp.dl_data_sym_num > fhi_caps.max_data_symbols) ||
-        (temp.ssb_data_sym_num > fhi_caps.max_data_symbols))
+    if ((dl_data_sym_num > fhi_caps.max_data_symbols) ||
+        (ssb_data_sym_num > fhi_caps.max_data_symbols))
     {
         PERROR("Configuration exceeds max data symbols\n");
         return XORIF_MAX_DATA_SYM_EXCEEDED;
     }
 
-    // Set up some allocation sizes
-    temp.ul_ctrl_offset_size = ptr->num_ctrl_per_sym_ul;
-    temp.ul_ctrl_base_offset_size = ptr->num_rbs;
-    temp.dl_ctrl_offset_size = ptr->num_ctrl_per_sym_dl;
-    temp.ssb_ctrl_offset_size = ptr->num_ctrl_per_sym_ssb;
-
     // Calculate downlink data buffer size (per symbol)
-    temp.dl_data_buff_size = calc_data_buff_size(ptr->num_rbs,
-                                                 ptr->iq_comp_meth_dl,
-                                                 ptr->iq_comp_width_dl,
-                                                 ptr->num_ctrl_per_sym_dl,
-                                                 ptr->num_frames_per_sym);
+    uint16_t dl_data_buff_size = calc_data_buff_size(ptr->num_rbs,
+                                                     ptr->iq_comp_meth_dl,
+                                                     ptr->iq_comp_width_dl,
+                                                     ptr->num_ctrl_per_sym_dl,
+                                                     ptr->num_frames_per_sym);
 
     // Calculate SSB data buffer size (per symbol)
-    temp.ssb_data_buff_size = calc_data_buff_size(ptr->num_rbs_ssb,
-                                                  ptr->iq_comp_meth_ssb,
-                                                  ptr->iq_comp_width_ssb,
-                                                  ptr->num_ctrl_per_sym_ssb,
-                                                  ptr->num_frames_per_sym_ssb);
+    uint16_t ssb_data_buff_size = calc_data_buff_size(ptr->num_rbs_ssb,
+                                                      ptr->iq_comp_meth_ssb,
+                                                      ptr->iq_comp_width_ssb,
+                                                      ptr->num_ctrl_per_sym_ssb,
+                                                      ptr->num_frames_per_sym_ssb);
 
-    // Get the "left" active component carrier
-    int left_cc = get_left_cc(cc);
-    if (left_cc == -1)
+    // Deallocate any memory associated with this component carrier
+    deallocate_memory(cc);
+
+    // Get new memory allocations
+    int ul_ctrl_offset = alloc_block(ul_ctrl_memory, (ul_ctrl_sym_num * ptr->num_ctrl_per_sym_ul), cc);
+    int ul_ctrl_base_offset = alloc_block(ul_ctrl_base_memory, ptr->num_rbs, cc);
+    int dl_ctrl_offset = alloc_block(dl_ctrl_memory, (dl_ctrl_sym_num * ptr->num_ctrl_per_sym_dl), cc);
+    int dl_data_ptrs_offset = alloc_block(dl_data_ptrs_memory, dl_data_sym_num, cc);
+    int dl_data_buff_offset = alloc_block(dl_data_buff_memory, (dl_data_sym_num * dl_data_buff_size), cc);
+    int ssb_ctrl_offset = alloc_block(ssb_ctrl_memory, (ssb_ctrl_sym_num * ptr->num_ctrl_per_sym_ssb), cc);
+    int ssb_data_ptrs_offset = alloc_block(ssb_data_ptrs_memory, ssb_data_sym_num, cc);
+    int ssb_data_buff_offset = alloc_block(ssb_data_buff_memory, (ssb_data_sym_num * ssb_data_buff_size), cc);
+
+    // Check for memory allocation errors...
+    int error = 0;
+    if (ul_ctrl_offset == -1)
     {
-        // No active component carrier to the left, so set values to 0
-        temp.ul_ctrl_offset = 0;
-        temp.ul_ctrl_base_offset = 0;
-        temp.dl_ctrl_offset = 0;
-        temp.dl_data_sym_start = 0;
-        temp.dl_data_buff_start = 0;
-        temp.ssb_ctrl_offset = 0;
-        temp.ssb_data_sym_start = 0;
-        temp.ssb_data_buff_start = 0;
-    }
-    else
-    {
-        // Use the active component carrier to the left to set values
-        const struct xorif_cc_alloc *left = &cc_alloc[left_cc];
-        temp.ul_ctrl_offset = left->ul_ctrl_offset + (left->ul_ctrl_sym_num * left->ul_ctrl_offset_size);
-        temp.ul_ctrl_base_offset = left->ul_ctrl_base_offset + left->ul_ctrl_base_offset_size;
-        temp.dl_ctrl_offset = left->dl_ctrl_offset + (left->dl_ctrl_sym_num * left->dl_ctrl_offset_size);
-        temp.dl_data_sym_start = left->dl_data_sym_start + left->dl_data_sym_num;
-        temp.dl_data_buff_start = left->dl_data_buff_start + (left->dl_data_sym_num * left->dl_data_buff_size);
-        temp.ssb_ctrl_offset = left->ssb_ctrl_offset + (left->ssb_ctrl_sym_num * left->ssb_ctrl_offset_size);
-        temp.ssb_data_sym_start = left->ssb_data_sym_start + left->ssb_data_sym_num;
-        temp.ssb_data_buff_start = left->ssb_data_buff_start + (left->ssb_data_sym_num * left->ssb_data_buff_size);
+        PERROR("Configuration exceeds available buffer space (uplink ctrl section memory)\n");
+        error = 1;
     }
 
-    // Buffer offset limit values, etc.
-    uint16_t ul_ctrl_offset_lim;
-    uint16_t ul_ctrl_base_offset_lim;
-    uint16_t dl_ctrl_offset_lim;
-    uint16_t dl_data_sym_start_lim;
-    uint16_t dl_data_buff_start_lim;
-    uint16_t ssb_ctrl_offset_lim;
-    uint16_t ssb_data_sym_start_lim;
-    uint16_t ssb_data_buff_start_lim;
-
-    // Get the "right" active component carrier
-    int right_cc = get_right_cc(cc);
-    if (right_cc == MAX_NUM_CC)
-    {
-        // No active component carrier to the right, so set values to max
-        ul_ctrl_offset_lim = 1024 * fhi_caps.max_ul_ctrl_1kwords;
-        ul_ctrl_base_offset_lim = fhi_caps.max_subcarriers / 12;;
-        dl_ctrl_offset_lim = 1024 * fhi_caps.max_dl_ctrl_1kwords;
-        dl_data_sym_start_lim = fhi_caps.max_data_symbols;
-        dl_data_buff_start_lim = 1024 * fhi_caps.max_dl_data_1kwords;
-        ssb_ctrl_offset_lim = 512 * fhi_caps.max_ssb_ctrl_512words;
-        ssb_data_sym_start_lim = fhi_caps.max_data_symbols;
-        ssb_data_buff_start_lim = 512 * fhi_caps.max_ssb_data_512words;
-    }
-    else
-    {
-        // Use the active component carrier to the right to set values
-        const struct xorif_cc_alloc *right = &cc_alloc[right_cc];
-        ul_ctrl_offset_lim = right->ul_ctrl_offset;
-        ul_ctrl_base_offset_lim = right->ul_ctrl_base_offset;
-        dl_ctrl_offset_lim = right->dl_ctrl_offset;
-        dl_data_sym_start_lim = right->dl_data_sym_start;
-        dl_data_buff_start_lim = right->dl_data_buff_start;
-        ssb_ctrl_offset_lim = right->ssb_ctrl_offset;
-        ssb_data_sym_start_lim = right->ssb_data_sym_start;
-        ssb_data_buff_start_lim = right->ssb_data_buff_start;
-    }
-
-    // Check fit...
-    if ((temp.ul_ctrl_offset + (temp.ul_ctrl_sym_num * temp.ul_ctrl_offset_size)) > ul_ctrl_offset_lim)
-    {
-        PERROR("Configuration exceeds available buffer space (uplink ctrl)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
-    }
-
-    if ((temp.ul_ctrl_base_offset + temp.ul_ctrl_base_offset_size) > ul_ctrl_base_offset_lim)
+    if (ul_ctrl_base_offset == -1)
     {
         PERROR("Configuration exceeds available subcarriers (uplink ctrl base)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
+        error = 1;
     }
 
-    if ((temp.dl_ctrl_offset + (temp.dl_ctrl_sym_num * temp.dl_ctrl_offset_size)) > dl_ctrl_offset_lim)
+    if (dl_ctrl_offset == -1)
     {
-        PERROR("Configuration exceeds available buffer space (downlink ctrl)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
+        PERROR("Configuration exceeds available buffer space (downlink ctrl section memory)\n");
+        error = 1;
     }
 
-    if ((temp.ssb_ctrl_offset + (temp.ssb_ctrl_sym_num * temp.ssb_ctrl_offset_size)) > ssb_ctrl_offset_lim)
+    if (ssb_ctrl_offset  == -1)
     {
-        PERROR("Configuration exceeds available buffer space (SSB ctrl)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
+        PERROR("Configuration exceeds available buffer space (SSB ctrl section memory)\n");
+        error = 1;
     }
 
-    if ((temp.dl_data_sym_start + temp.dl_data_sym_num) > dl_data_sym_start_lim)
+    if (dl_data_ptrs_offset == -1)
     {
-        PERROR("Configuration exceeds allocated buffer space (downlink data)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
+        PERROR("Configuration exceeds allocated buffer space (downlink data pointers)\n");
+        error = 1;
     }
 
-    if ((temp.dl_data_buff_start + (temp.dl_data_sym_num * temp.dl_data_buff_size)) > dl_data_buff_start_lim)
-    {
-        PERROR("Configuration exceeds allocated buffer space (downlink data buffer)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
-    }
-
-    if ((temp.ssb_data_sym_start + temp.ssb_data_sym_num) > ssb_data_sym_start_lim)
-    {
-        PERROR("Configuration exceeds allocated buffer space (SSB data)\n");
-        return XORIF_BUFFER_SPACE_EXCEEDED;
-    }
-
-    if ((temp.ssb_data_buff_start + (temp.ssb_data_sym_num * temp.ssb_data_buff_size)) > ssb_data_buff_start_lim)
+    if (dl_data_buff_offset == -1)
     {
         PERROR("Configuration exceeds allocated buffer space (downlink data buffer)\n");
+        error = 1;
+    }
+
+    if (ssb_data_ptrs_offset == -1)
+    {
+        PERROR("Configuration exceeds allocated buffer space (SSB data pointers)\n");
+        error = 1;
+    }
+
+    if (ssb_data_buff_offset == -1)
+    {
+        PERROR("Configuration exceeds allocated buffer space (SSB data buffer)\n");
+        error = 1;
+    }
+
+    if (error)
+    {
+        // Deallocate any memory associated with this component carrier
+        deallocate_memory(cc);
+
         return XORIF_BUFFER_SPACE_EXCEEDED;
     }
 
     // Everything fits!
     INFO("Configuration valid\n");
 
-    // Save component carrier allocation information
-    memcpy(&cc_alloc[cc], &temp, sizeof(struct xorif_cc_alloc));
-
-    // Disable component carrier
-    xorif_fhi_cc_disable(cc);
-
     // Program the h/w
     xorif_fhi_init_cc_rbs(cc, ptr->num_rbs, ptr->numerology, ptr->extended_cp);
 
     xorif_fhi_init_cc_rbs_ssb(cc, ptr->num_rbs_ssb, ptr->numerology_ssb, ptr->extended_cp_ssb);
 
-    xorif_fhi_init_cc_symbol_pointers(cc, temp.dl_data_sym_num, temp.dl_data_sym_start, temp.dl_ctrl_sym_num, temp.ul_ctrl_sym_num);
+    xorif_fhi_init_cc_symbol_pointers(cc, dl_data_sym_num, dl_data_ptrs_offset, dl_ctrl_sym_num, ul_ctrl_sym_num);
 
-    xorif_fhi_init_cc_symbol_pointers_ssb(cc, temp.ssb_data_sym_num, temp.ssb_data_sym_start, temp.ssb_ctrl_sym_num);
+    xorif_fhi_init_cc_symbol_pointers_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_ctrl_sym_num);
 
-    xorif_fhi_set_cc_dl_iq_compression(cc, ptr->iq_comp_width_dl, ptr->iq_comp_meth_dl);
+    xorif_fhi_set_cc_dl_iq_compression(cc, ptr->iq_comp_width_dl, ptr->iq_comp_meth_dl, ptr->iq_comp_mplane_dl);
 
-    xorif_fhi_set_cc_ul_iq_compression(cc, ptr->iq_comp_width_ul, ptr->iq_comp_meth_ul);
+    xorif_fhi_set_cc_ul_iq_compression(cc, ptr->iq_comp_width_ul, ptr->iq_comp_meth_ul, ptr->iq_comp_mplane_ul);
 
-    xorif_fhi_set_cc_iq_compression_ssb(cc, ptr->iq_comp_width_ssb, ptr->iq_comp_meth_ssb);
+    xorif_fhi_set_cc_iq_compression_ssb(cc, ptr->iq_comp_width_ssb, ptr->iq_comp_meth_ssb, ptr->iq_comp_mplane_ssb);
 
-    xorif_fhi_init_cc_dl_section_mem(cc, ptr->num_ctrl_per_sym_dl, temp.dl_ctrl_offset);
+    xorif_fhi_set_cc_iq_compression_prach(cc, ptr->iq_comp_width_prach, ptr->iq_comp_meth_prach, ptr->iq_comp_mplane_prach);
 
-    xorif_fhi_init_cc_ul_section_mem(cc, ptr->num_ctrl_per_sym_ul, temp.ul_ctrl_offset, temp.ul_ctrl_base_offset);
+    xorif_fhi_init_cc_dl_section_mem(cc, ptr->num_ctrl_per_sym_dl, dl_ctrl_offset);
 
-    xorif_fhi_init_cc_section_mem_ssb(cc, ptr->num_ctrl_per_sym_ssb, temp.ssb_ctrl_offset);
+    xorif_fhi_init_cc_ul_section_mem(cc, ptr->num_ctrl_per_sym_ul, ul_ctrl_offset, ul_ctrl_base_offset);
 
-    xorif_fhi_init_cc_dl_data_offsets(cc, temp.dl_data_sym_num, temp.dl_data_sym_start, temp.dl_data_buff_start, temp.dl_data_buff_size);
+    xorif_fhi_init_cc_section_mem_ssb(cc, ptr->num_ctrl_per_sym_ssb, ssb_ctrl_offset);
 
-    xorif_fhi_init_cc_dl_data_offsets_ssb(cc, temp.ssb_data_sym_num, temp.ssb_data_sym_start, temp.ssb_data_buff_start, temp.ssb_data_buff_size);
+    xorif_fhi_init_cc_dl_data_offsets(cc, dl_data_sym_num, dl_data_ptrs_offset, dl_data_buff_offset, dl_data_buff_size);
 
-    xorif_fhi_init_cc_ctrl_constants(cc, temp.dl_ctrl_sym_num, ptr->num_ctrl_per_sym_dl, temp.ul_ctrl_sym_num, ptr->num_ctrl_per_sym_ul);
+    xorif_fhi_init_cc_dl_data_offsets_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_data_buff_offset, ssb_data_buff_size);
 
-    xorif_fhi_init_cc_ctrl_constants_ssb(cc, temp.ssb_ctrl_sym_num, ptr->num_ctrl_per_sym_ssb);
+    xorif_fhi_init_cc_ctrl_constants(cc, dl_ctrl_sym_num, ptr->num_ctrl_per_sym_dl, ul_ctrl_sym_num, ptr->num_ctrl_per_sym_ul);
+
+    xorif_fhi_init_cc_ctrl_constants_ssb(cc, ssb_ctrl_sym_num, ptr->num_ctrl_per_sym_ssb);
 
     xorif_fhi_configure_time_advance_offsets(cc, ptr->numerology, ptr->extended_cp, ptr->advance_ul, ptr->advance_dl);
 
     xorif_fhi_configure_time_advance_offsets_ssb(cc, ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->advance_dl);
 
+    xorif_fhi_configure_ul_bid_forward(cc, ptr->numerology, ptr->extended_cp, ptr->ul_bid_forward);
+
     // Perform "reload" on the component carrier
     xorif_fhi_cc_reload(cc);
 
+#ifdef AUTO_ENABLE
     // Enable component carrier
     xorif_fhi_cc_enable(cc);
+#endif
 
     return XORIF_SUCCESS;
-}
-
-/**
- * @brief Scans component carriers for the 1st "active" one to the "left" of the
- * specified component carrier.
- * @param [in] cc Component carrier
- * @returns
- *      - Component carrier index (or -1 if none)
- */
-static int get_left_cc(uint16_t cc)
-{
-    // Scan left for 1st instance that's active (i.e. enabled bit = 1)
-    // Note, by "left" here we mean, for example: CC[0], CC[1], CC[2]...
-    // then "CC[1]" is left of "CC[2]", etc.
-    // Returns -1 if nothing to the left was found
-
-    // Using the component carrier enabled bit-map
-    uint16_t mask = xorif_fhi_get_enabled_mask();
-
-    for (int i = cc - 1; i >= 0; --i)
-    {
-        if (mask & (1 << i))
-        {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-/**
- * @brief Scans component carriers for the 1st "active" one to the "right" of the
- * specified component carrier.
- * @param [in] cc Component carrier
- * @returns
- *      - Component carrier index (or MAX_NUM_CC if none)
- */
-static int get_right_cc(uint16_t cc)
-{
-    // Scan right for 1st instance that's active (i.e. enabled bit = 1)
-    // Note, by "right" here we mean, for example: CC[0], CC[1], CC[2]...
-    // then "CC[1]" is right of "CC[0]", etc.
-    // Returns MAX_NUM_CC if nothing to the left was found
-
-    // Using the component carrier enabled bit-map
-    uint16_t mask = xorif_fhi_get_enabled_mask();
-
-    for (int i = cc + 1; i < MAX_NUM_CC; ++i)
-    {
-        if (mask & (1 << i))
-        {
-            return i;
-        }
-    }
-
-    return MAX_NUM_CC;
 }
 
 /**
@@ -1733,13 +1790,18 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
     {
     case IQ_COMP_BLOCK_FP:
         // (n bits I + n bits Q) per RE and round-up, plus 1 byte for exponent
-        size = (comp_width * 2 * RE_PER_RB + 7) / 8 + 1;
+        size = CEIL_DIV((comp_width * 2 * RE_PER_RB), 8) + 1;
+        break;
+
+    case IQ_COMP_MODULATION:
+        // (n bits I + n bits Q) per RE and round-up
+        size = CEIL_DIV((comp_width * 2 * RE_PER_RB), 8);
         break;
 
     case IQ_COMP_NONE:
     default:
         // (16 bits I + 16 bits Q) per RE and round-up
-        size = (16 * 2 * RE_PER_RB + 7) / 8;
+        size = CEIL_DIV((16 * 2 * RE_PER_RB), 8);
         break;
     }
 
@@ -1753,9 +1815,79 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
     size += (11 * num_frames);
 
     // Divide by 8 (since 8 bytes per location) and round-up
-    size = (size + 7) / 8;
+    size = CEIL_DIV(size, 8);
 
     return size;
 }
+
+int xorif_set_timing_constants(uint32_t fh_decap_dly, uint32_t ul_radio_ch_dly)
+{
+    // Update these system "constants"
+    FH_DECAP_DLY = fh_decap_dly;
+    UL_RADIO_CH_DLY = ul_radio_ch_dly;
+
+    return XORIF_SUCCESS;
+}
+
+/**
+ * @brief Deallocate memory assigned to specific component carrier.
+ * @param[in] cc Component carrier
+ */
+static void deallocate_memory(int cc)
+{
+    // Deallocate memory associated with this component carrier
+    dealloc_block(ul_ctrl_memory, cc);
+    dealloc_block(ul_ctrl_base_memory, cc);
+    dealloc_block(dl_ctrl_memory, cc);
+    dealloc_block(dl_data_ptrs_memory, cc);
+    dealloc_block(dl_data_buff_memory, cc);
+    dealloc_block(ssb_ctrl_memory, cc);
+    dealloc_block(ssb_data_ptrs_memory, cc);
+    dealloc_block(ssb_data_buff_memory, cc);
+}
+
+#ifdef NO_HW
+/**
+ * @brief Initialize fake register bank.
+ * @note For test only
+ */
+static void init_fake_reg_bank(void)
+{
+    INFO("Initializing fake register bank\n");
+
+    // Clear memory
+    memset(fake_reg_bank, 0, sizeof(fake_reg_bank));
+
+    // Set configuration registers to suitable values
+    WRITE_REG(CFG_CONFIG_NO_OF_FRAM_ANTS, 8);
+    WRITE_REG(CFG_CONFIG_NO_OF_DEFM_ANTS, 16);
+    WRITE_REG(CFG_CONFIG_NO_OF_ETH_PORTS, 4);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_CC, 8);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_SYMBOLS, 8);
+    WRITE_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX, 8000);
+    WRITE_REG(CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX, 8000);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_SCS, 6600);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_CTRL_SYMBOLS, 16);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS, 4);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS, 4);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS, 8);
+    WRITE_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS, 5000);
+    WRITE_REG(CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS, 1);
+    WRITE_REG(CFG_CONFIG_LIMIT_DU_W, 4);
+    WRITE_REG(CFG_CONFIG_LIMIT_BS_W, 6);
+    WRITE_REG(CFG_CONFIG_LIMIT_CC_W, 3);
+    WRITE_REG(CFG_CONFIG_LIMIT_RU_I_W, 8);
+    WRITE_REG(CFG_CONFIG_LIMIT_RU_O_W, 5);
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS, 0x3E); // 1, 2, 3, 4, 5
+    WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP, 1);
+    WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
+}
+#endif
 
 /** @} */

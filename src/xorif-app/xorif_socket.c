@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,11 +162,12 @@ static int open_connections(void)
     err = ioctl(udp_socket_fd, SIOCSHWTSTAMP, &ifreq);
     if (err < 0)
     {
+        // Treat as "warning" rather than "error"
         err = errno;
-        PERROR("Socket IOCTL failed (SIOCSHWTSTAMP): %x\n", err);
+        TRACE("Socket IOCTL failed (SIOCSHWTSTAMP): %x\n", err);
         if (err == ERANGE)
         {
-            PERROR("The requested time stamping mode is not supported by the hardware.\n");
+            TRACE("The requested time stamping mode is not supported by the hardware.\n");
         }
     }
 
@@ -325,6 +326,11 @@ int do_socket(void)
             {
                 PERROR("(%d) whilst processing socket comms\n", result);
                 PERROR("'%s'\n", buff);
+            }
+            else if (result == TERMINATE)
+            {
+                TRACE("Terminating application\n");
+                quit = 1;
             }
 
             // Close connection

@@ -124,7 +124,7 @@ namespace eval ::roe::data {
     puts_xorif "Default run_user_mods, override in user_procs.tcl if you want to add custom logic."
   }
 
-  proc design_modification { projectName board  mode ipRepo designType } {
+  proc design_modification { projectName board  mode ipRepo designType loop} {
   
     puts_xorif "Check for Design modifications"
 
@@ -164,6 +164,11 @@ namespace eval ::roe::data {
     if {[regexp {om5} $mode] == 1} {
       puts_xorif "Add additional xdc constraint for ORAN mode."
       add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_xdc_fifosync.xdc
+    }
+
+    if {$loop} {
+      delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
+      connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]
     }
     
     ##
@@ -301,7 +306,10 @@ set_property PACKAGE_PIN $IO_PIN     \[get_ports \"m0_dl_toggle_0\"\]
 set_property IOSTANDARD  $IO_TYPE    \[get_ports \"m0_dl_toggle_0\"\]
 "
 
-    ::xilinx.com::oran_radio_if_v1_1::writeStringToFile $fName $string
+    #::xilinx.com::oran_radio_if_v1_1::writeStringToFile $fName $string
+    set fileId [open $fName "w"]
+    puts -nonewline $fileId $string
+    close $fileId
     add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
 
   }   
@@ -464,6 +472,10 @@ set exitOnDone 0
     launch_runs impl_1 -to_step write_bitstream -jobs 4
     wait_on_run impl_1
     exportHw
+    
+    open_run impl_1
+    report_utilization -hierarchical -hierarchical_depth 4 -hierarchical_percentages
+    
     return impl_1
   }
   
@@ -582,6 +594,7 @@ proc process_tclargs { argc argv } {
     set exitOnDone       0
     set startGui         0
     set noDateInProjName 0
+    set loop             0
   
     ## This style uses a set of strings concatenated together to tell the 
     ## script what mode it should build in
@@ -607,6 +620,7 @@ proc process_tclargs { argc argv } {
       puts "Using tclargs lowercased to $argIn"
       if { [regexp {exd}    $argIn] == 1}     { set designType "exd" }
       if { [regexp {gui}    $argIn] == 1}     { set startGui   1     }
+      if { [regexp {loop}   $argIn] == 1}     { set loop       1     }
       if { [regexp {impl}   $argIn] == 1}     { set doimpl     1     }
       if { [regexp {exit}   $argIn] == 1}     { set exitOnDone 1     }
       if { [regexp {nodate} $argIn] == 1}     { set noDateInProjName 1   }
@@ -626,7 +640,7 @@ proc process_tclargs { argc argv } {
     puts "roePROJECTNAME: $projectName"
 
     ## Add board specific constraints in automation.
-    ::roe::data::design_modification $projectName $board $mode $ipRepo $designType
+    ::roe::data::design_modification $projectName $board $mode $ipRepo $designType $loop
   
     foreach prop [list_property [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]] { 
       puts "[format %-40s $prop] [get_property $prop [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]]"

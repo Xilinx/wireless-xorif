@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +23,30 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <dirent.h>
 #include <endian.h>
 #include "xorif_api.h"
 #include "xorif_system.h"
-#include "xorif_fh_func.h"
 #include "xorif_common.h"
+#include "xorif_fh_func.h"
 #include "xorif_utils.h"
+
+// Structure to hold memory allocation info
+struct block
+{
+    uint16_t offset;    // Start offset of allocated memory
+    uint16_t size;      // Size of allocated memory
+    int tag;            // Tag: -1 = free; >= 0 user identifier (e.g. CC#)
+    struct block *next; // Pointer to next block
+};
+
+// Typedef for memory allocation info structure
+typedef struct block block_t;
+
+// Tag value for free blocks
+#define FREE (-1)
 
 /**
  * @brief Comparator function for bsearch algorithm.
@@ -56,8 +73,9 @@ const reg_info_t *find_register(const reg_info_t *reg_map, int num, const char *
     return (const reg_info_t *)result;
 }
 
-uint32_t read_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr)
+uint32_t read_reg_raw(void *io, const char *name, uint32_t addr)
 {
+#ifndef NO_HW
     ASSERT(io);
     if (!io)
     {
@@ -67,7 +85,11 @@ uint32_t read_reg_raw(struct metal_io_region *io, const char *name, uint32_t add
     }
 
     // Libmetal read
-    uint32_t value = metal_io_read32(io, addr);
+    uint32_t value = metal_io_read32((struct metal_io_region *)io, addr);
+#else
+    // Fake read
+    uint32_t value = ((uint32_t *)io)[addr / 4];
+#endif
 
 #ifdef DEBUG
     if (xorif_trace == 3)
@@ -83,8 +105,9 @@ uint32_t read_reg_raw(struct metal_io_region *io, const char *name, uint32_t add
     return value;
 }
 
-void write_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t value)
+void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value)
 {
+#ifndef NO_HW
     ASSERT(io);
     if (!io)
     {
@@ -94,7 +117,11 @@ void write_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr, 
     }
 
     // Libmetal write
-    metal_io_write32(io, addr, value);
+    metal_io_write32((struct metal_io_region *)io, addr, value);
+#else
+    // Fake write
+    ((uint32_t *)io)[addr / 4] = value;
+#endif
 
 #ifdef DEBUG
     if (xorif_trace == 3)
@@ -109,8 +136,9 @@ void write_reg_raw(struct metal_io_region *io, const char *name, uint32_t addr, 
 #endif
 }
 
-uint32_t read_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)
+uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)
 {
+#ifndef NO_HW
     ASSERT(io);
     if (!io)
     {
@@ -120,7 +148,11 @@ uint32_t read_reg(struct metal_io_region *io, const char *name, uint32_t addr, u
     }
 
     // Libmetal read
-    uint32_t value = (metal_io_read32(io, addr) & mask) >> shift;
+    uint32_t value = (metal_io_read32((struct metal_io_region *)io, addr) & mask) >> shift;
+#else
+    // Fake read
+    uint32_t value = ((((uint32_t *)io)[addr / 4]) & mask) >> shift;
+#endif
 
 #ifdef DEBUG
     if (xorif_trace == 3)
@@ -137,8 +169,9 @@ uint32_t read_reg(struct metal_io_region *io, const char *name, uint32_t addr, u
     return value;
 }
 
-void write_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)
+void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)
 {
+#ifndef NO_HW
     ASSERT(io);
     if (!io)
     {
@@ -148,10 +181,17 @@ void write_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint
     }
 
     // Libmetal read / modify / write
-    uint32_t x = metal_io_read32(io, addr);
+    uint32_t x = metal_io_read32((struct metal_io_region *)io, addr);
     x &= ~mask;
     x |= (value << shift) & mask;
-    metal_io_write32(io, addr, x);
+    metal_io_write32((struct metal_io_region *)io, addr, x);
+#else
+    // Fake read / modify / write
+    uint32_t x = ((uint32_t *)io)[addr / 4];
+    x &= ~mask;
+    x |= (value << shift) & mask;
+    ((uint32_t *)io)[addr / 4] = x;
+#endif
 
 #ifdef DEBUG
     if (xorif_trace == 3)
@@ -166,6 +206,7 @@ void write_reg(struct metal_io_region *io, const char *name, uint32_t addr, uint
 #endif
 }
 
+#ifndef NO_HW
 const char *get_device_name(const char *short_name)
 {
     DIR *folder;
@@ -201,7 +242,9 @@ const char *get_device_name(const char *short_name)
     closedir(folder);
     return NULL;
 }
+#endif
 
+#ifndef NO_HW
 int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value)
 {
     FILE *fp;
@@ -233,7 +276,9 @@ int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_
     fclose(fp);
     return 0;
 }
+#endif
 
+#ifndef NO_HW
 int add_device(struct xorif_device_info *device, const char *bus_name, const char *dev_name)
 {
     // Initialize device info structure
@@ -266,6 +311,7 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
     // Success
     return XORIF_SUCCESS;
 }
+#endif
 
 int check_numerology(uint16_t numerology, uint16_t extended_cp)
 {
@@ -274,7 +320,7 @@ int check_numerology(uint16_t numerology, uint16_t extended_cp)
         // Extended CP requested for numerology other than 2
         return 0;
     }
-    else if (extended_cp && !caps.extended_cp)
+    else if (extended_cp && !fhi_caps.extended_cp)
     {
         // Extended CP requested when it's not supported
         return 0;
@@ -282,35 +328,52 @@ int check_numerology(uint16_t numerology, uint16_t extended_cp)
     else
     {
         // Check requested numerology against support mask
-        return ((1 << numerology) & caps.numerologies);
+        return ((1 << numerology) & fhi_caps.numerologies);
     }
 }
 
-int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method)
+int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum xorif_chan_type chan)
 {
-    if (bit_width > 16)
-    {
-        // Unsupported compression width
-        return 0;
-    }
-    else
-    {
-        // Check requested compression mode against support mask
-        return ((1 << comp_method) & caps.iq_comp_methods);
-    }
-}
+    uint16_t methods;
+    uint16_t bfp_widths;
+    uint16_t mod_widths;
 
-int check_bw_comp_mode(uint16_t bit_width, enum xorif_bw_comp comp_method)
-{
-    if (bit_width != 12)
+    // Get capabilities based on channel type
+    if ((chan == CHAN_DL) || (chan == CHAN_SSB))
     {
-        // Unsupported compression width
-        return 0;
+        methods = fhi_caps.iq_de_comp_methods;
+        bfp_widths = fhi_caps.iq_de_comp_bfp_widths;
+        mod_widths = fhi_caps.iq_de_comp_mod_widths;
+    }
+    else if (chan == CHAN_UL)
+    {
+        methods = fhi_caps.iq_comp_methods;
+        bfp_widths = fhi_caps.iq_comp_bfp_widths;
+        mod_widths = 0;
     }
     else
     {
-        // Check requested compression mode against support mask
-        return ((1 << comp_method) & caps.bw_comp_methods);
+        methods = IQ_COMP_NONE_SUPPORT;
+        bfp_widths = 0;
+        mod_widths = 0;
+    }
+
+    // Check configuration support
+    switch (comp_method)
+    {
+    case IQ_COMP_NONE:
+        // For alignment with O-RAN standard, a width value of 0 is equivalent to 16
+        return (methods & (1 << comp_method)) && ((bit_width == 0) | (bit_width == 16));
+
+    case IQ_COMP_BLOCK_FP:
+        return (methods & (1 << comp_method)) && (bfp_widths & (1 << bit_width));
+
+    case IQ_COMP_MODULATION:
+        return (methods & (1 << comp_method)) && (mod_widths & (1 << bit_width));
+
+    default:
+        // All others are unsupported
+        return 0;
     }
 }
 
@@ -341,6 +404,138 @@ const char *binary_mask_string(uint32_t value, uint32_t mask, uint16_t length)
     s[length] = '\0';
 
     return s;
+}
+
+void *init_memory_allocator(void **ptr, uint16_t offset, uint16_t size)
+{
+    block_t *p;
+
+    // Free any existing blocks
+    p = (block_t *)(*ptr);
+    while (p != NULL)
+    {
+        block_t *next = p->next;
+        free(p);
+        p = next;
+    }
+
+    // Allocate a new block of the required size
+    p = calloc(1, sizeof(block_t));
+    if (p)
+    {
+        p->offset = offset;
+        p->size = size;
+        p->tag = FREE;
+        p->next = NULL;
+    }
+
+    // Write back the pointer value
+    *ptr = (void *)p;
+
+    // Return the pointer value
+    return (void *)p;
+}
+
+int alloc_block(void *ptr, uint16_t size, uint16_t tag)
+{
+    // Scan list of blocks
+    block_t *p = (block_t *)ptr;
+    while (p != NULL)
+    {
+        // Using "first fit" approach
+        if ((p->tag == FREE) && (p->size >= size))
+        {
+            if (p->size == size)
+            {
+                // Free block is exact size
+                p->tag = tag;
+            }
+            else
+            {
+                // Free block is larger, so split it into 'p' and 'q'
+                // 'p' becomes the used block, and 'q' becomes the free block
+                // with 'q' linked after 'p'
+                block_t *q = calloc(1, sizeof(block_t));
+                if (!q)
+                {
+                    // Unable to allocate!
+                    return -1;
+                }
+
+                // Adjust 'p' & 'q' accordingly
+                q->offset = p->offset + size;
+                q->size = p->size - size;
+                q->tag = FREE;
+                q->next = p->next;
+                p->size = size;
+                p->tag = tag;
+                p->next = q;
+            }
+            return p->offset;
+        }
+        p = p->next;
+    }
+
+    // Unable to find space!
+    return -1;
+}
+
+void dealloc_block(void *ptr, uint16_t tag)
+{
+    block_t *p = (block_t *)ptr;
+    block_t *prev = NULL;
+    block_t *next;
+    while (p != NULL)
+    {
+        next = p->next;
+
+        if (p->tag == tag)
+        {
+            // Free block
+            p->tag = FREE;
+
+            if (next && next->tag == FREE)
+            {
+                // Next block is free, merge it into current
+                p->size += next->size;
+                p->next = next->next;
+                free(next);
+                next = p->next;
+            }
+            if (prev && prev->tag == FREE)
+            {
+                // Previous block was free, merge current into it
+                prev->size += p->size;
+                prev->next = p->next;
+                free(p);
+                p = prev;
+            }
+        }
+
+        prev = p;
+        p = next;
+    }
+}
+
+int get_alloc_block(void *ptr, uint16_t tag, uint16_t *offset, uint16_t *size)
+{
+    block_t *p = (block_t *)ptr;
+
+    while (p != NULL)
+    {
+        if (p->tag == tag)
+        {
+            *offset = p->offset;
+            *size = p->size;
+            return 1;
+        }
+
+        p = p->next;
+    }
+
+    *offset = 0;
+    *size = 0;
+    return 0;
 }
 
 /** @} */

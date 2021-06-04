@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ enum op_mode
     SERVER_MODE = 0,
     CMD_LINE_MODE,
     FILE_MODE,
-    MENU_MODE,
 };
 
 // Global variables
@@ -42,8 +41,13 @@ int remote_target = 0;
 int port = 5001; // Default port
 const char *ip_addr_name = "127.0.0.1"; // Default IP address
 const char *eth_device_name = "eth0"; // Default ethernet device
-const char *fhi_dev_name = NULL;
-const char *bf_dev_name = NULL;
+const char *pid_file = "/var/run/xorif-app.pid";
+const char *copy_right = "(c) Copyright 2019 – 2021 Xilinx, Inc. All rights reserved.";
+const char * const app_server_str = "XORIF-APP-SERVER";
+const char * const app_client_str = "XORIF-APP-CLIENT";
+const char *app_name;
+int no_fhi = 0;
+int no_bf = 0;
 
 #ifdef TEST_CALLBACK
 static void isr_callback1(uint32_t status)
@@ -72,17 +76,12 @@ int main(int argc, char *argv[])
     int mode = SERVER_MODE;
     int do_help = 0;
     int do_banner = 1;
-    int do_init = 0;
     const char *file = "";
     int opt;
 
     // Process command line options
     opterr = 0;
-#ifdef NO_HW
-    while ((opt = getopt(argc, argv, "bcf:hin:p:v")) != -1)
-#else
-    while ((opt = getopt(argc, argv, "bce:f:hin:p:svF:B:")) != -1)
-#endif
+    while ((opt = getopt(argc, argv, "bce:f:hn:p:svBF")) != -1)
     {
         switch (opt)
         {
@@ -103,9 +102,6 @@ int main(int argc, char *argv[])
         case 'h':
             do_help = 1;
             break;
-        case 'i':
-            do_init = 1;
-            break;
         case 'n':
             ip_addr_name = optarg;
             break;
@@ -122,14 +118,14 @@ int main(int argc, char *argv[])
         case 'v':
             trace = 1;
             break;
-        case 'F':
-            fhi_dev_name = optarg;
-            break;
         case 'B':
-            bf_dev_name = optarg;
+            no_bf = 1;
+            break;
+        case 'F':
+            no_fhi = 1;
             break;
         case '?':
-            if (optopt == 'e' || optopt == 'f' || optopt == 'n' || optopt == 'p' || optopt == 'F' || optopt == 'B')
+            if (optopt == 'e' || optopt == 'f' || optopt == 'n' || optopt == 'p')
             {
                 fprintf(stderr, "Option '-%c' requires an argument\n", optopt);
             }
@@ -158,35 +154,16 @@ int main(int argc, char *argv[])
 
     if (do_help)
     {
-#ifdef NO_HW
-        printf("Usage: [-bhiv] [-c | -f <file>] [-n <ip_addr>] [-p <port>] {\"<command> {<arguments>}\"}\n");
-#else
-#ifdef BF_INCLUDED
-        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] [-B <bf_dev_name>] {\"<command> {<arguments>}\"}\n");
-#else
-        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {\"<command> {<arguments>}\"}\n");
-#endif
-#endif
+        printf("Usage: [-bhv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {\"<command> {<arguments>}\"}\n");
         printf("\t-b Disable banner\n");
         printf("\t-c Client mode using the command line\n");
-#ifndef NO_HW
         printf("\t-e <device> Specified ethernet device (default eth0)\n");
-#endif
         printf("\t-f <file> Client mode using the specified file\n");
         printf("\t-h Show help\n");
-        printf("\t-i Automatically perform 'init' before performing command/file\n");
         printf("\t-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)\n");
         printf("\t-p <port> Specified port (defaults to 5001)\n");
-#ifndef NO_HW
         printf("\t-s Server mode (default)\n");
-#endif
         printf("\t-v Verbose\n");
-#ifndef NO_HW
-#ifdef BF_INCLUDED
-        printf("\t-B <bf_dev_name> Specify name of Beamformer device\n");
-#endif
-        printf("\t-F <fhi_dev_name> Specify name of Front-Haul Interface device\n");
-#endif
         printf("\t<command> {<arguments>} For command line mode only\n");
         return FAILURE;
     }
@@ -200,16 +177,15 @@ int main(int argc, char *argv[])
         printf("  \\  / | | | |_) || || |_ _____ / _ \\ | |_) | |_) |\n");
         printf("  /  \\ |_| |  _ < | ||  _|_____/ ___ \\|  __/|  __/ \n");
         printf(" /_/\\_\\___/|_| \\_\\___|_|      /_/   \\_\\_|   |_|    \n");
-        printf("© Copyright 2019 – 2020 Xilinx, Inc. All rights reserved.\n");
+        printf("%s\n", copy_right);
         printf("\n");
     }
 
+    // Set name according to server or client
+    app_name = (mode == SERVER_MODE) ? app_server_str : app_client_str;
+
     TRACE("mode = %d\n", mode);
     TRACE("ip_addr_name = %s, port = %d\n", ip_addr_name, port);
-    TRACE("fhi_dev_name = %s\n", fhi_dev_name ? fhi_dev_name : "NULL");
-#ifdef BF_INCLUDED
-    TRACE("bf_dev_name = %s\n", bf_dev_name ? bf_dev_name : "NULL");
-#endif
 
     switch (mode)
     {
@@ -220,12 +196,6 @@ int main(int argc, char *argv[])
         remote_target = 1;
         if (optind < argc)
         {
-            if (do_init)
-            {
-                // Initialize library
-                do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
-            }
-
             // Process commands
             for (; optind < argc; ++optind)
             {
@@ -241,46 +211,23 @@ int main(int argc, char *argv[])
                     return SUCCESS;
                 }
             }
-
-            // Finalize library
-            //do_command("finish");
         }
         break;
 
     case FILE_MODE:
         // File mode
         TRACE("File mode (%s)\n", file);
-
-        if (do_init)
-        {
-            // Initialize library
-            do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
-        }
-
         remote_host = 0;
         remote_target = 1;
         return do_file(file);
 
-#if 0 // Menu mode no longer supported
-    case MENU_MODE:
-        // Menu mode
-        TRACE("Menu mode\n");
-
-        if (do_init)
-        {
-            // Initialize library
-            do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
-        }
-
-        remote_host = 0;
-        remote_target = 1;
-        return do_menu();
-#endif
-
-#ifndef NO_HW
     case SERVER_MODE:
         // Server mode
         TRACE("Server mode\n");
+#ifdef NO_HW
+        fprintf(stderr, "No hardware\n");
+        return FAILURE;
+#else
         remote_host = 1;
         remote_target = 0;
 
@@ -288,11 +235,25 @@ int main(int argc, char *argv[])
         // Test register call-backs
         xorif_register_fhi_isr(isr_callback1);
 #ifdef BF_INCLUDED
-        xorif_register_bf_isr(isr_callback2);
+        xobf_register_bf_isr(isr_callback2);
 #endif
 #endif
 
-        return do_socket();
+        // Create pid file for server mode operation
+        FILE *fp = fopen(pid_file, "w");
+        if (fp)
+        {
+            int pid = getpid();
+            fprintf(fp, "%d\n", pid);
+            fclose(fp);
+        }
+
+        int result = do_socket();
+
+        // Delete pid file before exit
+        remove(pid_file);
+
+        return result;
 #endif
 
     default:

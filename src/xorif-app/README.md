@@ -4,12 +4,12 @@
 
 * This directory contains the source files and Makefile for the ORAN-Radio-Interface Example Application (xorif-app)
 
-* The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface and Beam-Former hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).
+* The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).
 
 * The xorif-app can operate as either a "server" or a "client".
 	* As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
 	* As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
-	* Only the xorif-app server mode can communicate directly with the h/w via the libxorif library.
+	* Only the xorif-app in "server mode" can communicate directly with the h/w (via the libxorif C library).
 
 ### Building
 
@@ -24,23 +24,21 @@
 ### Usage
 
 ~~~
-Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-F <fhi_dev_name>] {"<command> {<arguments>}"}
-	-b Disable banner
-	-c Client mode using the command line
-	-e <device> Specified ethernet device (default eth0)
-	-f <file> Client mode using the specified file
-	-h Show help
-	-i Automatically perform 'init' before performing command/file
-	-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)
-	-p <port> Specified port (defaults to 5001)
-	-s Server mode (default)
-	-v Verbose
-	-F <fhi_dev_name> Specify name of Front-Haul Interface device
-	<commands> {<arguments>} For command line mode only
+Usage: [-bhv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"<command> {<arguments>}"}
+        -b Disable banner
+        -c Client mode using the command line
+        -e <device> Specified ethernet device (default eth0)
+        -f <file> Client mode using the specified file
+        -h Show help
+        -n <ip_addr> Specified IP address (for client mode) (defaults to localhost)
+        -p <port> Specified port (defaults to 5001)
+        -s Server mode (default)
+        -v Verbose
+        <command> {<arguments>} For command line mode only
 ~~~
 
 * Server mode:
-    * Typical usage: `xorif-app -s` or `xorif-app`
+    * Typical usage: `xorif-app -s`
 	* Use `-s` for server mode (note, this is the default and so not necessary in most cases)
 	* Use `-p` to change the TCP/IP port number
 	* Use `-e` to change the ethernet device name (when using time-stamping)
@@ -51,6 +49,7 @@ Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-
 	* Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
 	* Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
 	* Use `-p` to change the TCP/IP port number
+	* The xorif-app server needs to be initialized before , so first time: `xorif-app -c "init"`
 
 ### Command-Line Mode
 
@@ -68,52 +67,57 @@ Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] [-
 
 ~~~
 help : help [<topic>]
-init : init [<fhi device>]
-finish : finish
-reset : reset [fhi]
-has : has [fhi | bf]
+debug : debug <level = 0..2>
+init : init [fhi] [<device_name>]
+finish : finish [fhi]
 get : get...
-		get sw_version
-		get fhi_hw_version
-		get fhi_hw_revision
-		get [capabilities | caps]
-		get [fhi_capabilities | fhi_caps]
-		get cc_config <cc>
-		get fhi_cc_alloc <cc>
-		get fhi_stats <port>
-		get state
-		get fhi_alarms
+        get fhi_sw_version
+        get fhi_hw_version
+        get fhi_hw_internal_rev
+        get [fhi_capabilities | fhi_caps]
+        get fhi_cc_config <cc>
+        get fhi_cc_alloc <cc>
+        get fhi_stats <port>
+        get fhi_alarms
+        get fhi_state
+        get fhi_enabled
 set : set...
-		set num_rbs <cc> <number of rbs>
-		set numerology <cc> <numerology> <extended CP = 0 | 1>
-		set numerology_ssb <cc> <numerology> <extended CP = 0 | 1>
-		set time_advance <cc> <deskew> <advance up-link> <advance down-link>
-		set [dl_iq_compression | dl_iq_comp] <cc> <width> <method>
-		set [ul_iq_compression | ul_iq_comp] <cc> <width> <method>
-		set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method>
-		set dl_sections_per_sym <cc> <num sections>
-		set ul_sections_per_sym <cc> <num sections>
-		set ssb_sections_per_sym <cc> <num sections>
-		set frames_per_sym <cc> <num frames>
-		set frames_per_sym_ssb <cc> <num frames>
-		set dest_mac_addr <port> <address>
-		set src_mac_addr <port> <address>
-		set protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>
-		set eAxC_id <DU bits> <BS bits> <CC bits> <RU bits>
-		set ru_ports <RU bits> <ss bits> <mask> <user value> <PRACH value> <SSB value>
+        set num_rbs <cc> <number_of_rbs>
+        set numerology <cc> <numerology> <extended_cp = 0 | 1>
+        set numerology_ssb <cc> <numerology> <extended_cp = 0 | 1>
+        set time_advance <cc> <deskew> <advance_uplink> <advance_downlink>
+        set ul_bid_forward <cc> <advance>
+        set ul_bid_forward_fine <cc> <symbols> <cycles>
+        set [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+        set [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+        set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+        set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
+        set dl_sections_per_sym <cc> <number_of_sections>
+        set ul_sections_per_sym <cc> <number_of_sections>
+        set ssb_sections_per_sym <cc> <number_of_sections>
+        set frames_per_sym <cc> <number_of_frames>
+        set frames_per_sym_ssb <cc> <number_of_frames>
+        set dest_mac_addr <port> <address>
+        set src_mac_addr <port> <address>
+        set protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>
+        set vlan <port> <id> <dei> <pcp>
+        set eaxc_id <DU bits> <BS bits> <CC bits> <RU bits>
+        set ru_ports <RU bits> <ss bits> <mask> <user_value> <prach_value> <ssb_value>
+        set fhi_enabled <mask>
+reset : reset [fhi] <mode>
 clear : clear [fhi_alarms | fhi_stats]
-configure : configure <cc>
-enable : enable <cc>
-disable : disable <c>
+has : has [fhi | bf]
+configure : configure [fhi] <cc>
+enable : enable [fhi] <cc>
+disable : disable [fhi] <cc>
 read_reg : read_reg [fhi] <name>
 read_reg_offset : read_reg_offset [fhi] <name> <offset>
 write_reg : write_reg [fhi] <name> <value>
 write_reg_offset : write_reg_offset [fhi] <name> <offset> <value>
-quit : quit
 ecpri : (Use 'ecpri help' for additional help and usage information)
 peek : peek <address>
 poke : poke <address> <value>
-debug : debug <level = 0..2>
+quit : quit
 ~~~
 
 * When executing a command, the app will echo the command and it's returned status, e.g. `set num_rbs 0 275 => status = 0`
@@ -122,25 +126,32 @@ debug : debug <level = 0..2>
 
 * The xorif-app server needs to be initialized before it can correctly accept most commands
 	* This can be done by sending the "init" command, e.g. `xorif-app -c "init"`
-	* Alternatively, the xorif-app client can do this automatically with the "-i" option, e.g. `xorif-app -i -c "set num_rbs 0 275"`
 	* Note, the xorif-app server only needs to be initialized once (after starting, or after sending a the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
+    * The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. `xorif-app -c "init fhi a0000000.oran_radio_if"`.
 
 * Some commands also provide additional information, for example...
 
 ~~~
 get fhi_caps => status = 0
-max_cc = 1
-num_eth_ports = 1
-no_framer_ss = 1
-no_deframer_ss = 1
-max_framer_ethernet_pkt = 1024
-max_deframer_ethernet_pkt = 1024
+max_cc = 8
+num_eth_ports = 4
+numerologies = 0x1F
+extended_cp = false
+iq_de_comp_methods = 0x13
+iq_de_comp_bfp_widths = 0x5200
+iq_de_comp_mod_widths = 0x3E
+iq_comp_methods = 0x3
+iq_comp_bfp_widths = 0x5200
+no_framer_ss = 8
+no_deframer_ss = 16
+max_framer_ethernet_pkt = 8000
+max_deframer_ethernet_pkt = 8000
 max_subcarriers = 6600
-max_data_symbols = 2
-max_ctrl_symbols = 13
-max_ul_ctrl_1kwords = 2
-max_dl_ctrl_1kwords = 2
-max_dl_data_1kwords = 2
+max_data_symbols = 8
+max_ctrl_symbols = 16
+max_ul_ctrl_1kwords = 4
+max_dl_ctrl_1kwords = 4
+max_dl_data_1kwords = 8
 max_ssb_ctrl_512words = 1
 max_ssb_data_512words = 2
 timer_clk_ps = 5000
@@ -177,51 +188,54 @@ ss_id_limit = 5
 ~~~
 # Initialize library
 init
+reset
 
 # Check versions
 get sw_version
 get fhi_hw_version
-get fhi_hw_revision
 
-# Configure CC#0 num_rbs=275, numerology=1
+# Configure CC[0] num_rbs=275, numerology=1
 set num_rbs 0 275
 set numerology 0 1 0
 set time_advance 0 30 90 90
-set dl_iq_compression 0 9 1
-set ul_iq_compression 0 9 1
+set dl_iq_compression 0 9 1 1
+set ul_iq_compression 0 9 1 1
 configure 0
+enable 0
 
-# Configure CC#1 num_rbs=100, numerology=0
+# Configure CC[1] num_rbs=100, numerology=0
 set num_rbs 1 100
 set numerology 1 0 0
 set time_advance 1 30 90 90
-set dl_iq_compression 1 9 1
-set ul_iq_compression 1 9 1
+set dl_iq_compression 1 9 1 1
+set ul_iq_compression 1 9 1 1
 configure 1
+enable 1
 ~~~
 
 * Example file (output):
 
 ~~~
 init => status = 0
+reset => status = 0
 get sw_version => status = 0
-result = 0x01000001
+fhi_version = 0x01010002
 get fhi_hw_version => status = 0
-result = 0x01000000
-get fhi_hw_revision => status = 0
-result = 0x12345678
+result = 0x01010002
 set num_rbs 0 275 => status = 0
 set numerology 0 1 0 => status = 0
 set time_advance 0 30 90 90 => status = 0
-set dl_iq_compression 0 9 1 => status = 0
-set ul_iq_compression 0 9 1 => status = 0
+set dl_iq_compression 0 9 1 1 => status = 0
+set ul_iq_compression 0 9 1 1 => status = 0
 configure 0 => status = 0
+enable 0 => status = 0
 set num_rbs 1 100 => status = 0
 set numerology 1 0 0 => status = 0
 set time_advance 1 30 90 90 => status = 0
-set dl_iq_compression 1 9 1 => status = 0
-set ul_iq_compression 1 9 1 => status = 0
+set dl_iq_compression 1 9 1 1 => status = 0
+set ul_iq_compression 1 9 1 1 => status = 0
 configure 1 => status = 0
+enable 1 => status = 0
 ~~~
 
 ### File Mode Simple Starter and PG370 examples
@@ -230,58 +244,82 @@ configure 1 => status = 0
 	* This is a good config to get started with:
 	* Limit to one Component Carrier, 1 Spatial Stream and a limited number of RB'S.
 	* Compared to the detail in the PG370, using the API removes the need to manually program these registers.
-	
+
 ~~~
+# Set initial state
+init
+reset
+
+# Component carrier 0
 set numerology 0 0 0
 set num_rbs 0 20
 set ul_iq_compression 0 0 0
 set dl_iq_compression 0 0 0
 set time_advance 0 160 100 100
 configure 0
+enable 0
 ~~~
 
 
 * PG370 "Configuring the Core" Example file (input):
 
 ~~~
+# Set initial state
+init
+reset
+
+# Component carrier 0
 set numerology 0 1 0
 set num_rbs 0 275
 set ul_iq_compression 0 9 1
 set dl_iq_compression 0 9 1
 set time_advance 0 30 90 90
 configure 0
+enable 0
 
+# Component carrier 1
 set numerology 1 1 0
 set num_rbs 1 275
 set ul_iq_compression 1 9 1
 set dl_iq_compression 1 9 1
 set time_advance 1 30 90 90
 configure 1
+enable 1
 ~~~
 
 * PG370 "Reconfiguring the Core" Example file (input):
 
 ~~~
+# Set initial state
+init
+reset
+
+# Component carrier 0
 set numerology 0 0 0
 set num_rbs 0 275
-set ul_iq_compression 0 9 1
-set dl_iq_compression 0 9 1
+set ul_iq_compression 0 9 1 1
+set dl_iq_compression 0 9 1 1
 set time_advance 0 30 90 90
 configure 0
+enable 0
 
+# Component carrier 1
 set numerology 1 1 0
 set num_rbs 1 137
-set ul_iq_compression 1 9 1
-set dl_iq_compression 1 9 1
+set ul_iq_compression 1 9 1 1
+set dl_iq_compression 1 9 1 1
 set time_advance 1 30 90 90
 configure 1
+enable 1
 
+## Component carrier 2
 set numerology 2 1 0
 set num_rbs 2 137
-set ul_iq_compression 2 9 1
-set dl_iq_compression 2 9 1
+set ul_iq_compression 2 9 1 1
+set dl_iq_compression 2 9 1 1
 set time_advance 2 30 90 90
 configure 2
+enable 2
 ~~~
 
 ### Debug Mode
@@ -291,22 +329,24 @@ configure 2
 	* Level 1: The trace feature shows main API calls and register read/writes
 	* Level 2: The trace feature shows debug extra information in addition to the main API calls and register read/writes
 * This can be a very useful feature for debugging or checking the component carrier configurations. For example...
-	
+
 ~~~
 LIBXORIF> xorif_set_cc_numerology(0, 0, 0)
 set numerology 0 0 0 => status = 0
 LIBXORIF> xorif_set_cc_num_rbs(0, 20)
 set num_rbs 0 20 => status = 0
-LIBXORIF> xorif_set_cc_ul_iq_compression(0, 0, 0)
+LIBXORIF> xorif_set_cc_ul_iq_compression(0, 0, 0, 1)
 set ul_iq_compression 0 0 0 => status = 0
-LIBXORIF> xorif_set_cc_dl_iq_compression(0, 0, 0)
+LIBXORIF> xorif_set_cc_dl_iq_compression(0, 0, 0, 1)
 set dl_iq_compression 0 0 0 => status = 0
 LIBXORIF> xorif_set_cc_time_advance(0, 160, 100, 100)
 set time_advance 0 160 100 100 => status = 0
 LIBXORIF> xorif_configure_cc(0)
-LIBXORIF> xorif_has_beamformer()
-LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x1 (1)
-LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x1 (1)
+LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x0 (0)
+LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x0 (0)
+LIBXORIF> DEBUG: Configuration valid
+LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x0 (0)
+LIBXORIF> WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] <= 0x0 (0)
 LIBXORIF> WRITE_REG: ORAN_CC_NUMRBS (0xE100)[0:8] <= 0x14 (20)
 LIBXORIF> WRITE_REG: ORAN_CC_NUMEROLOGY (0xE100)[16:18] <= 0x0 (0)
 LIBXORIF> WRITE_REG: ORAN_CC_SYMPERSLOT (0xE100)[24:24] <= 0x0 (0)
@@ -329,6 +369,9 @@ LIBXORIF> WRITE_REG: ORAN_CC_UL_MPLANE_UDCOMP_PARAM (0xE118)[8:8] <= 0x1 (1)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_UD_IQ_WIDTH (0xE91C)[0:3] <= 0x0 (0)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_UD_COMP_METH (0xE91C)[4:7] <= 0x0 (0)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_MPLANE_UDCOMP_PARAM (0xE91C)[8:8] <= 0x1 (1)
+LIBXORIF> WRITE_REG: ORAN_CC_PRACH_UD_IQ_WIDTH (0xE920)[0:3] <= 0x0 (0)
+LIBXORIF> WRITE_REG: ORAN_CC_PRACH_UD_COMP_METH (0xE920)[4:7] <= 0x0 (0)
+LIBXORIF> WRITE_REG: ORAN_CC_PRACH_MPLANE_UDCOMP_PARAM (0xE920)[8:8] <= 0x1 (1)
 LIBXORIF> WRITE_REG: ORAN_CC_NUM_CTRL_PER_SYMBOL_DL (0xE160)[0:15] <= 0x40 (64)
 LIBXORIF> WRITE_REG: ORAN_CC_DL_CTRL_OFFSETS (0xE104)[0:15] <= 0x0 (0)
 LIBXORIF> WRITE_REG: ORAN_CC_NUM_CTRL_PER_SYMBOL_UL (0xE164)[0:15] <= 0x40 (64)
@@ -356,13 +399,16 @@ LIBXORIF> WRITE_REG: ORAN_CC_UL_SETUP_C_ABS_SYMBOL (0xE120)[0:11] <= 0x3 (3)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_SETUP_D_CYCLES (0xE938)[0:16] <= 0x33E5 (13285)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_SETUP_C_CYCLES (0xE934)[0:16] <= 0x1D92 (7570)
 LIBXORIF> WRITE_REG: ORAN_CC_SSB_SETUP_C_ABS_SYMBOL (0xE930)[0:11] <= 0x2 (2)
+LIBXORIF> WRITE_REG: ORAN_CC_UL_BIDF_C_CYCLES (0xE148)[0:16] <= 0x11DA (4570)
+LIBXORIF> WRITE_REG: ORAN_CC_UL_BIDF_C_ABS_SYMBOL (0xE144)[0:11] <= 0x3 (3)
 LIBXORIF> WRITE_REG: ORAN_CC_RELOAD (0xE000)[0:7] <= 0x1 (1)
-LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x1 (1)
-LIBXORIF> WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] <= 0x1 (1)
-LIBXORIF> xorif_has_beamformer()
 configure 0 => status = 0
+LIBXORIF> xorif_enable_cc(0)
+LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x0 (0)
+LIBXORIF> WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] <= 0x1 (1)
+enable 0 => status = 0
 ~~~
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

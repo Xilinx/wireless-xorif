@@ -4,7 +4,7 @@
 
 ### libxorif
 
-* This directory contains the source files and Makefile for the ORAN-Radio-Interface C API Library
+* This directory contains the source files and Makefile for the ORAN-Radio-Interface Front-Haul Interface C Library
 
 ### xorif-app
 
@@ -25,4 +25,4 @@
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

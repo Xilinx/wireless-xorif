@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,6 @@ int do_file(const char *name)
         return FAILURE;
     }
 
-    // Initialize library
-    //do_command("init %s %s", fhi_dev_name ? fhi_dev_name : "", bf_dev_name ? bf_dev_name : "");
-
     // Reset line count
     int num_lines = 0;
 
@@ -71,9 +68,6 @@ int do_file(const char *name)
             break;
         }
     }
-
-    // Finalize library
-    //do_command("finish");
 
     // Close file
     fclose(fp);

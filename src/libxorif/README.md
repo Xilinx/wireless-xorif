@@ -2,7 +2,7 @@
 
 ## LIBXORIF Source Directory
 
-* This directory contains the source files and Makefile for the ORAN-Radio-Interface C API Library (libxorif)
+* This directory contains the source files and Makefile for the ORAN-Radio-Interface Front-Haul Interface C API Library (libxorif)
 
 ### API
 
@@ -26,7 +26,7 @@
 		* Note, during the specification phase, the validated inputs are stored in the s/w, they do not get written to the h/w until the "configure" step (below)
 	* Configure the component carrier (i.e. `xorif_configure_cc()`)
 		* The component carrier specification is validated to ensure it will fit in the hardware resources, and if successful the h/w register will be programmed appropriately
-		* The final step of the "configure" is to reload and enable the specified component carrier
+    * Enable the component carrier (i.e. `xorif_enable_cc()`)
 	* Multiple component carriers can be specified and configured, and this should always be done lowest CC id number first, i.e. CC[0], CC[1], CC[2], etc.
 	* Close the library cleanly with `xorif_finish()`
 * Other features of the library allow component carriers to disabled, re-configured, obtain stats, etc. See the API for details.
@@ -46,12 +46,15 @@ xorif_set_cc_numerology(0, 1, 0);
 // CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
 xorif_set_cc_time_advance(0, 30, 90, 90);
 
-// CC[0]: Set the down-link compression (9 bits, block-floating-point)
+// CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(0, 9, 1);
 xorif_set_cc_ul_iq_compression(0, 9, 1);
 
 // CC[0]: Configure
 xorif_configure_cc(0);
+
+// CC[0]: Enable the component carrier
+xorif_enable_cc(0)
 ~~~
 
 ### Example 2: Configure 2 component carriers (CC[0]: 275 RBS, numerology 1; CC[1]: 100 rbs, numerology 0)
@@ -59,7 +62,6 @@ xorif_configure_cc(0);
 ~~~
 // Precondition: libxorif has already been initialized with xorif_init()
 
-// Component carrier 0 ...
 // CC[0]: Set the number of RBs to 275
 xorif_set_cc_num_rbs(0, 275);
 
@@ -69,14 +71,16 @@ xorif_set_cc_numerology(0, 1, 0);
 // CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
 xorif_set_cc_time_advance(0, 30, 90, 90);
 
-// CC[0]: Set the down-link compression (9 bits, block-floating-point)
+// CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(0, 9, 1);
 xorif_set_cc_ul_iq_compression(0, 9, 1);
 
 // CC[0]: Configure
 xorif_configure_cc(0);
 
-// Component carrier 1 ...
+// CC[0]: Enable the component carrier
+xorif_enable_cc(0)
+
 // CC[1]: Set the number of RBs to 100
 xorif_set_cc_num_rbs(1, 100);
 
@@ -86,12 +90,15 @@ xorif_set_cc_numerology(1, 0, 0);
 // CC[1]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
 xorif_set_cc_time_advance(1, 30, 90, 90);
 
-// CC[1]: Set the down-link compression (9 bits, block-floating-point)
+// CC[1]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(1, 9, 1);
 xorif_set_cc_ul_iq_compression(1, 9, 1);
 
 // CC[1]: Configure
 xorif_configure_cc(1);
+
+// CC[1]: Enable the component carrier
+xorif_enable_cc(1)
 ~~~
 
 ### Example 3: Configure 1 component carrier (20 RBs, numerology 0, specifying sizes for max sections per symbol, max frames per symbol, protocol, etc.)
@@ -108,7 +115,7 @@ xorif_set_cc_numerology(0, 0, 0);
 // CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
 xorif_set_cc_time_advance(0, 30, 90, 90);
 
-// CC[0]: Set the down-link compression (no compression)
+// CC[0]: Set the down-link & up-link compression (no compression)
 xorif_set_cc_dl_iq_compression(0, 0, 0);
 xorif_set_cc_ul_iq_compression(0, 0, 0);
 
@@ -130,6 +137,9 @@ xorif_set_fhi_eaxc_id(4, 1, 3, 8);
 
 // CC[0]: Configure
 xorif_configure_cc(0);
+
+// CC[0]: Enable the component carrier
+xorif_enable_cc(0)
 ~~~
 
 ## Debug Mode
@@ -275,8 +285,8 @@ LIBXORIF> DEBUG: SSB value:   --------01------
 * Reading / writing registers
 
 ~~~
-LIBXORIF> xorif_read_fhi_reg(ORAN_CC_NUMRBS)
-LIBXORIF> READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] => 0x14 (20)
+LIBXORIF> xorif_read_fhi_reg(ORAN_CC_NUMEROLOGY)
+LIBXORIF> READ_REG: ORAN_CC_NUMEROLOGY (0xE100)[16:18] => 0x1 (1)
 
 LIBXORIF> xorif_read_fhi_reg(ORAN_CC_NUMRBS)
 LIBXORIF> READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] => 0x19 (25)
@@ -284,4 +294,4 @@ LIBXORIF> READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] => 0x19 (25)
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

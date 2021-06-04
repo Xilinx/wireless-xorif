@@ -34,16 +34,23 @@ namespace eval ::roe::data {
     connect_bd_net [get_bd_pins /torwave_0/radio_offset_10ms_stretch] [get_bd_pins oran_mon/ila_int/probe10]
     connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]        [get_bd_pins oran_mon/ila_int/probe11]
 
+    set_property -dict [ list \
+     CONFIG.C_NUM_MONITOR_SLOTS {2} \
+     CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
+    ] [get_bd_cells oran_mon/ila_eth]
+
+    connect_bd_intf_net [get_bd_intf_pins oran_mon/ila_eth/SLOT_1_AXIS] [get_bd_intf_pins  ${ipName}/m0_eth_axis]
+
     ## re validate
     validate_bd_design
 
   }
 
   proc add_zcu_exd_connections { board } {
-    delete_bd_objs [get_bd_nets roe_radio_top_0_fram_radio_start_10ms]
-    delete_bd_objs [get_bd_nets roe_radio_top_0_defm_radio_start_10ms]
-    connect_bd_net [get_bd_pins roe_framer_0/defm_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
-    connect_bd_net [get_bd_pins roe_framer_0/fram_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
+    #delete_bd_objs [get_bd_nets roe_radio_top_0_fram_radio_start_10ms]
+    #delete_bd_objs [get_bd_nets roe_radio_top_0_defm_radio_start_10ms]
+    #connect_bd_net [get_bd_pins roe_framer_0/defm_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
+    #connect_bd_net [get_bd_pins roe_framer_0/fram_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
 
     ## Will need to add some board selection here
     #set_property -dict [list CONFIG.memory_word_depth {32768}] [get_bd_cells torwave_0]
@@ -86,7 +93,11 @@ set_property IOSTANDARD  LVCMOS33   \[get_ports {radio_start_10ms_stretch} \]
 
     }
 
-    ::xilinx.com::oran_radio_if_v1_1::writeStringToFile $fName $string
+    #::xilinx.com::oran_radio_if_v2_0::writeStringToFile $fName $string
+    set fileId [open $fName "w"]
+    puts -nonewline $fileId $string
+    close $fileId
+
     add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
 
   }

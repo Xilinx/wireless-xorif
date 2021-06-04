@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,9 @@
 #include <stdarg.h>
 #include <syslog.h>
 #include <unistd.h>
-#ifdef NO_HW
-#include "../libxorif/xorif_api.h"
-#else
-#include <xorif/xorif_api.h>
-//#include "../libxorif/xorif_api.h"
+#include "xorif_api.h"
+#ifdef BF_INCLUDED
+#include "xobf_api.h"
 #endif
 #include "xorif_app.h"
 
@@ -50,31 +48,33 @@
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
+extern const char *app_name;
+
 #ifdef DEBUG
-#define PERROR(format, ...)                                          \
-    {                                                                \
-        fprintf(stderr, ANSI_COLOR_RED);                             \
-        fprintf(stderr, "XORIF-APP> ERROR: " format, ##__VA_ARGS__); \
-        fprintf(stderr, ANSI_COLOR_RESET);                           \
-        fflush(stderr);                                              \
+#define PERROR(format, ...)                                             \
+    {                                                                   \
+        fprintf(stderr, ANSI_COLOR_RED);                                \
+        fprintf(stderr, "%s> ERROR: " format, app_name, ##__VA_ARGS__); \
+        fprintf(stderr, ANSI_COLOR_RESET);                              \
+        fflush(stderr);                                                 \
     }
 
-#define TRACE(format, ...)                               \
-    {                                                    \
-        if (trace >= 1)                                  \
-        {                                                \
-            printf("XORIF-APP> " format, ##__VA_ARGS__); \
-            fflush(stdout);                              \
-        }                                                \
+#define TRACE(format, ...)                                  \
+    {                                                       \
+        if (trace >= 1)                                     \
+        {                                                   \
+            printf("%s> " format, app_name, ##__VA_ARGS__); \
+            fflush(stdout);                                 \
+        }                                                   \
     }
 
-#define INFO(format, ...)                                       \
-    {                                                           \
-        if (trace >= 2)                                         \
-        {                                                       \
-            printf("XORIF-APP> DEBUG: " format, ##__VA_ARGS__); \
-            fflush(stdout);                                     \
-        }                                                       \
+#define INFO(format, ...)                                          \
+    {                                                              \
+        if (trace >= 2)                                            \
+        {                                                          \
+            printf("%s> DEBUG: " format, app_name, ##__VA_ARGS__); \
+            fflush(stdout);                                        \
+        }                                                          \
     }
 
 #define ASSERT(expression)                                         \
@@ -108,7 +108,9 @@ enum error_codes
     COMMS_ERROR,          /**< Communication error */
     NO_HARDWARE,          /**< No hardware present */
     SYSTEM_CMD_FAILURE,   /**< Attempt to perform system command failed */
+    MEMORY_ACCESS_ERROR,  /**< Attempt to access memory failed */
     FILE_NOT_FOUND,       /**< File not found */
+    FILE_READ_ERROR,      /**< Error reading file */
     SUCCESS = 0,          /**< Success! No error! */
     FAILURE = 1,          /**< Failure return code */
     TERMINATE,            /**< Termination return code */
@@ -122,17 +124,8 @@ extern int remote_target;
 extern int port;
 extern const char *ip_addr_name;
 extern const char *eth_device_name;
-extern const char *fhi_dev_name;
-extern const char *bf_dev_name;
-
-// Function prototypes...
-/**
- * @brief Entry point for menu mode.
- * @returns
- *      - SUCCESS on success
- *      - Error code on failure
- */
-int do_menu(void);
+extern int no_fhi;
+extern int no_bf;
 
 /**
  * @brief Entry point for file mode.

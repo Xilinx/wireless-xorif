@@ -90,6 +90,23 @@ cfg:
       # 0x1000_0000
       CONFIG.Production_Simulation     : 268435456
 
+    ## SLV
+    z102_10_slv:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 2
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Physical_Ethernet_Ports   : 2
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Xran_Max_Dl_Data_Pointers : 6
+      CONFIG.Fram_Eth_Pkt_Max          : 8000
+      CONFIG.Defm_Eth_Pkt_Max          : 8000
+      # 0x1000_0000
+      CONFIG.Production_Simulation     : 268435456
+
 
   ## Supported boards parts for Implementation and Petalinux Build using this flow.
   boards:

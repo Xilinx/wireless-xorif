@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Xilinx, Inc.
+ * Copyright 2020 - 2021 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,15 +26,23 @@
 #define XORIF_COMMON_H
 
 #include <inttypes.h>
+#include <stdio.h>
+#ifndef NO_HW
 #include <metal/sys.h>
 #include <metal/device.h>
 #include <metal/io.h>
 #include <metal/irq.h>
+#endif
 #include "xorif_api.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/
 /*******************************************/
+
+/**
+ * @brief Conditional compilation flags
+ */
+//#define AUTO_ENABLE /**< When set, component carriers are enabled after configuration */
 
 // Control codes for coloured text in console
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -86,6 +94,7 @@
 #define ASSERT(expression)
 #endif
 
+#ifndef NO_HW
 /**
  * @brief Structure for device related information, including libmetal pointers
  */
@@ -97,20 +106,16 @@ struct xorif_device_info
     struct metal_device *dev;   /**< Pointer to libmetal device */
     struct metal_io_region *io; /**< Pointer to libmetal IO region */
 };
+#endif
 
 // Globals
 extern uint16_t xorif_state;
 extern int xorif_trace;
-extern struct xorif_device_info fh_device;
-extern struct xorif_fhi_caps fhi_caps;
-#ifdef BF_INCLUDED
-extern struct xorif_device_info bf_device;
-extern struct xorif_bf_caps bf_caps;
-#endif // BF_INCLUDED
+extern struct xorif_caps fhi_caps;
 extern struct xorif_cc_config cc_config[MAX_NUM_CC];
-extern struct xorif_caps caps;
-extern const int sc_spacing[NUM_NUMEROLOGY];
-extern const int slots_per_subframe[NUM_NUMEROLOGY];
+#ifndef NO_HW
+extern struct xorif_device_info fh_device;
+#endif
 
 /***************************/
 /*** Function prototypes ***/

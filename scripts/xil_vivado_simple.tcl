@@ -37,7 +37,7 @@ proc xorif_test_ba { PROJECT } {
   
   open_bd_design [get_files design_1.bd]
   
-  create_bd_cell -type ip -vlnv xilinx.com:ip:oran_radio_if:1.0 oran_radio_if_0
+  create_bd_cell -type ip -vlnv xilinx.com:ip:oran_radio_if oran_radio_if_0
   save_bd_design
   
   apply_bd_automation -rule xilinx.com:bd_rule:oran_radio_if -config { cfg_addBlFifoReset {1} processorSelect {ARM_Linux} ptpSelect {XilinxPtpV1}}  [get_bd_cells oran_radio_if_0]

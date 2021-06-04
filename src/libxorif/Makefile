@@ -7,9 +7,21 @@ VERSION = $(MAJOR).$(MINOR)
 SRCS = xorif_common.c xorif_fh_func.c xorif_utils.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-CFLAGS += -I. -Werror -Wall -g -DDEBUG -DENABLE_INTERRUPTS
-LDFLAGS +=
+CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG -DENABLE_INTERRUPTS
+LDFLAGS += -Wl,--version-script linker.script
+LDLIBS += -lm
+
+ifeq ($(NO_HW),1)
+CFLAGS += -DNO_HW
+else
 LDLIBS += -lmetal
+endif
+
+ifeq ($(GCOV),1)
+CFLAGS += -O0 -fprofile-arcs -ftest-coverage
+LDFLAGS += --coverage
+LDLIBS += -lgcov
+endif
 
 all: build
 
@@ -20,7 +32,7 @@ lib$(LIB).so: lib$(LIB).so.$(VERSION)
 	ln -s lib$(LIB).so.$(VERSION) lib$(LIB).so.$(MAJOR)
 	ln -s lib$(LIB).so.$(MAJOR) lib$(LIB).so
 
-lib$(LIB).so.$(VERSION): $(OBJS)
+lib$(LIB).so.$(VERSION): $(OBJS) linker.script
 	$(CC) -o $@ $(LDFLAGS) -shared -Wl,-soname,lib$(LIB).so.$(MAJOR) $(OBJS) $(LDLIBS)
 
 xorif_api.txt: xorif_api.h
@@ -28,9 +40,13 @@ xorif_api.txt: xorif_api.h
 	sed -i '/#/d' $@
 	sed -i '/^$$/d' $@
 
+linker.script:
+	echo "{ global: xorif*; local: *; };" > $@
+
 clean:
 	rm -f *.o *.d *.so *.so.*
 	rm -f xorif_api.txt
+	rm -f linker.script
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -fPIC $< > $@
