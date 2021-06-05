@@ -72,8 +72,8 @@ override EXTRAS += perl-modules
 override EXTRAS += perl-module-findbin
 override EXTRAS += perl-module-carp
 override EXTRAS += perl-module-lib
-override EXTRAS += python3-modules
-override EXTRAS += oran-codec
+#override EXTRAS += python3-modules
+#override EXTRAS += oran-codec
 
 # Add help / usage guide here
 usage:
