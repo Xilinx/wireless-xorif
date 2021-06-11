@@ -471,10 +471,12 @@ set exitOnDone 0
     ## Launch impl
     launch_runs impl_1 -to_step write_bitstream -jobs 4
     wait_on_run impl_1
-    exportHw
+    set helpString [exportHw]
     
     open_run impl_1
     report_utilization -hierarchical -hierarchical_depth 4 -hierarchical_percentages
+    
+    puts $helpString
     
     return impl_1
   }
@@ -484,10 +486,11 @@ set exitOnDone 0
     ## Generate XSA/HDF for Petalinux
     set  dir     [get_property DIRECTORY [current_project]]
     set  name    [get_property NAME [current_project]]
-    set  sdkPath ${dir}/${name}.sdk
-    file mkdir   ${sdkPath}
+    #set  sdkPath ${dir}/${name}.sdk
+    #file mkdir   ${sdkPath}
   
-    write_hw_platform -fixed -force -include_bit -file ${sdkPath}/${name}.xsa
+    ## Just write at the top level so its easier to find.
+    write_hw_platform -fixed -force -include_bit -file ${dir}/system.xsa
       
     ## Give the user some help
     puts "Target Modification 1 : $name"
@@ -495,13 +498,13 @@ set exitOnDone 0
     puts "Target Modification 2 : $target"
     regsub "_exd_.+" $target "_exd" target
     puts "Target Modification 3 : $target"
-    puts " 
+    return " 
 ################################################################################
 ## Possible command sequence to launch Petalinux
 ################################################################################
-source /proj/petalinux/2020.2/petalinux-v2020.2_daily_latest/tool/petalinux-v2020.2-final/settings.csh
+source /proj/petalinux/2021.1/petalinux-v2021.1_daily_latest/tool/petalinux-v2021.1-final/settings.csh
 mkdir ../xsa/$target
-cp ${dir}/${name}.sdk/${name}.xsa ../xsa/${target}/system.xsa   
+cp ${dir}/system.xsa ../xsa/${target}/system.xsa   
 make $target
 ################################################################################
 ## $target
