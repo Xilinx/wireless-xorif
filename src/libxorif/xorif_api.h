@@ -412,8 +412,8 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
  * @brief Set the maximum deskew and control advance timing for the component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] deskew Maximum deskew time (in microseconds)
- * @param[in] advance_ul Control advance in uplink (in microseconds)
- * @param[in] advance_dl Control advance in downlink (in microseconds)
+ * @param[in] advance_ul Control advance in uplink (in microseconds) (c.f. T2A_MIN_CP_UL)
+ * @param[in] advance_dl Control advance in downlink (in microseconds) (c.f. TCP_ADV_DL)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
