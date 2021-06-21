@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_oran-radio-if-release_release_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
+  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_oran-radio-if-release_candidate_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
   ['xorif_2dapp',['Xorif-app',['../group__xorif-app.html',1,'']]],
   ['xorif_5fapi_2eh',['xorif_api.h',['../xorif__api_8h.html',1,'']]],
   ['xorif_5fapp_2ec',['xorif_app.c',['../xorif__app_8c.html',1,'']]],

@@ -1103,7 +1103,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">bit_width</td><td>Bit width (0-16) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">comp_method</td><td>Compression method </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>Channel type (uplink, downlink, SSB, PRACH) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">chan</td><td>Channel type (uplink, downlink, SSB, PRACH) </td></tr>
   </table>
   </dd>
 </dl>
@@ -1277,6 +1277,7 @@ Functions</h2></td></tr>
 <p>Find the memory allocation offset and size (for specified tag). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ptr</td><td>Pointer to allocation structure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">tag</td><td>Tag value </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">offset</td><td>Pointer to write back the offset value </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">size</td><td>Pointer to write back the size value </td></tr>
@@ -4067,8 +4068,8 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">deskew</td><td>Maximum deskew time (in microseconds) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">advance_ul</td><td>Control advance in uplink (in microseconds) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">advance_dl</td><td>Control advance in downlink (in microseconds) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">advance_ul</td><td>Control advance in uplink (in microseconds) (c.f. T2A_MIN_CP_UL) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">advance_dl</td><td>Control advance in downlink (in microseconds) (c.f. TCP_ADV_DL) </td></tr>
   </table>
   </dd>
 </dl>

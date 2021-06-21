@@ -39,7 +39,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
@@ -87,7 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>The xorif-app can operate as either a "server" or a "client".<ul>
 <li>As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).</li>
 <li>As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".</li>
-<li>Only the xorif-app server mode can communicate directly with the h/w via the libxorif library.</li>
+<li>Only the xorif-app in "server mode" can communicate directly with the h/w (via the libxorif and libxobf C libraries).</li>
 </ul>
 </li>
 </ul>
@@ -104,22 +103,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 </ul>
 <h3>Usage</h3>
-<div class="fragment"><div class="line">Usage: [-bhiv] [-c | -f &lt;file&gt; | -s] [-n &lt;ip_addr&gt;] [-p &lt;port&gt;] [-e &lt;device&gt;] [-F &lt;fhi_dev_name&gt;] {<span class="stringliteral">&quot;&lt;command&gt; {&lt;arguments&gt;}&quot;</span>}</div>
-<div class="line">    -b Disable banner</div>
-<div class="line">    -c Client mode <span class="keyword">using</span> the command line</div>
-<div class="line">    -e &lt;device&gt; Specified ethernet device (<span class="keywordflow">default</span> eth0)</div>
-<div class="line">    -f &lt;file&gt; Client mode <span class="keyword">using</span> the specified file</div>
-<div class="line">    -h Show help</div>
-<div class="line">    -i Automatically perform <span class="stringliteral">&#39;init&#39;</span> before performing command/file</div>
-<div class="line">    -n &lt;ip_addr&gt; Specified IP address (<span class="keywordflow">for</span> client mode) (defaults to localhost)</div>
-<div class="line">    -p &lt;port&gt; Specified port (defaults to 5001)</div>
-<div class="line">    -s Server mode (<span class="keywordflow">default</span>)</div>
-<div class="line">    -v Verbose</div>
-<div class="line">    -F &lt;fhi_dev_name&gt; Specify <a class="code" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a> of Front-Haul Interface device</div>
-<div class="line">    &lt;commands&gt; {&lt;arguments&gt;} For command line mode only</div>
+<div class="fragment"><div class="line">Usage: [-bhv] [-c | -f &lt;file&gt; | -s] [-n &lt;ip_addr&gt;] [-p &lt;port&gt;] [-e &lt;device&gt;] {<span class="stringliteral">&quot;&lt;command&gt; {&lt;arguments&gt;}&quot;</span>}</div>
+<div class="line">        -b Disable banner</div>
+<div class="line">        -c Client mode <span class="keyword">using</span> the command line</div>
+<div class="line">        -e &lt;device&gt; Specified ethernet device (<span class="keywordflow">default</span> eth0)</div>
+<div class="line">        -f &lt;file&gt; Client mode <span class="keyword">using</span> the specified file</div>
+<div class="line">        -h Show help</div>
+<div class="line">        -n &lt;ip_addr&gt; Specified IP address (<span class="keywordflow">for</span> client mode) (defaults to localhost)</div>
+<div class="line">        -p &lt;port&gt; Specified port (defaults to 5001)</div>
+<div class="line">        -s Server mode (<span class="keywordflow">default</span>)</div>
+<div class="line">        -v Verbose</div>
+<div class="line">        &lt;command&gt; {&lt;arguments&gt;} For command line mode only</div>
 </div><!-- fragment --><ul>
 <li>Server mode:<ul>
-<li>Typical usage: <code>xorif-app -s</code> or <code>xorif-app</code></li>
+<li>Typical usage: <code>xorif-app -s</code></li>
 <li>Use <code>-s</code> for server mode (note, this is the default and so not necessary in most cases)</li>
 <li>Use <code>-p</code> to change the TCP/IP port number</li>
 <li>Use <code>-e</code> to change the ethernet device name (when using time-stamping)</li>
@@ -131,6 +128,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Use <code>-f</code> for "file mode" (runs commands specified in a text file, e.g. <code>xorif-app -f config.txt</code>)</li>
 <li>Use <code>-n</code> to set the IP address (default is the localhost, i.e. 127.0.0.1)</li>
 <li>Use <code>-p</code> to change the TCP/IP port number</li>
+<li>The xorif-app server needs to be initialized before , so first time: <code>xorif-app -c "init"</code></li>
 </ul>
 </li>
 </ul>
@@ -147,52 +145,71 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 <h3>Command Syntax</h3>
 <div class="fragment"><div class="line">help : help [&lt;topic&gt;]</div>
-<div class="line">init : init [&lt;fhi device&gt;]</div>
-<div class="line">finish : finish</div>
-<div class="line">reset : reset [fhi]</div>
-<div class="line">has : has [fhi | bf]</div>
+<div class="line">debug : debug &lt;level = 0..2&gt;</div>
+<div class="line">init : init [fhi | bf] [&lt;device_name&gt;]</div>
+<div class="line">finish : finish [fhi | bf]</div>
 <div class="line"><span class="keyword">get</span> : <span class="keyword">get</span>...</div>
-<div class="line">        <span class="keyword">get</span> sw_version</div>
+<div class="line">        <span class="keyword">get</span> fhi_sw_version</div>
 <div class="line">        <span class="keyword">get</span> fhi_hw_version</div>
-<div class="line">        <span class="keyword">get</span> fhi_hw_revision</div>
-<div class="line">        <span class="keyword">get</span> [capabilities | caps]</div>
+<div class="line">        <span class="keyword">get</span> fhi_hw_internal_rev</div>
 <div class="line">        <span class="keyword">get</span> [fhi_capabilities | fhi_caps]</div>
-<div class="line">        <span class="keyword">get</span> cc_config &lt;cc&gt;</div>
+<div class="line">        <span class="keyword">get</span> fhi_cc_config &lt;cc&gt;</div>
 <div class="line">        <span class="keyword">get</span> fhi_cc_alloc &lt;cc&gt;</div>
 <div class="line">        <span class="keyword">get</span> fhi_stats &lt;port&gt;</div>
-<div class="line">        <span class="keyword">get</span> state</div>
 <div class="line">        <span class="keyword">get</span> fhi_alarms</div>
+<div class="line">        <span class="keyword">get</span> fhi_state</div>
+<div class="line">        <span class="keyword">get</span> fhi_enabled</div>
+<div class="line">        <span class="keyword">get</span> bf_sw_version</div>
+<div class="line">        <span class="keyword">get</span> bf_hw_version</div>
+<div class="line">        <span class="keyword">get</span> bf_hw_internal_rev</div>
+<div class="line">        <span class="keyword">get</span> [bf_capabilities | bf_caps]</div>
+<div class="line">        <span class="keyword">get</span> bf_cc_config &lt;cc&gt;</div>
+<div class="line">        <span class="keyword">get</span> bf_cc_alloc &lt;cc&gt;</div>
+<div class="line">        <span class="keyword">get</span> bf_stats</div>
+<div class="line">        <span class="keyword">get</span> bf_alarms</div>
+<div class="line">        <span class="keyword">get</span> bf_state</div>
+<div class="line">        <span class="keyword">get</span> bf_enabled</div>
 <div class="line">set : set...</div>
-<div class="line">        set num_rbs &lt;cc&gt; &lt;number of rbs&gt;</div>
-<div class="line">        set numerology &lt;cc&gt; &lt;numerology&gt; &lt;extended CP = 0 | 1&gt;</div>
-<div class="line">        set numerology_ssb &lt;cc&gt; &lt;numerology&gt; &lt;extended CP = 0 | 1&gt;</div>
-<div class="line">        set time_advance &lt;cc&gt; &lt;deskew&gt; &lt;advance up-link&gt; &lt;advance down-link&gt;</div>
-<div class="line">        set [dl_iq_compression | dl_iq_comp] &lt;cc&gt; &lt;<a class="code" href="structreg__info.html#a6d809e32c04051e8b31783fbfef94469">width</a>&gt; &lt;method&gt;</div>
-<div class="line">        set [ul_iq_compression | ul_iq_comp] &lt;cc&gt; &lt;<a class="code" href="structreg__info.html#a6d809e32c04051e8b31783fbfef94469">width</a>&gt; &lt;method&gt;</div>
-<div class="line">        set [ssb_iq_compression | ssb_iq_comp] &lt;cc&gt; &lt;<a class="code" href="structreg__info.html#a6d809e32c04051e8b31783fbfef94469">width</a>&gt; &lt;method&gt;</div>
-<div class="line">        set dl_sections_per_sym &lt;cc&gt; &lt;num sections&gt;</div>
-<div class="line">        set ul_sections_per_sym &lt;cc&gt; &lt;num sections&gt;</div>
-<div class="line">        set ssb_sections_per_sym &lt;cc&gt; &lt;num sections&gt;</div>
-<div class="line">        set frames_per_sym &lt;cc&gt; &lt;num frames&gt;</div>
-<div class="line">        set frames_per_sym_ssb &lt;cc&gt; &lt;num frames&gt;</div>
+<div class="line">        set num_rbs &lt;cc&gt; &lt;number_of_rbs&gt;</div>
+<div class="line">        set numerology &lt;cc&gt; &lt;numerology&gt; &lt;extended_cp = 0 | 1&gt;</div>
+<div class="line">        set numerology_ssb &lt;cc&gt; &lt;numerology&gt; &lt;extended_cp = 0 | 1&gt;</div>
+<div class="line">        set time_advance &lt;cc&gt; &lt;deskew&gt; &lt;advance_uplink&gt; &lt;advance_downlink&gt;</div>
+<div class="line">        set ul_bid_forward &lt;cc&gt; &lt;advance&gt;</div>
+<div class="line">        set ul_bid_forward_fine &lt;cc&gt; &lt;symbols&gt; &lt;cycles&gt;</div>
+<div class="line">        set [dl_iq_compression | dl_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
+<div class="line">        set [ul_iq_compression | ul_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
+<div class="line">        set [ssb_iq_compression | ssb_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
+<div class="line">        set [prach_iq_compression | prach_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
+<div class="line">        set dl_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
+<div class="line">        set ul_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
+<div class="line">        set ssb_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
+<div class="line">        set frames_per_sym &lt;cc&gt; &lt;number_of_frames&gt;</div>
+<div class="line">        set frames_per_sym_ssb &lt;cc&gt; &lt;number_of_frames&gt;</div>
 <div class="line">        set dest_mac_addr &lt;port&gt; &lt;address&gt;</div>
 <div class="line">        set src_mac_addr &lt;port&gt; &lt;address&gt;</div>
 <div class="line">        set protocol &lt;ECPRI | 1914.3&gt; &lt;VLAN = 0 | 1&gt; &lt;RAW | IPv4 | IPv6&gt;</div>
-<div class="line">        set eAxC_id &lt;DU bits&gt; &lt;BS bits&gt; &lt;CC bits&gt; &lt;RU bits&gt;</div>
-<div class="line">        set ru_ports &lt;RU bits&gt; &lt;ss bits&gt; &lt;<a class="code" href="structreg__info.html#a0aa6eab66e00ccb758a637628f97886a">mask</a>&gt; &lt;user value&gt; &lt;PRACH value&gt; &lt;SSB value&gt;</div>
-<div class="line">clear : clear [fhi_alarms | fhi_stats]</div>
-<div class="line">configure : configure &lt;cc&gt;</div>
-<div class="line">enable : enable &lt;cc&gt;</div>
-<div class="line">disable : disable &lt;c&gt;</div>
-<div class="line"><a class="code" href="group__libxorif.html#gab6983960fa824bfb6f16f6e4ae1c3c1b">read_reg</a> : <a class="code" href="group__libxorif.html#gab6983960fa824bfb6f16f6e4ae1c3c1b">read_reg</a> [fhi] &lt;<a class="code" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a>&gt;</div>
-<div class="line">read_reg_offset : read_reg_offset [fhi] &lt;<a class="code" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a>&gt; &lt;offset&gt;</div>
-<div class="line"><a class="code" href="group__libxorif.html#ga3dfd4563badc02cc622c8d4a6e55237b">write_reg</a> : <a class="code" href="group__libxorif.html#ga3dfd4563badc02cc622c8d4a6e55237b">write_reg</a> [fhi] &lt;<a class="code" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a>&gt; &lt;value&gt;</div>
-<div class="line">write_reg_offset : write_reg_offset [fhi] &lt;<a class="code" href="structreg__info.html#a4a6b00247b1294d70d5a5db2eeb447d2">name</a>&gt; &lt;offset&gt; &lt;value&gt;</div>
-<div class="line">quit : quit</div>
+<div class="line">        set vlan &lt;port&gt; &lt;<span class="keywordtype">id</span>&gt; &lt;dei&gt; &lt;pcp&gt;</div>
+<div class="line">        set eaxc_id &lt;DU bits&gt; &lt;BS bits&gt; &lt;CC bits&gt; &lt;RU bits&gt;</div>
+<div class="line">        set ru_ports &lt;RU bits&gt; &lt;ss bits&gt; &lt;mask&gt; &lt;user_value&gt; &lt;prach_value&gt; &lt;ssb_value&gt;</div>
+<div class="line">        set fhi_enabled &lt;mask&gt;</div>
+<div class="line">        set [bw_compression | bw_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt;</div>
+<div class="line">        set bf_enabled &lt;mask&gt;</div>
+<div class="line">reset : reset [fhi | bf] &lt;mode&gt;</div>
+<div class="line">clear : clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]</div>
+<div class="line">has : has [fhi | bf]</div>
+<div class="line">configure : configure [fhi | bf] &lt;cc&gt;</div>
+<div class="line">enable : enable [fhi | bf] &lt;cc&gt;</div>
+<div class="line">disable : disable [fhi | bf] &lt;cc&gt;</div>
+<div class="line">schedule_bf : schedule_bf</div>
+<div class="line">load : load [beam_weights | prach_config] &lt;file&gt;</div>
+<div class="line"><a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> : <a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> [fhi | bf] &lt;name&gt;</div>
+<div class="line">read_reg_offset : read_reg_offset [fhi | bf] &lt;name&gt; &lt;offset&gt;</div>
+<div class="line"><a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> : <a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> [fhi | bf] &lt;name&gt; &lt;value&gt;</div>
+<div class="line">write_reg_offset : write_reg_offset [fhi | bf] &lt;name&gt; &lt;offset&gt; &lt;value&gt;</div>
 <div class="line">ecpri : (Use <span class="stringliteral">&#39;ecpri help&#39;</span> <span class="keywordflow">for</span> additional help and usage information)</div>
 <div class="line">peek : peek &lt;address&gt;</div>
 <div class="line">poke : poke &lt;address&gt; &lt;value&gt;</div>
-<div class="line">debug : debug &lt;level = 0..2&gt;</div>
+<div class="line">quit : quit</div>
 </div><!-- fragment --><ul>
 <li>When executing a command, the app will echo the command and it's returned status, e.g. <code>set num_rbs 0 275 =&gt; status = 0</code><ul>
 <li>Status value of 0 means good/pass and any non-zero value is an error code</li>
@@ -201,25 +218,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>The xorif-app server needs to be initialized before it can correctly accept most commands<ul>
 <li>This can be done by sending the "init" command, e.g. <code>xorif-app -c "init"</code></li>
-<li>Alternatively, the xorif-app client can do this automatically with the "-i" option, e.g. <code>xorif-app -i -c "set num_rbs 0 275"</code></li>
 <li>Note, the xorif-app server only needs to be initialized once (after starting, or after sending a the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.</li>
+<li>The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. <code>xorif-app -c "init fhi a0000000.oran_radio_if"</code>.</li>
 </ul>
 </li>
 <li>Some commands also provide additional information, for example...</li>
 </ul>
 <div class="fragment"><div class="line"><span class="keyword">get</span> fhi_caps =&gt; status = 0</div>
-<div class="line">max_cc = 1</div>
-<div class="line">num_eth_ports = 1</div>
-<div class="line">no_framer_ss = 1</div>
-<div class="line">no_deframer_ss = 1</div>
-<div class="line">max_framer_ethernet_pkt = 1024</div>
-<div class="line">max_deframer_ethernet_pkt = 1024</div>
+<div class="line">max_cc = 8</div>
+<div class="line">num_eth_ports = 4</div>
+<div class="line">numerologies = 0x1F</div>
+<div class="line">extended_cp = <span class="keyword">false</span></div>
+<div class="line">iq_de_comp_methods = 0x13</div>
+<div class="line">iq_de_comp_bfp_widths = 0x5200</div>
+<div class="line">iq_de_comp_mod_widths = 0x3E</div>
+<div class="line">iq_comp_methods = 0x3</div>
+<div class="line">iq_comp_bfp_widths = 0x5200</div>
+<div class="line">no_framer_ss = 8</div>
+<div class="line">no_deframer_ss = 16</div>
+<div class="line">max_framer_ethernet_pkt = 8000</div>
+<div class="line">max_deframer_ethernet_pkt = 8000</div>
 <div class="line">max_subcarriers = 6600</div>
-<div class="line">max_data_symbols = 2</div>
-<div class="line">max_ctrl_symbols = 13</div>
-<div class="line">max_ul_ctrl_1kwords = 2</div>
-<div class="line">max_dl_ctrl_1kwords = 2</div>
-<div class="line">max_dl_data_1kwords = 2</div>
+<div class="line">max_data_symbols = 8</div>
+<div class="line">max_ctrl_symbols = 16</div>
+<div class="line">max_ul_ctrl_1kwords = 4</div>
+<div class="line">max_dl_ctrl_1kwords = 4</div>
+<div class="line">max_dl_data_1kwords = 8</div>
 <div class="line">max_ssb_ctrl_512words = 1</div>
 <div class="line">max_ssb_data_512words = 2</div>
 <div class="line">timer_clk_ps = 5000</div>
@@ -254,49 +278,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 <div class="fragment"><div class="line"><span class="preprocessor"># Initialize library</span></div>
 <div class="line"><span class="preprocessor"></span>init</div>
+<div class="line">reset</div>
 <div class="line"></div>
 <div class="line"><span class="preprocessor"># Check versions</span></div>
 <div class="line"><span class="preprocessor"></span><span class="keyword">get</span> sw_version</div>
 <div class="line"><span class="keyword">get</span> fhi_hw_version</div>
-<div class="line"><span class="keyword">get</span> fhi_hw_revision</div>
 <div class="line"></div>
-<div class="line"><span class="preprocessor"># Configure CC#0 num_rbs=275, numerology=1</span></div>
+<div class="line"><span class="preprocessor"># Configure CC[0] num_rbs=275, numerology=1</span></div>
 <div class="line"><span class="preprocessor"></span>set num_rbs 0 275</div>
 <div class="line">set numerology 0 1 0</div>
 <div class="line">set time_advance 0 30 90 90</div>
-<div class="line">set dl_iq_compression 0 9 1</div>
-<div class="line">set ul_iq_compression 0 9 1</div>
+<div class="line">set dl_iq_compression 0 9 1 1</div>
+<div class="line">set ul_iq_compression 0 9 1 1</div>
 <div class="line">configure 0</div>
+<div class="line">enable 0</div>
 <div class="line"></div>
-<div class="line"><span class="preprocessor"># Configure CC#1 num_rbs=100, numerology=0</span></div>
+<div class="line"><span class="preprocessor"># Configure CC[1] num_rbs=100, numerology=0</span></div>
 <div class="line"><span class="preprocessor"></span>set num_rbs 1 100</div>
 <div class="line">set numerology 1 0 0</div>
 <div class="line">set time_advance 1 30 90 90</div>
-<div class="line">set dl_iq_compression 1 9 1</div>
-<div class="line">set ul_iq_compression 1 9 1</div>
+<div class="line">set dl_iq_compression 1 9 1 1</div>
+<div class="line">set ul_iq_compression 1 9 1 1</div>
 <div class="line">configure 1</div>
+<div class="line">enable 1</div>
 </div><!-- fragment --><ul>
 <li>Example file (output):</li>
 </ul>
 <div class="fragment"><div class="line">init =&gt; status = 0</div>
+<div class="line">reset =&gt; status = 0</div>
 <div class="line"><span class="keyword">get</span> sw_version =&gt; status = 0</div>
-<div class="line">result = 0x01000001</div>
+<div class="line">fhi_version = 0x01010002</div>
 <div class="line"><span class="keyword">get</span> fhi_hw_version =&gt; status = 0</div>
-<div class="line">result = 0x01000000</div>
-<div class="line"><span class="keyword">get</span> fhi_hw_revision =&gt; status = 0</div>
-<div class="line">result = 0x12345678</div>
+<div class="line">result = 0x01010002</div>
 <div class="line">set num_rbs 0 275 =&gt; status = 0</div>
 <div class="line">set numerology 0 1 0 =&gt; status = 0</div>
 <div class="line">set time_advance 0 30 90 90 =&gt; status = 0</div>
-<div class="line">set dl_iq_compression 0 9 1 =&gt; status = 0</div>
-<div class="line">set ul_iq_compression 0 9 1 =&gt; status = 0</div>
+<div class="line">set dl_iq_compression 0 9 1 1 =&gt; status = 0</div>
+<div class="line">set ul_iq_compression 0 9 1 1 =&gt; status = 0</div>
 <div class="line">configure 0 =&gt; status = 0</div>
+<div class="line">enable 0 =&gt; status = 0</div>
 <div class="line">set num_rbs 1 100 =&gt; status = 0</div>
 <div class="line">set numerology 1 0 0 =&gt; status = 0</div>
 <div class="line">set time_advance 1 30 90 90 =&gt; status = 0</div>
-<div class="line">set dl_iq_compression 1 9 1 =&gt; status = 0</div>
-<div class="line">set ul_iq_compression 1 9 1 =&gt; status = 0</div>
+<div class="line">set dl_iq_compression 1 9 1 1 =&gt; status = 0</div>
+<div class="line">set ul_iq_compression 1 9 1 1 =&gt; status = 0</div>
 <div class="line">configure 1 =&gt; status = 0</div>
+<div class="line">enable 1 =&gt; status = 0</div>
 </div><!-- fragment --><h3>File Mode Simple Starter and PG370 examples</h3>
 <ul>
 <li>Simple uncompressed data example (input):<ul>
@@ -306,51 +333,75 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 </li>
 </ul>
-<div class="fragment"><div class="line">set numerology 0 0 0</div>
+<div class="fragment"><div class="line"><span class="preprocessor"># Set initial state</span></div>
+<div class="line"><span class="preprocessor"></span>init</div>
+<div class="line">reset</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Component carrier 0</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 0 0 0</div>
 <div class="line">set num_rbs 0 20</div>
 <div class="line">set ul_iq_compression 0 0 0</div>
 <div class="line">set dl_iq_compression 0 0 0</div>
 <div class="line">set time_advance 0 160 100 100</div>
 <div class="line">configure 0</div>
+<div class="line">enable 0</div>
 </div><!-- fragment --><ul>
 <li>PG370 "Configuring the Core" Example file (input):</li>
 </ul>
-<div class="fragment"><div class="line">set numerology 0 1 0</div>
+<div class="fragment"><div class="line"><span class="preprocessor"># Set initial state</span></div>
+<div class="line"><span class="preprocessor"></span>init</div>
+<div class="line">reset</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Component carrier 0</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 0 1 0</div>
 <div class="line">set num_rbs 0 275</div>
 <div class="line">set ul_iq_compression 0 9 1</div>
 <div class="line">set dl_iq_compression 0 9 1</div>
 <div class="line">set time_advance 0 30 90 90</div>
 <div class="line">configure 0</div>
+<div class="line">enable 0</div>
 <div class="line"></div>
-<div class="line">set numerology 1 1 0</div>
+<div class="line"><span class="preprocessor"># Component carrier 1</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 1 1 0</div>
 <div class="line">set num_rbs 1 275</div>
 <div class="line">set ul_iq_compression 1 9 1</div>
 <div class="line">set dl_iq_compression 1 9 1</div>
 <div class="line">set time_advance 1 30 90 90</div>
 <div class="line">configure 1</div>
+<div class="line">enable 1</div>
 </div><!-- fragment --><ul>
 <li>PG370 "Reconfiguring the Core" Example file (input):</li>
 </ul>
-<div class="fragment"><div class="line">set numerology 0 0 0</div>
+<div class="fragment"><div class="line"><span class="preprocessor"># Set initial state</span></div>
+<div class="line"><span class="preprocessor"></span>init</div>
+<div class="line">reset</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Component carrier 0</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 0 0 0</div>
 <div class="line">set num_rbs 0 275</div>
-<div class="line">set ul_iq_compression 0 9 1</div>
-<div class="line">set dl_iq_compression 0 9 1</div>
+<div class="line">set ul_iq_compression 0 9 1 1</div>
+<div class="line">set dl_iq_compression 0 9 1 1</div>
 <div class="line">set time_advance 0 30 90 90</div>
 <div class="line">configure 0</div>
+<div class="line">enable 0</div>
 <div class="line"></div>
-<div class="line">set numerology 1 1 0</div>
+<div class="line"><span class="preprocessor"># Component carrier 1</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 1 1 0</div>
 <div class="line">set num_rbs 1 137</div>
-<div class="line">set ul_iq_compression 1 9 1</div>
-<div class="line">set dl_iq_compression 1 9 1</div>
+<div class="line">set ul_iq_compression 1 9 1 1</div>
+<div class="line">set dl_iq_compression 1 9 1 1</div>
 <div class="line">set time_advance 1 30 90 90</div>
 <div class="line">configure 1</div>
+<div class="line">enable 1</div>
 <div class="line"></div>
-<div class="line">set numerology 2 1 0</div>
+<div class="line"><span class="preprocessor">## Component carrier 2</span></div>
+<div class="line"><span class="preprocessor"></span>set numerology 2 1 0</div>
 <div class="line">set num_rbs 2 137</div>
-<div class="line">set ul_iq_compression 2 9 1</div>
-<div class="line">set dl_iq_compression 2 9 1</div>
+<div class="line">set ul_iq_compression 2 9 1 1</div>
+<div class="line">set dl_iq_compression 2 9 1 1</div>
 <div class="line">set time_advance 2 30 90 90</div>
 <div class="line">configure 2</div>
+<div class="line">enable 2</div>
 </div><!-- fragment --><h3>Debug Mode</h3>
 <ul>
 <li>The "debug" command can be used to enable library's "trace" feature<ul>
@@ -365,16 +416,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">set numerology 0 0 0 =&gt; status = 0</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gac5bb9cbc4aae17d9db299f7a7595efa0">xorif_set_cc_num_rbs</a>(0, 20)</div>
 <div class="line">set num_rbs 0 20 =&gt; status = 0</div>
-<div class="line">LIBXORIF&gt; xorif_set_cc_ul_iq_compression(0, 0, 0)</div>
+<div class="line">LIBXORIF&gt; xorif_set_cc_ul_iq_compression(0, 0, 0, 1)</div>
 <div class="line">set ul_iq_compression 0 0 0 =&gt; status = 0</div>
-<div class="line">LIBXORIF&gt; xorif_set_cc_dl_iq_compression(0, 0, 0)</div>
+<div class="line">LIBXORIF&gt; xorif_set_cc_dl_iq_compression(0, 0, 0, 1)</div>
 <div class="line">set dl_iq_compression 0 0 0 =&gt; status = 0</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga9a94902547afdfa15e3da94ce510e670">xorif_set_cc_time_advance</a>(0, 160, 100, 100)</div>
 <div class="line">set time_advance 0 160 100 100 =&gt; status = 0</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a>(0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gada7f89b57ba8f62c2ce157c5913c9598">xorif_has_beamformer</a>()</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; DEBUG: Configuration valid</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x0 (0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUMRBS (0xE100)[0:8] &lt;= 0x14 (20)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUMEROLOGY (0xE100)[16:18] &lt;= 0x0 (0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SYMPERSLOT (0xE100)[24:24] &lt;= 0x0 (0)</div>
@@ -397,6 +450,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_UD_IQ_WIDTH (0xE91C)[0:3] &lt;= 0x0 (0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_UD_COMP_METH (0xE91C)[4:7] &lt;= 0x0 (0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_MPLANE_UDCOMP_PARAM (0xE91C)[8:8] &lt;= 0x1 (1)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_PRACH_UD_IQ_WIDTH (0xE920)[0:3] &lt;= 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_PRACH_UD_COMP_METH (0xE920)[4:7] &lt;= 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_PRACH_MPLANE_UDCOMP_PARAM (0xE920)[8:8] &lt;= 0x1 (1)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUM_CTRL_PER_SYMBOL_DL (0xE160)[0:15] &lt;= 0x40 (64)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_CTRL_OFFSETS (0xE104)[0:15] &lt;= 0x0 (0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUM_CTRL_PER_SYMBOL_UL (0xE164)[0:15] &lt;= 0x40 (64)</div>
@@ -424,13 +480,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_D_CYCLES (0xE938)[0:16] &lt;= 0x33E5 (13285)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_C_CYCLES (0xE934)[0:16] &lt;= 0x1D92 (7570)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_C_ABS_SYMBOL (0xE930)[0:11] &lt;= 0x2 (2)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_BIDF_C_CYCLES (0xE148)[0:16] &lt;= 0x11DA (4570)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_BIDF_C_ABS_SYMBOL (0xE144)[0:11] &lt;= 0x3 (3)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_RELOAD (0xE000)[0:7] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gada7f89b57ba8f62c2ce157c5913c9598">xorif_has_beamformer</a>()</div>
 <div class="line">configure 0 =&gt; status = 0</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga7b3839531a2c838f6d1a0185d39efdb6">xorif_enable_cc</a>(0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x0 (0)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x1 (1)</div>
+<div class="line">enable 0 =&gt; status = 0</div>
 </div><!-- fragment --> <hr/>
-<p>Copyright (C) 2019 - 2020 Xilinx, Inc. All rights reserved. </p>
+<p>Copyright (C) 2019 - 2021 Xilinx, Inc. All rights reserved. </p>
 </div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

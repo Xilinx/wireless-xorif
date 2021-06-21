@@ -175,7 +175,7 @@ int check_numerology(uint16_t numerology, uint16_t extended_cp);
  * @brief Checks to see if specified IQ compression mode is supported.
  * @param[in] bit_width Bit width (0-16)
  * @param[in] comp_method Compression method
- * @param[in] type Channel type (uplink, downlink, SSB, PRACH)
+ * @param[in] chan Channel type (uplink, downlink, SSB, PRACH)
  * @returns
  *      - 0 if mode not supported
  *      - 1 if mode is supported
@@ -250,6 +250,7 @@ void dealloc_block(void *ptr, uint16_t tag);
 
 /**
  * @brief Find the memory allocation offset and size (for specified tag).
+ * @param[in] ptr Pointer to allocation structure
  * @param[in] tag Tag value
  * @param[in,out] offset Pointer to write back the offset value
  * @param[in,out] size Pointer to write back the size value
