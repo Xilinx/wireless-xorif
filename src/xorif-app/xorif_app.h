@@ -33,9 +33,11 @@
 #include <stdarg.h>
 #include <syslog.h>
 #include <unistd.h>
+#ifndef NO_HW
 #include "xorif_api.h"
 #ifdef BF_INCLUDED
 #include "xobf_api.h"
+#endif
 #endif
 #include "xorif_app.h"
 
