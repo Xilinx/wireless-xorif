@@ -107,10 +107,9 @@ namespace eval ::roe::data {
 
   }
   
-  
 }
 
-## Privide another hook to allow constraints, custom user modifications etc
+## Provide another hook to allow constraints, custom user modifications etc
 ## after the main design has been built.
 namespace eval ::roe::data {
   
@@ -135,16 +134,13 @@ namespace eval ::roe::data {
     }
   
     if { $board == "zcu111" } {
-      puts_xorif "Modify for zcu111"
+      puts_xorif "Modify REFCLK for zcu111"
       
-      ## No longer required, constrai
-      #add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_zcu111_pinout.xdc
-
       ## If the board is zcu111, ensure the REFCLK is 156.25MHz. The default BA
       ## can set this to 161 in 25G Mode, but we want to force this to the default
       ## rate of the Si570 on the board.
       set_property -dict [list CONFIG.GT_REF_CLK_FREQ {156.25}] [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]
-      set_property CONFIG.FREQ_HZ 156250000 [get_bd_intf_ports /gt_ref_clk]
+      set_property CONFIG.FREQ_HZ 156250000                     [get_bd_intf_ports /gt_ref_clk]
 
       validate_bd_design
       set_property synth_checkpoint_mode None [get_files *.bd]
@@ -152,13 +148,35 @@ namespace eval ::roe::data {
 
     }
     
-    ## 
+    ## Check the rate, 10/25 and update all key parameters. If the internal_buc_clk rate is modified, these
+    ## must be modified.
+    set_property -dict [list CONFIG.OPTIMIZE_CLOCKING_STRUCTURE_EN {true} CONFIG.JITTER_SEL {Min_O_Jitter} CONFIG.CLKOUT1_DRIVES {BUFG} CONFIG.CLKOUT2_DRIVES {BUFG}] [get_bd_cells reset_retime/clk_wiz_syncE_timer]
+
     if { [get_property CONFIG.LINE_RATE [get_bd_cells /datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]] == 10} {
       puts_xorif "Modifications for Line Rate of 10gbps"
     
-      set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {156250}] [get_bd_cells datapath/framer_datapath/roe_radio_top_0] 
-      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps    {6400}]   [get_bd_cells datapath/framer_datapath/roe_framer_0   ]
+      #set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {156250}] [get_bd_cells datapath/framer_datapath/roe_radio_top_0] 
+      #set_property -dict [list CONFIG.Xran_Timer_Clk_Ps    {6400}]   [get_bd_cells datapath/framer_datapath/roe_framer_0   ]
 
+      ## Update the syncer clock period for 156.250MHz
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {6400}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_tx]
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {6400}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_rx]
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {6400}]              [get_bd_cells datapath/framer_datapath/roe_framer_0]
+
+      set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {156250}]         [get_bd_cells datapath/framer_datapath/roe_radio_top_0]
+      set_property -dict [list CONFIG.clocks_for_1ms {156250}]               [get_bd_cells datapath/framer_datapath/oran_mon/radio_start_recover_v_0]
+      set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {156.250} ] [get_bd_cells reset_retime/clk_wiz_syncE_timer]     
+
+
+    } else {
+      ## Update the syncer clock period for 390.625MHz
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_tx]
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_rx]
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {2560}]              [get_bd_cells datapath/framer_datapath/roe_framer_0]
+
+      set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {390625}]         [get_bd_cells datapath/framer_datapath/roe_radio_top_0]
+      set_property -dict [list CONFIG.clocks_for_1ms {390625}]               [get_bd_cells datapath/framer_datapath/oran_mon/radio_start_recover_v_0]
+      set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {390.625} ] [get_bd_cells reset_retime/clk_wiz_syncE_timer]     
     }
 
     if {[regexp {om5} $mode] == 1} {
@@ -173,21 +191,10 @@ namespace eval ::roe::data {
     
     ##
     puts_xorif "Add toggle for debug"
+    ## Use the following call to add the pin loc constraints
     add_toggle $board
-    ## 
-    #create_bd_cell -type module -reference mrf_toggle datapath/framer_datapath/mrf_toggle_0
-    #connect_bd_net [get_bd_pins datapath/framer_datapath/mrf_toggle_0/pulse_in] [get_bd_pins datapath/framer_datapath/roe_framer_0/m0_dl_update]
-    #connect_bd_net [get_bd_pins datapath/framer_datapath/internal_bus_clk]      [get_bd_pins datapath/framer_datapath/mrf_toggle_0/clk]
-    make_bd_pins_external  [get_bd_pins /datapath/framer_datapath/roe_framer_0/m0_dl_toggle]
-    
-    ## Run work around procs - DELETE THIS FOR 2020.2 release
-    #if { $ipRepo == "" } {
-    #  if { [ regexp 1_AR [version -short]] }  {
-    #    puts "Using Patched Vivado, version [version -short]"
-    #  } else {
-    #    wa_fix_inverted_reset_out      
-    #  }
-    #}
+    make_bd_pins_external  [get_bd_pins /datapath/framer_datapath/roe_framer_0/m0_dl_toggle]  
+
     puts_xorif "Add ILA"
     wa_add_additional_ila_of_interest
     
@@ -199,13 +206,8 @@ namespace eval ::roe::data {
 
   }
 
-  #proc wa_fix_inverted_reset_out { } {     
-  #  set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
-  #  delete_bd_objs [get_bd_cells datapath/framer_datapath/defm_resetn]
-  #  connect_bd_net [get_bd_pins ${ipName}/defm_reset_active] [get_bd_pins datapath/framer_datapath/axis_pkt_message_fifo/s_axis_aresetn]
-  #}
 
-  proc wa_add_core_reset_from_register { } {
+  proc wa_add_core_reset_from_register_delete { } {
     ## This needs to hook on somewhere else  
     set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
 
@@ -271,6 +273,9 @@ namespace eval ::roe::data {
   
   ## ---------------------------------------------------------------------------
   ## Module that can be added to visualise pulse signals on external IO with OSC
+  ## This port is now avaiable from the IP, but this is an example of how code
+  ## can be added, via TCL, if required. It will then be avaiable in IPI via
+  ## Module Reference Flow.
   ## ---------------------------------------------------------------------------
   proc add_toggle { board } {
 
