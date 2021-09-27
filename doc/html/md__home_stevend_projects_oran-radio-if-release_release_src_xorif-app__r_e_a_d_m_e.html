@@ -82,11 +82,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><h2>XORIF-APP Source Directory</h2>
 <ul>
 <li>This directory contains the source files and Makefile for the ORAN-Radio-Interface Example Application (xorif-app)</li>
-<li>The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface and Beam-Former hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).</li>
+<li>The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).</li>
 <li>The xorif-app can operate as either a "server" or a "client".<ul>
 <li>As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).</li>
 <li>As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".</li>
-<li>Only the xorif-app in "server mode" can communicate directly with the h/w (via the libxorif and libxobf C libraries).</li>
+<li>Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).</li>
 </ul>
 </li>
 </ul>
@@ -146,8 +146,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h3>Command Syntax</h3>
 <div class="fragment"><div class="line">help : help [&lt;topic&gt;]</div>
 <div class="line">debug : debug &lt;level = 0..2&gt;</div>
-<div class="line">init : init [fhi | bf] [&lt;device_name&gt;]</div>
-<div class="line">finish : finish [fhi | bf]</div>
+<div class="line">init : init [fhi] [&lt;device_name&gt;]</div>
+<div class="line">finish : finish [fhi]</div>
 <div class="line"><span class="keyword">get</span> : <span class="keyword">get</span>...</div>
 <div class="line">        <span class="keyword">get</span> fhi_sw_version</div>
 <div class="line">        <span class="keyword">get</span> fhi_hw_version</div>
@@ -159,16 +159,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">        <span class="keyword">get</span> fhi_alarms</div>
 <div class="line">        <span class="keyword">get</span> fhi_state</div>
 <div class="line">        <span class="keyword">get</span> fhi_enabled</div>
-<div class="line">        <span class="keyword">get</span> bf_sw_version</div>
-<div class="line">        <span class="keyword">get</span> bf_hw_version</div>
-<div class="line">        <span class="keyword">get</span> bf_hw_internal_rev</div>
-<div class="line">        <span class="keyword">get</span> [bf_capabilities | bf_caps]</div>
-<div class="line">        <span class="keyword">get</span> bf_cc_config &lt;cc&gt;</div>
-<div class="line">        <span class="keyword">get</span> bf_cc_alloc &lt;cc&gt;</div>
-<div class="line">        <span class="keyword">get</span> bf_stats</div>
-<div class="line">        <span class="keyword">get</span> bf_alarms</div>
-<div class="line">        <span class="keyword">get</span> bf_state</div>
-<div class="line">        <span class="keyword">get</span> bf_enabled</div>
 <div class="line">set : set...</div>
 <div class="line">        set num_rbs &lt;cc&gt; &lt;number_of_rbs&gt;</div>
 <div class="line">        set numerology &lt;cc&gt; &lt;numerology&gt; &lt;extended_cp = 0 | 1&gt;</div>
@@ -176,6 +166,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">        set time_advance &lt;cc&gt; &lt;deskew&gt; &lt;advance_uplink&gt; &lt;advance_downlink&gt;</div>
 <div class="line">        set ul_bid_forward &lt;cc&gt; &lt;advance&gt;</div>
 <div class="line">        set ul_bid_forward_fine &lt;cc&gt; &lt;symbols&gt; &lt;cycles&gt;</div>
+<div class="line">        set ul_radio_ch_dly &lt;cc&gt; &lt;delay&gt;</div>
 <div class="line">        set [dl_iq_compression | dl_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
 <div class="line">        set [ul_iq_compression | ul_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
 <div class="line">        set [ssb_iq_compression | ssb_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
@@ -191,21 +182,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">        set vlan &lt;port&gt; &lt;<span class="keywordtype">id</span>&gt; &lt;dei&gt; &lt;pcp&gt;</div>
 <div class="line">        set eaxc_id &lt;DU bits&gt; &lt;BS bits&gt; &lt;CC bits&gt; &lt;RU bits&gt;</div>
 <div class="line">        set ru_ports &lt;RU bits&gt; &lt;ss bits&gt; &lt;mask&gt; &lt;user_value&gt; &lt;prach_value&gt; &lt;ssb_value&gt;</div>
-<div class="line">        set fhi_enabled &lt;mask&gt;</div>
-<div class="line">        set [bw_compression | bw_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt;</div>
-<div class="line">        set bf_enabled &lt;mask&gt;</div>
+<div class="line">        set ru_ports_table_mode &lt;mode&gt;</div>
+<div class="line">        set ru_ports_table &lt;address&gt; &lt;port&gt; &lt;type&gt; [&lt;number&gt;]</div>
+<div class="line">        set system_constants &lt;fh_decap_dly&gt; [...]</div>
 <div class="line">reset : reset [fhi | bf] &lt;mode&gt;</div>
 <div class="line">clear : clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]</div>
 <div class="line">has : has [fhi | bf]</div>
-<div class="line">configure : configure [fhi | bf] &lt;cc&gt;</div>
-<div class="line">enable : enable [fhi | bf] &lt;cc&gt;</div>
-<div class="line">disable : disable [fhi | bf] &lt;cc&gt;</div>
-<div class="line">schedule_bf : schedule_bf</div>
-<div class="line">load : load [beam_weights | prach_config] &lt;file&gt;</div>
-<div class="line"><a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> : <a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> [fhi | bf] &lt;name&gt;</div>
-<div class="line">read_reg_offset : read_reg_offset [fhi | bf] &lt;name&gt; &lt;offset&gt;</div>
-<div class="line"><a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> : <a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> [fhi | bf] &lt;name&gt; &lt;value&gt;</div>
-<div class="line">write_reg_offset : write_reg_offset [fhi | bf] &lt;name&gt; &lt;offset&gt; &lt;value&gt;</div>
+<div class="line">configure : configure [fhi] &lt;cc&gt;</div>
+<div class="line">enable : enable [fhi] &lt;cc&gt;</div>
+<div class="line">disable : disable [fhi] &lt;cc&gt;</div>
+<div class="line"><a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> : <a class="code" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> [fhi] &lt;name&gt;</div>
+<div class="line">read_reg_offset : read_reg_offset [fhi] &lt;name&gt; &lt;offset&gt;</div>
+<div class="line"><a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> : <a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> [fhi] &lt;name&gt; &lt;value&gt;</div>
+<div class="line">write_reg_offset : write_reg_offset [fhi] &lt;name&gt; &lt;offset&gt; &lt;value&gt;</div>
+<div class="line">dump_reg : dump_reg [fhi]</div>
 <div class="line">ecpri : (Use <span class="stringliteral">&#39;ecpri help&#39;</span> <span class="keywordflow">for</span> additional help and usage information)</div>
 <div class="line">peek : peek &lt;address&gt;</div>
 <div class="line">poke : poke &lt;address&gt; &lt;value&gt;</div>
@@ -253,6 +243,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">cc_id_limit = 3</div>
 <div class="line">ru_id_limit = 8</div>
 <div class="line">ss_id_limit = 5</div>
+<div class="line">ru_ports_map_width = 8</div>
 </div><!-- fragment --><ul>
 <li>Many of the commands map directly on to the libxorif library API calls. Others, such as "help" and "quit" are handled locally.</li>
 <li>The xorif-app commands also allow the user to read/write device registers, and even to peek/poke memory directly.</li>
@@ -420,7 +411,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">set ul_iq_compression 0 0 0 =&gt; status = 0</div>
 <div class="line">LIBXORIF&gt; xorif_set_cc_dl_iq_compression(0, 0, 0, 1)</div>
 <div class="line">set dl_iq_compression 0 0 0 =&gt; status = 0</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga9a94902547afdfa15e3da94ce510e670">xorif_set_cc_time_advance</a>(0, 160, 100, 100)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a>(0, 160, 100, 100)</div>
 <div class="line">set time_advance 0 160 100 100 =&gt; status = 0</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a>(0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x0 (0)</div>

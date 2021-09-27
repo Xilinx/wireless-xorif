@@ -63,6 +63,7 @@ var searchData=
   ['ecpri_5ftest_5fmesg_5fstr',['ECPRI_TEST_MESG_STR',['../group__protocol__ecpri.html#gae290e0c26483f0e23ce501fa4bcc0922',1,'ecpri_str.h']]],
   ['ecpri_5fusage_5fstr',['ECPRI_USAGE_STR',['../group__protocol__ecpri.html#gaea5ef8ddb96633d98df129331008536c',1,'ecpri_str.h']]],
   ['element_5fid',['element_id',['../structecpri__rma__msg__s.html#acb58edcc589f8cf6f85b542c112188c5',1,'ecpri_rma_msg_s']]],
+  ['enable_5finterrupts',['ENABLE_INTERRUPTS',['../group__libxorif.html#ga62b74068f303c78492667e69fe203914',1,'xorif_common.h']]],
   ['error_5fcodes',['error_codes',['../group__xorif-app.html#gabfd51332ef0e0ba71f951a69e68e06be',1,'xorif_app.h']]],
   ['extended_5fcp',['extended_cp',['../structxorif__caps.html#a075695c49fe302b9ba0377727ed7243c',1,'xorif_caps::extended_cp()'],['../structxorif__cc__config.html#a1f54c795e34de718d6d3111bd54dfa04',1,'xorif_cc_config::extended_cp()']]],
   ['extended_5fcp_5fssb',['extended_cp_ssb',['../structxorif__cc__config.html#a1c1002bb5d60439b583f65f2f6e6ab21',1,'xorif_cc_config']]]

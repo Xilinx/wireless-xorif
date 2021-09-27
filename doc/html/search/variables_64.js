@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['deskew',['deskew',['../structxorif__cc__config.html#a9808a68cecfc939b85de470af0117344',1,'xorif_cc_config']]],
+  ['deskew',['deskew',['../structxorif__cc__config.html#acf9f6bfdd69789745dea09fe05ade789',1,'xorif_cc_config']]],
   ['dev',['dev',['../structxorif__device__info.html#aa24b891a199e30f1c320cd9a4bf97105',1,'xorif_device_info']]],
   ['dev_5fname',['dev_name',['../structxorif__device__info.html#a5c8bad5160b3122812cb63704d81ee64',1,'xorif_device_info']]],
   ['dl_5fctrl_5foffset',['dl_ctrl_offset',['../structxorif__cc__alloc.html#a19c9f386790852accd90f455b1ee2344',1,'xorif_cc_alloc']]],
