@@ -129,6 +129,7 @@ struct xorif_caps
     uint16_t cc_id_limit;               /**< Maximum size (in bits) of the CC id */
     uint16_t ru_id_limit;               /**< Maximum size (in bits) of the RU id */
     uint16_t ss_id_limit;               /**< Maximum size (in bits) of the spatial stream id */
+    uint16_t ru_ports_map_width;        /**< Width of RU port mapping table */
 };
 
 /**
@@ -154,10 +155,11 @@ struct xorif_cc_config
     uint16_t iq_comp_meth_prach;     /**< IQ compression method for PRACH */
     uint16_t iq_comp_width_prach;    /**< IQ compressed width for PRACH */
     uint16_t iq_comp_mplane_prach;   /**< Flag indicating M-plane compression for PRACH */
-    uint32_t deskew;                 /**< Maximum deskew time (in microseconds) */
-    uint32_t advance_ul;             /**< Control advance in uplink (in microseconds) */
-    uint32_t advance_dl;             /**< Control advance in downlink (in microseconds) */
-    uint32_t ul_bid_forward;         /**< Uplink beam-id forward advance (in microseconds) */
+    double deskew;                   /**< Maximum deskew time (in microseconds) */
+    double advance_ul;               /**< Control advance in uplink (in microseconds) */
+    double advance_dl;               /**< Control advance in downlink (in microseconds) */
+    double ul_bid_forward;           /**< Uplink beam-id forward advance (in microseconds) */
+    double ul_radio_ch_dly;          /**< Uplink radio channel delay (in microseconds) */
     uint16_t num_ctrl_per_sym_ul;    /**< Number of sections per symbol in uplink */
     uint16_t num_ctrl_per_sym_dl;    /**< Number of sections per symbol in downlink */
     uint16_t num_ctrl_per_sym_ssb;   /**< Number of sections per symbol for SSB */
@@ -224,17 +226,17 @@ struct xorif_fhi_eth_stats
  */
 enum xorif_fhi_alarms
 {
-    FRAMER_RESET_STATUS = 0x1,         /**< "Framer" reset status */
-    DEFRAMER_RESET_STATUS = 0x2,       /**< "De-framer" reset status */
-    DEFRAMER_FIFO_OF = 0x100,          /**< "De-framer" FIFO over-flow */
-    DEFRAMER_FIFO_UF = 0x200,          /**< "De-framer" FIFO under-flow */
-    DEFRAMER_CIRC_BUFF_OF = 0x400,     /**< "De-framer" circular buffer over-flow */
-    DEFRAMER_CIRC_BUFF_PTR_OF = 0x800, /**< "De-framer" circular buffer pointer over-flow */
-    FRAMER_FIFO_OF = 0x1000,           /**< "Framer" FIFO over-flow */
-    FRAMER_FIFO_UF = 0x2000,           /**< "Framer" FIFO under-flow */
-    FRAMER_PRACH_SECTION_OF = 0x4000,  /**< PRACH section over-flow */
-    FRAMER_PRACH_SECTION_NF = 0x8000,  /**< PRACH section not-found */
-    AXI_TIMEOUT = 0x80000000,          /**< AXI time-out */
+    FRAMER_RESET_STATUS = 0x1,             /**< "Framer" reset status */
+    DEFRAMER_RESET_STATUS = 0x2,           /**< "De-framer" reset status */
+    DEFRAMER_IN_FIFO_OF = 0x100,           /**< "De-framer" input FIFO over-flow */
+    DEFRAMER_IN_FIFO_UF = 0x200,           /**< "De-framer" input FIFO under-flow */
+    DEFRAMER_ETH_CIRC_BUFF_OF = 0x400,     /**< "De-framer" Ethernet circular buffer over-flow */
+    DEFRAMER_ETH_CIRC_BUFF_PTR_OF = 0x800, /**< "De-framer" Ethernet circular buffer pointer over-flow */
+    FRAMER_OUT_FIFO_OF = 0x1000,           /**< "Framer" output FIFO over-flow */
+    FRAMER_OUT_FIFO_UF = 0x2000,           /**< "Framer" output FIFO under-flow */
+    FRAMER_PRACH_SECTION_OF = 0x4000,      /**< PRACH section over-flow */
+    FRAMER_PRACH_SECTION_NF = 0x8000,      /**< PRACH section not-found */
+    AXI_TIMEOUT = 0x80000000,              /**< AXI time-out */
 };
 
 /**
@@ -260,6 +262,15 @@ enum xorif_ip_mode
  * @brief Type definition for alarm interrupt call-back function.
  */
 typedef void (*isr_func_t)(uint32_t status);
+
+/**
+ * @brief Structure for Front-Haul specific system "constants".
+ */
+struct xorif_system_constants
+{
+    double FH_DECAP_DLY;    /**< See PG370. */
+    // TBD Add more as required
+};
 
 /**********************************************/
 /*** Function prototypes (common interface) ***/
@@ -421,20 +432,31 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
  * See PG370 for details.
  */
 int xorif_set_cc_time_advance(uint16_t cc,
-                              uint32_t deskew,
-                              uint32_t advance_ul,
-                              uint32_t advance_dl);
+                              double deskew,
+                              double advance_ul,
+                              double advance_dl);
 
 /**
  * @brief Set the uplink beam-id forward advance for the component carrier.
  * @param[in] cc Component carrier to configure
- * @param[in] advance Uplink beam-id forward advance (in nanoseconds)
+ * @param[in] advance Uplink beam-id forward advance (in microseconds)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure.
  * See PG370 for details.
  */
-int xorif_set_ul_bid_forward(uint16_t cc, uint32_t advance);
+int xorif_set_ul_bid_forward(uint16_t cc, double advance);
+
+/**
+ * @brief Set the uplink radio channel delay estimate for the component carrier.
+ * @param[in] cc Component carrier to configure
+ * @param[in] delay Delay estimate (in microseconds)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure.
+ * See PG370 for details.
+ */
+int xorif_set_ul_radio_ch_dly(uint16_t cc, double delay);
 
 /**
  * @brief Configure the downlink IQ compression for the component carrier.
@@ -766,7 +788,10 @@ int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t ma
  *      - Error code on failure
  * @note
  * The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16.
- * See #xorif_set_ru_ports for setting the spatial stream mask/values.
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * For mask-based mapping see #xorif_set_ru_ports & #xorif_set_ru_ports_alt1
+ * For table-based mapping see #xorif_set_ru_ports_table_mode and 
+ * #xorif_set_ru_ports_table
  */
 int xorif_set_fhi_eaxc_id(uint16_t du_bits,
                           uint16_t bs_bits,
@@ -785,7 +810,9 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * The RU bits defined by the call to #xorif_set_fhi_eaxc_id. The present function defines
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * This API relates to mask-based RU port mapping.
+ * The number of RU bits is set by #xorif_set_fhi_eaxc_id. The present function defines
  * additional masks/values which are used to split the RU ports into user/PRACH/SSB/...
  * spatial streams.
  * The ru_bits define the total size of the RU ID field; the ss_bits define the number of
@@ -817,7 +844,9 @@ int xorif_set_ru_ports(uint16_t ru_bits,
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * The RU bits defined by the call to #xorif_set_fhi_eaxc_id. The present function defines
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * This API relates to mask-based RU port mapping.
+ * The number of RU bits is set by #xorif_set_fhi_eaxc_id. The present function defines
  * additional masks/values which are used to split the RU ports into user/PRACH/SSB/...
  * spatial streams.
  * This function is an alternative to #xorif_set_ru_ports, which also provides mapping for
@@ -830,6 +859,68 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
                             uint16_t prach_val,
                             uint16_t ssb_val,
                             uint16_t lte_val);
+
+/**
+ * @brief Set the table mapping mode for the RU port id.
+ * @param[in] mode RU port id table mapping mode (see notes)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * This API relates to table-based RU port mapping.
+ * The "mode" parameter allows flexibility in how addresses are mapped to ports.
+ * For example, in mode 1 the address is constructed from 'direction + RU bits'.
+ * See PG370 for details.
+ * Mode 0 = 'RU bits'
+ * Mode 1 = 'direction + RU bits'
+ * Mode 2 = 'band-sector bits + RU bits'
+ * Mode 3 = 'direction + band-sector bits + RU bits'
+ * The number of band-sector / RU bits is defined by #xorif_set_fhi_eaxc_id.
+ */
+int xorif_set_ru_ports_table_mode(uint16_t mode);
+
+/**
+ * @brief Reset the RU ports mapping table.
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This sets the whole mapping table "type" value to "UNKNOWN" (i.e. not-used).
+ */
+int xorif_clear_ru_ports_table(void);
+
+/**
+ * @brief Assign one or more RU port id mappings.
+ * @param[in] address The base (external) address to use
+ * @param[in] port The base (internal) port to use
+ * @param[in] type The port type (see note for values)
+ * @param[in] number The number of port mappings in this assignment
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * This API relates to table-based RU port mapping.
+ * The "address" depends upon the mode (see #xorif_set_ru_ports_table_mode).
+ * The "port" is the internal port number to use.
+ * The "type" indicates which port group to use:
+ *      - 0 = PDXCH
+ *      - 1 = PUXCH
+ *      - 2 = SSB
+ *      - 3 = PRACH
+ *      - 4 - LTE
+ *      - 5..62 = user-defined
+ *      - 63 = UNKNOWN (uses to indicate not-used)
+ * The "number" indicates the number of mappings in the assignment.
+ * When number > 1, the address and port values are incremented for each mapping.
+ * For example, address 0 -> port 8, address 1 -> port 9, address 2 -> port 10,
+ * etc.
+ */
+int xorif_set_ru_ports_table(uint16_t address,
+                             uint16_t port,
+                             uint16_t type,
+                             uint16_t number);
 
 /**
  * @brief Enable / disable Front-Haul Interface interrupts.
@@ -852,16 +943,24 @@ int xorif_enable_fhi_interrupts(uint32_t mask);
 int xorif_register_fhi_isr(isr_func_t callback);
 
 /**
- * @brief Set system timing "constants".
- * @param[in] fh_decap_dly Estimate of downlink delay (in picoseconds).
- * @param[in] ul_radio_ch_dly Estimate of uplink delay (in picoseconds).
+ * @brief Set system "constants".
+ * @param[in] ptr Point to system constants structure
+ * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * These should be set before configuring component carriers.
- * See PG370 for details.
+ * These are system "constants" and should be set prior to configuring carriers.
  */
-int xorif_set_timing_constants(uint32_t fh_decap_dly, uint32_t ul_radio_ch_dly);
+int xorif_set_system_constants(const struct xorif_system_constants *ptr);
+
+/**
+ * @brief Set the symbol strobe source (internal or external)
+ * @param[in] source Source (0 = internally generated, 1 = externally generated)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_set_symbol_strobe_source(uint16_t source);
 
 #endif // XORIF_API_H
 

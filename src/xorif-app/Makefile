@@ -5,6 +5,10 @@ OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 CFLAGS += -I. -Werror -Wall -Wno-unused-function -std=gnu99 -g -DDEBUG
 
+ifeq ($(BF),1)
+CFLAGS += -DBF_INCLUDED
+endif
+
 ifeq ($(NO_HW),1)
 CFLAGS += -DNO_HW
 else
@@ -12,7 +16,7 @@ CFLAGS += -I../libxorif -I=/usr/include/xorif
 LDFLAGS += -L../libxorif
 LDLIBS += -lxorif
 ifeq ($(BF),1)
-CFLAGS += -I../libxobf -I=/usr/include/xobf -DBF_INCLUDED
+CFLAGS += -I../libxobf -I=/usr/include/xobf
 LDFLAGS += -L../libxobf
 LDLIBS += -lxobf
 endif

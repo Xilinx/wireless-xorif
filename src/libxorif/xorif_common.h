@@ -43,6 +43,7 @@
  * @brief Conditional compilation flags
  */
 //#define AUTO_ENABLE /**< When set, component carriers are enabled after configuration */
+#define ENABLE_INTERRUPTS /**< When set, interrupt code is enabled */
 
 // Control codes for coloured text in console
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -94,6 +95,19 @@
 #define ASSERT(expression)
 #endif
 
+#ifdef EXTRA_DEBUG
+#define LOG(log_file, format, ...)                    \
+    {                                                 \
+        if (log_file)                                 \
+        {                                             \
+            fprintf(log_file, format, ##__VA_ARGS__); \
+            fflush(log_file);                         \
+        }                                             \
+    }
+#else
+#define LOG(log_file, format, ...)
+#endif
+
 #ifndef NO_HW
 /**
  * @brief Structure for device related information, including libmetal pointers
@@ -116,6 +130,12 @@ extern struct xorif_cc_config cc_config[MAX_NUM_CC];
 #ifndef NO_HW
 extern struct xorif_device_info fh_device;
 #endif
+#ifdef EXTRA_DEBUG
+extern FILE *log_file;
+#endif
+
+// System "constants" (can be changed with API)
+extern struct xorif_system_constants fhi_sys_const;
 
 /***************************/
 /*** Function prototypes ***/

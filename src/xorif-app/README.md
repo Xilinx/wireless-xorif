@@ -9,7 +9,7 @@
 * The xorif-app can operate as either a "server" or a "client".
 	* As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
 	* As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
-	* Only the xorif-app in "server mode" can communicate directly with the h/w (via the libxorif C library).
+	* Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).
 
 ### Building
 
@@ -88,6 +88,7 @@ set : set...
         set time_advance <cc> <deskew> <advance_uplink> <advance_downlink>
         set ul_bid_forward <cc> <advance>
         set ul_bid_forward_fine <cc> <symbols> <cycles>
+        set ul_radio_ch_dly <cc> <delay>
         set [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
         set [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
         set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
@@ -103,9 +104,11 @@ set : set...
         set vlan <port> <id> <dei> <pcp>
         set eaxc_id <DU bits> <BS bits> <CC bits> <RU bits>
         set ru_ports <RU bits> <ss bits> <mask> <user_value> <prach_value> <ssb_value>
-        set fhi_enabled <mask>
-reset : reset [fhi] <mode>
-clear : clear [fhi_alarms | fhi_stats]
+        set ru_ports_table_mode <mode>
+        set ru_ports_table <address> <port> <type> [<number>]
+        set system_constants <fh_decap_dly> [...]
+reset : reset [fhi | bf] <mode>
+clear : clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]
 has : has [fhi | bf]
 configure : configure [fhi] <cc>
 enable : enable [fhi] <cc>
@@ -114,6 +117,7 @@ read_reg : read_reg [fhi] <name>
 read_reg_offset : read_reg_offset [fhi] <name> <offset>
 write_reg : write_reg [fhi] <name> <value>
 write_reg_offset : write_reg_offset [fhi] <name> <offset> <value>
+dump_reg : dump_reg [fhi]
 ecpri : (Use 'ecpri help' for additional help and usage information)
 peek : peek <address>
 poke : poke <address> <value>
@@ -161,6 +165,7 @@ bs_id_limit = 6
 cc_id_limit = 3
 ru_id_limit = 8
 ss_id_limit = 5
+ru_ports_map_width = 8
 ~~~
 
 * Many of the commands map directly on to the libxorif library API calls. Others, such as "help" and "quit" are handled locally.

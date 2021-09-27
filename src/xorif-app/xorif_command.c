@@ -60,6 +60,7 @@ static int read_reg(const char *request, char *response);
 static int read_reg_offset(const char *request, char *response);
 static int write_reg(const char *request, char *response);
 static int write_reg_offset(const char *request, char *response);
+static int dump_reg(const char *request, char *response);
 static int ecpri(const char *request, char *response);
 static int peek(const char *request, char *response);
 static int poke(const char *request, char *response);
@@ -69,8 +70,16 @@ int ecpri_func(int argc, char **argv, char *resp);
 static int schedule_bf(const char *request, char *response);
 static int load(const char *request, char *response);
 static int load_beam_weight_file(const char *name);
+#ifdef PRACH_CONFIG
 static int load_prach_config(const char *name);
-#endif
+#endif // PRACH_CONFIG
+#endif // BF_INCLUDED
+static int dump_fhi_register(char *response, const char *reg_name);
+static char * dump_reg_fhi(char *response);
+#ifdef BF_INCLUDED
+static int dump_bf_register(int bank, char *response, const char *reg_name);
+static char * dump_reg_bf(int bank, char *response);
+#endif // BF_INCLUDED
 
 // Variables
 static char *token[MAX_TOKENS];
@@ -109,6 +118,7 @@ static int num_tokens = 0;
                     "\n\tset time_advance <cc> <deskew> <advance_uplink> <advance_downlink>"                \
                     "\n\tset ul_bid_forward <cc> <advance>"                                                 \
                     "\n\tset ul_bid_forward_fine <cc> <symbols> <cycles>"                                   \
+                    "\n\tset ul_radio_ch_dly <cc> <delay>"                                                  \
                     "\n\tset [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
                     "\n\tset [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
                     "\n\tset [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"     \
@@ -124,11 +134,12 @@ static int num_tokens = 0;
                     "\n\tset vlan <port> <id> <dei> <pcp>"                                                  \
                     "\n\tset eaxc_id <DU bits> <BS bits> <CC bits> <RU bits>"                               \
                     "\n\tset ru_ports <RU bits> <ss bits> <mask> <user_value> <prach_value> <ssb_value>"    \
-                    "\n\tset fhi_enabled <mask>"
+                    "\n\tset ru_ports_table_mode <mode>"                                                    \
+                    "\n\tset ru_ports_table <address> <port> <type> [<number>]"                             \
+                    "\n\tset system_constants <fh_decap_dly> [...]"
 
 #ifdef BF_INCLUDED
-#define SET_USAGE_2 "\n\tset [bw_compression | bw_comp] <cc> <width> <method>" \
-                    "\n\tset bf_enabled <mask>"
+#define SET_USAGE_2 "\n\tset [bw_compression | bw_comp] <cc> <width> <method>"
 #endif
 
 #define ECPRI_USAGE "(Use 'ecpri help' for additional help and usage information)"
@@ -150,11 +161,12 @@ const static struct command command_set[] =
     {"enable", enable, "enable [fhi | bf] <cc>"},
     {"disable", disable, "disable [fhi | bf] <cc>"},
     {"schedule_bf", schedule_bf, "schedule_bf"},
-    {"load", load, "load [beam_weights | prach_config] <file>"},
-    {"read_reg", read_reg, "read_reg [fhi | bf] <name>"},
-    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf] <name> <offset>"},
-    {"write_reg", write_reg, "write_reg [fhi | bf] <name> <value>"},
-    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf] <name> <offset> <value>"},
+    {"load", load, "load [beam_weights] <file>"},
+    {"read_reg", read_reg, "read_reg [fhi | bf0 | bf1] <name>"},
+    {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi | bf0 | bf1] <name> <offset>"},
+    {"write_reg", write_reg, "write_reg [fhi | bf0 | bf1] <name> <value>"},
+    {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi | bf0 | bf1] <name> <offset> <value>"},
+    {"dump_reg", dump_reg, "dump_reg [fhi | bf0 | bf1]"},
 #else
     {"init", init, "init [<device_name>]"}, 
     {"finish", finish, "finish"},
@@ -170,6 +182,7 @@ const static struct command command_set[] =
     {"read_reg_offset", read_reg_offset, "read_reg_offset [fhi] <name> <offset>"},
     {"write_reg", write_reg, "write_reg [fhi] <name> <value>"},
     {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>"},
+    {"dump_reg", dump_reg, "dump_reg [fhi]"},
 #endif
     {"ecpri", ecpri, ECPRI_USAGE},
     {"peek", peek, "peek <address>"},
@@ -272,6 +285,26 @@ static unsigned int parse_integer(int tok_id, unsigned int *ptr)
     {
         //printf("Int: %d\n", u);
         *ptr = u;
+        return 1;
+    }
+    return 0;
+}
+
+/**
+ * @brief Simple parser for double precision floating point numbers.
+ * @param[in] tok_id The token id
+ * @param[in] ptr Pointer to double variable
+ * @returns
+ *      - 0 if no valid token was converted
+ *      - 1 if successful
+ */
+static unsigned int parse_double(int tok_id, double *ptr)
+{
+    double d;
+    if (sscanf(token[tok_id], "%lf", &d) == 1)
+    {
+        //printf("Double: %d\n", d);
+        *ptr = d;
         return 1;
     }
     return 0;
@@ -530,7 +563,7 @@ static int init(const char *request, char *response)
             {
                 if (has_bf())
                 {
-                    return xobf_init(NULL);
+                    return xobf_init(NULL, NULL);
                 }
             }
 #endif
@@ -549,7 +582,7 @@ static int init(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s, "bf"))
                 {
-                    return xobf_init(NULL);
+                    return xobf_init(NULL, NULL);
                 }
 #endif
             }
@@ -561,18 +594,46 @@ static int init(const char *request, char *response)
             const char *s2;
             if (parse_string(1, &s1) && parse_string(2, &s2))
             {
+                if (match(s2, "NULL"))
+                {
+                    s2 = NULL;
+                }
                 if (match(s1, "fhi"))
                 {
                     return xorif_init(s2);
                 }
-#ifdef BF_INCLUDED
+#if BF_INCLUDED
                 else if (match(s1, "bf"))
                 {
-                    return xobf_init(s2);
+                    return xobf_init(s2, NULL);
                 }
 #endif
             }
         }
+#ifdef BF_INCLUDED
+        else if (num_tokens == 4)
+        {
+            // init [bf] <device_name> <device name>
+            const char *s1;
+            const char *s2;
+            const char *s3;
+            if (parse_string(1, &s1) && parse_string(2, &s2) && parse_string(3, &s3))
+            {
+                if (match(s2, "NULL"))
+                {
+                    s2 = NULL;
+                }
+                if (match(s3, "NULL"))
+                {
+                    s3 = NULL;
+                }
+                if (match(s1, "bf"))
+                {
+                    return xobf_init(s2, s3);
+                }
+            }
+        }
+#endif
         return MALFORMED_COMMAND;
     }
 #endif
@@ -849,6 +910,7 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "cc_id_limit = %d\n", ptr->cc_id_limit);
                     response += sprintf(response, "ru_id_limit = %d\n", ptr->ru_id_limit);
                     response += sprintf(response, "ss_id_limit = %d\n", ptr->ss_id_limit);
+                    response += sprintf(response, "ru_ports_map_width = %d\n", ptr->ru_ports_map_width);
                     return SUCCESS;
                 }
                 else if (match(s, "fhi_alarms") && num_tokens == 2)
@@ -905,9 +967,9 @@ static int get(const char *request, char *response)
                         {
                             response += sprintf(response, "status = 0\n");
                             response += sprintf(response, "num_rbs = %d\n", config.num_rbs);
-                            response += sprintf(response, "num_rbs_ssb = %d\n", config.num_rbs_ssb);
                             response += sprintf(response, "numerology = %d\n", config.numerology);
                             response += sprintf(response, "extended_cp = %s\n", config.extended_cp ? "true" : "false");
+                            response += sprintf(response, "num_rbs_ssb = %d\n", config.num_rbs_ssb);
                             response += sprintf(response, "numerology_ssb = %d\n", config.numerology_ssb);
                             response += sprintf(response, "extended_cp_ssb = %s\n", config.extended_cp_ssb ? "true" : "false");
                             response += sprintf(response, "iq_comp_meth_ul = %d\n", config.iq_comp_meth_ul);
@@ -922,10 +984,11 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "iq_comp_meth_prach = %d\n", config.iq_comp_meth_prach);
                             response += sprintf(response, "iq_comp_width_prach = %d\n", config.iq_comp_width_prach);
                             response += sprintf(response, "iq_comp_mplane_prach = %d\n", config.iq_comp_mplane_prach);
-                            response += sprintf(response, "deskew = %d\n", config.deskew);
-                            response += sprintf(response, "advance_ul = %d\n", config.advance_ul);
-                            response += sprintf(response, "advance_dl = %d\n", config.advance_dl);
-                            response += sprintf(response, "ul_bid_forward = %d\n", config.ul_bid_forward);
+                            response += sprintf(response, "deskew = %g\n", config.deskew);
+                            response += sprintf(response, "advance_ul = %g\n", config.advance_ul);
+                            response += sprintf(response, "advance_dl = %g\n", config.advance_dl);
+                            response += sprintf(response, "ul_bid_forward = %g\n", config.ul_bid_forward);
+                            response += sprintf(response, "ul_radio_ch_dly = %g\n", config.ul_radio_ch_dly);
                             response += sprintf(response, "num_ctrl_per_sym_ul = %d\n", config.num_ctrl_per_sym_ul);
                             response += sprintf(response, "num_ctrl_per_sym_dl = %d\n", config.num_ctrl_per_sym_dl);
                             response += sprintf(response, "num_ctrl_per_sym_ssb = %d\n", config.num_ctrl_per_sym_ssb);
@@ -1028,6 +1091,7 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "cache_clk = %s\n", ptr->cache_clk ? "true" : "false");
                     response += sprintf(response, "aie_if_clk = %s\n", ptr->aie_if_clk ? "true" : "false");
                     response += sprintf(response, "max_bw_ids = %d\n", ptr->max_bw_ids);
+                    response += sprintf(response, "num_bfs = %d\n", ptr->num_bfs);
                     return SUCCESS;
                 }
                 else if (match(s, "bf_cc_config") && num_tokens == 3)
@@ -1042,11 +1106,13 @@ static int get(const char *request, char *response)
                         {
                             response += sprintf(response, "status = 0\n");
                             response += sprintf(response, "num_rbs = %d\n", config.num_rbs);
-                            response += sprintf(response, "num_rbs_ssb = %d\n", config.num_rbs_ssb);
                             response += sprintf(response, "numerology = %d\n", config.numerology);
                             response += sprintf(response, "extended_cp = %s\n", config.extended_cp ? "true" : "false");
+#ifdef MIXED_SSB_SUPPORT
+                            response += sprintf(response, "num_rbs_ssb = %d\n", config.num_rbs_ssb);
                             response += sprintf(response, "numerology_ssb = %d\n", config.numerology_ssb);
                             response += sprintf(response, "extended_cp_ssb = %s\n", config.extended_cp_ssb ? "true" : "false");
+#endif
                             response += sprintf(response, "bw_comp_meth = %d\n", config.bw_comp_meth);
                             response += sprintf(response, "bw_comp_width = %d\n", config.bw_comp_width);
                             return SUCCESS;
@@ -1064,10 +1130,14 @@ static int get(const char *request, char *response)
                         if (result == XORIF_SUCCESS)
                         {
                             response += sprintf(response, "status = 0\n");
-                            response += sprintf(response, "ud_symbol_offset = %d\n", config.ud_symbol_offset);
-                            response += sprintf(response, "ud_symbol_size = %d\n", config.ud_symbol_size);
+                            response += sprintf(response, "ud_symbol_offset_0 = %d\n", config.ud_symbol_offset_0);
+                            response += sprintf(response, "ud_symbol_size_0 = %d\n", config.ud_symbol_size_0);
+                            response += sprintf(response, "ud_symbol_offset_1 = %d\n", config.ud_symbol_offset_1);
+                            response += sprintf(response, "ud_symbol_size_1 = %d\n", config.ud_symbol_size_1);
+#ifdef MIXED_SSB_SUPPORT
                             response += sprintf(response, "ssb_symbol_offset = %d\n", config.ssb_symbol_offset);
                             response += sprintf(response, "ssb_symbol_size = %d\n", config.ssb_symbol_size);
+#endif
                             return SUCCESS;
                         }
                     }
@@ -1088,7 +1158,21 @@ static int get(const char *request, char *response)
                     if (result == XORIF_SUCCESS)
                     {
                         response += sprintf(response, "status = 0\n");
-                        response += sprintf(response, "cache_miss_count = %d\n", stats.cache_miss_count);
+                        response += sprintf(response, "cache_dl_miss_count = %d\n", stats.cache_dl_miss_count);
+                        response += sprintf(response, "cplane_dl_no_desc_count = %d\n", stats.cplane_dl_no_desc_count);
+                        response += sprintf(response, "bf_dl_re_mutex_count = %d\n", stats.bf_dl_re_mutex_count);
+                        response += sprintf(response, "aie_dl_count = %d\n", stats.aie_dl_count);
+                        response += sprintf(response, "bwm_dl_next_bidn_uf_count = %d\n", stats.bwm_dl_next_bidn_uf_count);
+                        response += sprintf(response, "cache_ul_miss_count = %d\n", stats.cache_ul_miss_count);
+                        response += sprintf(response, "cplane_ul_no_desc_count = %d\n", stats.cplane_ul_no_desc_count);
+                        response += sprintf(response, "bf_ul_re_mutex_count = %d\n", stats.bf_ul_re_mutex_count);
+                        response += sprintf(response, "aie_ul_count = %d\n", stats.aie_ul_count);
+                        response += sprintf(response, "dfe_ul_config_count = %d\n", stats.dfe_ul_config_count);
+                        response += sprintf(response, "bwm_ul_next_bidn_uf_count = %d\n", stats.bwm_ul_next_bidn_uf_count);
+                        response += sprintf(response, "prach_count = %d\n", stats.prach_count);
+#ifdef MIXED_SSB_SUPPORT
+                        response += sprintf(response, "ssb_count = %d\n", stats.ssb_count);
+#endif
                         return SUCCESS;
                     }
                 }
@@ -1186,6 +1270,7 @@ static int set(const char *request, char *response)
                     {
                         int result = xorif_set_cc_numerology_ssb(cc, val1, val2);
 #ifdef BF_INCLUDED
+#ifdef MIXED_SSB_SUPPORT
                         if (result == XORIF_SUCCESS)
                         {
                             if (has_bf())
@@ -1194,14 +1279,16 @@ static int set(const char *request, char *response)
                             }
                         }
 #endif
+#endif
                         return result;
                     }
                 }
                 else if (match(s, "time_advance") && num_tokens == 6)
                 {
                     // set time_advance <cc> <deskew> <advance up-link> <advance down-link>
-                    unsigned int cc, val1, val2, val3;
-                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    unsigned int cc;
+                    double val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_double(3, &val1) && parse_double(4, &val2) && parse_double(5, &val3))
                     {
                         return xorif_set_cc_time_advance(cc, val1, val2, val3);
                     }
@@ -1209,8 +1296,9 @@ static int set(const char *request, char *response)
                 else if (match(s, "ul_bid_forward") && num_tokens == 4)
                 {
                     // set ul_bid_forward <cc> <advance>
-                    unsigned int cc, val;
-                    if (parse_integer(2, &cc) && parse_integer(3, &val))
+                    unsigned int cc;
+                    double val;
+                    if (parse_integer(2, &cc) && parse_double(3, &val))
                     {
                         return xorif_set_ul_bid_forward(cc, val);
                     }
@@ -1225,6 +1313,16 @@ static int set(const char *request, char *response)
                         xorif_write_fhi_reg_offset("ORAN_CC_UL_BIDF_C_ABS_SYMBOL", 0x70 * cc, val1);
                         xorif_write_fhi_reg_offset("ORAN_CC_UL_BIDF_C_CYCLES", 0x70 * cc, val2);
                         return XORIF_SUCCESS;
+                    }
+                }
+                else if (match(s, "ul_radio_ch_dly") && num_tokens == 4)
+                {
+                    // set ul_radio_ch_dly <cc> <delay>
+                    unsigned int cc;
+                    double val;
+                    if (parse_integer(2, &cc) && parse_double(3, &val))
+                    {
+                        return xorif_set_ul_radio_ch_dly(cc, val);
                     }
                 }
                 else if ((match(s, "dl_iq_compression") || match(s, "dl_iq_comp")) && num_tokens == 5)
@@ -1497,6 +1595,52 @@ static int set(const char *request, char *response)
                         return xorif_set_ru_ports_alt1(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
                     }
                 }
+                else if (match(s, "ru_ports_table_mode") && num_tokens == 3)
+                {
+                    // set ru_ports_table_mode <mode>
+                    unsigned int mode;
+                    if (parse_integer(2, &mode))
+                    {
+                        return xorif_set_ru_ports_table_mode(mode);
+                    }
+                }
+                else if (match(s, "ru_ports_table") && num_tokens == 5)
+                {
+                    // set ru_ports_table <address> <port> <type>
+                    unsigned int address;
+                    unsigned int port;
+                    unsigned int type;
+                    if (parse_integer(2, &address) && parse_integer(3, &port) &&
+                        parse_integer(4, &type))
+                    {
+                        return xorif_set_ru_ports_table(address, port, type, 1);
+                    }
+                }
+                else if (match(s, "ru_ports_table") && num_tokens == 6)
+                {
+                    // set ru_ports_table <address> <port> <type> [<number>]
+                    unsigned int address;
+                    unsigned int port;
+                    unsigned int type;
+                    unsigned int number;
+                    if (parse_integer(2, &address) && parse_integer(3, &port) &&
+                        parse_integer(4, &type) && parse_integer(5, &number))
+                    {
+                        return xorif_set_ru_ports_table(address, port, type, number);
+                    }
+                }
+                else if (match(s, "system_constants") && num_tokens >= 3)
+                {
+                    // set system_constants <fh_decap_dly> [...]
+                    double val1;
+                    if (parse_double(2, &val1))
+                    {
+                        struct xorif_system_constants sys_const;
+                        sys_const.FH_DECAP_DLY = val1;
+                        // TBD Add more as required
+                        return xorif_set_system_constants(&sys_const);
+                    }
+                }
             }
         }
         return MALFORMED_COMMAND;
@@ -1525,7 +1669,7 @@ static int clear(const char *request, char *response)
     {
         if (num_tokens == 2)
         {
-            // clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]
+            // clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats | ru_ports_table]
             const char *s;
             if (parse_string(1, &s))
             {
@@ -1538,6 +1682,12 @@ static int clear(const char *request, char *response)
                 else if (match(s, "fhi_stats"))
                 {
                     xorif_clear_fhi_stats();
+                    response += sprintf(response, "status = 0\n");
+                    return SUCCESS;
+                }
+                else if (match(s, "ru_ports_table"))
+                {
+                    xorif_clear_ru_ports_table();
                     response += sprintf(response, "status = 0\n");
                     return SUCCESS;
                 }
@@ -1768,7 +1918,7 @@ static int read_reg(const char *request, char *response)
     {
         if (num_tokens == 3)
         {
-            // read_reg [fhi | bf] <name>
+            // read_reg [fhi | bf | bf0 | bf1] <name>
             const char *s1;
             const char *s2;
             if (parse_string(1, &s1) && parse_string(2, &s2))
@@ -1780,9 +1930,13 @@ static int read_reg(const char *request, char *response)
                     result = xorif_read_fhi_reg(s2, &val);
                 }
 #ifdef BF_INCLUDED
-                else if (match(s1, "bf"))
+                else if (match(s1, "bf") || match(s1, "bf0"))
                 {
-                    result = xobf_read_bf_reg(s2, &val);
+                    result = xobf_read_bf_reg(0, s2, &val);
+                }
+                else if (match(s1, "bf1"))
+                {
+                    result = xobf_read_bf_reg(1, s2, &val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1828,7 +1982,7 @@ static int read_reg_offset(const char *request, char *response)
     {
         if (num_tokens == 4)
         {
-            // read_reg_offset [fhi | bf] <name> <offset>
+            // read_reg_offset [fhi | bf | bf0 | bf1] <name> <offset>
             const char *s1;
             const char *s2;
             unsigned int offset;
@@ -1841,9 +1995,13 @@ static int read_reg_offset(const char *request, char *response)
                     result = xorif_read_fhi_reg_offset(s2, offset, &val);
                 }
 #ifdef BF_INCLUDED
-                else if (match(s1, "bf"))
+                else if (match(s1, "bf") || match(s1, "bf0"))
                 {
-                    result = xobf_read_bf_reg_offset(s2, offset, &val);
+                    result = xobf_read_bf_reg_offset(0, s2, offset, &val);
+                }
+                else if (match(s1, "bf1"))
+                {
+                    result = xobf_read_bf_reg_offset(1, s2, offset, &val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1889,7 +2047,7 @@ static int write_reg(const char *request, char *response)
     {
         if (num_tokens == 4)
         {
-            // write_reg [fhi | bf] <name> <value>
+            // write_reg [fhi | bf | bf0 | bf1] <name> <value>
             const char *s1;
             const char *s2;
             uint32_t val;
@@ -1901,9 +2059,13 @@ static int write_reg(const char *request, char *response)
                     result = xorif_write_fhi_reg(s2, val);
                 }
 #ifdef BF_INCLUDED
-                else if (match(s1, "bf"))
+                else if (match(s1, "bf") || match(s1, "bf0"))
                 {
-                    result = xobf_write_bf_reg(s2, val);
+                    result = xobf_write_bf_reg(0, s2, val);
+                }
+                else if (match(s1, "bf1"))
+                {
+                    result = xobf_write_bf_reg(1, s2, val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1941,7 +2103,7 @@ static int write_reg_offset(const char *request, char *response)
     {
         if (num_tokens == 5)
         {
-            // write_reg_offset [fhi | bf] <name> <offset> <value>
+            // write_reg_offset [fhi | bf | bf0 | bf1] <name> <offset> <value>
             const char *s1;
             const char *s2;
             unsigned int offset;
@@ -1954,9 +2116,13 @@ static int write_reg_offset(const char *request, char *response)
                     result = xorif_write_fhi_reg_offset(s2, offset, val);
                 }
 #ifdef BF_INCLUDED
-                else if (match(s1, "bf"))
+                else if (match(s1, "bf") || match(s1, "bf0"))
                 {
-                    result = xobf_write_bf_reg_offset(s2, offset, val);
+                    result = xobf_write_bf_reg_offset(0, s2, offset, val);
+                }
+                else if (match(s1, "bf1"))
+                {
+                    result = xobf_write_bf_reg_offset(1, s2, offset, val);
                 }
 #endif // BF_INCLUDED
                 else
@@ -1971,6 +2137,55 @@ static int write_reg_offset(const char *request, char *response)
         return MALFORMED_COMMAND;
     }
 #endif
+}
+
+/**
+ * @brief "dump_reg" command.
+ * @param[in] request Pointer to request string
+ * @param[in,out] response Pointer to response string
+ * @returns
+ *      - 0 if successful
+ *      - Error code if not successful
+ */
+static int dump_reg(const char *request, char *response)
+{
+    if (remote_target)
+    {
+        return send_to_target(request, response);
+    }
+#ifdef NO_HW
+    return NO_HARDWARE;
+#else
+    else
+    {
+        if (num_tokens == 2)
+        {
+            // dump_reg [fhi | bf | bf0 | bf1]
+            const char *s;
+            if (parse_string(1, &s))
+            {
+                if (match(s, "fhi"))
+                {
+                    response = dump_reg_fhi(response);
+                    return SUCCESS;
+                }
+#ifdef BF_INCLUDED
+                else if (match(s, "bf") || match(s, "bf0"))
+                {
+                    response = dump_reg_bf(0, response);
+                    return SUCCESS;
+                }
+                else if (match(s, "bf1"))
+                {
+                    response = dump_reg_bf(1, response);
+                    return SUCCESS;
+                }
+#endif // BF_INCLUDED
+            }
+        }
+        return MALFORMED_COMMAND;
+    }
+#endif // NO_HW
 }
 
 /**
@@ -2279,53 +2494,40 @@ static int schedule_bf(const char *request, char *response)
             // schedule_bf
             return xobf_schedule_bf();
         }
-        else if (num_tokens > 2)
+        else if (num_tokens >= 2)
         {
-            // schedule_bf [ud | ssb] {CxAx | Cx}
-            // e.g. schedule_bf ud C0 C1 C0
-            // e.g. schedule_bf ssb C0A0 C0A1 C1 C0A0 C0A1
-            const char *s;
-            if (parse_string(1, &s))
-            {
-                if (match(s, "ud") || match(s, "ssb"))
-                {
-                    struct xobf_schedule_info *ptr;
-                    int count = num_tokens - 2;
-                    ptr = calloc(count, sizeof(struct xobf_schedule_info));
-                    if (ptr)
-                    {
-                        for (int i = 0; i < count; ++i)
-                        {
-                            int cc, ag;
-                            if (sscanf(token[i + 2],"C%dA%d", &cc, &ag) == 2)
-                            {
-                                ptr[i].cc = cc;
-                                ptr[i].ag = ag;
-                            }
-                            else if (sscanf(token[i + 2],"C%d", &cc) == 1)
-                            {
-                                ptr[i].cc = cc;
-                                ptr[i].ag = 2; // NUM_ANTENNA_GROUPS
-                            }
-                            else
-                            {
-                                return MALFORMED_COMMAND;
-                            }
-                        }
+            // schedule_bf {CxAx | Cx}
+            // e.g. schedule_bf C0 C1 C0
+            // e.g. schedule_bf C0A0 C0A1 C1 C0A0 C0A1
 
-                        int result;
-                        if (match(s, "ud"))
-                        {
-                            result = xobf_populate_bf_schedule(count, ptr);
-                        }
-                        else
-                        {
-                            result = xobf_populate_bf_schedule_ssb(count, ptr);
-                        }
-                        free(ptr);
-                        return result;
+            struct xobf_schedule_info *ptr;
+            int count = num_tokens - 1;
+            ptr = calloc(count, sizeof(struct xobf_schedule_info));
+            if (ptr)
+            {
+                for (int i = 0; i < count; ++i)
+                {
+                    int cc, ag;
+                    if (sscanf(token[i + 1], "C%dA%d", &cc, &ag) == 2)
+                    {
+                        ptr[i].cc = cc;
+                        ptr[i].ag = ag;
+                    }
+                    else if (sscanf(token[i + 1], "C%d", &cc) == 1)
+                    {
+                        ptr[i].cc = cc;
+                        ptr[i].ag = 2; // NUM_ANTENNA_GROUPS
+                    }
+                    else
+                    {
+                        return MALFORMED_COMMAND;
                     }
                 }
+
+                int result = xobf_populate_bf_schedule(count, ptr);
+
+                free(ptr);
+                return result;
             }
         }
         return MALFORMED_COMMAND;
@@ -2356,7 +2558,7 @@ static int load(const char *request, char *response)
     {
         if (num_tokens == 3)
         {
-            // load [beam_weights | prach_config] <file>
+            // load [beam_weights] <file>
             const char *s1;
             const char *s2;
             if (parse_string(1, &s1) && parse_string(2, &s2))
@@ -2365,6 +2567,7 @@ static int load(const char *request, char *response)
                 {
                     return load_beam_weight_file(s2);
                 }
+#ifdef PRACH_CONFIG
                 else if (match(s1, "prach_config"))
                 {
                     if (match(s2, "null"))
@@ -2377,6 +2580,7 @@ static int load(const char *request, char *response)
                         return load_prach_config(s2);
                     }
                 }
+#endif
             }
         }
         return MALFORMED_COMMAND;
@@ -2565,6 +2769,7 @@ static int load_beam_weight_file(const char *name)
     return result;
 }
 
+#ifdef PRACH_CONFIG
 /**
  * @brief Load config data for beamformer PRACH processing.
  * @param name Name of file
@@ -2634,7 +2839,87 @@ static int load_prach_config(const char *name)
 
     return result;
 }
+#endif // PRACH_CONFIG
 #endif // NO_HW
 #endif // BF_INCLUDED
+
+#ifndef NO_HW
+static int dump_fhi_register(char *response, const char *reg_name)
+{
+    int num = 0;
+    int result;
+    uint32_t val = 0;
+    result = xorif_read_fhi_reg(reg_name, &val);
+    if (result == XORIF_SUCCESS)
+    {
+        num = sprintf(response, "%s = %d\n", reg_name, val);
+    }
+
+    return num;
+}
+
+static char * dump_reg_fhi(char *response)
+{
+    response += sprintf(response, "status = 0\n");
+
+    // Add registers to dump here...
+    // TODO
+
+    return response;
+}
+
+#ifdef BF_INCLUDED
+static int dump_bf_register(int bank, char *response, const char *reg_name)
+{
+    int num = 0;
+    int result;
+    uint32_t val = 0;
+    result = xobf_read_bf_reg(bank, reg_name, &val);
+    if (result == XORIF_SUCCESS)
+    {
+        num = sprintf(response, "%s = %d\n", reg_name, val);
+    }
+
+    return num;
+}
+
+static char * dump_reg_bf(int bank, char *response)
+{
+    response += sprintf(response, "status = 0\n");
+
+    // Add registers to dump here...
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_CACHE_DL_MISS");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_CPLANE_DL_NO_DESC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_BF_DL_RE_MUTEX");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_DL_IN_SYNC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_DL_OUT_SYNC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_DL_UF");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_BWM_DL_NEXT_BIDN_UF");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_CACHE_UL_MISS");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_CPLANE_UL_NO_DESC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_BF_UL_RE_MUTEX");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_UL_IN_SYNC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_UL_OUT_SYNC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_AIE_UL_UF");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_DFE_UL_CONFIG");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_BWM_UL_NEXT_BIDN_UF");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_SEQ_LEN_ERR");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_FORMAT_ERR");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_SCS_INVALID");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_NUM_SYM_INVALID");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_FD_CH_TIMEOUT");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_FD_ALLOC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_STARTPRBC_ERR");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_NUMPRBC_ERR");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_DFE_MISMATCH");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_PRACH_CMAC_INVALID");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_SSB_CACHE_MISS");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_SSB_CPLANE_NO_DESC");
+    response += dump_bf_register(bank, response, "BF_ERRORS_ERROR_SSB_BF_RE_MUTEX");
+
+    return response;
+}
+#endif // BF_INCLUDED
+#endif // NO_HW
 
 /** @} */

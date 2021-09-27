@@ -9,6 +9,12 @@ TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/
 PLNX_VER = $(shell printenv PETALINUX_VER)
 DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/usr/bin/dtc
 
+ifeq ($(PLNX_VER),2021.1)
+	YOCTO_BUILDTOOLS_EXTENDED = 1
+else ifeq ($(PLNX_VER),2021.2)
+	YOCTO_BUILDTOOLS_EXTENDED = 1
+endif
+
 ### CONFIGURATION SECTION ###
 
 # Define targets for "all" here
@@ -220,7 +226,7 @@ else ifeq ($(BOARD),vck190)
 	perl -p -i -e 's/^.*CONFIG_YOCTO_MACHINE_NAME.*/CONFIG_YOCTO_MACHINE_NAME="vck190-versal"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_versal_virt_defconfig"/' $(PLX_DIR)/project-spec/configs/config
 endif
-ifeq ($(PLNX_VER),2021.1)
+ifeq ($(YOCTO_BUILDTOOLS_EXTENDED),1)
 	echo CONFIG_YOCTO_BUILDTOOLS_EXTENDED=y >> $(PLX_DIR)/project-spec/configs/config
 endif
 

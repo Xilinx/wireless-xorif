@@ -38,18 +38,18 @@
 #define RE_PER_RB 12     /**< Number of REs per RB */
 
 // Configuration defaults
-#define DEFAULT_DESKEW_TIME 30       /**< Default deskew time in microseconds */
-#define DEFAULT_ADVANCE_UL 90        /**< Default uplink time advance in microseconds */
-#define DEFAULT_ADVANCE_DL 90        /**< Default downlink time advance in microseconds */
-#define DEFAULT_UL_BIDF 90000        /**< Default uplink beam-id forward in nanoseconds */
+#define DEFAULT_DESKEW_TIME 30.0     /**< Default deskew time in microseconds */
+#define DEFAULT_ADVANCE_UL 90.0      /**< Default uplink time advance in microseconds */
+#define DEFAULT_ADVANCE_DL 90.0      /**< Default downlink time advance in microseconds */
+#define DEFAULT_UL_BIDF 90.0         /**< Default uplink beam-id forward in microseconds */
 #define DEFAULT_CTRL_PER_SYM 64      /**< Default sections per symbol */
 #define DEFAULT_FRAMES_PER_SYM 15    /**< Default Ethernet frames per symbol */
 #define DEFAULT_CTRL_PER_SYM_SSB 5   /**< Default sections per symbol (SSB) */
 #define DEFAULT_FRAMES_PER_SYM_SSB 3 /**< Default Ethernet frames per symbol (SSB) */
 
 // Timing delay defaults
-#define DEFAULT_FH_DECAP_DLY 5000000    /**< Estimate of downlink delay (in picoseconds). See PG370. */
-#define DEFAUT_UL_RADIO_CH_DLY 30000000 /**< Estimate of uplink delay (in picoseconds). See PG370.*/
+#define DEFAULT_FH_DECAP_DLY 5.0    /**< Estimate of downlink delay (in microseconds). See PG370. */
+#define DEFAUT_UL_RADIO_CH_DLY 30.0 /**< Estimate of uplink delay (in microseconds). See PG370.*/
 
 #endif // XORIF_SYSTEM_H
 

@@ -22,4 +22,4 @@ See [here](../scripts/README.md) for more details of the build process.
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

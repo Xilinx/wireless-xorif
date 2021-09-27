@@ -127,6 +127,12 @@ if (( $( f_testMaskedValue $dipValue 0x01 ) != 0 )); then
    ${LOGGER} "Board is in LED Mode 2" 
 fi
 
+if (( $( f_testMaskedValue $dipValue 0x80 ) != 0 )); then
+   ${LOGGER} "Board is in Radio Loopback mode: enable framer"
+   ## This should be the Master board in the Demo. 
+   devmem 0xa0002000 32 0
+fi
+
 ###############################################################################
 ## Start the PTP demo
 ###############################################################################

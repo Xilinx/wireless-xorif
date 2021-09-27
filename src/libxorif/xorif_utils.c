@@ -48,6 +48,9 @@ typedef struct block block_t;
 // Tag value for free blocks
 #define FREE (-1)
 
+// Fake base address for debug "devmem"
+#define FAKE_BASE_ADDR 0xA0000000
+
 /**
  * @brief Comparator function for bsearch algorithm.
  * @param[in] key Key to look for
@@ -91,15 +94,16 @@ uint32_t read_reg_raw(void *io, const char *name, uint32_t addr)
     uint32_t value = ((uint32_t *)io)[addr / 4];
 #endif
 
-#ifdef DEBUG
+    TRACE("READ_REG: %s (0x%04X) => 0x%X (%u)\n", name, addr, value, value);
+
+#ifdef EXTRA_DEBUG
     if (xorif_trace == 3)
     {
-        // Special formatting option
-        printf("READ_REG:  %-35s (0x%04X)[%2d:%-2d] => 0x%X (%u)\n", name, addr, 0, 31, value, value);
+        LOG(log_file, "sw_driver_read(32'h%08X, 32'h%08X); // %s\n", addr, value, name);
     }
-    else
+    else if (xorif_trace == 4)
     {
-        TRACE("READ_REG: %s (0x%04X) => 0x%X (%u)\n", name, addr, value, value);
+        LOG(log_file, "devmem 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), name);
     }
 #endif
     return value;
@@ -123,15 +127,16 @@ void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value)
     ((uint32_t *)io)[addr / 4] = value;
 #endif
 
-#ifdef DEBUG
+    TRACE("WRITE_REG: %s (0x%04X) <= 0x%X (%u)\n", name, addr, value, value);
+
+#ifdef EXTRA_DEBUG
     if (xorif_trace == 3)
     {
-        // Special formatting option
-        printf("WRITE_REG: %-35s (0x%04X)[%2d:%-2d] <= 0x%X (%u)\n", name, addr, 0, 31, value, value);
+        LOG(log_file, "sw_driver_write(32'h%08X, 32'h%08X); // %s\n", addr, value, name);
     }
-    else
+    else if (xorif_trace == 4)
     {
-        TRACE("WRITE_REG: %s (0x%04X) <= 0x%X (%u)\n", name, addr, value, value);
+        LOG(log_file, "devmem 0x%08X 32 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), value, name);
     }
 #endif
 }
@@ -148,21 +153,23 @@ uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint
     }
 
     // Libmetal read
-    uint32_t value = (metal_io_read32((struct metal_io_region *)io, addr) & mask) >> shift;
+    uint32_t x = metal_io_read32((struct metal_io_region *)io, addr);
 #else
     // Fake read
-    uint32_t value = ((((uint32_t *)io)[addr / 4]) & mask) >> shift;
+    uint32_t x = ((uint32_t *)io)[addr / 4];
 #endif
+    uint32_t value = (x & mask) >> shift;
 
-#ifdef DEBUG
+    TRACE("READ_REG: %s (0x%04X)[%d:%d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+
+#ifdef EXTRA_DEBUG
     if (xorif_trace == 3)
     {
-        // Special formatting option
-        printf("READ_REG:  %-35s (0x%04X)[%2d:%-2d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+        LOG(log_file, "sw_driver_read(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
     }
-    else
+    else if (xorif_trace == 4)
     {
-        TRACE("READ_REG: %s (0x%04X)[%d:%d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+        LOG(log_file, "devmem 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), name);
     }
 #endif
 
@@ -193,15 +200,16 @@ void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_
     ((uint32_t *)io)[addr / 4] = x;
 #endif
 
-#ifdef DEBUG
+    TRACE("WRITE_REG: %s (0x%04X)[%d:%d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+
+#ifdef EXTRA_DEBUG
     if (xorif_trace == 3)
     {
-        // Special formatting option
-        printf("WRITE_REG: %-35s (0x%04X)[%2d:%-2d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+        LOG(log_file, "sw_driver_write(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
     }
-    else
+    else if (xorif_trace == 4)
     {
-        TRACE("WRITE_REG: %s (0x%04X)[%d:%d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
+        LOG(log_file, "devmem 0x%08X 32 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), value, name);
     }
 #endif
 }

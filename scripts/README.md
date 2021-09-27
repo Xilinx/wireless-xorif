@@ -40,7 +40,7 @@ vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25 
 The Linux and embedded software is built using PetaLinux tools and a Makefile.
 
 Build instructions:
-1. Source the appropriate PetaLinux tools setting script, e.g. `source /proj/petalinux/2020.1/petalinux-v2020.1_daily_latest/tool/petalinux-v2020.1-final/settings.csh`
+1. Source the appropriate PetaLinux tools setting script, e.g. `source /proj/petalinux/2021.1/petalinux-v2021.1_daily_latest/tool/petalinux-v2021.1-final/settings.csh`
 2. Copy the relevant hardware definition file (and rename if necessary) into `../xsa/<target>/system.xsa`
 3. Run `make <target>`
 
@@ -66,11 +66,13 @@ Notes:
 * Note 2: The "clean_all" target cleans all of the supported targets.
 It uses "mrproper" which performs a deep-clean of the project and removes the `<plnx-proj-root>/build/`, `<plnx-proj-root>/images/` and `<TMPDIR>` directories.
 
-The PetaLinux project directory is created as `../output/<target>_<tool version>/petalinux/`, e.g. `../output/zcu111_om5_exs_2020_1/petalinux/`.
+The PetaLinux project directory is created as `../output/<target>_<tool version>/petalinux/`, e.g. `../output/zcu111_om5_exs_2021_1/petalinux/`.
 
-The boot images and rootfs are created inside the PetaLinux project directory at the usual location, i.e. `<plnx-proj-root>/images/linux/`
+The boot images are created inside the PetaLinux project directory at the usual location, i.e. `<plnx-proj-root>/images/linux/`. Typically, these are the BOOT.BIN, image.ub and boot.scr files. These files can be copied over onto an appropriately formatted SD card.
 
-NOTE: From PetaLinux version 2021.1, the default build process builds an EXT4 based rootfs. The makefile creates a "wic" file which can be used to burn an SD-card with the boot partition (FAT32) and the rootfs partition (EXT4) using appropriate application software.
+NOTE: In PetaLinux version 2021.1, the default build process generates an EXT4 based rootfs. The makefile creates a "wic" file which can be used to burn an SD-card with the boot partition (FAT32) and the rootfs partition (EXT4) using appropriate application software. However, in PetaLinux version 2021.2, the generated boot images have reverted back to using ramdisk based rootfs.
+
+Consult PetaLinux user guide for details.
 
 For more information on PetaLinux refer to:
 * [UG1157](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2019_2/ug1157-petalinux-tools-command-line-guide.pdf)
@@ -83,4 +85,4 @@ petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --fpga images/linux
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

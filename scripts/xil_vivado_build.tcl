@@ -275,7 +275,7 @@ namespace eval ::roe::data {
   ## Module that can be added to visualise pulse signals on external IO with OSC
   ## This port is now avaiable from the IP, but this is an example of how code
   ## can be added, via TCL, if required. It will then be avaiable in IPI via
-  ## Module Reference Flow.
+  ## Module Referene Flow.
   ## ---------------------------------------------------------------------------
   proc add_toggle { board } {
 

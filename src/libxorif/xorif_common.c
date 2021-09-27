@@ -45,6 +45,15 @@ struct xorif_cc_config cc_config[MAX_NUM_CC];
 #ifndef NO_HW
 struct xorif_device_info fh_device;
 #endif
+#ifdef EXTRA_DEBUG
+FILE *log_file = NULL;
+#endif
+
+// System "constants" (can be changed with API)
+struct xorif_system_constants fhi_sys_const =
+{
+    .FH_DECAP_DLY = DEFAULT_FH_DECAP_DLY,      // Downlink delay estimate (see PG370)
+};
 
 /**
  * @brief Initialize the configuration data.
@@ -57,9 +66,9 @@ static void initialize_configuration(void)
     {
         // Populate structure with defaults
         cc_config[i].num_rbs = 0;
-        cc_config[i].num_rbs_ssb = 20;
         cc_config[i].numerology = 0;
         cc_config[i].extended_cp = 0;
+        cc_config[i].num_rbs_ssb = 20;
         cc_config[i].numerology_ssb = 0;
         cc_config[i].extended_cp_ssb = 0;
         cc_config[i].iq_comp_meth_ul = IQ_COMP_NONE;
@@ -78,6 +87,7 @@ static void initialize_configuration(void)
         cc_config[i].advance_ul = DEFAULT_ADVANCE_UL;
         cc_config[i].advance_dl = DEFAULT_ADVANCE_DL;
         cc_config[i].ul_bid_forward = DEFAULT_UL_BIDF;
+        cc_config[i].ul_radio_ch_dly = DEFAUT_UL_RADIO_CH_DLY;
         cc_config[i].num_ctrl_per_sym_ul = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_dl = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_ssb = DEFAULT_CTRL_PER_SYM_SSB;
@@ -96,6 +106,25 @@ void xorif_debug(int level)
 {
     TRACE("xorif_debug(%d)\n", level);
     xorif_trace = level;
+
+#ifdef EXTRA_DEBUG
+    if ((level >= 3) && (level <= 4))
+    {
+        if (!log_file)
+        {
+            // Create log-file, ignore errors
+            log_file = fopen("libxorif.log", "w");
+        }
+    }
+    else
+    {
+        if (log_file)
+        {
+            fclose(log_file);
+            log_file = NULL;
+        }
+    }
+#endif
 }
 
 int xorif_init(const char *fh_dev_name)
@@ -407,11 +436,11 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
 }
 
 int xorif_set_cc_time_advance(uint16_t cc,
-                              uint32_t deskew,
-                              uint32_t advance_ul,
-                              uint32_t advance_dl)
+                              double deskew,
+                              double advance_ul,
+                              double advance_dl)
 {
-    TRACE("xorif_set_cc_time_advance(%d, %u, %u, %u)\n", cc, deskew, advance_ul, advance_dl);
+    TRACE("xorif_set_cc_time_advance(%d, %g, %g, %g)\n", cc, deskew, advance_ul, advance_dl);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -426,9 +455,9 @@ int xorif_set_cc_time_advance(uint16_t cc,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_ul_bid_forward(uint16_t cc, uint32_t ul_bid_forward)
+int xorif_set_ul_bid_forward(uint16_t cc, double ul_bid_forward)
 {
-    TRACE("xorif_set_ul_bid_forward(%d, %u)\n", cc, ul_bid_forward);
+    TRACE("xorif_set_ul_bid_forward(%d, %g)\n", cc, ul_bid_forward);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -437,6 +466,21 @@ int xorif_set_ul_bid_forward(uint16_t cc, uint32_t ul_bid_forward)
     }
 
     cc_config[cc].ul_bid_forward = ul_bid_forward;
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_ul_radio_ch_dly(uint16_t cc, double delay)
+{
+    TRACE("xorif_set_ul_radio_ch_dly(%d, %g)\n", cc, delay);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
+    {
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+
+    cc_config[cc].ul_radio_ch_dly = delay;
 
     return XORIF_SUCCESS;
 }

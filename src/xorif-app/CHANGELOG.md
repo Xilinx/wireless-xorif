@@ -1,5 +1,12 @@
 # Change Log
 
+## Release 2021.2
+* Improved debug logging
+* Added RU port mapping table: 'set ru_ports_table_mmode', 'set ru_ports_table'
+* Added command to set system constants: 'set system_constants'
+* 'set time_advance' now take doubles rather than integer
+* Added command to set 'ul_radio_ch_dly' per component carrier
+
 ## Release 2021.1
 * Refactored library code
 * Changes for code coverage tools

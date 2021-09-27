@@ -512,6 +512,13 @@
 #define CFG_CONFIG_LIMIT_DU_W_WIDTH 0x4 /* 4 */
 #define CFG_CONFIG_LIMIT_DU_W_DEFAULT 0x0 /* 0 */
 
+/* Type = roSig  */
+#define CFG_CONFIG_MAP_TABLE_W_ADDR 0x114 /* 276 */
+#define CFG_CONFIG_MAP_TABLE_W_MASK 0xf /* 15 */
+#define CFG_CONFIG_MAP_TABLE_W_OFFSET 0x0 /* 0 */
+#define CFG_CONFIG_MAP_TABLE_W_WIDTH 0x4 /* 4 */
+#define CFG_CONFIG_MAP_TABLE_W_DEFAULT 0x0 /* 0 */
+
 
 /*-----------------------------------------------------------------------------
 * C Header bank register definitions for bank oran_radio_if_v2_0_fram 
@@ -978,6 +985,69 @@
 #define DEFM_USER_DATA_FILTER_W3_MASK_OFFSET 0x0 /* 0 */
 #define DEFM_USER_DATA_FILTER_W3_MASK_WIDTH 0x10 /* 16 */
 #define DEFM_USER_DATA_FILTER_W3_MASK_DEFAULT 0xffff /* 65535 */
+
+/* Type = rw  */
+#define DEFM_CID_FT_MAP_MODE_ADDR 0x6900 /* 26880 */
+#define DEFM_CID_FT_MAP_MODE_MASK 0x3 /* 3 */
+#define DEFM_CID_FT_MAP_MODE_OFFSET 0x0 /* 0 */
+#define DEFM_CID_FT_MAP_MODE_WIDTH 0x2 /* 2 */
+#define DEFM_CID_FT_MAP_MODE_DEFAULT 0x1 /* 1 */
+
+/* Type = wPlsH  */
+#define DEFM_CID_FT_WR_STROBE_ADDR 0x6904 /* 26884 */
+#define DEFM_CID_FT_WR_STROBE_MASK 0x80000000 /* 2147483648 */
+#define DEFM_CID_FT_WR_STROBE_OFFSET 0x1f /* 31 */
+#define DEFM_CID_FT_WR_STROBE_WIDTH 0x1 /* 1 */
+#define DEFM_CID_FT_WR_STROBE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_FT_WR_STREAM_PORTID_ADDR 0x6904 /* 26884 */
+#define DEFM_CID_FT_WR_STREAM_PORTID_MASK 0x7c0000 /* 8126464 */
+#define DEFM_CID_FT_WR_STREAM_PORTID_OFFSET 0x12 /* 18 */
+#define DEFM_CID_FT_WR_STREAM_PORTID_WIDTH 0x5 /* 5 */
+#define DEFM_CID_FT_WR_STREAM_PORTID_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_FT_WR_STREAM_TYPE_ADDR 0x6904 /* 26884 */
+#define DEFM_CID_FT_WR_STREAM_TYPE_MASK 0x7000 /* 28672 */
+#define DEFM_CID_FT_WR_STREAM_TYPE_OFFSET 0xc /* 12 */
+#define DEFM_CID_FT_WR_STREAM_TYPE_WIDTH 0x3 /* 3 */
+#define DEFM_CID_FT_WR_STREAM_TYPE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_FT_WR_TABLE_ADDR_ADDR 0x6904 /* 26884 */
+#define DEFM_CID_FT_WR_TABLE_ADDR_MASK 0x7ff /* 2047 */
+#define DEFM_CID_FT_WR_TABLE_ADDR_OFFSET 0x0 /* 0 */
+#define DEFM_CID_FT_WR_TABLE_ADDR_WIDTH 0xb /* 11 */
+#define DEFM_CID_FT_WR_TABLE_ADDR_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define DEFM_CID_FT_RD_STROBE_ADDR 0x6908 /* 26888 */
+#define DEFM_CID_FT_RD_STROBE_MASK 0x80000000 /* 2147483648 */
+#define DEFM_CID_FT_RD_STROBE_OFFSET 0x1f /* 31 */
+#define DEFM_CID_FT_RD_STROBE_WIDTH 0x1 /* 1 */
+#define DEFM_CID_FT_RD_STROBE_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define DEFM_CID_FT_RD_STREAM_PORTID_ADDR 0x6908 /* 26888 */
+#define DEFM_CID_FT_RD_STREAM_PORTID_MASK 0x7c0000 /* 8126464 */
+#define DEFM_CID_FT_RD_STREAM_PORTID_OFFSET 0x12 /* 18 */
+#define DEFM_CID_FT_RD_STREAM_PORTID_WIDTH 0x5 /* 5 */
+#define DEFM_CID_FT_RD_STREAM_PORTID_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define DEFM_CID_FT_RD_STREAM_TYPE_ADDR 0x6908 /* 26888 */
+#define DEFM_CID_FT_RD_STREAM_TYPE_MASK 0x7000 /* 28672 */
+#define DEFM_CID_FT_RD_STREAM_TYPE_OFFSET 0xc /* 12 */
+#define DEFM_CID_FT_RD_STREAM_TYPE_WIDTH 0x3 /* 3 */
+#define DEFM_CID_FT_RD_STREAM_TYPE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_CID_FT_RD_TABLE_ADDR_ADDR 0x6908 /* 26888 */
+#define DEFM_CID_FT_RD_TABLE_ADDR_MASK 0x7ff /* 2047 */
+#define DEFM_CID_FT_RD_TABLE_ADDR_OFFSET 0x0 /* 0 */
+#define DEFM_CID_FT_RD_TABLE_ADDR_WIDTH 0xb /* 11 */
+#define DEFM_CID_FT_RD_TABLE_ADDR_DEFAULT 0x0 /* 0 */
 
 
 /*-----------------------------------------------------------------------------

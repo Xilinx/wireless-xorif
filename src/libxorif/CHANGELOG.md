@@ -1,5 +1,14 @@
 # Change Log
 
+## Release 2021.2
+* Updated register map
+* Added RU port mapping table: xorif_set_ru_ports_table_mode(), xorif_clear_ru_ports_table(), xorif_set_ru_ports_table()
+* xorif_set_system_constants() API now uses 'struct' (currently only has FH_DECAP_DLY)
+* xorif_set_cc_time_advance() and xorif_set_ul_bid_forward() APIs now take doubles rather than uint32
+* xorif_set_ul_radio_ch_dly() API added to allow setting of UL_RADIO_CH_DLY per component carrier
+* Improved debug logging
+
+
 ## Release 2021.1
 * Refactored library code
 * Changes for code coverage tools

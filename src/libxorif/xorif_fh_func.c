@@ -31,10 +31,8 @@
 #include "xorif_utils.h"
 #include "oran_radio_if_v2_0_ctrl.h"
 
-// Constants for time advance calculation
-static uint32_t XRAN_TIMER_CLK = 2500;                    // Clock default value (gets set later from register)
-static uint32_t FH_DECAP_DLY = DEFAULT_FH_DECAP_DLY;      // Downlink delay estimate (see PG370)
-static uint32_t UL_RADIO_CH_DLY = DEFAUT_UL_RADIO_CH_DLY; // Uplink delay estimate (see PG370)
+// Clock default value (gets set later from register)
+static double XRAN_TIMER_CLK = 2500; 
 
 // The following const structure defines the register map for the Front Haul Interface
 // Note, this array is sorted for more efficient access
@@ -47,24 +45,25 @@ static const reg_info_t fhi_reg_map[] =
     {"CFG_CONFIG_LIMIT_DU_W", 0x110, 0xf, 0, 4},
     {"CFG_CONFIG_LIMIT_RU_I_W", 0x100, 0xf, 0, 4},
     {"CFG_CONFIG_LIMIT_RU_O_W", 0x104, 0xf, 0, 4},
+    {"CFG_CONFIG_MAP_TABLE_W", 0x114, 0xf, 0, 4},
     {"CFG_CONFIG_NO_OF_DEFM_ANTS", 0x20, 0xffff0000, 16, 16},
     {"CFG_CONFIG_NO_OF_ETH_PORTS", 0x24, 0x3ff, 0, 10},
     {"CFG_CONFIG_NO_OF_FRAM_ANTS", 0x20, 0xffff, 0, 16},
-    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP", 0x88, 0x20000, 17, 1}, // NEW
-    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_SELRE", 0x88, 0x200000, 21, 1}, // NEW
-    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS", 0x8c, 0xffff, 0, 16}, // NEW
-    {"CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED", 0x28, 0x20, 5, 1}, // NEW
-    {"CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP", 0x88, 0x10000, 16, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP", 0x80, 0x2, 1, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_SELRE", 0x80, 0x20, 5, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS", 0x84, 0xffff, 0, 16}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC", 0x80, 0x4, 2, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED", 0x28, 0x10, 4, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP", 0x80, 0x10, 4, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP_SELRE", 0x80, 0x40, 6, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS", 0x84, 0x3f0000, 16, 6}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU", 0x80, 0x8, 3, 1}, // NEW
-    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP", 0x80, 0x1, 0, 1}, // NEW
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP", 0x88, 0x20000, 17, 1},
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_SELRE", 0x88, 0x200000, 21, 1},
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS", 0x8c, 0xffff, 0, 16},
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED", 0x28, 0x20, 5, 1},
+    {"CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP", 0x88, 0x10000, 16, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP", 0x80, 0x2, 1, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_SELRE", 0x80, 0x20, 5, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS", 0x84, 0xffff, 0, 16},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC", 0x80, 0x4, 2, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED", 0x28, 0x10, 4, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP", 0x80, 0x10, 4, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP_SELRE", 0x80, 0x40, 6, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS", 0x84, 0x3f0000, 16, 6},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU", 0x80, 0x8, 3, 1},
+    {"CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP", 0x80, 0x1, 0, 1},
     {"CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX", 0x44, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_ETH_SS_BUF_PKT_PTRS", 0x70, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_ETH_SS_BUF_WORD_DEPTH", 0x6c, 0xffff, 0, 16},
@@ -80,7 +79,7 @@ static const reg_info_t fhi_reg_map[] =
     {"CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS", 0x50, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MIN_NUMEROLOGY", 0x38, 0x7, 0, 3},
     {"CFG_CONFIG_XRAN_PRACH_C_PORTS", 0x74, 0xffff, 0, 16},
-    {"CFG_CONFIG_XRAN_PRECODING_EXT3_PORT", 0x28, 0x40, 6, 1}, // NEW
+    {"CFG_CONFIG_XRAN_PRECODING_EXT3_PORT", 0x28, 0x40, 6, 1},
     {"CFG_CONFIG_XRAN_SUPPORT_MODE", 0x28, 0xf, 0, 4},
     {"CFG_CONFIG_XRAN_TIMER_CLK_PS", 0x5c, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM", 0x68, 0xffff, 0, 16},
@@ -117,6 +116,15 @@ static const reg_info_t fhi_reg_map[] =
     {"DEFM_CID_CC_SHIFT", 0x6020, 0xf, 0, 4},
     {"DEFM_CID_DU_MASK", 0x6034, 0x3f, 0, 6},
     {"DEFM_CID_DU_SHIFT", 0x6030, 0xf, 0, 4},
+    {"DEFM_CID_FT_MAP_MODE", 0x6900, 0x3, 0, 2},
+    {"DEFM_CID_FT_RD_STREAM_PORTID", 0x6908, 0x7c0000, 18, 5},
+    {"DEFM_CID_FT_RD_STREAM_TYPE", 0x6908, 0x7000, 12, 3},
+    {"DEFM_CID_FT_RD_STROBE", 0x6908, 0x80000000, 31, 1},
+    {"DEFM_CID_FT_RD_TABLE_ADDR", 0x6908, 0x7ff, 0, 11},
+    {"DEFM_CID_FT_WR_STREAM_PORTID", 0x6904, 0x7c0000, 18, 5},
+    {"DEFM_CID_FT_WR_STREAM_TYPE", 0x6904, 0x7000, 12, 3},
+    {"DEFM_CID_FT_WR_STROBE", 0x6904, 0x80000000, 31, 1},
+    {"DEFM_CID_FT_WR_TABLE_ADDR", 0x6904, 0x7ff, 0, 11},
     {"DEFM_CID_LTE_MASK", 0x6054, 0xff, 0, 8},
     {"DEFM_CID_LTE_VALUE", 0x6058, 0xff, 0, 8},
     {"DEFM_CID_PRACH_MASK", 0x6044, 0xff, 0, 8},
@@ -389,7 +397,7 @@ static void *ssb_data_buff_memory = NULL;
 #define DEFM_USER_DATA_FILTER_ADDR DEFM_USER_DATA_FILTER_W0_31_0_ADDR
 
 // Local function prototypes...
-static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, uint32_t time);
+static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double time);
 static uint16_t calc_data_buff_size(uint16_t num_rbs,
                                     enum xorif_iq_comp comp_mode,
                                     uint16_t comp_width,
@@ -415,28 +423,30 @@ int xorif_reset_fhi(uint16_t mode)
     WRITE_REG(FRAM_DISABLE, 1);
     WRITE_REG(DEFM_RESTART, 1);
 
-    // Reset enabled component carrier bit-map
-    WRITE_REG(ORAN_CC_ENABLE, 0);
-
-    // Clear alarms and counters
-    xorif_clear_fhi_alarms();
-    xorif_clear_fhi_stats();
-
-    // Initialize the memory allocation pointers
-    init_memory_allocator(&ul_ctrl_memory, 0, 1024 * fhi_caps.max_ul_ctrl_1kwords);
-    init_memory_allocator(&ul_ctrl_base_memory, 0, fhi_caps.max_subcarriers / RE_PER_RB);
-    init_memory_allocator(&dl_ctrl_memory, 0, 1024 * fhi_caps.max_dl_ctrl_1kwords);
-    init_memory_allocator(&dl_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
-    init_memory_allocator(&dl_data_buff_memory, 0, 1024 * fhi_caps.max_dl_data_1kwords);
-    init_memory_allocator(&ssb_ctrl_memory, 0, 512 * fhi_caps.max_ssb_ctrl_512words);
-    init_memory_allocator(&ssb_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
-    init_memory_allocator(&ssb_data_buff_memory, 0, 512 * fhi_caps.max_ssb_data_512words);
-
     if (mode == 0)
     {
         // Enable framer/de-framer
         WRITE_REG(FRAM_DISABLE, 0);
         WRITE_REG(DEFM_RESTART, 0);
+
+        // TODO should we wait for "ready" signal?
+
+        // Initialize the memory allocation pointers
+        init_memory_allocator(&ul_ctrl_memory, 0, 1024 * fhi_caps.max_ul_ctrl_1kwords);
+        init_memory_allocator(&ul_ctrl_base_memory, 0, fhi_caps.max_subcarriers / RE_PER_RB);
+        init_memory_allocator(&dl_ctrl_memory, 0, 1024 * fhi_caps.max_dl_ctrl_1kwords);
+        init_memory_allocator(&dl_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+        init_memory_allocator(&dl_data_buff_memory, 0, 1024 * fhi_caps.max_dl_data_1kwords);
+        init_memory_allocator(&ssb_ctrl_memory, 0, 512 * fhi_caps.max_ssb_ctrl_512words);
+        init_memory_allocator(&ssb_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+        init_memory_allocator(&ssb_data_buff_memory, 0, 512 * fhi_caps.max_ssb_data_512words);
+
+        // Reset component carrier enables
+        WRITE_REG(ORAN_CC_ENABLE, 0);
+
+        // Clear alarms and counters
+        xorif_clear_fhi_alarms();
+        xorif_clear_fhi_stats();
     }
 
     return XORIF_SUCCESS;
@@ -1010,6 +1020,52 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
     return XORIF_SUCCESS;
 }
 
+int xorif_set_ru_ports_table_mode(uint16_t mode)
+{
+    TRACE("xorif_set_ru_ports_table_mode(%d)\n", mode);
+    WRITE_REG(DEFM_CID_FT_MAP_MODE, mode);
+    return XORIF_SUCCESS;
+}
+
+int xorif_clear_ru_ports_table(void)
+{
+    TRACE("xorif_clear_ru_ports_table()\n");
+
+    // Reset RU port mapping table to UNKNOWN (i.e. not-used)
+    uint16_t width = fhi_caps.ru_ports_map_width;
+    if (width > 0)
+    {
+        uint16_t number = 1 << width;
+        for (int i = 0; i < number; ++i)
+        {
+            // Value: <write strobe> | <port = 0> | <type = 0x3F> | <address>
+            uint32_t value = (1 << 31) | (0 << 18) | (0x3F << 12) | (i & 0x7FF);
+            WRITE_REG_RAW(DEFM_CID_FT_WR_STROBE_ADDR, value);
+        }
+    }
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_ru_ports_table(uint16_t address,
+                             uint16_t port,
+                             uint16_t type,
+                             uint16_t number)
+{
+    TRACE("xorif_set_ru_ports_table(%d, %d, %d, %d)\n", address, port, type, number);
+
+    for (int i = 0; i < number; ++i)
+    {
+        // Value: <write strobe> | <port> | <type> | <address>
+        uint16_t a = address + i;
+        uint16_t p = port + i;
+        uint32_t value = (1 << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
+        WRITE_REG_RAW(DEFM_CID_FT_WR_STROBE_ADDR, value);
+    }
+
+    return XORIF_SUCCESS;
+}
+
 int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
 {
     TRACE("xorif_get_fhi_cc_alloc(%d, ...)\n", cc);
@@ -1062,6 +1118,26 @@ int xorif_register_fhi_isr(isr_func_t callback)
 {
     TRACE("xorif_register_fhi_isr(...)\n");
     fhi_callback = callback;
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_system_constants(const struct xorif_system_constants *ptr)
+{
+    TRACE("xorif_set_system_constants(...)\n");
+
+    if (!ptr)
+    {
+        return XORIF_NULL_POINTER;
+    }
+
+    memcpy(&fhi_sys_const, ptr, sizeof(struct xorif_system_constants));
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_symbol_strobe_source(uint16_t source)
+{
+    TRACE("xorif_set_symbol_strobe_source(%d)\n", source);
+    WRITE_REG(DEFM_USE_ONE_SYMBOL_STROBE, source);
     return XORIF_SUCCESS;
 }
 
@@ -1210,6 +1286,7 @@ void xorif_fhi_init_device(void)
     fhi_caps.cc_id_limit = READ_REG(CFG_CONFIG_LIMIT_CC_W);
     fhi_caps.ru_id_limit = READ_REG(CFG_CONFIG_LIMIT_RU_I_W);
     fhi_caps.ss_id_limit = READ_REG(CFG_CONFIG_LIMIT_RU_O_W);
+    fhi_caps.ru_ports_map_width = READ_REG(CFG_CONFIG_MAP_TABLE_W);
 
     // Set up any useful defaults, etc.
     XRAN_TIMER_CLK = fhi_caps.timer_clk_ps; //READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
@@ -1294,12 +1371,6 @@ int xorif_fhi_cc_disable(uint16_t cc)
 uint8_t xorif_fhi_get_enabled_mask(void)
 {
     return (uint8_t)READ_REG(ORAN_CC_ENABLE);
-}
-
-void xorif_fhi_set_enabled_mask(uint8_t mask)
-{
-    // TODO - need to deallocate memory if doing this way, or remove this API!
-    WRITE_REG(ORAN_CC_ENABLE, mask);
 }
 
 int xorif_fhi_init_cc_symbol_pointers(
@@ -1481,8 +1552,8 @@ int xorif_fhi_set_cc_iq_compression_prach(uint16_t cc,
 int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
                                              uint16_t numerology,
                                              uint16_t sym_per_slot,
-                                             uint32_t advance_ul,
-                                             uint32_t advance_dl)
+                                             double advance_ul,
+                                             double advance_dl)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
@@ -1491,13 +1562,15 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
     // Symbol period in picoseconds = 1e12 / num
     double sym_period = 1e12 / num;
 
-    // Adjust symbol period to be in clock cycles
+    // Adjust symbol period to be integer number of clock cycles
     // Note, rounding-down / truncating here
     uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
 
-    // Convert time advance from microseconds to picoseconds
-    uint32_t T2A_MIN_CP_UL = advance_ul * 1e6;
-    uint32_t TCP_ADV_DL = advance_dl * 1e6;
+    // Convert from microseconds to picoseconds
+    double TCP_ADV_DL = advance_dl * 1e6;
+    double T2A_MIN_CP_UL = advance_ul * 1e6;
+    double FH_DECAP_DLY = fhi_sys_const.FH_DECAP_DLY * 1e6;
+    double UL_RADIO_CH_DLY = cc_config[cc].ul_radio_ch_dly * 1e6;
 
     // Intermediate values used in the calculation
     uint32_t DL_CTRL_RXWIN_ADV_CP = (FH_DECAP_DLY + TCP_ADV_DL) / XRAN_TIMER_CLK;
@@ -1507,11 +1580,13 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
     WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD - (FH_DECAP_DLY / XRAN_TIMER_CLK));
     WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (DL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
     WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_ABS_SYMBOL, cc * 0x70, (DL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 1);
+    // From PG370, "+1 is due to aligning the DL BID forward to the current DL Data symbol"
 
     // Uplink settings
     WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD);
     WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
     WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_ABS_SYMBOL, cc * 0x70, (UL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 2);
+    // From PG370, "+2 is due to anticipating the UL BID forward with respect to the UL data symbol that is required"
 
     return XORIF_SUCCESS;
 }
@@ -1519,7 +1594,7 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
 int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
                                                  uint16_t numerology,
                                                  uint16_t sym_per_slot,
-                                                 uint32_t advance_dl)
+                                                 double advance)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
@@ -1528,12 +1603,13 @@ int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
     // Symbol period in picoseconds = 1e12 / num
     double sym_period = 1e12 / num;
 
-    // Adjust symbol period to be in clock cycles
+    // Adjust symbol period to be integer number of clock cycles
     // Note, rounding-down / truncating here
     uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
 
-    // Convert time advance from microseconds to picoseconds
-    uint32_t TCP_ADV_DL = advance_dl * 1e6;
+    // Convert from microseconds to picoseconds
+    double TCP_ADV_DL = advance * 1e6;
+    double FH_DECAP_DLY = fhi_sys_const.FH_DECAP_DLY * 1e6;
 
     // Intermediate values used in the calculation
     uint32_t DL_CTRL_RXWIN_ADV_CP = (FH_DECAP_DLY + TCP_ADV_DL) / XRAN_TIMER_CLK;
@@ -1542,6 +1618,7 @@ int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD - (FH_DECAP_DLY / XRAN_TIMER_CLK));
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (DL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
     WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_ABS_SYMBOL, cc * 0x70, (DL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 1);
+    // From PG370, "+1 is due to aligning the DL BID forward to the current DL Data symbol"
 
     return XORIF_SUCCESS;
 }
@@ -1549,7 +1626,7 @@ int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
 int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
                                        uint16_t numerology,
                                        uint16_t sym_per_slot,
-                                       uint32_t advance)
+                                       double advance)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
@@ -1558,22 +1635,22 @@ int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
     // Symbol period in picoseconds = 1e12 / num
     double sym_period = 1e12 / num;
 
-    // Adjust symbol period to be in clock cycles
+    // Adjust symbol period to be integer number of clock cycles
     // Note, rounding-down / truncating here
     uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
 
-    // Convert time advance from nanoseconds to picoseconds
-    uint32_t T2A_MIN_CP_UL = advance * 1e3;
+    // Convert from microseconds to picoseconds
+    double T2A_MIN_CP_UL = advance * 1e6;
+    //double UL_RADIO_CH_DLY = cc_config[cc].ul_radio_ch_dly * 1e6;
 
     // Intermediate values used in the calculation
-    //uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
-    // Apparently UL_RADIO_CH_DLY not relevant for UL BIDF calculation
     uint32_t UL_CTRL_RXWIN_ADV_CP = T2A_MIN_CP_UL / XRAN_TIMER_CLK;
+    //uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
 
     // BIDF settings
-    //WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_D_CYCLES, cc * 0x70, ACTUAL_PERIOD);
     WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
     WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_ABS_SYMBOL, cc * 0x70, (UL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 2);
+    // From PG370, "+2 is due to anticipating the UL BID forward with respect to the UL data symbol that is required"
 
     return XORIF_SUCCESS;
 }
@@ -1752,7 +1829,7 @@ int xorif_fhi_configure_cc(uint16_t cc)
  * @returns
  *      - Number of symbols required
  */
-static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, uint32_t time)
+static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double time)
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
@@ -1820,15 +1897,6 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
     return size;
 }
 
-int xorif_set_timing_constants(uint32_t fh_decap_dly, uint32_t ul_radio_ch_dly)
-{
-    // Update these system "constants"
-    FH_DECAP_DLY = fh_decap_dly;
-    UL_RADIO_CH_DLY = ul_radio_ch_dly;
-
-    return XORIF_SUCCESS;
-}
-
 /**
  * @brief Deallocate memory assigned to specific component carrier.
  * @param[in] cc Component carrier
@@ -1858,6 +1926,10 @@ static void init_fake_reg_bank(void)
     // Clear memory
     memset(fake_reg_bank, 0, sizeof(fake_reg_bank));
 
+    // Disable debug tracing of following WRITE_REG's, since they're all fake
+    int temp = xorif_trace;
+    xorif_trace = 0;
+
     // Set configuration registers to suitable values
     WRITE_REG(CFG_CONFIG_NO_OF_FRAM_ANTS, 8);
     WRITE_REG(CFG_CONFIG_NO_OF_DEFM_ANTS, 16);
@@ -1879,6 +1951,7 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_LIMIT_CC_W, 3);
     WRITE_REG(CFG_CONFIG_LIMIT_RU_I_W, 8);
     WRITE_REG(CFG_CONFIG_LIMIT_RU_O_W, 5);
+    WRITE_REG(CFG_CONFIG_MAP_TABLE_W, 8); // Use 0, 8, 11 ?
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP, 1);
@@ -1887,6 +1960,9 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
+
+    // Restore debug tracing level
+    xorif_trace = temp;
 }
 #endif
 

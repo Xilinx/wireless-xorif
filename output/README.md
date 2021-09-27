@@ -10,20 +10,20 @@ The flows generate output in specific subdirectories according to the build targ
 
 For example:
 ~~~
-├── zcu102_om5_exs_2020_1
+├── zcu102_om5_exs_2021_1
 │   ├── vivado
 │   └── petalinux
-├── zcu111_om5_exs_2020_1
+├── zcu111_om5_exs_2021_1
 │   ├── vivado
 │   └── petalinux
-├── zcu111_om5_exs_2020_2
+├── zcu111_om5_exs_2021_2
 │   ├── vivado
 │   └── petalinux
-└─── zcu111_om7_exs_2020_2
+└─── zcu111_om7_exs_2021_2
     ├── vivado
     └── petalinux
 ~~~
 
 ---
 
-Copyright (C) 2019 - 2020  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

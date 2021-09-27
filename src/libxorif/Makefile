@@ -7,7 +7,7 @@ VERSION = $(MAJOR).$(MINOR)
 SRCS = xorif_common.c xorif_fh_func.c xorif_utils.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG -DENABLE_INTERRUPTS
+CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG
 LDFLAGS += -Wl,--version-script linker.script
 LDLIBS += -lm
 
@@ -21,6 +21,10 @@ ifeq ($(GCOV),1)
 CFLAGS += -O0 -fprofile-arcs -ftest-coverage
 LDFLAGS += --coverage
 LDLIBS += -lgcov
+endif
+
+ifeq ($(DEBUG),1)
+CFLAGS += -DEXTRA_DEBUG
 endif
 
 all: build
