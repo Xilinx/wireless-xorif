@@ -15,6 +15,8 @@ else ifeq ($(PLNX_VER),2021.2)
 	YOCTO_BUILDTOOLS_EXTENDED = 1
 endif
 
+YOCTO_INITRAMFS_IMAGE = 0
+
 ### CONFIGURATION SECTION ###
 
 # Define targets for "all" here
@@ -80,6 +82,8 @@ override EXTRAS += perl-module-carp
 override EXTRAS += perl-module-lib
 #override EXTRAS += python3-modules
 #override EXTRAS += oran-codec
+#override EXTRAS += netconf
+#override EXTRAS += xmplane-app
 
 # Add help / usage guide here
 usage:
@@ -151,6 +155,37 @@ python3-modules:
 	perl -i -pe 's/^CONFIG_python3-cffi=n.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 	perl -i -pe 's/^# CONFIG_python3-pytest\s.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 	perl -i -pe 's/^CONFIG_python3-pytest=n.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+netconf:
+	@echo Adding changes for $@
+	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	echo CONFIG_libssh >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_libyang >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-libyang-python >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_libnetconf2 >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_sysrepo >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-sysrepo-python >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_netopeer2 >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_libssh\s.*\n/CONFIG_libssh=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_libyang\s.*\n/CONFIG_libyang=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-libyang-python\s.*\n/CONFIG_python3-libyang-python=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_libnetconf2\s.*\n/CONFIG_libnetconf2=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_sysrepo\s.*\n/CONFIG_sysrepo=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-sysrepo-python\s.*\n/CONFIG_python3-sysrepo-python=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_netopeer2\s.*\n/CONFIG_netopeer2=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+xmplane-app:
+	@echo Creating application $@
+	petalinux-create --project $(PLX_DIR) --type apps --template c --name $@ --enable --force
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
+	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	-cp -pr $(SRC_DIR)/$@/modules $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+	-cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	echo CONFIG_$@-dbg >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_$@-dev >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
 linux:
 	@echo Adding changes for $@
@@ -253,6 +288,11 @@ config2: config1 $(ROOTFS_Y) $(ROOTFS_N) $(EXTRAS)
 	@echo Configuring 2 $(PLX_DIR)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_HOSTNAME.*/CONFIG_SUBSYSTEM_HOSTNAME="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_PRODUCT.*/CONFIG_SUBSYSTEM_PRODUCT="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
+ifeq ($(YOCTO_INITRAMFS_IMAGE),1)
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-initramfs-image"/' $(PLX_DIR)/project-spec/configs/config
+else
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"/' $(PLX_DIR)/project-spec/configs/config
+endif
 ifeq ($(TARGET),vck190_hw_emu)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
 	sed -i '/CONFIG_SUBSYSTEM_INITRD_RAMDISK_LOADADDR/d' $(PLX_DIR)/project-spec/configs/config
@@ -294,7 +334,7 @@ ifeq ($(BOARD),vck190)
 else
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --fpga --force
 endif
-ifeq ($(PLNX_VER),2021.1)
+ifeq ($(YOCTO_INITRAMFS_IMAGE),1)
 	cd $(PLX_DIR); petalinux-package --wic --extra-bootfiles "ramdisk.cpio.gz.u-boot"
 	gzip -f $(PLX_DIR)/images/linux/*.wic
 endif

@@ -1,21 +1,30 @@
 # ORAN-Radio-Interface Project
 
-## IP documentation
+## IP Documentation
 This can be found on the [**oran_radio_if lounge**](https://www.xilinx.com/member/oran-radio-if.html). Registration is required for this site.
 
 ## Project Information
 
 This project contains the C LibMetal driver for the oran_radio_if IP. Additionally a C application is supplied demonstrating how to use the library to configure the IP. Full build instructions and scripts are provided for Vivado and Petalinux. 
 
-## Programming references
+## Programming References
 
-||Description|
+|Source|Description|
 |---|---|
 |[Register_Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the [**oran_radio_if lounge**](https://www.xilinx.com/member/oran-radio-if.html). The user guide, [**PG370**](https://www.xilinx.com/member/oran-radio-if.html) is also available for download. Registration required.|
 |[Library_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/libxorif)|Example of IP configuration using library calls. Includes full breakdown of IP register accesses. Note. this library contains C code that can be re-targeted for your application, if not using the library directly.|
 |[Library_C_Code](https://github.com/Xilinx/wireless-xorif/blob/master/src/libxorif/xorif_fh_func.c)|Direct link to xorif library C function definitions. Use in conjunction with link above.|
 |[Xorif_App_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app)|App overview and examples of App configuration files.|
 
+
+## GitHub Usage
+The master branch of the GitHub repository contains the latest version for the current Xilinx release.
+
+Releases are aligned with the Xilinx tools release schedule, at which point the archive is tagged e.g., v2021.2, and a "Release" is created on GitHub. All post-release fixes/changes are made on the master/HEAD.
+
+Therefore, the "latest" usable code for the current Xilinx release is normally master/HEAD.
+
+Code for previous Xilinx releases can of course be checked-out via commit hash, or by tag.
 
 ## Directory Structure
 

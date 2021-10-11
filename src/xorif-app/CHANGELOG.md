@@ -6,6 +6,8 @@
 * Added command to set system constants: 'set system_constants'
 * 'set time_advance' now take doubles rather than integer
 * Added command to set 'ul_radio_ch_dly' per component carrier
+* Removed legacy "ecpri" commands
+* Improved code coverage testing
 
 ## Release 2021.1
 * Refactored library code

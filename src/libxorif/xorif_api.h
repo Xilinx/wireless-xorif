@@ -59,6 +59,7 @@ enum xorif_error_codes
     XORIF_BUFFER_SPACE_EXCEEDED,        /**< Required buffer space exceeds available space */
     XORIF_INVALID_ETH_PORT,             /**< Invalid ethernet port number */
     XORIF_INVALID_EAXC_ID,              /**< The specified eAxC ID is invalid */
+    XORIF_INVALID_RU_PORT_MAPPING,      /**< Invalid RU port mapping assignment */
     XORIF_BEAMFORMER_ERRORS = -1400,    /**< (Place-holder for Beamformer-specific errors) */
     XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in Beamformer schedule table */
     XORIF_INVALID_AG,                   /**< Antenna group is not valid */

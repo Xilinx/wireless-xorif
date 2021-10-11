@@ -7,9 +7,9 @@
 * The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).
 
 * The xorif-app can operate as either a "server" or a "client".
-	* As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
-	* As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
-	* Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).
+    * As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
+    * As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
+    * Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).
 
 ### Building
 
@@ -24,12 +24,13 @@
 ### Usage
 
 ~~~
-Usage: [-bhv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"<command> {<arguments>}"}
+Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"<command> {<arguments>}"}
         -b Disable banner
         -c Client mode using the command line
         -e <device> Specified ethernet device (default eth0)
         -f <file> Client mode using the specified file
         -h Show help
+        -i Auto-initialize (server mode only)
         -n <ip_addr> Specified IP address (for client mode) (defaults to localhost)
         -p <port> Specified port (defaults to 5001)
         -s Server mode (default)
@@ -39,25 +40,30 @@ Usage: [-bhv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"<
 
 * Server mode:
     * Typical usage: `xorif-app -s`
-	* Use `-s` for server mode (note, this is the default and so not necessary in most cases)
-	* Use `-p` to change the TCP/IP port number
-	* Use `-e` to change the ethernet device name (when using time-stamping)
+    * Use `-s` for server mode (note, this is the default and so not necessary in most cases)
+    * Use `-p` to change the TCP/IP port number
+    * Use `-e` to change the ethernet device name (when using time-stamping)
+    * Use `-i` option to auto-initialize the server (instead of sending "init" command each time)
 
 * Client mode:
-	* Typical usage: `xorif-app -n 192.168.0.55 ...`
-	* Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version"`)
-	* Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
-	* Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
-	* Use `-p` to change the TCP/IP port number
-	* The xorif-app server needs to be initialized before , so first time: `xorif-app -c "init"`
+    * Typical usage: `xorif-app -n 192.168.0.55 ...`
+    * Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version"`)
+    * Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
+    * Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
+    * Use `-p` to change the TCP/IP port number
+    * The xorif-app server needs to be initialized before , so first time: `xorif-app -c "init"`
+
+* Note on server/client ports
+    * It is important that the xorif-app server and client are using the same port number to communicate
+    * The xorif-app server will not start if the specified port is not available (e.g. in use by another xorif-app instance). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.
 
 ### Command-Line Mode
 
 * This mode allows basic configuration and interaction with the system using the xorif-app command line.
 
 * Usage:
-	* Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-	* Issue a command using the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command e.g. `xorif-app -n 192.168.0.55 -c "get sw_version"`.
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
+    * Issue a command using the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command e.g. `xorif-app -n 192.168.0.55 -c "get sw_version"`.
 
 * It is also possible to send multiple commands on the same command line. Because of the way command line arguments are handled, each command should be enclosed in quotes, e.g. `xorif-app -n 192.168.0.55 -c "get sw_version" "get fhi_hw_version"`.
 
@@ -125,13 +131,14 @@ quit : quit
 ~~~
 
 * When executing a command, the app will echo the command and it's returned status, e.g. `set num_rbs 0 275 => status = 0`
-	* Status value of 0 means good/pass and any non-zero value is an error code
-	* Refer to the libxorif header file `xorif_api.h` for a list of error codes
+    * Status value of 0 means good/pass and any non-zero value is an error code
+    * Refer to the libxorif header file `xorif_api.h` for a list of error codes
 
 * The xorif-app server needs to be initialized before it can correctly accept most commands
-	* This can be done by sending the "init" command, e.g. `xorif-app -c "init"`
-	* Note, the xorif-app server only needs to be initialized once (after starting, or after sending a the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
+    * This can be done by sending the "init" command, e.g. `xorif-app -c "init"`
+    * Note, the xorif-app server only needs to be initialized once (after starting, or after sending a the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
     * The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. `xorif-app -c "init fhi a0000000.oran_radio_if"`.
+    * The server can also be set to "auto-initialize" with the `-i` option when starting the xorif-app server.
 
 * Some commands also provide additional information, for example...
 
@@ -177,16 +184,16 @@ ru_ports_map_width = 8
 * This mode allows basic configuration and interaction with the system using a text file.
 
 * Usage:
-	* Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-	* Start an instance of the xorif-app "client", specifying the IP address of the "server" and the command e.g. `xorif-app -n 192.168.0.55 -f config1.txt`
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
+    * Start an instance of the xorif-app "client", specifying the IP address of the "server" and the command e.g. `xorif-app -n 192.168.0.55 -f config1.txt`
 
 * File format:
-	* A plain text file
-	* A maximum of one command per line
-	* Line breaks in the middle of commands are not permitted
-	* Blank lines are skipped
-	* Hash characters ("#") can be used to provide comment lines in the file
-	* Command syntax is the same as described above
+    * A plain text file
+    * A maximum of one command per line
+    * Line breaks in the middle of commands are not permitted
+    * Blank lines are skipped
+    * Hash characters ("#") can be used to provide comment lines in the file
+    * Command syntax is the same as described above
 
 * Example file (input):
 
@@ -246,9 +253,9 @@ enable 1 => status = 0
 ### File Mode Simple Starter and PG370 examples
 
 * Simple uncompressed data example (input):
-	* This is a good config to get started with:
-	* Limit to one Component Carrier, 1 Spatial Stream and a limited number of RB'S.
-	* Compared to the detail in the PG370, using the API removes the need to manually program these registers.
+    * This is a good config to get started with:
+    * Limit to one Component Carrier, 1 Spatial Stream and a limited number of RB'S.
+    * Compared to the detail in the PG370, using the API removes the need to manually program these registers.
 
 ~~~
 # Set initial state
@@ -330,9 +337,9 @@ enable 2
 ### Debug Mode
 
 * The "debug" command can be used to enable library's "trace" feature
-	* Level 0: No trace, but errors are still reported
-	* Level 1: The trace feature shows main API calls and register read/writes
-	* Level 2: The trace feature shows debug extra information in addition to the main API calls and register read/writes
+    * Level 0: No trace, but errors are still reported
+    * Level 1: The trace feature shows main API calls and register read/writes
+    * Level 2: The trace feature shows debug extra information in addition to the main API calls and register read/writes
 * This can be a very useful feature for debugging or checking the component carrier configurations. For example...
 
 ~~~

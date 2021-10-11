@@ -393,8 +393,15 @@ static void *ssb_ctrl_memory = NULL;
 static void *ssb_data_ptrs_memory = NULL;
 static void *ssb_data_buff_memory = NULL;
 
+// Copy of RU bits and BS bits for use in RU ports table mapping
+uint16_t num_ru_bits = 0;
+uint16_t num_bs_bits = 0;
+
 // Start address of packet filter word
 #define DEFM_USER_DATA_FILTER_ADDR DEFM_USER_DATA_FILTER_W0_31_0_ADDR
+
+// Unknown "stream type" for RU port mapping (used to de-allocate the address)
+#define UNKNOWN_STREAM_TYPE 0x3F
 
 // Local function prototypes...
 static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double time);
@@ -840,6 +847,10 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
     // Note, RU ID bits are handled by an additional mask register, so that
     // spatial streams can be further split into user/PRACH/SSB/...
 
+    // Save RU bits and BS bits for use in RU ports table mapping
+    num_ru_bits = ru_bits;
+    num_bs_bits = bs_bits;
+
 #if DEBUG
     if (xorif_trace >= 2)
     {
@@ -886,12 +897,12 @@ int xorif_set_ru_ports(uint16_t ru_bits,
 
     if (ss_bits > ru_bits)
     {
-        PERROR("Invalid RU port assignment.\n");
+        PERROR("Invalid RU port assignment\n");
         return XORIF_INVALID_EAXC_ID;
     }
     else if (ss_bits > fhi_caps.ss_id_limit)
     {
-        PERROR("Invalid RU port assignment.\n");
+        PERROR("Invalid RU port assignment\n");
         return XORIF_INVALID_EAXC_ID;
     }
 
@@ -953,12 +964,12 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
 
     if (ss_bits > ru_bits)
     {
-        PERROR("Invalid RU port assignment.\n");
+        PERROR("Invalid RU port assignment\n");
         return XORIF_INVALID_EAXC_ID;
     }
     else if (ss_bits > fhi_caps.ss_id_limit)
     {
-        PERROR("Invalid RU port assignment.\n");
+        PERROR("Invalid RU port assignment\n");
         return XORIF_INVALID_EAXC_ID;
     }
 
@@ -1023,23 +1034,62 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
 int xorif_set_ru_ports_table_mode(uint16_t mode)
 {
     TRACE("xorif_set_ru_ports_table_mode(%d)\n", mode);
-    WRITE_REG(DEFM_CID_FT_MAP_MODE, mode);
-    return XORIF_SUCCESS;
+
+    if (mode > 3)
+    {
+        PERROR("Invalid RU port mapping mode\n");
+        return XORIF_INVALID_RU_PORT_MAPPING;
+    }
+
+    // Check that the table has sufficient address space for the mode
+    uint16_t required = 0;
+    if (mode == 0)
+    {
+        // mode 0: {RU} so width = ru_bits
+        required = num_ru_bits;
+    }
+    else if (mode == 1)
+    {
+        // mode 1: {DIR, RU} so width = 1 + ru_bits
+        required = 1 + num_ru_bits;
+    }
+    else if (mode == 2)
+    {
+        // mode 2: {BS, RU} so width = bs_bits + ru_bits
+        required = num_bs_bits + num_ru_bits;
+    }
+    else if (mode == 3)
+    {
+        // mode 3: {DIR, RU, BS} so width = 1 + bs_bits + ru_bits
+        required = 1 + num_bs_bits + num_ru_bits;
+    }
+
+    if ((fhi_caps.ru_ports_map_width == 0) || (required > fhi_caps.ru_ports_map_width))
+    {
+        PERROR("Insufficient RU port table memory for mode\n");
+        return XORIF_INVALID_RU_PORT_MAPPING;
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_FT_MAP_MODE, mode);
+        return XORIF_SUCCESS;
+    }
 }
 
 int xorif_clear_ru_ports_table(void)
 {
     TRACE("xorif_clear_ru_ports_table()\n");
 
-    // Reset RU port mapping table to UNKNOWN (i.e. not-used)
-    uint16_t width = fhi_caps.ru_ports_map_width;
-    if (width > 0)
+    // Note, no need to call this from reset
+
+    // Reset RU port mapping table to UNKNOWN_STREAM_TYPE (i.e. not-used)
+    if (fhi_caps.ru_ports_map_width > 0)
     {
-        uint16_t number = 1 << width;
-        for (int i = 0; i < number; ++i)
+        uint16_t size = 1 << fhi_caps.ru_ports_map_width;
+        for (int a = 0; a < size; ++a)
         {
-            // Value: <write strobe> | <port = 0> | <type = 0x3F> | <address>
-            uint32_t value = (1 << 31) | (0 << 18) | (0x3F << 12) | (i & 0x7FF);
+            // Value: <write strobe> | <port = 0> | <type = UNKNOWN_STREAM_TYPE> | <address>
+            uint32_t value = (1 << 31) | (0 << 18) | (UNKNOWN_STREAM_TYPE << 12) | (a & 0x7FF);
             WRITE_REG_RAW(DEFM_CID_FT_WR_STROBE_ADDR, value);
         }
     }
@@ -1054,16 +1104,31 @@ int xorif_set_ru_ports_table(uint16_t address,
 {
     TRACE("xorif_set_ru_ports_table(%d, %d, %d, %d)\n", address, port, type, number);
 
-    for (int i = 0; i < number; ++i)
+    if (fhi_caps.ru_ports_map_width > 0)
     {
-        // Value: <write strobe> | <port> | <type> | <address>
-        uint16_t a = address + i;
-        uint16_t p = port + i;
-        uint32_t value = (1 << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
-        WRITE_REG_RAW(DEFM_CID_FT_WR_STROBE_ADDR, value);
+        uint16_t size = 1 << fhi_caps.ru_ports_map_width;
+        for (int i = 0; i < number; ++i)
+        {
+            // Value: <write strobe> | <port> | <type> | <address>
+            uint16_t a = address + i;
+            uint16_t p = port + i;
+            uint32_t value = (1 << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
+
+            if (a < size)
+            {
+                WRITE_REG_RAW(DEFM_CID_FT_WR_STROBE_ADDR, value);
+            }
+            else
+            {
+                PERROR("Invalid RU port table address\n");
+                return XORIF_INVALID_RU_PORT_MAPPING;
+            }
+        }
+        return XORIF_SUCCESS;
     }
 
-    return XORIF_SUCCESS;
+    PERROR("Insufficient RU port table memory\n");
+    return XORIF_INVALID_RU_PORT_MAPPING;
 }
 
 int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
@@ -1646,6 +1711,7 @@ int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
     // Intermediate values used in the calculation
     uint32_t UL_CTRL_RXWIN_ADV_CP = T2A_MIN_CP_UL / XRAN_TIMER_CLK;
     //uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
+    // TODO - still not sure about the above, do we include the UL_RADIO_CH_DLY or not?
 
     // BIDF settings
     WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));

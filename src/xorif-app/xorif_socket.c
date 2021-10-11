@@ -49,7 +49,14 @@ int ip_socket_fd = -1;
 int udp_socket_fd = -1;
 int new_socket_fd = -1;
 
+// Enable LEGACY_ECPRI for the legacy EPCI message processing, etc.
+//#define LEGACY_ECPRI
+
+#ifdef LEGACY_ECPRI
 #define NUM_LISTEN_SOCKETS 2
+#else
+#define NUM_LISTEN_SOCKETS 1
+#endif
 #define IP_POLL_FD 0
 #define UDP_POLL_FD 1
 struct pollfd fds[NUM_LISTEN_SOCKETS];
@@ -67,8 +74,10 @@ static int open_connections(void)
     struct sockaddr_in addr;
     int err;
     int opt;
+#ifdef LEGACY_ECPRI
     struct ifreq ifreq;
     struct hwtstamp_config cfg;
+#endif
 
     // Creating TCP/IP socket file descriptor
     if ((ip_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -78,11 +87,15 @@ static int open_connections(void)
     }
 
     // Set socket options for address & port re-use
+    // Note:
+    // This code used to use SO_REUSEPORT, but this can causes orphan servers.
+    // However, keeping the SO_REUSEADDR to avoid blocking during TIME_WAIT.
     opt = 1;
-    err = setsockopt(ip_socket_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+    //err = setsockopt(ip_socket_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+    err = setsockopt(ip_socket_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     if (err < 0)
     {
-        PERROR("Socket options failed (SO_REUSEADDR | SO_REUSEPORT): %x\n", err);
+        PERROR("Socket options failed (SO_REUSEADDR): %x\n", err);
         return COMMS_ERROR;
     }
 
@@ -95,7 +108,7 @@ static int open_connections(void)
     // Bind socket to the port
     if (bind(ip_socket_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
     {
-        PERROR("Socket bind failed\n");
+        PERROR("Socket bind failed (check that the port is not already in use)\n");
         return COMMS_ERROR;
     }
 
@@ -110,6 +123,7 @@ static int open_connections(void)
     fds[IP_POLL_FD].fd = ip_socket_fd;
     fds[IP_POLL_FD].events = POLLIN;
 
+#ifdef LEGACY_ECPRI
     // Creating UDP socket file descriptor
     if ((udp_socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
@@ -171,7 +185,6 @@ static int open_connections(void)
         }
     }
 
-#ifndef NO_HW
     // Bind this socket to a particular device!
     memset(&ifreq, 0, sizeof(ifreq));
     snprintf(ifreq.ifr_name, sizeof(ifreq.ifr_name) - 1, "%s", eth_device_name);
@@ -180,7 +193,6 @@ static int open_connections(void)
         PERROR("UDP device bind failed (SO_BINDTODEVICE): %x\n", errno);
         return COMMS_ERROR;
     }
-#endif
 
     // Set-up address
     memset(&addr, 0, sizeof(addr));
@@ -198,6 +210,7 @@ static int open_connections(void)
     // Add to poll structure
     fds[UDP_POLL_FD].fd = sock_ip;
     fds[UDP_POLL_FD].events = POLLIN;
+#endif // LEGACY_ECPRI
 
     return SUCCESS;
 }
@@ -287,7 +300,11 @@ int do_socket(void)
     int ret;
 
     // Open connections
-    open_connections();
+    if (open_connections() != SUCCESS)
+    {
+        PERROR("Failed to open connection\n");
+        return COMMS_ERROR;
+    }
 
     // TODO need to decide how to handle errors here, stop or continue?
     while (!quit)
@@ -336,6 +353,7 @@ int do_socket(void)
             // Close connection
             close(new_socket_fd);
         }
+#ifdef LEGACY_ECPRI
         else if (fds[UDP_POLL_FD].revents & (POLLIN | POLLERR))
         {
             // Handle UDP socket events...
@@ -345,6 +363,7 @@ int do_socket(void)
                 PERROR("Error processing ECPRI protocol (%d)\n", result);
             }
         }
+#endif
     }
 
     // Close connections

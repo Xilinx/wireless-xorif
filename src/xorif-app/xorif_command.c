@@ -61,11 +61,15 @@ static int read_reg_offset(const char *request, char *response);
 static int write_reg(const char *request, char *response);
 static int write_reg_offset(const char *request, char *response);
 static int dump_reg(const char *request, char *response);
+#ifdef LEGACY_ECPRI
 static int ecpri(const char *request, char *response);
+#endif // LEGACY_ECPRI
 static int peek(const char *request, char *response);
 static int poke(const char *request, char *response);
 static int debug(const char *request, char *response);
+#ifdef LEGACY_ECPRI
 int ecpri_func(int argc, char **argv, char *resp);
+#endif // LEGACY_ECPRI
 #ifdef BF_INCLUDED
 static int schedule_bf(const char *request, char *response);
 static int load(const char *request, char *response);
@@ -184,7 +188,9 @@ const static struct command command_set[] =
     {"write_reg_offset", write_reg_offset, "write_reg_offset [fhi] <name> <offset> <value>"},
     {"dump_reg", dump_reg, "dump_reg [fhi]"},
 #endif
+#ifdef LEGACY_ECPRI
     {"ecpri", ecpri, ECPRI_USAGE},
+#endif
     {"peek", peek, "peek <address>"},
     {"poke", poke, "poke <address> <value>"},
     {"quit", quit, "quit"},
@@ -2188,6 +2194,7 @@ static int dump_reg(const char *request, char *response)
 #endif // NO_HW
 }
 
+#ifdef LEGACY_ECPRI
 /**
  * @brief "ecpri" command.
  * @param[in] request Pointer to request string
@@ -2203,6 +2210,7 @@ static int ecpri(const char *request, char *response)
     int result = ecpri_func(num_tokens - 1, &token[1], response);
     return result;
 }
+#endif
 
 /**
  * @brief "peek" command.
@@ -2643,16 +2651,10 @@ static int load_beam_weight_file(const char *name)
     int comp_width = 12;
     int comp_method = 1;
     int comp_param = 0;
-    int num_weights = 32;
-    int ss = 0;
-    int type = 0;
-    int dir = 0;
-    int cc = 0;
-    int srb = 0;
-    int nrb = 0;
-    int sym = 0;
+    int num_weights = 64;
     uint32_t *data = NULL;
-    int count;
+    int count = 0;
+    int vector = 0;
     int i_val, q_val;
 
     // Open file
@@ -2682,10 +2684,6 @@ static int load_beam_weight_file(const char *name)
         {
             // Info entry mode
             mode = 0;
-
-            // Set "type" to -1. If it gets set to real value later then we'll
-            // know that a cache-based BMV is being specified.
-            type = -1;
         }
         else if (mode == 0)
         {
@@ -2693,13 +2691,13 @@ static int load_beam_weight_file(const char *name)
             sscanf(buff, "comp_width =%d", &comp_width);
             sscanf(buff, "comp_method =%d", &comp_method);
             sscanf(buff, "comp_param =%d", &comp_param);
-            sscanf(buff, "ss =%d", &ss);
-            sscanf(buff, "type =%d", &type);
-            sscanf(buff, "dir =%d", &dir);
-            sscanf(buff, "cc =%d", &cc);
-            sscanf(buff, "srb =%d", &srb);
-            sscanf(buff, "nrb =%d", &nrb);
-            sscanf(buff, "sym =%d", &sym);
+            //sscanf(buff, "ss =%d", &ss);
+            //sscanf(buff, "type =%d", &type);
+            //sscanf(buff, "dir =%d", &dir);
+            //sscanf(buff, "cc =%d", &cc);
+            //sscanf(buff, "srb =%d", &srb);
+            //sscanf(buff, "nrb =%d", &nrb);
+            //sscanf(buff, "sym =%d", &sym);
 
             // The "num_weights" always precedes the weight data
             if (sscanf(buff, "num_weights =%d", &num_weights) == 1 && num_weights > 1)
@@ -2726,28 +2724,12 @@ static int load_beam_weight_file(const char *name)
             }
             if (count == num_weights)
             {
-                if (beam_id == 0)
-                {
-                    // Cache-based SSB BMV (no external store)
-                    result = xobf_load_bf_beam_weights_alt2(beam_id, comp_width, comp_method, comp_param, cc, sym, srb, nrb, num_weights, data);
-                }
-                else
-                {
-                    if (type == -1)
-                    {
-                        // Normal (external store)
-                        result = xobf_load_bf_beam_weights(beam_id, comp_width, comp_method, comp_param, num_weights, data);
-                    }
-                    else
-                    {
-                        // Cache-based BMV (no external store)
-                        result = xobf_load_bf_beam_weights_alt1(beam_id, comp_width, comp_method, comp_param, ss, dir, type, num_weights, data);
-                    }
-                }
+                // Load beam-weight vector
+                result = xobf_load_bf_beam_weights(beam_id, comp_width, comp_method, comp_param, num_weights, data);
 
                 if (result == XORIF_SUCCESS)
                 {
-                    ++count;
+                    ++vector; // Count of successfully loaded vectors
                 }
                 else
                 {
@@ -2765,6 +2747,8 @@ static int load_beam_weight_file(const char *name)
 
     // Close file
     fclose(fp);
+
+    TRACE("%d beam-weight vectors successfully loaded\n", vector);
 
     return result;
 }

@@ -7,7 +7,7 @@
 * xorif_set_cc_time_advance() and xorif_set_ul_bid_forward() APIs now take doubles rather than uint32
 * xorif_set_ul_radio_ch_dly() API added to allow setting of UL_RADIO_CH_DLY per component carrier
 * Improved debug logging
-
+* Improved code coverage testing
 
 ## Release 2021.1
 * Refactored library code

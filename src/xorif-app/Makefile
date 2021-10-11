@@ -1,6 +1,6 @@
 APP = xorif-app
 
-SRCS = xorif_app.c xorif_file.c xorif_socket.c xorif_command.c ecpri_proto.c ecpri.c
+SRCS = xorif_app.c xorif_file.c xorif_socket.c xorif_command.c #ecpri_proto.c ecpri.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 CFLAGS += -I. -Werror -Wall -Wno-unused-function -std=gnu99 -g -DDEBUG

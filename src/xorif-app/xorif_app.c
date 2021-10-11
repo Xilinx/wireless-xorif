@@ -76,12 +76,13 @@ int main(int argc, char *argv[])
     int mode = SERVER_MODE;
     int do_help = 0;
     int do_banner = 1;
+    int do_init = 0;
     const char *file = "";
     int opt;
 
     // Process command line options
     opterr = 0;
-    while ((opt = getopt(argc, argv, "bce:f:hn:p:svBF")) != -1)
+    while ((opt = getopt(argc, argv, "bce:f:hin:p:svBF")) != -1)
     {
         switch (opt)
         {
@@ -102,6 +103,9 @@ int main(int argc, char *argv[])
         case 'h':
             do_help = 1;
             break;
+        case 'i':
+            do_init = 1;
+            break;
         case 'n':
             ip_addr_name = optarg;
             break;
@@ -109,7 +113,7 @@ int main(int argc, char *argv[])
             if (sscanf(optarg, "%d", &port) != 1)
             {
                 fprintf(stderr, "Invalid value for '-p' option\n");
-                do_help = 1;
+                do_help = -1;
             }
             break;
         case 's':
@@ -137,35 +141,36 @@ int main(int argc, char *argv[])
             {
                 fprintf(stderr, "Unknown option character '\\x%x'\n", optopt);
             }
-            do_help = 1;
+            do_help = -1;
             break;
         }
     }
 
     // Process command line non-option arguments
-    if (do_banner)
+    if (mode != CMD_LINE_MODE)
     {
         for (; optind < argc; ++optind)
         {
             fprintf(stderr, "Unknown argument '%s'\n", argv[optind]);
-            do_help = 1;
+            do_help = -1;
         }
     }
 
     if (do_help)
     {
-        printf("Usage: [-bhv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {\"<command> {<arguments>}\"}\n");
+        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {\"<command> {<arguments>}\"}\n");
         printf("\t-b Disable banner\n");
         printf("\t-c Client mode using the command line\n");
         printf("\t-e <device> Specified ethernet device (default eth0)\n");
         printf("\t-f <file> Client mode using the specified file\n");
         printf("\t-h Show help\n");
+        printf("\t-i Auto-initialize (server mode only)\n");
         printf("\t-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)\n");
         printf("\t-p <port> Specified port (defaults to 5001)\n");
         printf("\t-s Server mode (default)\n");
         printf("\t-v Verbose\n");
         printf("\t<command> {<arguments>} For command line mode only\n");
-        return FAILURE;
+        return (do_help > 0) ? SUCCESS : FAILURE;
     }
 
     if (do_banner)
@@ -228,8 +233,15 @@ int main(int argc, char *argv[])
         fprintf(stderr, "No hardware\n");
         return FAILURE;
 #else
-        remote_host = 1;
         remote_target = 0;
+        if (do_init)
+        {
+            // Send "init" command locally
+            TRACE("Sending 'init' command locally\n");
+            remote_host = 0;
+            do_command("init");
+        }
+        remote_host = 1;
 
 #ifdef TEST_CALLBACK
         // Test register call-backs
@@ -239,6 +251,7 @@ int main(int argc, char *argv[])
 #endif
 #endif
 
+#ifdef USE_PIDFILE
         // Create pid file for server mode operation
         FILE *fp = fopen(pid_file, "w");
         if (fp)
@@ -247,11 +260,14 @@ int main(int argc, char *argv[])
             fprintf(fp, "%d\n", pid);
             fclose(fp);
         }
+#endif
 
         int result = do_socket();
 
+#ifdef USE_PIDFILE
         // Delete pid file before exit
         remove(pid_file);
+#endif
 
         return result;
 #endif
