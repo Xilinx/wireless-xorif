@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['magic',['magic',['../structecpri__header__s.html#a107ec590700d7fcb1baf8b0362193147',1,'ecpri_header_s']]],
   ['main',['main',['../group__xorif-app.html#ga0ddf1224851353fc92bfbff6f499fa97',1,'xorif_app.c']]],
   ['malformed_5fcommand',['MALFORMED_COMMAND',['../group__xorif-app.html#ggabfd51332ef0e0ba71f951a69e68e06bea5382d3b5bc7beb68f6b1325962c4c71e',1,'xorif_app.h']]],
   ['mask',['mask',['../structreg__info.html#a0aa6eab66e00ccb758a637628f97886a',1,'reg_info']]],

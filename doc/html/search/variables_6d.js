@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['magic',['magic',['../structecpri__header__s.html#a107ec590700d7fcb1baf8b0362193147',1,'ecpri_header_s']]],
   ['mask',['mask',['../structreg__info.html#a0aa6eab66e00ccb758a637628f97886a',1,'reg_info']]],
   ['max_5fcc',['max_cc',['../structxorif__caps.html#a0a749cdbf170fcf46b81063370463888',1,'xorif_caps']]],
   ['max_5fctrl_5fsymbols',['max_ctrl_symbols',['../structxorif__caps.html#a64ca38fdda310c0c0ad57ea4c0b13a04',1,'xorif_caps']]],

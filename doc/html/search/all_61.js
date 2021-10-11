@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['action_5ftype',['action_type',['../structecpri__owdm__msg__s.html#a19e2961b6ac0c16caaa0926dac096489',1,'ecpri_owdm_msg_s']]],
   ['add_5fdevice',['add_device',['../group__libxorif.html#gacd892b9c931954f60c9dc7929ba632dd',1,'xorif_utils.c']]],
   ['addr',['addr',['../structreg__info.html#ac09e8e43353f0b97e8e84296ba4f9094',1,'reg_info']]],
-  ['address',['address',['../structecpri__rma__msg__s.html#afe7fd10aa1fe3a6c56e0ea929da0ed46',1,'ecpri_rma_msg_s']]],
   ['advance_5fdl',['advance_dl',['../structxorif__cc__config.html#ac4b7e599751872545893c0f28351d198',1,'xorif_cc_config']]],
   ['advance_5ful',['advance_ul',['../structxorif__cc__config.html#ac2c8c2e9d51116ad7aa6076c3bf25b73',1,'xorif_cc_config']]],
   ['alloc_5fblock',['alloc_block',['../group__libxorif.html#ga6f5a52ee9b9b0e4671922450226ba915',1,'xorif_utils.c']]],

@@ -2,7 +2,6 @@ var searchData=
 [
   ['send_5fto_5fhost',['send_to_host',['../group__xorif-app.html#ga19b025743c793735244140255738f094',1,'xorif_socket.c']]],
   ['send_5fto_5ftarget',['send_to_target',['../group__xorif-app.html#gaea914c55fd8b98449797c8c5f4db3181',1,'xorif_socket.c']]],
-  ['seq_5fnum',['SEQ_NUM',['../group__protocol__ecpri.html#ga238c328dacc18e33f4ae32f9638fd012',1,'ecpri_proto.c']]],
   ['shift',['shift',['../structreg__info.html#af1e4fb7c603c8c4f18a9ac5a91e8b93b',1,'reg_info']]],
   ['ss_5fid_5flimit',['ss_id_limit',['../structxorif__caps.html#a48121a91aace72a25e3ac14f6c335808',1,'xorif_caps']]],
   ['ssb_5fctrl_5foffset',['ssb_ctrl_offset',['../structxorif__cc__alloc.html#a076f8742d47abdccb4b58dccb6aaf6b7',1,'xorif_cc_alloc']]],

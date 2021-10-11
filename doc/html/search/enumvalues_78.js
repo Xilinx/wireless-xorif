@@ -14,6 +14,7 @@ var searchData=
   ['xorif_5finvalid_5feth_5fport',['XORIF_INVALID_ETH_PORT',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5d8be60fc908dae826f288a33c72959f',1,'xorif_api.h']]],
   ['xorif_5finvalid_5frbs',['XORIF_INVALID_RBS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa09ee5e8b650631ea5acb0d6aca182bd9',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fresult',['XORIF_INVALID_RESULT',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faf431f4841dcd33bca7a22bf73f2e1376',1,'xorif_api.h']]],
+  ['xorif_5finvalid_5fru_5fport_5fmapping',['XORIF_INVALID_RU_PORT_MAPPING',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa31de86d2f8e0f17527baa020a3daff49',1,'xorif_api.h']]],
   ['xorif_5flibmetal_5ferror',['XORIF_LIBMETAL_ERROR',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa4714fa10d010ea3a706076deba21addc',1,'xorif_api.h']]],
   ['xorif_5fmax_5fctrl_5fsym_5fexceeded',['XORIF_MAX_CTRL_SYM_EXCEEDED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa29e36b3ba768c321b68f719f3398a6ba',1,'xorif_api.h']]],
   ['xorif_5fmax_5fdata_5fsym_5fexceeded',['XORIF_MAX_DATA_SYM_EXCEEDED',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa08089c14b12e08ce6ce89c4837ba94b5',1,'xorif_api.h']]],

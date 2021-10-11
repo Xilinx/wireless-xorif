@@ -133,9 +133,6 @@ Functions</h2></td></tr>
 <tr class="memitem:ga19b025743c793735244140255738f094"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__xorif-app.html#ga19b025743c793735244140255738f094">send_to_host</a> (const char *response)</td></tr>
 <tr class="memdesc:ga19b025743c793735244140255738f094"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility to send response message to the host (i.e.  <a href="#ga19b025743c793735244140255738f094">More...</a><br/></td></tr>
 <tr class="separator:ga19b025743c793735244140255738f094"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5babc84eb1ce6a9861f890572e40f09a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__xorif-app.html#ga5babc84eb1ce6a9861f890572e40f09a">ecpri_func</a> (int argc, char **argv, char *resp)</td></tr>
-<tr class="memdesc:ga5babc84eb1ce6a9861f890572e40f09a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the input command string and calls a handler function (if found).  <a href="#ga5babc84eb1ce6a9861f890572e40f09a">More...</a><br/></td></tr>
-<tr class="separator:ga5babc84eb1ce6a9861f890572e40f09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Example application for the Xilinx ORAN Radio Interface (xorif-app) </p>
@@ -292,54 +289,6 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>SUCCESS on success</li>
 <li>Error code on failure </li>
-</ul>
-</dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga5babc84eb1ce6a9861f890572e40f09a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int ecpri_func </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>argc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **&#160;</td>
-          <td class="paramname"><em>argv</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>resp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Parses the input command string and calls a handler function (if found). </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">argc</td><td>Number of string arguments. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">argv</td><td>Array of strings containg arguments. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">resp</td><td>Pointer to string to place response text in.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>1 if no commands tokens found.</li>
-<li>2 if no handler found for command.</li>
-<li>0 otherwise. </li>
 </ul>
 </dd></dl>
 

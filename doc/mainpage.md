@@ -4,6 +4,10 @@
 
 * This directory contains the source files and Makefile for the ORAN-Radio-Interface Front-Haul Interface C Library
 
+## libxobf
+
+* This directory contains the source files and Makefile for the ORAN-Radio-Interface Beamformer C Library
+
 ## xorif-app
 
 * This directory contains the source files and Makefiles for the ORAN-Radio-Interface Example Application

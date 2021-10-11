@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_oran-radio-if-release_release_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
+  ['xorif_2dapp',['XORIF-APP',['../md__home_stevend_projects_oran-radio-if-release_candidate_src_xorif-app__r_e_a_d_m_e.html',1,'']]],
   ['xorif_2dapp',['Xorif-app',['../group__xorif-app.html',1,'']]],
   ['xorif_5fapi_2eh',['xorif_api.h',['../xorif__api_8h.html',1,'']]],
   ['xorif_5fapp_2ec',['xorif_app.c',['../xorif__app_8c.html',1,'']]],
@@ -81,6 +81,7 @@ var searchData=
   ['xorif_5finvalid_5feth_5fport',['XORIF_INVALID_ETH_PORT',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5d8be60fc908dae826f288a33c72959f',1,'xorif_api.h']]],
   ['xorif_5finvalid_5frbs',['XORIF_INVALID_RBS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa09ee5e8b650631ea5acb0d6aca182bd9',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fresult',['XORIF_INVALID_RESULT',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faf431f4841dcd33bca7a22bf73f2e1376',1,'xorif_api.h']]],
+  ['xorif_5finvalid_5fru_5fport_5fmapping',['XORIF_INVALID_RU_PORT_MAPPING',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa31de86d2f8e0f17527baa020a3daff49',1,'xorif_api.h']]],
   ['xorif_5fip_5fmode',['xorif_ip_mode',['../group__libxorif-api.html#gada146a3a3559be5ef31bf10fac14ff24',1,'xorif_api.h']]],
   ['xorif_5fiq_5fcomp',['xorif_iq_comp',['../group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b',1,'xorif_api.h']]],
   ['xorif_5fiq_5fcomp_5fflags',['xorif_iq_comp_flags',['../group__libxorif-api.html#gac42ef3891485579391376bda5ac38175',1,'xorif_api.h']]],
