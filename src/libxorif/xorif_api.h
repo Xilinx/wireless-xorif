@@ -940,6 +940,11 @@ int xorif_enable_fhi_interrupts(uint32_t mask);
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * When an alarm interrupt occurs, the interrupt handler calls the call-back
+ * function (if it exists) and then performs default handling to log the error
+ * and clear the alarm.
+ * The call-back function should be short.
  */
 int xorif_register_fhi_isr(isr_func_t callback);
 

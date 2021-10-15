@@ -15,10 +15,12 @@ else
 CFLAGS += -I../libxorif -I=/usr/include/xorif
 LDFLAGS += -L../libxorif
 LDLIBS += -lxorif
+STATIC_LIBS += ../libxorif/libxorif.a
 ifeq ($(BF),1)
 CFLAGS += -I../libxobf -I=/usr/include/xobf
 LDFLAGS += -L../libxobf
 LDLIBS += -lxobf
+STATIC_LIBS += ../libxobf/libxobf.a
 endif
 endif
 
@@ -33,10 +35,15 @@ all: build
 build: $(APP)
 
 $(APP): $(OBJS)
+ifeq ($(STATIC),1)
+	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(STATIC_LIBS) -lm -lgcov
+else
 	$(CC) -o $@ $(LDFLAGS) $(OBJS) $(LDLIBS)
+endif
 
 clean:
 	rm -f $(APP) *.o *.d
+	rm -f *.gcov *.gcda *.gcno
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< > $@

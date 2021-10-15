@@ -129,6 +129,8 @@ void xorif_debug(int level)
 
 int xorif_init(const char *fh_dev_name)
 {
+    extern struct metal_state _metal;
+
     TRACE("xorif_init(%s)\n", fh_dev_name ? fh_dev_name : "NULL");
 
     // See if we're already initialized
@@ -145,19 +147,24 @@ int xorif_init(const char *fh_dev_name)
     }
 
 #ifndef NO_HW
-    // Parameters define log handlers and log level for libmetal
-    struct metal_init_params init_param =
-        {
-            .log_handler = metal_default_log_handler,
-            .log_level = METAL_LOG_ERROR,
-        };
-
-    // Initialize libmetal
-    INFO("Initializing libmetal framework\n");
-    if (metal_init(&init_param))
+    // Only do metal_init() if not already initialized!
+    // Note, next line is not fully portable
+    if (_metal.pagemap_fd == 0)
     {
-        PERROR("Failed to initialize libmetal framework\n");
-        return XORIF_LIBMETAL_ERROR;
+        // Parameters define log handlers and log level for libmetal
+        struct metal_init_params init_param =
+            {
+                .log_handler = metal_default_log_handler,
+                .log_level = METAL_LOG_ERROR,
+            };
+
+        // Initialize libmetal
+        INFO("Initializing libmetal framework\n");
+        if (metal_init(&init_param))
+        {
+            PERROR("Failed to initialize libmetal framework\n");
+            return XORIF_LIBMETAL_ERROR;
+        }
     }
 
     // Get FHI device name
@@ -217,9 +224,13 @@ void xorif_finish(void)
             metal_device_close(fh_device.dev);
         }
 
+#if 0
         // Close libmetal
+        // Note, finishing libmetal may cause problems with multiple devices
         INFO("Finishing libmetal framework\n");
         metal_finish();
+#endif
+
 #endif
         // Set state to 'not operational'
         xorif_state = 0;

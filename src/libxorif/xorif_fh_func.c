@@ -1227,60 +1227,59 @@ static int fhi_irq_handler(int id, void *data)
 
             if (fhi_callback)
             {
-                // Handled by registered call-back function
+                // Call registered call-back function
                 (*fhi_callback)(status);
             }
-            else
+
+            // Default interrupt handling...
+
+            if (status & CFG_DEFM_INT_INFIFO_OF_MASK)
             {
-                // Otherwise, default debug handling
-                if (status & CFG_DEFM_INT_INFIFO_OF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_OF\n");
-                }
-                if (status & CFG_DEFM_INT_INFIFO_UF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_UF\n");
-                }
-                if (status & CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_C_BUF_OF\n");
-                }
-                if (status & CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_TABLE_OF\n");
-                }
-                if (status & CFG_FRAM_INT_OUTFIFO_OF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_OF\n");
-                }
-                if (status & CFG_FRAM_INT_OUTFIFO_UF_MASK)
-                {
-                    INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_UF\n");
-                }
-                if (status & CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK)
-                {
-                    INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_OVERFLOW\n");
-                }
-                if (status & CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK)
-                {
-                    INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
-                }
-                if (status & CFG_AXI_TIMEOUT_STATUS_MASK)
-                {
-                    INFO("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
-                }
-
-                // All interrupts are serious error conditions
-                // Reset data-pipe (framer & de-framer)
-                WRITE_REG(FRAM_DISABLE, 1);
-                WRITE_REG(DEFM_RESTART, 1);
-                WRITE_REG(FRAM_DISABLE, 0);
-                WRITE_REG(DEFM_RESTART, 0);
-
-                // Clear interrupts by writing to the "master interrupt"
-                WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
-                WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
+                INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_OF\n");
             }
+            if (status & CFG_DEFM_INT_INFIFO_UF_MASK)
+            {
+                INFO("FHI IRQ: CFG_DEFM_INT_INFIFO_UF\n");
+            }
+            if (status & CFG_DEFM_INT_ETH_PIPE_C_BUF_OF_MASK)
+            {
+                INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_C_BUF_OF\n");
+            }
+            if (status & CFG_DEFM_INT_ETH_PIPE_TABLE_OF_MASK)
+            {
+                INFO("FHI IRQ: CFG_DEFM_INT_ETH_PIPE_TABLE_OF\n");
+            }
+            if (status & CFG_FRAM_INT_OUTFIFO_OF_MASK)
+            {
+                INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_OF\n");
+            }
+            if (status & CFG_FRAM_INT_OUTFIFO_UF_MASK)
+            {
+                INFO("FHI IRQ: CFG_FRAM_INT_OUTFIFO_UF\n");
+            }
+            if (status & CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK)
+            {
+                INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_OVERFLOW\n");
+            }
+            if (status & CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK)
+            {
+                INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
+            }
+            if (status & CFG_AXI_TIMEOUT_STATUS_MASK)
+            {
+                INFO("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
+            }
+
+            // All interrupts are serious error conditions
+            // Reset data-pipe (framer & de-framer)
+            WRITE_REG(FRAM_DISABLE, 1);
+            WRITE_REG(DEFM_RESTART, 1);
+            WRITE_REG(FRAM_DISABLE, 0);
+            WRITE_REG(DEFM_RESTART, 0);
+
+            // Clear interrupts by writing to the "master interrupt"
+            WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
+            WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
 
             return METAL_IRQ_HANDLED;
         }

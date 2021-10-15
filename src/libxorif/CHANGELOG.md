@@ -8,6 +8,7 @@
 * xorif_set_ul_radio_ch_dly() API added to allow setting of UL_RADIO_CH_DLY per component carrier
 * Improved debug logging
 * Improved code coverage testing
+* Change interrupt handler so call-back called 'then' default processing
 
 ## Release 2021.1
 * Refactored library code

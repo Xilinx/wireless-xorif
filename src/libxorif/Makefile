@@ -29,7 +29,7 @@ endif
 
 all: build
 
-build: lib$(LIB).so xorif_api.txt
+build: lib$(LIB).so lib$(LIB).a xorif_api.txt
 
 lib$(LIB).so: lib$(LIB).so.$(VERSION)
 	rm -f lib$(LIB).so.$(MAJOR) lib$(LIB).so
@@ -38,6 +38,9 @@ lib$(LIB).so: lib$(LIB).so.$(VERSION)
 
 lib$(LIB).so.$(VERSION): $(OBJS) linker.script
 	$(CC) -o $@ $(LDFLAGS) -shared -Wl,-soname,lib$(LIB).so.$(MAJOR) $(OBJS) $(LDLIBS)
+
+lib$(LIB).a: $(OBJS)
+	ar -crs $@ $(OBJS)
 
 xorif_api.txt: xorif_api.h
 	$(CC) $(CFLAGS) -E -DCFFI_CDEF_HDR xorif_api.h > $@
@@ -48,7 +51,8 @@ linker.script:
 	echo "{ global: xorif*; local: *; };" > $@
 
 clean:
-	rm -f *.o *.d *.so *.so.*
+	rm -f *.o *.d *.so *.so.* *.a
+	rm -f *.gcov *.gcda *.gcno
 	rm -f xorif_api.txt
 	rm -f linker.script
 
