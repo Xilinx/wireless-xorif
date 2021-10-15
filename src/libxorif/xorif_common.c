@@ -129,8 +129,6 @@ void xorif_debug(int level)
 
 int xorif_init(const char *fh_dev_name)
 {
-    extern struct metal_state _metal;
-
     TRACE("xorif_init(%s)\n", fh_dev_name ? fh_dev_name : "NULL");
 
     // See if we're already initialized
@@ -149,6 +147,7 @@ int xorif_init(const char *fh_dev_name)
 #ifndef NO_HW
     // Only do metal_init() if not already initialized!
     // Note, next line is not fully portable
+    extern struct metal_state _metal;
     if (_metal.pagemap_fd == 0)
     {
         // Parameters define log handlers and log level for libmetal
