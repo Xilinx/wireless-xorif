@@ -1310,7 +1310,7 @@ void xorif_fhi_init_device(void)
 
     // Compression is Uplink
     fhi_caps.iq_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
-    fhi_caps.iq_de_comp_bfp_widths = 0x5200); // 9, 12, 14
+    fhi_caps.iq_comp_bfp_widths = 0x5200); // 9, 12, 14
 #else
     // De-compression is downlink
     int de_comp = 0;
