@@ -374,14 +374,24 @@ uint32_t fake_reg_bank[0x10000 / 4]; // Fake register bank
                        CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK | \
                        CFG_AXI_TIMEOUT_STATUS_MASK)
 
+// Symbol duration look-up table (in microseconds)
+// TODO: short, long or average?
+//static const double sym_period_table[] = {71.35, 35.68, 17.84, 20.83, 8.92, 4.46};
+//static const double sym_period_table[] = {71.88, 36.2, 18.36, 20.83, 9.44, 4.98};
+static const double sym_period_table[] =
+    {
+        71.42857143,
+        35.71428571,
+        17.85714286,
+        8.928571429,
+        4.464285714
+    };
+
 // FHI alarm flags
 static enum xorif_fhi_alarms fhi_alarm_status = 0;
 
 // FHI ISR callback function
 static isr_func_t fhi_callback = NULL;
-
-// Slots per sub-frame definition, used for various calculations
-static const int slots_per_subframe[NUM_NUMEROLOGY] = {1, 2, 4, 8, 16};
 
 // Memory allocation pointers
 static void *ul_ctrl_memory = NULL;
@@ -408,7 +418,7 @@ static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double t
 static uint16_t calc_data_buff_size(uint16_t num_rbs,
                                     enum xorif_iq_comp comp_mode,
                                     uint16_t comp_width,
-                                    uint16_t num_sections,
+                                    uint16_t num_sect,
                                     uint16_t num_frames);
 static void deallocate_memory(int cc);
 
@@ -1601,56 +1611,59 @@ int xorif_fhi_set_cc_iq_compression_ssb(uint16_t cc,
     return XORIF_SUCCESS;
 }
 
-int xorif_fhi_set_cc_iq_compression_prach(uint16_t cc,
-                                          uint16_t bit_width,
-                                          enum xorif_iq_comp comp_meth,
-                                          uint16_t mplane)
-{
-    // TODO - these registers have been removed, need to know what to do to the API
-    //WRITE_REG_OFFSET(ORAN_CC_PRACH_UD_IQ_WIDTH, cc * 0x70, (bit_width & 0xF));
-    //WRITE_REG_OFFSET(ORAN_CC_PRACH_UD_COMP_METH, cc * 0x70, comp_meth);
-    //WRITE_REG_OFFSET(ORAN_CC_PRACH_MPLANE_UDCOMP_PARAM, cc * 0x70, (mplane & 0x1));
-    return XORIF_SUCCESS;
-}
-
 int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
                                              uint16_t numerology,
                                              uint16_t sym_per_slot,
                                              double advance_ul,
-                                             double advance_dl)
+                                             double advance_dl,
+                                             double ul_bid_forward)
 {
-    // Compute number of symbols per second based on numerology
-    // Note, 10 sub-frames per frame, 100 frames per second
-    int num = 100 * 10 * slots_per_subframe[numerology] * (sym_per_slot ? 12 : 14);
+    // Symbol period in picoseconds
+    double sym_period = sym_period_table[numerology] * 1e6;
 
-    // Symbol period in picoseconds = 1e12 / num
-    double sym_period = 1e12 / num;
+    // Convert parameters from microseconds to picoseconds
+    advance_dl = advance_dl * 1e6;
+    advance_ul = advance_ul * 1e6;
+    ul_bid_forward = ul_bid_forward * 1e6;
+    double fh_decap_dly = fhi_sys_const.FH_DECAP_DLY * 1e6;
+    double ul_radio_ch_dly = cc_config[cc].ul_radio_ch_dly * 1e6;
 
-    // Adjust symbol period to be integer number of clock cycles
-    // Note, rounding-down / truncating here
-    uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
+    // Compute offsets from 10 ms strobe
+    double dl_offset = advance_dl + fh_decap_dly;
+    double ul_offset = advance_ul + ul_radio_ch_dly;
+    double ul_bidf_offset;
 
-    // Convert from microseconds to picoseconds
-    double TCP_ADV_DL = advance_dl * 1e6;
-    double T2A_MIN_CP_UL = advance_ul * 1e6;
-    double FH_DECAP_DLY = fhi_sys_const.FH_DECAP_DLY * 1e6;
-    double UL_RADIO_CH_DLY = cc_config[cc].ul_radio_ch_dly * 1e6;
-
-    // Intermediate values used in the calculation
-    uint32_t DL_CTRL_RXWIN_ADV_CP = (FH_DECAP_DLY + TCP_ADV_DL) / XRAN_TIMER_CLK;
-    uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
+    // Constrain UL BIDF time
+    // TODO might need to offset +/- a few cycles
+    if (ul_bid_forward > ul_offset)
+    {
+        // UL BID FWD time can't be earlier than the UL offset
+        INFO("UL BID FWD time can't be earlier than the UL offset!\n");
+        ul_bidf_offset = ul_offset;
+    }
+    else if (ul_bid_forward < sym_period)
+    {
+        // UL BIDF can't be later than 1 symbol period
+        INFO("UL BID FWD can't be later than 1 symbol period!\n");
+        ul_bidf_offset = sym_period;
+    }
+    else
+    {
+        ul_bidf_offset = ul_bid_forward;
+    }
 
     // Downlink settings
-    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD - (FH_DECAP_DLY / XRAN_TIMER_CLK));
-    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (DL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
-    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_ABS_SYMBOL, cc * 0x70, (DL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 1);
-    // From PG370, "+1 is due to aligning the DL BID forward to the current DL Data symbol"
+    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_D_CYCLES, cc * 0x70, (sym_period - fh_decap_dly) / XRAN_TIMER_CLK);
+    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_ABS_SYMBOL, cc * 0x70, ceil(dl_offset / sym_period));
+    WRITE_REG_OFFSET(ORAN_CC_DL_SETUP_C_CYCLES, cc * 0x70, (sym_period - fmod(dl_offset, sym_period)) / XRAN_TIMER_CLK);
 
     // Uplink settings
-    WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD);
-    WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
-    WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_ABS_SYMBOL, cc * 0x70, (UL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 2);
-    // From PG370, "+2 is due to anticipating the UL BID forward with respect to the UL data symbol that is required"
+    WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_ABS_SYMBOL, cc * 0x70, ceil(ul_offset / sym_period));
+    WRITE_REG_OFFSET(ORAN_CC_UL_SETUP_C_CYCLES, cc * 0x70, (sym_period - fmod(ul_offset, sym_period)) / XRAN_TIMER_CLK);
+
+    // Uplink BIDF settings
+    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_ABS_SYMBOL, cc * 0x70, ceil(ul_bidf_offset /  sym_period));
+    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_CYCLES, cc * 0x70, (sym_period - fmod(ul_bidf_offset, sym_period)) / XRAN_TIMER_CLK);
 
     return XORIF_SUCCESS;
 }
@@ -1658,64 +1671,22 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
 int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
                                                  uint16_t numerology,
                                                  uint16_t sym_per_slot,
-                                                 double advance)
+                                                 double advance_dl)
 {
-    // Compute number of symbols per second based on numerology
-    // Note, 10 sub-frames per frame, 100 frames per second
-    int num = 100 * 10 * slots_per_subframe[numerology] * (sym_per_slot ? 12 : 14);
+    // Symbol period in picoseconds
+    double sym_period = sym_period_table[numerology] * 1e6;
 
-    // Symbol period in picoseconds = 1e12 / num
-    double sym_period = 1e12 / num;
+    // Convert parameters from microseconds to picoseconds
+    advance_dl = advance_dl * 1e6;
+    double fh_decap_dly = fhi_sys_const.FH_DECAP_DLY * 1e6;
 
-    // Adjust symbol period to be integer number of clock cycles
-    // Note, rounding-down / truncating here
-    uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
+    // Compute offsets from 10 ms strobe
+    double dl_offset = advance_dl + fh_decap_dly;
 
-    // Convert from microseconds to picoseconds
-    double TCP_ADV_DL = advance * 1e6;
-    double FH_DECAP_DLY = fhi_sys_const.FH_DECAP_DLY * 1e6;
-
-    // Intermediate values used in the calculation
-    uint32_t DL_CTRL_RXWIN_ADV_CP = (FH_DECAP_DLY + TCP_ADV_DL) / XRAN_TIMER_CLK;
-
-    // SSB settings
-    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_D_CYCLES, cc * 0x70, ACTUAL_PERIOD - (FH_DECAP_DLY / XRAN_TIMER_CLK));
-    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (DL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
-    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_ABS_SYMBOL, cc * 0x70, (DL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 1);
-    // From PG370, "+1 is due to aligning the DL BID forward to the current DL Data symbol"
-
-    return XORIF_SUCCESS;
-}
-
-int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
-                                       uint16_t numerology,
-                                       uint16_t sym_per_slot,
-                                       double advance)
-{
-    // Compute number of symbols per second based on numerology
-    // Note, 10 sub-frames per frame, 100 frames per second
-    int num = 100 * 10 * slots_per_subframe[numerology] * (sym_per_slot ? 12 : 14);
-
-    // Symbol period in picoseconds = 1e12 / num
-    double sym_period = 1e12 / num;
-
-    // Adjust symbol period to be integer number of clock cycles
-    // Note, rounding-down / truncating here
-    uint32_t ACTUAL_PERIOD = sym_period / XRAN_TIMER_CLK;
-
-    // Convert from microseconds to picoseconds
-    double T2A_MIN_CP_UL = advance * 1e6;
-    //double UL_RADIO_CH_DLY = cc_config[cc].ul_radio_ch_dly * 1e6;
-
-    // Intermediate values used in the calculation
-    uint32_t UL_CTRL_RXWIN_ADV_CP = T2A_MIN_CP_UL / XRAN_TIMER_CLK;
-    //uint32_t UL_CTRL_RXWIN_ADV_CP = (UL_RADIO_CH_DLY + T2A_MIN_CP_UL) / XRAN_TIMER_CLK;
-    // TODO - still not sure about the above, do we include the UL_RADIO_CH_DLY or not?
-
-    // BIDF settings
-    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_CYCLES, cc * 0x70, ACTUAL_PERIOD - (UL_CTRL_RXWIN_ADV_CP % ACTUAL_PERIOD));
-    WRITE_REG_OFFSET(ORAN_CC_UL_BIDF_C_ABS_SYMBOL, cc * 0x70, (UL_CTRL_RXWIN_ADV_CP / ACTUAL_PERIOD) + 2);
-    // From PG370, "+2 is due to anticipating the UL BID forward with respect to the UL data symbol that is required"
+    // Downlink settings
+    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_D_CYCLES, cc * 0x70, (sym_period - fh_decap_dly) / XRAN_TIMER_CLK);
+    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_ABS_SYMBOL, cc * 0x70, ceil(dl_offset / sym_period));
+    WRITE_REG_OFFSET(ORAN_CC_SSB_SETUP_C_CYCLES, cc * 0x70, (sym_period - fmod(dl_offset, sym_period)) / XRAN_TIMER_CLK);
 
     return XORIF_SUCCESS;
 }
@@ -1726,11 +1697,11 @@ int xorif_fhi_configure_cc(uint16_t cc)
     const struct xorif_cc_config *ptr = &cc_config[cc];
 
     // Calculate required number of symbols
-    uint16_t ul_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_ul);
-    uint16_t dl_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew + ptr->advance_dl);
-    uint16_t dl_data_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->deskew) + 1;
-    uint16_t ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew + ptr->advance_dl);
-    uint16_t ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->deskew) + 1;
+    uint16_t ul_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_cp_ul + ptr->advance_ul + ptr->ul_radio_ch_dly);
+    uint16_t dl_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_cp_dl + ptr->advance_dl + fhi_sys_const.FH_DECAP_DLY);
+    uint16_t dl_data_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
+    uint16_t ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_cp_dl + ptr->advance_dl + fhi_sys_const.FH_DECAP_DLY);
+    uint16_t ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
 
     // Check number ctrl symbols
     if ((ul_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
@@ -1753,14 +1724,14 @@ int xorif_fhi_configure_cc(uint16_t cc)
     uint16_t dl_data_buff_size = calc_data_buff_size(ptr->num_rbs,
                                                      ptr->iq_comp_meth_dl,
                                                      ptr->iq_comp_width_dl,
-                                                     ptr->num_ctrl_per_sym_dl,
+                                                     ptr->num_sect_per_sym,
                                                      ptr->num_frames_per_sym);
 
     // Calculate SSB data buffer size (per symbol)
     uint16_t ssb_data_buff_size = calc_data_buff_size(ptr->num_rbs_ssb,
                                                       ptr->iq_comp_meth_ssb,
                                                       ptr->iq_comp_width_ssb,
-                                                      ptr->num_ctrl_per_sym_ssb,
+                                                      ptr->num_sect_per_sym_ssb,
                                                       ptr->num_frames_per_sym_ssb);
 
     // Deallocate any memory associated with this component carrier
@@ -1852,8 +1823,6 @@ int xorif_fhi_configure_cc(uint16_t cc)
 
     xorif_fhi_set_cc_iq_compression_ssb(cc, ptr->iq_comp_width_ssb, ptr->iq_comp_meth_ssb, ptr->iq_comp_mplane_ssb);
 
-    xorif_fhi_set_cc_iq_compression_prach(cc, ptr->iq_comp_width_prach, ptr->iq_comp_meth_prach, ptr->iq_comp_mplane_prach);
-
     xorif_fhi_init_cc_dl_section_mem(cc, ptr->num_ctrl_per_sym_dl, dl_ctrl_offset);
 
     xorif_fhi_init_cc_ul_section_mem(cc, ptr->num_ctrl_per_sym_ul, ul_ctrl_offset, ul_ctrl_base_offset);
@@ -1868,11 +1837,9 @@ int xorif_fhi_configure_cc(uint16_t cc)
 
     xorif_fhi_init_cc_ctrl_constants_ssb(cc, ssb_ctrl_sym_num, ptr->num_ctrl_per_sym_ssb);
 
-    xorif_fhi_configure_time_advance_offsets(cc, ptr->numerology, ptr->extended_cp, ptr->advance_ul, ptr->advance_dl);
+    xorif_fhi_configure_time_advance_offsets(cc, ptr->numerology, ptr->extended_cp, ptr->advance_ul, ptr->advance_dl, ptr->ul_bid_forward);
 
     xorif_fhi_configure_time_advance_offsets_ssb(cc, ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->advance_dl);
-
-    xorif_fhi_configure_ul_bid_forward(cc, ptr->numerology, ptr->extended_cp, ptr->ul_bid_forward);
 
     // Perform "reload" on the component carrier
     xorif_fhi_cc_reload(cc);
@@ -1898,12 +1865,12 @@ static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double t
 {
     // Compute number of symbols per second based on numerology
     // Note, 10 sub-frames per frame, 100 frames per second
-    int num = 100 * 10 * slots_per_subframe[numerology] * (extended_cp ? 12 : 14);
+    int num = 100 * 10 * (1 << numerology) * (extended_cp ? 12 : 14);
 
     // Symbol period in microseconds = 1e6 / num
     double sym_period = 1e6 / num;
 
-    // Number of symbols required is ceil(time / sym_period) converted to integer
+    // Number of symbols required rounded-up and converted to integer
     return (uint16_t)(ceil(time / sym_period));
 }
 
@@ -1912,15 +1879,15 @@ static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double t
  * @param[in] num_rbs Number of RBs
  * @param[in] comp_mode IQ compression mode
  * @param[in] comp_width compression width
- * @param[in] num_sections Number of sections
+ * @param[in] num_sect Number of sections
  * @param[in] num_frames Number of Ethernet frames
  * @returns
- *      - Downlink data buffer size (in bytes)
+ *      - Downlink data buffer size (in 8-byte words)
  */
 static uint16_t calc_data_buff_size(uint16_t num_rbs,
                                     enum xorif_iq_comp comp_mode,
                                     uint16_t comp_width,
-                                    uint16_t num_sections,
+                                    uint16_t num_sect,
                                     uint16_t num_frames)
 {
     // For calculation purposes, a width of 0 means 16 bits
@@ -1951,12 +1918,13 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
     size *= num_rbs;
 
     // Add 4 bytes per section header
-    size += (4 * num_sections);
+    // TODO this could be 6 or 8 for dynamic compression cases
+    size += (4 * num_sect);
 
-    // Add allowance for application headers per Ethernet frame
+    // Add 11 bytes per Ethernet frame (4 + 7 for worse-case rounding to 8-byte word)
     size += (11 * num_frames);
 
-    // Divide by 8 (since 8 bytes per location) and round-up
+    // Divide by 8 (since 8 byte words) and round-up
     size = CEIL_DIV(size, 8);
 
     return size;
@@ -2000,15 +1968,15 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_NO_OF_DEFM_ANTS, 16);
     WRITE_REG(CFG_CONFIG_NO_OF_ETH_PORTS, 4);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_CC, 8);
-    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_SYMBOLS, 8);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_SYMBOLS, 16);
     WRITE_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX, 8000);
     WRITE_REG(CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX, 8000);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_SCS, 6600);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_CTRL_SYMBOLS, 16);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS, 4);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS, 4);
-    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS, 8);
-    WRITE_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS, 5000);
+    WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS, 16);
+    WRITE_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS, 5000); // 2500, 2560, 5000
     WRITE_REG(CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM, 1);
     WRITE_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS, 1);
     WRITE_REG(CFG_CONFIG_LIMIT_DU_W, 4);

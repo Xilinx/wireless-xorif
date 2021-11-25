@@ -72,6 +72,8 @@ enum xorif_error_codes
 };
 #endif // XORIF_COMMON_ERROR_CODES
 
+#ifndef XORIF_COMMON_IQ_COMP_CODES
+#define XORIF_COMMON_IQ_COMP_CODES
 /**
  * @brief Enumerated type for IQ compression modes (ORAN values).
  */
@@ -95,6 +97,7 @@ enum xorif_iq_comp_flags
     IQ_COMP_U_LAW_SUPPORT = 0x08,       /**< U-Law compression */
     IQ_COMP_MODULATION_SUPPORT = 0x10,  /**< Modulation compression */
 };
+#endif // XORIF_COMMON_IQ_COMP_CODES
 
 /**
  * @brief Structure for supported capabilities.
@@ -153,18 +156,19 @@ struct xorif_cc_config
     uint16_t iq_comp_meth_ssb;       /**< IQ compression method for SSB */
     uint16_t iq_comp_width_ssb;      /**< IQ compressed width for SSB */
     uint16_t iq_comp_mplane_ssb;     /**< Flag indicating M-plane compression for SSB */
-    uint16_t iq_comp_meth_prach;     /**< IQ compression method for PRACH */
-    uint16_t iq_comp_width_prach;    /**< IQ compressed width for PRACH */
-    uint16_t iq_comp_mplane_prach;   /**< Flag indicating M-plane compression for PRACH */
-    double deskew;                   /**< Maximum deskew time (in microseconds) */
-    double advance_ul;               /**< Control advance in uplink (in microseconds) */
-    double advance_dl;               /**< Control advance in downlink (in microseconds) */
-    double ul_bid_forward;           /**< Uplink beam-id forward advance (in microseconds) */
+    double delay_comp_cp_ul;         /**< Delay compenstation (deskew) for uplink C-plane (in microseconds) */
+    double delay_comp_cp_dl;         /**< Delay compenstation (deskew) for downlink C-plane (in microseconds) */
+    double delay_comp_up;            /**< Delay compenstation (deskew) for downlink U-plane (in microseconds) */
+    double advance_ul;               /**< Control time advance for uplink (in microseconds) */
+    double advance_dl;               /**< Control time advance for downlink (in microseconds) */
+    double ul_bid_forward;           /**< Uplink beam-id forward time (in microseconds) */
     double ul_radio_ch_dly;          /**< Uplink radio channel delay (in microseconds) */
-    uint16_t num_ctrl_per_sym_ul;    /**< Number of sections per symbol in uplink */
-    uint16_t num_ctrl_per_sym_dl;    /**< Number of sections per symbol in downlink */
-    uint16_t num_ctrl_per_sym_ssb;   /**< Number of sections per symbol for SSB */
-    uint16_t num_frames_per_sym;     /**< Number of Ethernet frames per symbol in downlink */
+    uint16_t num_ctrl_per_sym_ul;    /**< Number of control words per symbol for uplink */
+    uint16_t num_ctrl_per_sym_dl;    /**< Number of control words per symbol for downlink */
+    uint16_t num_ctrl_per_sym_ssb;   /**< Number of control words per symbol for SSB */
+    uint16_t num_sect_per_sym;       /**< Number of sections per symbol for downlink */
+    uint16_t num_sect_per_sym_ssb;   /**< Number of sections per symbol for SSB */
+    uint16_t num_frames_per_sym;     /**< Number of Ethernet frames per symbol for downlink */
     uint16_t num_frames_per_sym_ssb; /**< Number of Ethernet frames per symbol for SSB */
 };
 
@@ -431,6 +435,8 @@ int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t exten
  *      - Error code on failure
  * @note
  * See PG370 for details.
+ * Note: This function is deprecated. Use xorif_set_cc_ul_timing_parameters() and
+ * xorif_set_cc_dl_timing_parameters().
  */
 int xorif_set_cc_time_advance(uint16_t cc,
                               double deskew,
@@ -438,15 +444,60 @@ int xorif_set_cc_time_advance(uint16_t cc,
                               double advance_dl);
 
 /**
- * @brief Set the uplink beam-id forward advance for the component carrier.
+ * @brief Set the uplink timing parameters for the component carrier.
  * @param[in] cc Component carrier to configure
- * @param[in] advance Uplink beam-id forward advance (in microseconds)
+ * @param[in] delay_comp_cp Delay compensation for C-Plane (in microseconds)
+ * @param[in] advance Control time advance (in microseconds) (i.e. T2A_MIN_CP_UL)
+ * @param[in] radio_ch_delay Total delay from output of FH to "air" (in microseconds)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * See PG370 for details.
+ * The delay_comp_cp value is the size of the valid reception window for C-Plane
+ * packets, and is equivalent to (i.e. T2A_MAX_CP_UL - T2A_MIN_CP_UL).
+ * The advance value is equivalent to T2A_MIN_CP_UL.
+ * The radio_ch_delay value defines the time offset between the 10ms strobe
+ * and the actual "air" strobe; it compensates for the system delay for beam-
+ * former, DFE, etc.
+ */
+int xorif_set_cc_ul_timing_parameters(uint16_t cc,
+                                      double delay_comp_cp,
+                                      double advance,
+                                      double radio_ch_delay);
+
+/**
+ * @brief Set the downlink timing parameters for the component carrier.
+ * @param[in] cc Component carrier to configure
+ * @param[in] delay_comp_cp Delay compensation for C-Plane (in microseconds)
+ * @param[in] delay_comp_up Delay compensation for U-Plane (in microseconds)
+ * @param[in] advance Control time advance (in microseconds) (i.e. TCP_ADV_DL)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * See PG370 for details.
+ * The delay_comp_cp value is the size of the valid reception window for C-Plane
+ * packets, and is equivalent to (i.e. T2A_MAX_CP_DL - T2A_MIN_CP_DL).
+ * The delay_comp_up value is the size of the valid reception window for U-Plane
+ * packets, and is equivalent to (i.e. T2A_MAX_UP - T2A_MIN_UP).
+ * The advance value is equivalent to TCP_ADV_DL.
+ */
+int xorif_set_cc_dl_timing_parameters(uint16_t cc,
+                                      double delay_comp_cp,
+                                      double delay_comp_up,
+                                      double advance);
+
+/**
+ * @brief Set the uplink beam-id forward time for the component carrier.
+ * @param[in] cc Component carrier to configure
+ * @param[in] advance Uplink beam-id forward time (in microseconds)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure.
  * See PG370 for details.
  */
-int xorif_set_ul_bid_forward(uint16_t cc, double advance);
+int xorif_set_ul_bid_forward(uint16_t cc, double time);
 
 /**
  * @brief Set the uplink radio channel delay estimate for the component carrier.
@@ -456,6 +507,7 @@ int xorif_set_ul_bid_forward(uint16_t cc, double advance);
  *      - XORIF_SUCCESS on success
  *      - Error code on failure.
  * See PG370 for details.
+ * Note: This function is deprecated. Use xorif_set_cc_ul_timing_parameters().
  */
 int xorif_set_ul_radio_ch_dly(uint16_t cc, double delay);
 
@@ -529,67 +581,74 @@ int xorif_set_cc_iq_compression_ssb(uint16_t cc,
                                     uint16_t mplane);
 
 /**
- * @brief Configure the PRACH compression for the component carrier.
+ * @brief Configure the number of sections and ctrl words per downlink symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] bit_width Bit width (0-16)
- * @param[in] comp_method Compression method (see #xorif_iq_comp)
- * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
+ * @param[in] num_sect Maximmum number of sections per symbol
+ * @param[in] num_ctrl Maximmum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
- * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
- * With static configuration, the M-plane is used to configure the compression
- * mode using the supplied values (bit_width and comp_method). With dynamic
- * configuration, the C-plane is used to configure the compression. However, the
- * supplied values (bit_width and comp_method) are still used for internal
- * buffer sizing.
+ * The num_sect and num_ctrl values are used in determining buffer sizes.
+ * The num_ctrl value can vary depending on the Section Type, for example
+ * 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for
+ * Type 11, etc.
+ * See PG370 for details.
  */
-int xorif_set_cc_iq_compression_prach(uint16_t cc,
-                                      uint16_t bit_width,
-                                      enum xorif_iq_comp comp_method,
-                                      uint16_t mplane);
+int xorif_set_cc_dl_sections_per_symbol(uint16_t cc,
+                                        uint16_t num_sect,
+                                        uint16_t num_ctrl);
 
 /**
- * @brief Configure the number of sections allowed per downlink symbol.
+ * @brief Configure the number of sections and ctrl words per uplink symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_sections Maximmum number of sections per symbol
+ * @param[in] num_sect Maximmum number of sections per symbol
+ * @param[in] num_ctrl Maximmum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * The num_sect and num_ctrl values are used in determining buffer sizes.
+ * The num_ctrl value can vary depending on the Section Type, for example
+ * 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for
+ * Type 11, etc.
+ * See PG370 for details.
  */
-int xorif_set_cc_dl_sections_per_symbol(uint16_t cc, uint16_t num_sections);
+int xorif_set_cc_ul_sections_per_symbol(uint16_t cc,
+                                        uint16_t num_sect,
+                                        uint16_t num_ctrl);
 
 /**
- * @brief Configure the number of sections allowed per uplink symbol.
- * @param[in] cc Component carrier to configure
- * @param[in] num_sections Maximmum number of sections per symbol
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_set_cc_ul_sections_per_symbol(uint16_t cc, uint16_t num_sections);
-
-/**
- * @brief Configure the number of Ethernet frames allowed per (downlink) symbol.
+ * @brief Configure the number of Ethernet frames per downlink symbol.
  * @param[in] cc Component carrier to configure
  * @param[in] num_frames Maximmum number of Ethernet frames per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * The num_frames value is used in determining buffer sizes.
+ * See PG370 for details.
  */
 int xorif_set_cc_frames_per_symbol(uint16_t cc, uint16_t num_frames);
 
 /**
- * @brief Configure the number of sections allowed per SSB symbol.
+ * @brief Configure the number of sections and ctrl words per SSB symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_sections Maximmum number of sections per symbol
+ * @param[in] num_sect Maximmum number of sections per symbol
+ * @param[in] num_ctrl Maximmum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * The num_sect and num_ctrl values are used in determining buffer sizes.
+ * The num_ctrl value can vary depending on the Section Type, for example
+ * 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for
+ * Type 11, etc.
+ * See PG370 for details.
  */
-int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc, uint16_t num_sections);
+int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc,
+                                         uint16_t num_sect,
+                                         uint16_t num_ctrl);
 
 /**
  * @brief Configure the number of Ethernet frames allowed per SSB symbol.
@@ -598,6 +657,9 @@ int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc, uint16_t num_sections);
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * The num_frames value is used in determining buffer sizes.
+ * See PG370 for details.
  */
 int xorif_set_cc_frames_per_symbol_ssb(uint16_t cc, uint16_t num_frames);
 

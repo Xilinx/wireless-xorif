@@ -172,16 +172,13 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
 int check_numerology(uint16_t numerology, uint16_t extended_cp);
 
 /**
- * @brief Checks to see if specified IQ compression mode is supported.
+ * @brief Checks to see if specified IQ (de-)compression mode is supported.
  * @param[in] bit_width Bit width (0-16)
  * @param[in] comp_method Compression method
- * @param[in] chan Channel type (uplink, downlink, SSB, PRACH)
+ * @param[in] chan Channel type (UL, DL, SSB, PRACH)
  * @returns
  *      - 0 if mode not supported
  *      - 1 if mode is supported
- * @note
- * The "dir" is required since allowed compression methods can be different, e.g.
- * modulation compression is only valid for downlink.
  */
 int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum xorif_chan_type chan);
 

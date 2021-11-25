@@ -80,17 +80,18 @@ static void initialize_configuration(void)
         cc_config[i].iq_comp_meth_ssb = IQ_COMP_NONE;
         cc_config[i].iq_comp_width_ssb = 16;
         cc_config[i].iq_comp_mplane_ssb = 1;
-        cc_config[i].iq_comp_meth_prach = IQ_COMP_NONE;
-        cc_config[i].iq_comp_width_prach = 16;
-        cc_config[i].iq_comp_mplane_prach = 1;
-        cc_config[i].deskew = DEFAULT_DESKEW_TIME;
+        cc_config[i].delay_comp_cp_ul = DEFAULT_DELAY_COMP;
+        cc_config[i].delay_comp_cp_dl = DEFAULT_DELAY_COMP;
+        cc_config[i].delay_comp_up = DEFAULT_DELAY_COMP;
         cc_config[i].advance_ul = DEFAULT_ADVANCE_UL;
         cc_config[i].advance_dl = DEFAULT_ADVANCE_DL;
-        cc_config[i].ul_bid_forward = DEFAULT_UL_BIDF;
+        cc_config[i].ul_bid_forward = DEFAULT_UL_BID_FWD;
         cc_config[i].ul_radio_ch_dly = DEFAUT_UL_RADIO_CH_DLY;
         cc_config[i].num_ctrl_per_sym_ul = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_dl = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_ssb = DEFAULT_CTRL_PER_SYM_SSB;
+        cc_config[i].num_sect_per_sym = DEFAULT_SECT_PER_SYM;
+        cc_config[i].num_sect_per_sym_ssb = DEFAULT_SECT_PER_SYM_SSB;
         cc_config[i].num_frames_per_sym = DEFAULT_FRAMES_PER_SYM;
         cc_config[i].num_frames_per_sym_ssb = DEFAULT_FRAMES_PER_SYM_SSB;
     }
@@ -261,8 +262,7 @@ int xorif_has_front_haul_interface(void)
         // Device exists
         return 1;
     }
-
-    if (get_device_name("oran_radio_if") != NULL)
+    else if (get_device_name("oran_radio_if") != NULL)
     {
         // Oran-radio-if device exists in /sys/bus/platform/devices
         return 1;
@@ -372,11 +372,6 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
         PERROR("IQ compression mode not supported (SSB)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    else if (!check_iq_comp_mode(config->iq_comp_width_prach, config->iq_comp_meth_prach, CHAN_PRACH))
-    {
-        PERROR("IQ compression mode not supported (PRACH)\n");
-        return XORIF_COMP_MODE_NOT_SUPPORTED;
-    }
 
     memcpy(&cc_config[cc], config, sizeof(struct xorif_cc_config));
 
@@ -450,7 +445,9 @@ int xorif_set_cc_time_advance(uint16_t cc,
                               double advance_ul,
                               double advance_dl)
 {
-    TRACE("xorif_set_cc_time_advance(%d, %g, %g, %g)\n", cc, deskew, advance_ul, advance_dl);
+    // Note: This function is deprecated.
+
+    TRACE("xorif_set_cc_time_advance(%d, %g, %g, %g) [deprecated]\n", cc, deskew, advance_ul, advance_dl);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -458,16 +455,21 @@ int xorif_set_cc_time_advance(uint16_t cc,
         return XORIF_INVALID_CC;
     }
 
-    cc_config[cc].deskew = deskew;
+    cc_config[cc].delay_comp_cp_ul = deskew;
+    cc_config[cc].delay_comp_cp_dl = deskew;
+    cc_config[cc].delay_comp_up = deskew;
     cc_config[cc].advance_ul = advance_ul;
     cc_config[cc].advance_dl = advance_dl;
 
     return XORIF_SUCCESS;
 }
 
-int xorif_set_ul_bid_forward(uint16_t cc, double ul_bid_forward)
+int xorif_set_cc_ul_timing_parameters(uint16_t cc,
+                                      double delay_comp_cp,
+                                      double advance,
+                                      double radio_ch_delay)
 {
-    TRACE("xorif_set_ul_bid_forward(%d, %g)\n", cc, ul_bid_forward);
+    TRACE("xorif_set_cc_ul_timing_parameters(%d, %g, %g, %g)\n", cc, delay_comp_cp, advance, radio_ch_delay);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -475,14 +477,53 @@ int xorif_set_ul_bid_forward(uint16_t cc, double ul_bid_forward)
         return XORIF_INVALID_CC;
     }
 
-    cc_config[cc].ul_bid_forward = ul_bid_forward;
+    cc_config[cc].delay_comp_cp_ul = delay_comp_cp;
+    cc_config[cc].advance_ul = advance;
+    cc_config[cc].ul_radio_ch_dly = radio_ch_delay;
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_cc_dl_timing_parameters(uint16_t cc,
+                                      double delay_comp_cp,
+                                      double delay_comp_up,
+                                      double advance)
+{
+    TRACE("xorif_set_cc_dl_timing_parameters(%d, %g, %g, %g)\n", cc, delay_comp_cp, delay_comp_up, advance);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
+    {
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+
+    cc_config[cc].delay_comp_cp_dl = delay_comp_cp;
+    cc_config[cc].delay_comp_up = delay_comp_up;
+    cc_config[cc].advance_dl = advance;
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_ul_bid_forward(uint16_t cc, double time)
+{
+    TRACE("xorif_set_ul_bid_forward(%d, %g)\n", cc, time);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
+    {
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+
+    cc_config[cc].ul_bid_forward = time;
 
     return XORIF_SUCCESS;
 }
 
 int xorif_set_ul_radio_ch_dly(uint16_t cc, double delay)
 {
-    TRACE("xorif_set_ul_radio_ch_dly(%d, %g)\n", cc, delay);
+    // Note: This function is deprecated.
+
+    TRACE("xorif_set_ul_radio_ch_dly(%d, %g) [deprecated]\n", cc, delay);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -570,34 +611,11 @@ int xorif_set_cc_iq_compression_ssb(uint16_t cc,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_iq_compression_prach(uint16_t cc,
-                                      uint16_t bit_width,
-                                      enum xorif_iq_comp comp_method,
-                                      uint16_t mplane)
+int xorif_set_cc_dl_sections_per_symbol(uint16_t cc,
+                                        uint16_t num_sect,
+                                        uint16_t num_ctrl)
 {
-    TRACE("xorif_set_cc_iq_compression_prach(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
-
-    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
-    {
-        PERROR("Invalid CC value\n");
-        return XORIF_INVALID_CC;
-    }
-    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_PRACH))
-    {
-        PERROR("IQ compression mode not supported (PRACH)\n");
-        return XORIF_COMP_MODE_NOT_SUPPORTED;
-    }
-
-    cc_config[cc].iq_comp_width_prach = bit_width;
-    cc_config[cc].iq_comp_meth_prach = comp_method;
-    cc_config[cc].iq_comp_mplane_prach = mplane;
-
-    return XORIF_SUCCESS;
-}
-
-int xorif_set_cc_dl_sections_per_symbol(uint16_t cc, uint16_t num_sections)
-{
-    TRACE("xorif_set_cc_dl_sections_per_symbol(%d, %d)\n", cc, num_sections);
+    TRACE("xorif_set_cc_dl_sections_per_symbol(%d, %d, %d)\n", cc, num_sect, num_ctrl);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -606,14 +624,17 @@ int xorif_set_cc_dl_sections_per_symbol(uint16_t cc, uint16_t num_sections)
     }
     // No upper limit, only buffer space which is checked during configuration
 
-    cc_config[cc].num_ctrl_per_sym_dl = num_sections;
+    cc_config[cc].num_sect_per_sym = num_sect;
+    cc_config[cc].num_ctrl_per_sym_dl = num_ctrl;
 
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_ul_sections_per_symbol(uint16_t cc, uint16_t num_sections)
+int xorif_set_cc_ul_sections_per_symbol(uint16_t cc,
+                                        uint16_t num_sect,
+                                        uint16_t num_ctrl)
 {
-    TRACE("xorif_set_cc_ul_sections_per_symbol(%d, %d)\n", cc, num_sections);
+    TRACE("xorif_set_cc_ul_sections_per_symbol(%d, %d, %d)\n", cc, num_sect, num_ctrl);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -622,7 +643,8 @@ int xorif_set_cc_ul_sections_per_symbol(uint16_t cc, uint16_t num_sections)
     }
     // No upper limit, only buffer space which is checked during configuration
 
-    cc_config[cc].num_ctrl_per_sym_ul = num_sections;
+    // Note, num_sect not needed for uplink currently
+    cc_config[cc].num_ctrl_per_sym_ul = num_ctrl;
 
     return XORIF_SUCCESS;
 }
@@ -643,9 +665,11 @@ int xorif_set_cc_frames_per_symbol(uint16_t cc, uint16_t num_frames)
     return XORIF_SUCCESS;
 }
 
-int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc, uint16_t num_sections)
+int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc,
+                                         uint16_t num_sect,
+                                         uint16_t num_ctrl)
 {
-    TRACE("xorif_set_cc_sections_per_symbol_ssb(%d, %d)\n", cc, num_sections);
+    TRACE("xorif_set_cc_sections_per_symbol_ssb(%d, %d, %d)\n", cc, num_sect, num_ctrl);
 
     if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
     {
@@ -654,7 +678,8 @@ int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc, uint16_t num_sections)
     }
     // No upper limit, only buffer space which is checked during configuration
 
-    cc_config[cc].num_ctrl_per_sym_ssb = num_sections;
+    cc_config[cc].num_sect_per_sym_ssb = num_sect;
+    cc_config[cc].num_ctrl_per_sym_ssb = num_ctrl;
 
     return XORIF_SUCCESS;
 }

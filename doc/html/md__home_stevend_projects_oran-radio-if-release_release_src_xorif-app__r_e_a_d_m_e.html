@@ -82,7 +82,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><h2>XORIF-APP Source Directory</h2>
 <ul>
 <li>This directory contains the source files and Makefile for the ORAN-Radio-Interface Example Application (xorif-app)</li>
-<li>The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).</li>
+<li>The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware.</li>
 <li>The xorif-app can operate as either a "server" or a "client".<ul>
 <li>As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).</li>
 <li>As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".</li>
@@ -170,17 +170,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">        set num_rbs &lt;cc&gt; &lt;number_of_rbs&gt;</div>
 <div class="line">        set numerology &lt;cc&gt; &lt;numerology&gt; &lt;extended_cp = 0 | 1&gt;</div>
 <div class="line">        set numerology_ssb &lt;cc&gt; &lt;numerology&gt; &lt;extended_cp = 0 | 1&gt;</div>
-<div class="line">        set time_advance &lt;cc&gt; &lt;deskew&gt; &lt;advance_uplink&gt; &lt;advance_downlink&gt;</div>
-<div class="line">        set ul_bid_forward &lt;cc&gt; &lt;advance&gt;</div>
+<div class="line">        set time_advance &lt;cc&gt; &lt;deskew&gt; &lt;advance_uplink&gt; &lt;advance_downlink&gt; (deprecated)</div>
+<div class="line">        set ul_timing_params &lt;cc&gt; &lt;delay_comp&gt; &lt;advance&gt; &lt;radio_ch_delay&gt;</div>
+<div class="line">        set dl_timing_params &lt;cc&gt; &lt;delay_comp_cp&gt; &lt;delay_comp_up&gt; &lt;advance&gt;</div>
+<div class="line">        set ul_bid_forward &lt;cc&gt; &lt;time&gt;</div>
 <div class="line">        set ul_bid_forward_fine &lt;cc&gt; &lt;symbols&gt; &lt;cycles&gt;</div>
-<div class="line">        set ul_radio_ch_dly &lt;cc&gt; &lt;delay&gt;</div>
+<div class="line">        set ul_radio_ch_dly &lt;cc&gt; &lt;delay&gt; (deprecated)</div>
 <div class="line">        set [dl_iq_compression | dl_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
 <div class="line">        set [ul_iq_compression | ul_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
 <div class="line">        set [ssb_iq_compression | ssb_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
 <div class="line">        set [prach_iq_compression | prach_iq_comp] &lt;cc&gt; &lt;width&gt; &lt;method&gt; &lt;mplane = 0 | 1&gt;</div>
-<div class="line">        set dl_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
-<div class="line">        set ul_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
-<div class="line">        set ssb_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt;</div>
+<div class="line">        set dl_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt; &lt;number_of_ctrl_words&gt;</div>
+<div class="line">        set ul_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt; &lt;number_of_ctrl_words&gt;</div>
+<div class="line">        set ssb_sections_per_sym &lt;cc&gt; &lt;number_of_sections&gt; &lt;number_of_ctrl_words&gt;</div>
 <div class="line">        set frames_per_sym &lt;cc&gt; &lt;number_of_frames&gt;</div>
 <div class="line">        set frames_per_sym_ssb &lt;cc&gt; &lt;number_of_frames&gt;</div>
 <div class="line">        set dest_mac_addr &lt;port&gt; &lt;address&gt;</div>
@@ -203,7 +205,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> : <a class="code" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> [fhi] &lt;name&gt; &lt;value&gt;</div>
 <div class="line">write_reg_offset : write_reg_offset [fhi] &lt;name&gt; &lt;offset&gt; &lt;value&gt;</div>
 <div class="line">dump_reg : dump_reg [fhi]</div>
-<div class="line">ecpri : (Use <span class="stringliteral">&#39;ecpri help&#39;</span> <span class="keywordflow">for</span> additional help and usage information)</div>
 <div class="line">peek : peek &lt;address&gt;</div>
 <div class="line">poke : poke &lt;address&gt; &lt;value&gt;</div>
 <div class="line">quit : quit</div>

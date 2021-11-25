@@ -233,21 +233,6 @@ int xorif_fhi_set_cc_iq_compression_ssb(uint16_t cc,
                                         uint16_t mplane);
 
 /**
- * @brief Configure the uplink IQ compression for the component carrier PRACH.
- * @param[in] cc Component carrier to configure
- * @param[in] bit_width Bit width
- * @param[in] comp_meth Compression method
- * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
- * @returns
- *      - XORIF_SUCCESS on success
- *      - Error code on failure
- */
-int xorif_fhi_set_cc_iq_compression_prach(uint16_t cc,
-                                          uint16_t bit_width,
-                                          enum xorif_iq_comp comp_meth,
-                                          uint16_t mplane);
-
-/**
  * @brief Configure the uplink control memories.
  * @param[in] cc Component carrier to configure
  * @param[in] num_ctrl_per_sym_ul Number of sections per symbol
@@ -334,6 +319,7 @@ int xorif_fhi_configure_cc(uint16_t cc);
  * @param[in] sym_per_slot Number of symbols per slot (0 = 14 symbols, 1 = 12 symbols)
  * @param[in] advance_ul Timing advance for uplink (in microseconds, c.f. T2A_MIN_CP_UL)
  * @param[in] advance_dl Timing advance for downlink (in microseconds, c.f. TCP_ADV_DL)
+ * @param[in] ul_bid_forward Uplink beam-id forward time (in microseconds)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
@@ -342,14 +328,15 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
                                              uint16_t numerology,
                                              uint16_t sym_per_slot,
                                              double advance_ul,
-                                             double advance_dl);
+                                             double advance_dl,
+                                             double ul_bid_forward);
 
 /**
  * @brief Compute SSB timing advance for the specified component carrier.
  * @param[in] cc Component carrier to configure
  * @param[in] numerology Numerology for the specified CC
  * @param[in] sym_per_slot Number of symbols per slot (0 = 14 symbols, 1 = 12 symbols)
- * @param[in] advance Timing advance for SSB (in microseconds, c.f. TCP_ADV_DL)
+ * @param[in] advance_dl Timing advance for SSB (in microseconds, c.f. TCP_ADV_DL)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
@@ -357,22 +344,7 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
 int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
                                                  uint16_t numerology,
                                                  uint16_t sym_per_slot,
-                                                 double advance);
-
-/**
- * @brief Compute beam-id forward timing advance for the specified component carrier.
- * @param[in] cc Component carrier to configure
- * @param[in] numerology Numerology for the specified CC
- * @param[in] sym_per_slot Number of symbols per slot (0 = 14 symbols, 1 = 12 symbols)
- * @param[in] advance Uplink beam-id forward advance (in microseconds)
- * @returns
- *      - XORIF_SUCCESS on success
- *      - XORIF_FAILURE on error
- */
-int xorif_fhi_configure_ul_bid_forward(uint16_t cc,
-                                       uint16_t numerology,
-                                       uint16_t sym_per_slot,
-                                       double advance);
+                                                 double advance_dl);
 
 #endif /* XORIF_FH_FUNC_H */
 

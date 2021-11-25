@@ -4,7 +4,7 @@
 
 * This directory contains the source files and Makefile for the ORAN-Radio-Interface Example Application (xorif-app)
 
-* The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware. The xorif-app also demonstrates the handling of some eCPRI management messages, such as OWDM (One-Way Delay Measurement).
+* The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware.
 
 * The xorif-app can operate as either a "server" or a "client".
     * As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
@@ -91,17 +91,19 @@ set : set...
         set num_rbs <cc> <number_of_rbs>
         set numerology <cc> <numerology> <extended_cp = 0 | 1>
         set numerology_ssb <cc> <numerology> <extended_cp = 0 | 1>
-        set time_advance <cc> <deskew> <advance_uplink> <advance_downlink>
-        set ul_bid_forward <cc> <advance>
+        set time_advance <cc> <deskew> <advance_uplink> <advance_downlink> (deprecated)
+        set ul_timing_params <cc> <delay_comp> <advance> <radio_ch_delay>
+        set dl_timing_params <cc> <delay_comp_cp> <delay_comp_up> <advance>
+        set ul_bid_forward <cc> <time>
         set ul_bid_forward_fine <cc> <symbols> <cycles>
-        set ul_radio_ch_dly <cc> <delay>
+        set ul_radio_ch_dly <cc> <delay> (deprecated)
         set [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
         set [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
         set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
         set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
-        set dl_sections_per_sym <cc> <number_of_sections>
-        set ul_sections_per_sym <cc> <number_of_sections>
-        set ssb_sections_per_sym <cc> <number_of_sections>
+        set dl_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
+        set ul_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
+        set ssb_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
         set frames_per_sym <cc> <number_of_frames>
         set frames_per_sym_ssb <cc> <number_of_frames>
         set dest_mac_addr <port> <address>
@@ -124,7 +126,6 @@ read_reg_offset : read_reg_offset [fhi] <name> <offset>
 write_reg : write_reg [fhi] <name> <value>
 write_reg_offset : write_reg_offset [fhi] <name> <offset> <value>
 dump_reg : dump_reg [fhi]
-ecpri : (Use 'ecpri help' for additional help and usage information)
 peek : peek <address>
 poke : poke <address> <value>
 quit : quit

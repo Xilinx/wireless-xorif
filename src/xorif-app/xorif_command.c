@@ -119,17 +119,19 @@ static int num_tokens = 0;
                     "\n\tset num_rbs <cc> <number_of_rbs>"                                                  \
                     "\n\tset numerology <cc> <numerology> <extended_cp = 0 | 1>"                            \
                     "\n\tset numerology_ssb <cc> <numerology> <extended_cp = 0 | 1>"                        \
-                    "\n\tset time_advance <cc> <deskew> <advance_uplink> <advance_downlink>"                \
-                    "\n\tset ul_bid_forward <cc> <advance>"                                                 \
+                    "\n\tset time_advance <cc> <deskew> <advance_uplink> <advance_downlink> (deprecated)"   \
+                    "\n\tset ul_timing_params <cc> <delay_comp> <advance> <radio_ch_delay>"                 \
+                    "\n\tset dl_timing_params <cc> <delay_comp_cp> <delay_comp_up> <advance>"               \
+                    "\n\tset ul_bid_forward <cc> <time>"                                                    \
                     "\n\tset ul_bid_forward_fine <cc> <symbols> <cycles>"                                   \
-                    "\n\tset ul_radio_ch_dly <cc> <delay>"                                                  \
+                    "\n\tset ul_radio_ch_dly <cc> <delay> (deprecated)"                                     \
                     "\n\tset [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
                     "\n\tset [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"       \
                     "\n\tset [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>"     \
                     "\n\tset [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>" \
-                    "\n\tset dl_sections_per_sym <cc> <number_of_sections>"                                 \
-                    "\n\tset ul_sections_per_sym <cc> <number_of_sections>"                                 \
-                    "\n\tset ssb_sections_per_sym <cc> <number_of_sections>"                                \
+                    "\n\tset dl_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>"          \
+                    "\n\tset ul_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>"          \
+                    "\n\tset ssb_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>"         \
                     "\n\tset frames_per_sym <cc> <number_of_frames>"                                        \
                     "\n\tset frames_per_sym_ssb <cc> <number_of_frames>"                                    \
                     "\n\tset dest_mac_addr <port> <address>"                                                \
@@ -987,10 +989,9 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "iq_comp_meth_ssb = %d\n", config.iq_comp_meth_ssb);
                             response += sprintf(response, "iq_comp_width_ssb = %d\n", config.iq_comp_width_ssb);
                             response += sprintf(response, "iq_comp_mplane_ssb = %d\n", config.iq_comp_mplane_ssb);
-                            response += sprintf(response, "iq_comp_meth_prach = %d\n", config.iq_comp_meth_prach);
-                            response += sprintf(response, "iq_comp_width_prach = %d\n", config.iq_comp_width_prach);
-                            response += sprintf(response, "iq_comp_mplane_prach = %d\n", config.iq_comp_mplane_prach);
-                            response += sprintf(response, "deskew = %g\n", config.deskew);
+                            response += sprintf(response, "delay_comp_cp_ul = %g\n", config.delay_comp_cp_ul);
+                            response += sprintf(response, "delay_comp_cp_dl = %g\n", config.delay_comp_cp_dl);
+                            response += sprintf(response, "delay_comp_up = %g\n", config.delay_comp_up);
                             response += sprintf(response, "advance_ul = %g\n", config.advance_ul);
                             response += sprintf(response, "advance_dl = %g\n", config.advance_dl);
                             response += sprintf(response, "ul_bid_forward = %g\n", config.ul_bid_forward);
@@ -998,6 +999,8 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "num_ctrl_per_sym_ul = %d\n", config.num_ctrl_per_sym_ul);
                             response += sprintf(response, "num_ctrl_per_sym_dl = %d\n", config.num_ctrl_per_sym_dl);
                             response += sprintf(response, "num_ctrl_per_sym_ssb = %d\n", config.num_ctrl_per_sym_ssb);
+                            response += sprintf(response, "num_sect_per_sym = %d\n", config.num_sect_per_sym);
+                            response += sprintf(response, "num_sect_per_sym_ssb = %d\n", config.num_sect_per_sym_ssb);
                             response += sprintf(response, "num_frames_per_sym = %d\n", config.num_frames_per_sym);
                             response += sprintf(response, "num_frames_per_sym_ssb = %d\n", config.num_frames_per_sym_ssb);
                             return SUCCESS;
@@ -1087,7 +1090,10 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "num_eth_ports = %d\n", ptr->num_eth_ports);
                     response += sprintf(response, "numerologies = 0x%X\n", ptr->numerologies);
                     response += sprintf(response, "extended_cp = %s\n", ptr->extended_cp ? "true" : "false");
+                    response += sprintf(response, "iq_comp_methods = 0x%X\n", ptr->iq_comp_methods);
+                    response += sprintf(response, "iq_comp_bfp_widths = 0x%X\n", ptr->iq_comp_bfp_widths);
                     response += sprintf(response, "bw_comp_methods = 0x%X\n", ptr->bw_comp_methods);
+                    response += sprintf(response, "bw_comp_bfp_widths = 0x%X\n", ptr->bw_comp_bfp_widths);
                     response += sprintf(response, "uram_cache = %d\n", ptr->uram_cache);
                     response += sprintf(response, "num_antennas = %d\n", ptr->num_antennas);
                     response += sprintf(response, "num_dfes = %d\n", ptr->num_dfes);
@@ -1119,6 +1125,9 @@ static int get(const char *request, char *response)
                             response += sprintf(response, "numerology_ssb = %d\n", config.numerology_ssb);
                             response += sprintf(response, "extended_cp_ssb = %s\n", config.extended_cp_ssb ? "true" : "false");
 #endif
+                            response += sprintf(response, "iq_comp_meth_prach = %d\n", config.iq_comp_meth_prach);
+                            response += sprintf(response, "iq_comp_width_prach = %d\n", config.iq_comp_width_prach);
+                            response += sprintf(response, "iq_comp_mplane_prach = %d\n", config.iq_comp_mplane_prach);
                             response += sprintf(response, "bw_comp_meth = %d\n", config.bw_comp_meth);
                             response += sprintf(response, "bw_comp_width = %d\n", config.bw_comp_width);
                             return SUCCESS;
@@ -1299,9 +1308,29 @@ static int set(const char *request, char *response)
                         return xorif_set_cc_time_advance(cc, val1, val2, val3);
                     }
                 }
+                else if (match(s, "ul_timing_params") && num_tokens == 6)
+                {
+                    // set ul_timing_params <cc> <delay_comp> <advance> <radio_ch_delay>
+                    unsigned int cc;
+                    double val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_double(3, &val1) && parse_double(4, &val2) && parse_double(5, &val3))
+                    {
+                        return xorif_set_cc_ul_timing_parameters(cc, val1, val2, val3);
+                    }
+                }
+                else if (match(s, "dl_timing_params") && num_tokens == 6)
+                {
+                    // set dl_timing_params <cc> <delay_comp_cp> <delay_comp_up> <advance>
+                    unsigned int cc;
+                    double val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_double(3, &val1) && parse_double(4, &val2) && parse_double(5, &val3))
+                    {
+                        return xorif_set_cc_dl_timing_parameters(cc, val1, val2, val3);
+                    }
+                }
                 else if (match(s, "ul_bid_forward") && num_tokens == 4)
                 {
-                    // set ul_bid_forward <cc> <advance>
+                    // set ul_bid_forward <cc> <time>
                     unsigned int cc;
                     double val;
                     if (parse_integer(2, &cc) && parse_double(3, &val))
@@ -1391,16 +1420,20 @@ static int set(const char *request, char *response)
                     unsigned int cc, val1, val2;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
                     {
-                        return xorif_set_cc_iq_compression_prach(cc, val1, val2, 1);
+#ifdef BF_INCLUDED
+                        return xobf_set_cc_iq_compression_prach(cc, val1, val2, 1);
+#endif
                     }
                 }
                 else if ((match(s, "prach_iq_compression") || match(s, "prach_iq_comp")) && num_tokens == 6)
                 {
-                    // set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <method> <mplane = 0 | 1>
+                    // set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
                     unsigned int cc, val1, val2, val3;
                     if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
                     {
-                        return xorif_set_cc_iq_compression_prach(cc, val1, val2, val3);
+#ifdef BF_INCLUDED
+                        return xobf_set_cc_iq_compression_prach(cc, val1, val2, val3);
+#endif
                     }
                 }
 #ifdef BF_INCLUDED
@@ -1420,7 +1453,16 @@ static int set(const char *request, char *response)
                     unsigned int cc, val;
                     if (parse_integer(2, &cc) && parse_integer(3, &val))
                     {
-                        return xorif_set_cc_dl_sections_per_symbol(cc, val);
+                        return xorif_set_cc_dl_sections_per_symbol(cc, val, val);
+                    }
+                }
+                else if (match(s, "dl_sections_per_sym") && num_tokens == 5)
+                {
+                    // set dl_sections_per_sym <cc> <num sections> <num ctrl>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        return xorif_set_cc_dl_sections_per_symbol(cc, val1, val2);
                     }
                 }
                 else if (match(s, "ul_sections_per_sym") && num_tokens == 4)
@@ -1429,7 +1471,16 @@ static int set(const char *request, char *response)
                     unsigned int cc, val;
                     if (parse_integer(2, &cc) && parse_integer(3, &val))
                     {
-                        return xorif_set_cc_ul_sections_per_symbol(cc, val);
+                        return xorif_set_cc_ul_sections_per_symbol(cc, val, val);
+                    }
+                }
+                else if (match(s, "ul_sections_per_sym") && num_tokens == 5)
+                {
+                    // set ul_sections_per_sym <cc> <num sections> <num ctrl>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        return xorif_set_cc_ul_sections_per_symbol(cc, val1, val2);
                     }
                 }
                 else if (match(s, "ssb_sections_per_sym") && num_tokens == 4)
@@ -1438,7 +1489,16 @@ static int set(const char *request, char *response)
                     unsigned int cc, val;
                     if (parse_integer(2, &cc) && parse_integer(3, &val))
                     {
-                        return xorif_set_cc_sections_per_symbol_ssb(cc, val);
+                        return xorif_set_cc_sections_per_symbol_ssb(cc, val, val);
+                    }
+                }
+                else if (match(s, "ssb_sections_per_sym") && num_tokens == 5)
+                {
+                    // set ssb_sections_per_sym <cc> <num sections> <num ctrl>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        return xorif_set_cc_sections_per_symbol_ssb(cc, val1, val2);
                     }
                 }
                 else if (match(s, "frames_per_sym") && num_tokens == 4)

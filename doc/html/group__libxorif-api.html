@@ -257,9 +257,15 @@ Functions</h2></td></tr>
 <tr class="memitem:gaa3201eb51ec95a208a12a952da12fa26"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a> (uint16_t cc, double deskew, double advance_ul, double advance_dl)</td></tr>
 <tr class="memdesc:gaa3201eb51ec95a208a12a952da12fa26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the maximum deskew and control advance timing for the component carrier.  <a href="#gaa3201eb51ec95a208a12a952da12fa26">More...</a><br/></td></tr>
 <tr class="separator:gaa3201eb51ec95a208a12a952da12fa26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6ccf0eef6e7cb516d1ed4cd66dfc5b12"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga6ccf0eef6e7cb516d1ed4cd66dfc5b12">xorif_set_ul_bid_forward</a> (uint16_t cc, double advance)</td></tr>
-<tr class="memdesc:ga6ccf0eef6e7cb516d1ed4cd66dfc5b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the uplink beam-id forward advance for the component carrier.  <a href="#ga6ccf0eef6e7cb516d1ed4cd66dfc5b12">More...</a><br/></td></tr>
-<tr class="separator:ga6ccf0eef6e7cb516d1ed4cd66dfc5b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf9fc75de00d2748b74ca7662e9ff5c5e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e">xorif_set_cc_ul_timing_parameters</a> (uint16_t cc, double delay_comp_cp, double advance, double radio_ch_delay)</td></tr>
+<tr class="memdesc:gaf9fc75de00d2748b74ca7662e9ff5c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the uplink timing parameters for the component carrier.  <a href="#gaf9fc75de00d2748b74ca7662e9ff5c5e">More...</a><br/></td></tr>
+<tr class="separator:gaf9fc75de00d2748b74ca7662e9ff5c5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf43336d896069b72003f112aae1f396d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d">xorif_set_cc_dl_timing_parameters</a> (uint16_t cc, double delay_comp_cp, double delay_comp_up, double advance)</td></tr>
+<tr class="memdesc:gaf43336d896069b72003f112aae1f396d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the downlink timing parameters for the component carrier.  <a href="#gaf43336d896069b72003f112aae1f396d">More...</a><br/></td></tr>
+<tr class="separator:gaf43336d896069b72003f112aae1f396d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2b1fa8a5ab92c334994a32f2d83e65fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga2b1fa8a5ab92c334994a32f2d83e65fd">xorif_set_ul_bid_forward</a> (uint16_t cc, double time)</td></tr>
+<tr class="memdesc:ga2b1fa8a5ab92c334994a32f2d83e65fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the uplink beam-id forward time for the component carrier.  <a href="#ga2b1fa8a5ab92c334994a32f2d83e65fd">More...</a><br/></td></tr>
+<tr class="separator:ga2b1fa8a5ab92c334994a32f2d83e65fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4f5ebd79d6d83c0d6e37eff6cb7465d9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga4f5ebd79d6d83c0d6e37eff6cb7465d9">xorif_set_ul_radio_ch_dly</a> (uint16_t cc, double delay)</td></tr>
 <tr class="memdesc:ga4f5ebd79d6d83c0d6e37eff6cb7465d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the uplink radio channel delay estimate for the component carrier.  <a href="#ga4f5ebd79d6d83c0d6e37eff6cb7465d9">More...</a><br/></td></tr>
 <tr class="separator:ga4f5ebd79d6d83c0d6e37eff6cb7465d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,21 +278,18 @@ Functions</h2></td></tr>
 <tr class="memitem:gaedc9a1a8a947162d98100ab2e92171da"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaedc9a1a8a947162d98100ab2e92171da">xorif_set_cc_iq_compression_ssb</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_method, uint16_t mplane)</td></tr>
 <tr class="memdesc:gaedc9a1a8a947162d98100ab2e92171da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the SSB compression for the component carrier.  <a href="#gaedc9a1a8a947162d98100ab2e92171da">More...</a><br/></td></tr>
 <tr class="separator:gaedc9a1a8a947162d98100ab2e92171da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga29a935e45b74a6ed2766f286a6bc21d3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga29a935e45b74a6ed2766f286a6bc21d3">xorif_set_cc_iq_compression_prach</a> (uint16_t cc, uint16_t bit_width, enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a> comp_method, uint16_t mplane)</td></tr>
-<tr class="memdesc:ga29a935e45b74a6ed2766f286a6bc21d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the PRACH compression for the component carrier.  <a href="#ga29a935e45b74a6ed2766f286a6bc21d3">More...</a><br/></td></tr>
-<tr class="separator:ga29a935e45b74a6ed2766f286a6bc21d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1dc74d09ad8a24068cf946b1715187fb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga1dc74d09ad8a24068cf946b1715187fb">xorif_set_cc_dl_sections_per_symbol</a> (uint16_t cc, uint16_t num_sections)</td></tr>
-<tr class="memdesc:ga1dc74d09ad8a24068cf946b1715187fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections allowed per downlink symbol.  <a href="#ga1dc74d09ad8a24068cf946b1715187fb">More...</a><br/></td></tr>
-<tr class="separator:ga1dc74d09ad8a24068cf946b1715187fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac48101999aecfda9319ecee281a62bf0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gac48101999aecfda9319ecee281a62bf0">xorif_set_cc_ul_sections_per_symbol</a> (uint16_t cc, uint16_t num_sections)</td></tr>
-<tr class="memdesc:gac48101999aecfda9319ecee281a62bf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections allowed per uplink symbol.  <a href="#gac48101999aecfda9319ecee281a62bf0">More...</a><br/></td></tr>
-<tr class="separator:gac48101999aecfda9319ecee281a62bf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaebaccf31445eb3da67493984f26e3fba"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gaebaccf31445eb3da67493984f26e3fba">xorif_set_cc_dl_sections_per_symbol</a> (uint16_t cc, uint16_t num_sect, uint16_t num_ctrl)</td></tr>
+<tr class="memdesc:gaebaccf31445eb3da67493984f26e3fba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections and ctrl words per downlink symbol.  <a href="#gaebaccf31445eb3da67493984f26e3fba">More...</a><br/></td></tr>
+<tr class="separator:gaebaccf31445eb3da67493984f26e3fba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8791772c6c278a79420538c9b0df202d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga8791772c6c278a79420538c9b0df202d">xorif_set_cc_ul_sections_per_symbol</a> (uint16_t cc, uint16_t num_sect, uint16_t num_ctrl)</td></tr>
+<tr class="memdesc:ga8791772c6c278a79420538c9b0df202d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections and ctrl words per uplink symbol.  <a href="#ga8791772c6c278a79420538c9b0df202d">More...</a><br/></td></tr>
+<tr class="separator:ga8791772c6c278a79420538c9b0df202d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga891c7e0622f34429e09023f7d64e54d0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga891c7e0622f34429e09023f7d64e54d0">xorif_set_cc_frames_per_symbol</a> (uint16_t cc, uint16_t num_frames)</td></tr>
-<tr class="memdesc:ga891c7e0622f34429e09023f7d64e54d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of Ethernet frames allowed per (downlink) symbol.  <a href="#ga891c7e0622f34429e09023f7d64e54d0">More...</a><br/></td></tr>
+<tr class="memdesc:ga891c7e0622f34429e09023f7d64e54d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of Ethernet frames per downlink symbol.  <a href="#ga891c7e0622f34429e09023f7d64e54d0">More...</a><br/></td></tr>
 <tr class="separator:ga891c7e0622f34429e09023f7d64e54d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9134c19e37ea0de1753275532eaa6eca"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga9134c19e37ea0de1753275532eaa6eca">xorif_set_cc_sections_per_symbol_ssb</a> (uint16_t cc, uint16_t num_sections)</td></tr>
-<tr class="memdesc:ga9134c19e37ea0de1753275532eaa6eca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections allowed per SSB symbol.  <a href="#ga9134c19e37ea0de1753275532eaa6eca">More...</a><br/></td></tr>
-<tr class="separator:ga9134c19e37ea0de1753275532eaa6eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga13b800f4ca34e642e206e29a2abb6c6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga13b800f4ca34e642e206e29a2abb6c6a">xorif_set_cc_sections_per_symbol_ssb</a> (uint16_t cc, uint16_t num_sect, uint16_t num_ctrl)</td></tr>
+<tr class="memdesc:ga13b800f4ca34e642e206e29a2abb6c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of sections and ctrl words per SSB symbol.  <a href="#ga13b800f4ca34e642e206e29a2abb6c6a">More...</a><br/></td></tr>
+<tr class="separator:ga13b800f4ca34e642e206e29a2abb6c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga58c4dcf40c1bac85c7ff288b02b443f3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga58c4dcf40c1bac85c7ff288b02b443f3">xorif_set_cc_frames_per_symbol_ssb</a> (uint16_t cc, uint16_t num_frames)</td></tr>
 <tr class="memdesc:ga58c4dcf40c1bac85c7ff288b02b443f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the number of Ethernet frames allowed per SSB symbol.  <a href="#ga58c4dcf40c1bac85c7ff288b02b443f3">More...</a><br/></td></tr>
 <tr class="separator:ga58c4dcf40c1bac85c7ff288b02b443f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1437,7 +1440,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga1dc74d09ad8a24068cf946b1715187fb"></a>
+<a class="anchor" id="gaebaccf31445eb3da67493984f26e3fba"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1451,7 +1454,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>num_sections</em>&#160;</td>
+          <td class="paramname"><em>num_sect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_ctrl</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1461,11 +1470,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configure the number of sections allowed per downlink symbol. </p>
+<p>Configure the number of sections and ctrl words per downlink symbol. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sections</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -1474,6 +1484,62 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The num_sect and num_ctrl values are used in determining buffer sizes. The num_ctrl value can vary depending on the Section Type, for example 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for Type 11, etc. See PG370 for details. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf43336d896069b72003f112aae1f396d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_set_cc_dl_timing_parameters </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>cc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>delay_comp_cp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>delay_comp_up</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>advance</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the downlink timing parameters for the component carrier. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">delay_comp_cp</td><td>Delay compensation for C-Plane (in microseconds) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">delay_comp_up</td><td>Delay compensation for U-Plane (in microseconds) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">advance</td><td>Control time advance (in microseconds) (i.e. TCP_ADV_DL) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See PG370 for details. The delay_comp_cp value is the size of the valid reception window for C-Plane packets, and is equivalent to (i.e. T2A_MAX_CP_DL - T2A_MIN_CP_DL). The delay_comp_up value is the size of the valid reception window for U-Plane packets, and is equivalent to (i.e. T2A_MAX_UP - T2A_MIN_UP). The advance value is equivalent to TCP_ADV_DL. </dd></dl>
 
 </div>
 </div>
@@ -1501,7 +1567,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configure the number of Ethernet frames allowed per (downlink) symbol. </p>
+<p>Configure the number of Ethernet frames per downlink symbol. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
@@ -1514,6 +1580,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The num_frames value is used in determining buffer sizes. See PG370 for details. </dd></dl>
 
 </div>
 </div>
@@ -1554,61 +1621,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga29a935e45b74a6ed2766f286a6bc21d3"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int xorif_set_cc_iq_compression_prach </td>
-          <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>cc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>bit_width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">enum <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b">xorif_iq_comp</a>&#160;</td>
-          <td class="paramname"><em>comp_method</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>mplane</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Configure the PRACH compression for the component carrier. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">bit_width</td><td>Bit width (0-16) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">comp_method</td><td>Compression method (see <a class="el" href="group__libxorif-api.html#ga26436fd9ffeac8fb09128b81b60f347b" title="Enumerated type for IQ compression modes (ORAN values). ">xorif_iq_comp</a>) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mplane</td><td>Flag indicating M-plane (1) or C-plane (0) configuration </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>XORIF_SUCCESS on success</li>
-<li>Error code on failure </li>
-</ul>
-</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16. The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration. With static configuration, the M-plane is used to configure the compression mode using the supplied values (bit_width and comp_method). With dynamic configuration, the C-plane is used to configure the compression. However, the supplied values (bit_width and comp_method) are still used for internal buffer sizing. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The num_frames value is used in determining buffer sizes. See PG370 for details. </dd></dl>
 
 </div>
 </div>
@@ -1801,7 +1814,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga9134c19e37ea0de1753275532eaa6eca"></a>
+<a class="anchor" id="ga13b800f4ca34e642e206e29a2abb6c6a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1815,7 +1828,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>num_sections</em>&#160;</td>
+          <td class="paramname"><em>num_sect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_ctrl</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1825,11 +1844,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configure the number of sections allowed per SSB symbol. </p>
+<p>Configure the number of sections and ctrl words per SSB symbol. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sections</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -1838,6 +1858,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The num_sect and num_ctrl values are used in determining buffer sizes. The num_ctrl value can vary depending on the Section Type, for example 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for Type 11, etc. See PG370 for details. </dd></dl>
 
 </div>
 </div>
@@ -1892,7 +1913,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See PG370 for details. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See PG370 for details. Note: This function is deprecated. Use <a class="el" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e" title="Set the uplink timing parameters for the component carrier. ">xorif_set_cc_ul_timing_parameters()</a> and <a class="el" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d" title="Set the downlink timing parameters for the component carrier. ">xorif_set_cc_dl_timing_parameters()</a>. </dd></dl>
 
 </div>
 </div>
@@ -1951,7 +1972,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="gac48101999aecfda9319ecee281a62bf0"></a>
+<a class="anchor" id="ga8791772c6c278a79420538c9b0df202d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1965,7 +1986,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>num_sections</em>&#160;</td>
+          <td class="paramname"><em>num_sect</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_ctrl</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -1975,11 +2002,12 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Configure the number of sections allowed per uplink symbol. </p>
+<p>Configure the number of sections and ctrl words per uplink symbol. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sections</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -1988,6 +2016,62 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The num_sect and num_ctrl values are used in determining buffer sizes. The num_ctrl value can vary depending on the Section Type, for example 1 control word for Type 1, 2 words for Type 0 or Type 3, N words for Type 11, etc. See PG370 for details. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf9fc75de00d2748b74ca7662e9ff5c5e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_set_cc_ul_timing_parameters </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>cc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>delay_comp_cp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>advance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>radio_ch_delay</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the uplink timing parameters for the component carrier. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">delay_comp_cp</td><td>Delay compensation for C-Plane (in microseconds) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">advance</td><td>Control time advance (in microseconds) (i.e. T2A_MIN_CP_UL) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">radio_ch_delay</td><td>Total delay from output of FH to "air" (in microseconds) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See PG370 for details. The delay_comp_cp value is the size of the valid reception window for C-Plane packets, and is equivalent to (i.e. T2A_MAX_CP_UL - T2A_MIN_CP_UL). The advance value is equivalent to T2A_MIN_CP_UL. The radio_ch_delay value defines the time offset between the 10ms strobe and the actual "air" strobe; it compensates for the system delay for beam- former, DFE, etc. </dd></dl>
 
 </div>
 </div>
@@ -2575,7 +2659,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga6ccf0eef6e7cb516d1ed4cd66dfc5b12"></a>
+<a class="anchor" id="ga2b1fa8a5ab92c334994a32f2d83e65fd"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -2589,7 +2673,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>advance</em>&#160;</td>
+          <td class="paramname"><em>time</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -2599,11 +2683,11 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the uplink beam-id forward advance for the component carrier. </p>
+<p>Set the uplink beam-id forward time for the component carrier. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">advance</td><td>Uplink beam-id forward advance (in microseconds) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">advance</td><td>Uplink beam-id forward time (in microseconds) </td></tr>
   </table>
   </dd>
 </dl>
@@ -2649,7 +2733,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>XORIF_SUCCESS on success</li>
-<li>Error code on failure. See PG370 for details. </li>
+<li>Error code on failure. See PG370 for details. Note: This function is deprecated. Use <a class="el" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e" title="Set the uplink timing parameters for the component carrier. ">xorif_set_cc_ul_timing_parameters()</a>. </li>
 </ul>
 </dd></dl>
 

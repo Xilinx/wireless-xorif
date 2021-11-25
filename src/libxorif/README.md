@@ -43,8 +43,13 @@ xorif_set_cc_num_rbs(0, 275);
 // CC[0]: Set the numerology to 1 (normal cyclic prefix)
 xorif_set_cc_numerology(0, 1, 0);
 
-// CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
-xorif_set_cc_time_advance(0, 30, 90, 90);
+// CC[0]: Set the uplink timing parameters
+// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)
+xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
+
+// CC[0]: Set the downlink timing parameters
+// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)
+xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(0, 9, 1);
@@ -68,8 +73,13 @@ xorif_set_cc_num_rbs(0, 275);
 // CC[0]: Set the numerology to 1 (normal cyclic prefix)
 xorif_set_cc_numerology(0, 1, 0);
 
-// CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
-xorif_set_cc_time_advance(0, 30, 90, 90);
+// CC[0]: Set the uplink timing parameters
+// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)
+xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
+
+// CC[0]: Set the downlink timing parameters
+// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)
+xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(0, 9, 1);
@@ -87,8 +97,13 @@ xorif_set_cc_num_rbs(1, 100);
 // CC[1]: Set the numerology to 0 (normal cyclic prefix)
 xorif_set_cc_numerology(1, 0, 0);
 
-// CC[1]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
-xorif_set_cc_time_advance(1, 30, 90, 90);
+// CC[1]: Set the uplink timing parameters
+// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)
+xorif_set_cc_ul_timing_parameters(1, 30, 90, 30);
+
+// CC[1]: Set the downlink timing parameters
+// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)
+xorif_set_cc_dl_timing_parameters(1, 30, 30, 90);
 
 // CC[1]: Set the down-link & up-link compression (9 bits, block-floating-point)
 xorif_set_cc_dl_iq_compression(1, 9, 1);
@@ -112,8 +127,13 @@ xorif_set_cc_num_rbs(0, 20);
 // CC[0]: Set the numerology to 1 (normal cyclic prefix)
 xorif_set_cc_numerology(0, 0, 0);
 
-// CC[0]: Set the timing advances & deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)
-xorif_set_cc_time_advance(0, 30, 90, 90);
+// CC[0]: Set the uplink timing parameters
+// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)
+xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
+
+// CC[0]: Set the downlink timing parameters
+// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)
+xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (no compression)
 xorif_set_cc_dl_iq_compression(0, 0, 0);
@@ -121,8 +141,8 @@ xorif_set_cc_ul_iq_compression(0, 0, 0);
 
 // CC[0]: Set max number of sections per symbol (10 for both uplink and downlink)
 // Note, this number affects the memory allocation for component carriers
-xorif_set_cc_ul_sections_per_symbol(0, 10);
-xorif_set_cc_dl_sections_per_symbol(0, 10);
+xorif_set_cc_ul_sections_per_symbol(0, 10, 10);
+xorif_set_cc_dl_sections_per_symbol(0, 10, 10);
 
 // CC[0]: Set number of Ethernet frames per symbol (5 frames)
 // Note, this number affects the memory allocation for component carriers
@@ -155,8 +175,8 @@ LIBXORIF> xorif_set_cc_num_rbs(0, 20)
 LIBXORIF> xorif_set_cc_numerology(0, 0, 0)
 LIBXORIF> xorif_set_cc_dl_iq_compression(0, 0, 0)
 LIBXORIF> xorif_set_cc_ul_iq_compression(0, 0, 0)
-LIBXORIF> xorif_set_cc_ul_sections_per_symbol(0, 10)
-LIBXORIF> xorif_set_cc_dl_sections_per_symbol(0, 10)
+LIBXORIF> xorif_set_cc_ul_sections_per_symbol(0, 10, 10)
+LIBXORIF> xorif_set_cc_dl_sections_per_symbol(0, 10, 10)
 LIBXORIF> xorif_configure_cc(0)
 LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x1 (1)
 LIBXORIF> READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] => 0x1 (1)

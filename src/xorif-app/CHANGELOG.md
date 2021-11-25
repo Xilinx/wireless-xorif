@@ -8,6 +8,7 @@
 * Added command to set 'ul_radio_ch_dly' per component carrier
 * Removed legacy "ecpri" commands
 * Improved code coverage testing
+* Changes for new and deprecated APIs
 
 ## Release 2021.1
 * Refactored library code

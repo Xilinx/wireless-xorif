@@ -12,6 +12,8 @@ var searchData=
   ['num_5fprach_5fports',['num_prach_ports',['../structxorif__caps.html#a7a9a81e2cfc6a0f33192ed9000ce843e',1,'xorif_caps']]],
   ['num_5frbs',['num_rbs',['../structxorif__cc__config.html#a24ef9909f0a1e732f95f0111905c0586',1,'xorif_cc_config']]],
   ['num_5frbs_5fssb',['num_rbs_ssb',['../structxorif__cc__config.html#ab532c29eb47d3f926dca650dc07f0405',1,'xorif_cc_config']]],
+  ['num_5fsect_5fper_5fsym',['num_sect_per_sym',['../structxorif__cc__config.html#a68dfdb4a4aa087de9fe9f6b706f4e4c0',1,'xorif_cc_config']]],
+  ['num_5fsect_5fper_5fsym_5fssb',['num_sect_per_sym_ssb',['../structxorif__cc__config.html#a3cbce6838d3eae57d5b48bb632be9e77',1,'xorif_cc_config']]],
   ['num_5funsolicited_5fports',['num_unsolicited_ports',['../structxorif__caps.html#a55239fc46ecad50af8898af012874670',1,'xorif_caps']]],
   ['numerologies',['numerologies',['../structxorif__caps.html#ac8c780b8cf22b37f6a6e58632ae48058',1,'xorif_caps']]],
   ['numerology',['numerology',['../structxorif__cc__config.html#ac84fa34977ebd1d5d9f9c70e0de1926e',1,'xorif_cc_config']]],

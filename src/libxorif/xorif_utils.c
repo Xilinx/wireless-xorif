@@ -353,7 +353,7 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
         bfp_widths = fhi_caps.iq_de_comp_bfp_widths;
         mod_widths = fhi_caps.iq_de_comp_mod_widths;
     }
-    else if (chan == CHAN_UL)
+    else if ((chan == CHAN_UL) || (chan == CHAN_PRACH))
     {
         methods = fhi_caps.iq_comp_methods;
         bfp_widths = fhi_caps.iq_comp_bfp_widths;
@@ -366,12 +366,22 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
         mod_widths = 0;
     }
 
+    if (bit_width > 16)
+    {
+        // Not supported
+        return 0;
+    }
+    else if (bit_width == 16)
+    {
+        // A bit_width value of 16 is equivalent to 0
+        bit_width = 0;
+    }
+
     // Check configuration support
     switch (comp_method)
     {
     case IQ_COMP_NONE:
-        // For alignment with O-RAN standard, a width value of 0 is equivalent to 16
-        return (methods & (1 << comp_method)) && ((bit_width == 0) | (bit_width == 16));
+        return (methods & (1 << comp_method)) && (bit_width == 0);
 
     case IQ_COMP_BLOCK_FP:
         return (methods & (1 << comp_method)) && (bfp_widths & (1 << bit_width));

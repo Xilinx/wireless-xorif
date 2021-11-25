@@ -9,6 +9,11 @@
 * Improved debug logging
 * Improved code coverage testing
 * Change interrupt handler so call-back called 'then' default processing
+* xorif_set_cc_time_advance() API deprecated in favour of xorif_set_cc_ul_timing_parameters() and xorif_set_cc_dl_timing_parameters()
+* xorif_set_ul_radio_ch_dly() API deprecated in favour of xorif_set_cc_ul_timing_parameters()
+* xorif_set_cc_dl_sections_per_symbol(), xorif_set_cc_ul_sections_per_symbol() and xorif_set_cc_sections_per_symbol_ssb() APIs now takes parameters of "number_of_sections" and "number_of_ctrl_words"
+* Fixed calculation for number of symbols (UL Ctrl, DL Ctrl and DL Data)
+* Fixed calculation for register programming SETUP_C_ABS_SYMBOL and SETUP_C_CYCLES for uplink, downlink and UL BID forward
 
 ## Release 2021.1
 * Refactored library code

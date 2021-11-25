@@ -125,8 +125,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="comment">// CC[0]: Set the numerology to 1 (normal cyclic prefix)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 1, 0);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// CC[0]: Set the timing advances &amp; deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)</span></div>
-<div class="line"><a class="code" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a>(0, 30, 90, 90);</div>
+<div class="line"><span class="comment">// CC[0]: Set the uplink timing parameters</span></div>
+<div class="line"><span class="comment">// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e">xorif_set_cc_ul_timing_parameters</a>(0, 30, 90, 30);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// CC[0]: Set the downlink timing parameters</span></div>
+<div class="line"><span class="comment">// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d">xorif_set_cc_dl_timing_parameters</a>(0, 30, 30, 90);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[0]: Set the down-link &amp; up-link compression (9 bits, block-floating-point)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 9, 1);</div>
@@ -146,8 +151,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="comment">// CC[0]: Set the numerology to 1 (normal cyclic prefix)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 1, 0);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// CC[0]: Set the timing advances &amp; deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)</span></div>
-<div class="line"><a class="code" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a>(0, 30, 90, 90);</div>
+<div class="line"><span class="comment">// CC[0]: Set the uplink timing parameters</span></div>
+<div class="line"><span class="comment">// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e">xorif_set_cc_ul_timing_parameters</a>(0, 30, 90, 30);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// CC[0]: Set the downlink timing parameters</span></div>
+<div class="line"><span class="comment">// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d">xorif_set_cc_dl_timing_parameters</a>(0, 30, 30, 90);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[0]: Set the down-link &amp; up-link compression (9 bits, block-floating-point)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 9, 1);</div>
@@ -165,8 +175,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="comment">// CC[1]: Set the numerology to 0 (normal cyclic prefix)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(1, 0, 0);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// CC[1]: Set the timing advances &amp; deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)</span></div>
-<div class="line"><a class="code" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a>(1, 30, 90, 90);</div>
+<div class="line"><span class="comment">// CC[1]: Set the uplink timing parameters</span></div>
+<div class="line"><span class="comment">// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e">xorif_set_cc_ul_timing_parameters</a>(1, 30, 90, 30);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// CC[1]: Set the downlink timing parameters</span></div>
+<div class="line"><span class="comment">// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d">xorif_set_cc_dl_timing_parameters</a>(1, 30, 30, 90);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[1]: Set the down-link &amp; up-link compression (9 bits, block-floating-point)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(1, 9, 1);</div>
@@ -186,8 +201,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="comment">// CC[0]: Set the numerology to 1 (normal cyclic prefix)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 0, 0);</div>
 <div class="line"></div>
-<div class="line"><span class="comment">// CC[0]: Set the timing advances &amp; deskew (deskew = 30us, up-link advance = 90us, down-link = 90us)</span></div>
-<div class="line"><a class="code" href="group__libxorif-api.html#gaa3201eb51ec95a208a12a952da12fa26">xorif_set_cc_time_advance</a>(0, 30, 90, 90);</div>
+<div class="line"><span class="comment">// CC[0]: Set the uplink timing parameters</span></div>
+<div class="line"><span class="comment">// (delay compensation = 30us, control time advance = 90us, radio channel delay = 30us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf9fc75de00d2748b74ca7662e9ff5c5e">xorif_set_cc_ul_timing_parameters</a>(0, 30, 90, 30);</div>
+<div class="line"></div>
+<div class="line"><span class="comment">// CC[0]: Set the downlink timing parameters</span></div>
+<div class="line"><span class="comment">// (C-Plane delay compensation = 30us, U-Plane delay compensation = 30us, control time advance = 90us)</span></div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaf43336d896069b72003f112aae1f396d">xorif_set_cc_dl_timing_parameters</a>(0, 30, 30, 90);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[0]: Set the down-link &amp; up-link compression (no compression)</span></div>
 <div class="line"><a class="code" href="group__libxorif-api.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 0, 0);</div>
@@ -195,8 +215,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[0]: Set max number of sections per symbol (10 for both uplink and downlink)</span></div>
 <div class="line"><span class="comment">// Note, this number affects the memory allocation for component carriers</span></div>
-<div class="line"><a class="code" href="group__libxorif-api.html#gac48101999aecfda9319ecee281a62bf0">xorif_set_cc_ul_sections_per_symbol</a>(0, 10);</div>
-<div class="line"><a class="code" href="group__libxorif-api.html#ga1dc74d09ad8a24068cf946b1715187fb">xorif_set_cc_dl_sections_per_symbol</a>(0, 10);</div>
+<div class="line"><a class="code" href="group__libxorif-api.html#ga8791772c6c278a79420538c9b0df202d">xorif_set_cc_ul_sections_per_symbol</a>(0, 10, 10);</div>
+<div class="line"><a class="code" href="group__libxorif-api.html#gaebaccf31445eb3da67493984f26e3fba">xorif_set_cc_dl_sections_per_symbol</a>(0, 10, 10);</div>
 <div class="line"></div>
 <div class="line"><span class="comment">// CC[0]: Set number of Ethernet frames per symbol (5 frames)</span></div>
 <div class="line"><span class="comment">// Note, this number affects the memory allocation for component carriers</span></div>
@@ -228,8 +248,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 0, 0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 0, 0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga5ae73ee046a29f31dcaec51ea42c674e">xorif_set_cc_ul_iq_compression</a>(0, 0, 0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gac48101999aecfda9319ecee281a62bf0">xorif_set_cc_ul_sections_per_symbol</a>(0, 10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga1dc74d09ad8a24068cf946b1715187fb">xorif_set_cc_dl_sections_per_symbol</a>(0, 10)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga8791772c6c278a79420538c9b0df202d">xorif_set_cc_ul_sections_per_symbol</a>(0, 10, 10)</div>
+<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#gaebaccf31445eb3da67493984f26e3fba">xorif_set_cc_dl_sections_per_symbol</a>(0, 10, 10)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif-api.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a>(0)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
 <div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
