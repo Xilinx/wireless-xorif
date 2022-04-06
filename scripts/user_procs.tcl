@@ -17,46 +17,54 @@ namespace eval ::roe::data {
     puts "USER: add probes & other connections"
     add_zcu_exd_connections $board
     
-    set_property -dict [list CONFIG.C_NUM_OF_PROBES {12} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells oran_mon/ila_int]
+
+    if { [llength [get_bd_cells oran_mon/ila_int]] > 0 } {
+
+      set_property -dict [list CONFIG.C_NUM_OF_PROBES {1} CONFIG.C_MON_TYPE {MIX} CONFIG.C_NUM_MONITOR_SLOTS {3}] [get_bd_cells oran_mon/ila_int]
+      set ipName roe_framer_0
+
+      set_property -dict [list CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:xroe_display:xroe_dl_xran_header_if_rtl:1.0}] [get_bd_cells oran_mon/ila_int]
+      set_property -dict [list CONFIG.C_SLOT_2_INTF_TYPE {xilinx.com:xroe_display:xorif_timing_if_rtl:1.0}]        [get_bd_cells oran_mon/ila_int]
+
+      connect_bd_intf_net [get_bd_intf_pins ${ipName}/m0_xran_head   ] [get_bd_intf_pins oran_mon/ila_int/SLOT_1_XROE_DL_XRAN_HEADER_IF] 
+      connect_bd_intf_net [get_bd_intf_pins ${ipName}/cc0_timing     ] [get_bd_intf_pins oran_mon/ila_int/SLOT_2_XORIF_TIMING_IF] 
     
-    set ipName roe_framer_0
+      connect_bd_net [get_bd_pins /torwave_0/radio_offset_10ms_stretch] [get_bd_pins oran_mon/ila_int/probe0]
+
+      set_property -dict [ list \
+       CONFIG.C_NUM_MONITOR_SLOTS {2} \
+       CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
+      ] [get_bd_cells oran_mon/ila_eth]
+
+      connect_bd_intf_net [get_bd_intf_pins oran_mon/ila_eth/SLOT_1_AXIS] [get_bd_intf_pins  ${ipName}/m0_eth_axis]
+
+      ## Shrink this as device is pretty full! 96% BRAM
+      ## If deeper ILA needed the XRAN_HEADER can be dropped and selective probes added
+      set_property -dict [list CONFIG.C_DATA_DEPTH {4096}] [get_bd_cells oran_mon/ila_int]
+      set_property -dict [list CONFIG.C_DATA_DEPTH {4096}] [get_bd_cells oran_mon/ila_eth]
     
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_cta_sym_num]          [get_bd_pins oran_mon/ila_int/probe0]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_sym_num]              [get_bd_pins oran_mon/ila_int/probe1]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_update]               [get_bd_pins oran_mon/ila_int/probe2]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_cta_sym_num]          [get_bd_pins oran_mon/ila_int/probe3]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_sym_num]              [get_bd_pins oran_mon/ila_int/probe4]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_update]               [get_bd_pins oran_mon/ila_int/probe5]
-    connect_bd_net [get_bd_pins ${ipName}/m0_radio_app_head_valid]    [get_bd_pins oran_mon/ila_int/probe6]
-    connect_bd_net [get_bd_pins ${ipName}/m0_section_header_valid]    [get_bd_pins oran_mon/ila_int/probe7]
-    connect_bd_net [get_bd_pins ${ipName}/m0_t_header_offset_valid]   [get_bd_pins oran_mon/ila_int/probe8]
-    connect_bd_net [get_bd_pins ${ipName}/m0_packet_in_window]        [get_bd_pins oran_mon/ila_int/probe9]
-    connect_bd_net [get_bd_pins /torwave_0/radio_offset_10ms_stretch] [get_bd_pins oran_mon/ila_int/probe10]
-    connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]        [get_bd_pins oran_mon/ila_int/probe11]
-
-    set_property -dict [ list \
-     CONFIG.C_NUM_MONITOR_SLOTS {2} \
-     CONFIG.C_SLOT_1_INTF_TYPE {xilinx.com:interface:axis_rtl:1.0} \
-    ] [get_bd_cells oran_mon/ila_eth]
-
-    connect_bd_intf_net [get_bd_intf_pins oran_mon/ila_eth/SLOT_1_AXIS] [get_bd_intf_pins  ${ipName}/m0_eth_axis]
-
+    } else {
+      puts "USER: oran_mon block was not found!"  
+    }
+    
     ## re validate
     validate_bd_design
 
   }
 
   proc add_zcu_exd_connections { board } {
-    #delete_bd_objs [get_bd_nets roe_radio_top_0_fram_radio_start_10ms]
-    #delete_bd_objs [get_bd_nets roe_radio_top_0_defm_radio_start_10ms]
-    #connect_bd_net [get_bd_pins roe_framer_0/defm_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
-    #connect_bd_net [get_bd_pins roe_framer_0/fram_radio_start_10ms]    [get_bd_pins torwave_0/radio_offset_10ms]
 
     ## Will need to add some board selection here
     #set_property -dict [list CONFIG.memory_word_depth {32768}] [get_bd_cells torwave_0]
     #set_property -dict [list CONFIG.memory_word_depth {65536}] [get_bd_cells torwave_0]
     #set_property -dict [list CONFIG.memory_word_depth {135168}] [get_bd_cells torwave_0]
     set_property -dict [list CONFIG.memory_word_depth {122880}] [get_bd_cells torwave_0]
+
+    if { $board eq "vck190" } {
+
+      return 
+      
+    }
 
     create_bd_port -dir O radio_offset_10ms_stretch
     connect_bd_net [get_bd_pins /torwave_0/radio_offset_10ms_stretch] [get_bd_ports radio_offset_10ms_stretch]

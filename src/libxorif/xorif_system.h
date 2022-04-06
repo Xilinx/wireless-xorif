@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,17 @@
  * @brief Header file defines various system constants and configuration parameters.
  * @addtogroup libxorif
  * @{
- *
- * C Library API for the Xilinx ORAN Radio Interface (libxorif)
  */
 
 #ifndef XORIF_SYSTEM_H
 #define XORIF_SYSTEM_H
 
 #include <inttypes.h>
+
+// Software version number
+#define SW_MAJ_VER 2
+#define SW_MIN_VER 2
+#define SW_REVISION 1
 
 // System constants
 #define NUM_NUMEROLOGY 5 /**< Number of numerologies */

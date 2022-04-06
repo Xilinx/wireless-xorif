@@ -43,20 +43,12 @@
 #include <errno.h>
 #include <linux/sockios.h>
 #include "xorif_app.h"
-#include "ecpri_proto.h"
 
 int ip_socket_fd = -1;
 int udp_socket_fd = -1;
 int new_socket_fd = -1;
 
-// Enable LEGACY_ECPRI for the legacy EPCI message processing, etc.
-//#define LEGACY_ECPRI
-
-#ifdef LEGACY_ECPRI
-#define NUM_LISTEN_SOCKETS 2
-#else
 #define NUM_LISTEN_SOCKETS 1
-#endif
 #define IP_POLL_FD 0
 #define UDP_POLL_FD 1
 struct pollfd fds[NUM_LISTEN_SOCKETS];
@@ -74,10 +66,6 @@ static int open_connections(void)
     struct sockaddr_in addr;
     int err;
     int opt;
-#ifdef LEGACY_ECPRI
-    struct ifreq ifreq;
-    struct hwtstamp_config cfg;
-#endif
 
     // Creating TCP/IP socket file descriptor
     if ((ip_socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -122,95 +110,6 @@ static int open_connections(void)
     // Add to poll structure
     fds[IP_POLL_FD].fd = ip_socket_fd;
     fds[IP_POLL_FD].events = POLLIN;
-
-#ifdef LEGACY_ECPRI
-    // Creating UDP socket file descriptor
-    if ((udp_socket_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
-    {
-        PERROR("Socket creation failed\n");
-        return COMMS_ERROR;
-    }
-
-    // Set socket options for address & port re-use
-    opt = 1;
-    err = setsockopt(udp_socket_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
-    if (err < 0)
-    {
-        PERROR("Socket options failed (SO_REUSEADDR | SO_REUSEPORT): %x\n", err);
-        return COMMS_ERROR;
-    }
-
-    // Set socket options for time-stamping
-    opt = 0;
-    opt |= SOF_TIMESTAMPING_TX_HARDWARE | SOF_TIMESTAMPING_TX_SOFTWARE;
-    opt |= SOF_TIMESTAMPING_RX_HARDWARE | SOF_TIMESTAMPING_RX_SOFTWARE;
-    opt |= SOF_TIMESTAMPING_RAW_HARDWARE | SOF_TIMESTAMPING_SOFTWARE;
-#ifdef SOF_TIMESTAMPING_OPT_TX_SWHW
-    opt |= SOF_TIMESTAMPING_OPT_TX_SWHW;
-#endif
-#ifdef SOF_TIMESTAMPING_OPT_ID
-    opt |= SOF_TIMESTAMPING_OPT_ID;
-#endif
-#ifdef SOF_TIMESTAMPING_OPT_TSONLY
-    opt |= SOF_TIMESTAMPING_OPT_TSONLY;
-#endif
-#ifdef SOF_TIMESTAMPING_OPT_CMSG
-    opt |= SOF_TIMESTAMPING_OPT_CMSG;
-#endif
-    err = setsockopt(udp_socket_fd, SOL_SOCKET, SO_TIMESTAMPING, &opt, sizeof(opt));
-    if (err < 0)
-    {
-        PERROR("Socket options failed (SO_TIMESTAMPING): %x\n", err);
-        return COMMS_ERROR;
-    }
-
-    // Set up the ifreq structure
-    memset(&ifreq, 0, sizeof(ifreq));
-    snprintf(ifreq.ifr_name, sizeof(ifreq.ifr_name) - 1, "%s", eth_device_name);
-    ifreq.ifr_data = (void *)&cfg;
-    memset(&cfg, 0, sizeof(cfg));
-    cfg.tx_type = HWTSTAMP_TX_ON;
-    cfg.rx_filter = HWTSTAMP_FILTER_ALL;
-
-    // Configure socket using IOCTL
-    err = ioctl(udp_socket_fd, SIOCSHWTSTAMP, &ifreq);
-    if (err < 0)
-    {
-        // Treat as "warning" rather than "error"
-        err = errno;
-        TRACE("Socket IOCTL failed (SIOCSHWTSTAMP): %x\n", err);
-        if (err == ERANGE)
-        {
-            TRACE("The requested time stamping mode is not supported by the hardware.\n");
-        }
-    }
-
-    // Bind this socket to a particular device!
-    memset(&ifreq, 0, sizeof(ifreq));
-    snprintf(ifreq.ifr_name, sizeof(ifreq.ifr_name) - 1, "%s", eth_device_name);
-    if (setsockopt(udp_socket_fd, SOL_SOCKET, SO_BINDTODEVICE, (void *)&ifreq, sizeof(ifreq)) < 0)
-    {
-        PERROR("UDP device bind failed (SO_BINDTODEVICE): %x\n", errno);
-        return COMMS_ERROR;
-    }
-
-    // Set-up address
-    memset(&addr, 0, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(port);
-
-    // Bind socket to the port
-    if (bind(udp_socket_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-    {
-        PERROR("Socket bind failed\n");
-        return COMMS_ERROR;
-    }
-
-    // Add to poll structure
-    fds[UDP_POLL_FD].fd = sock_ip;
-    fds[UDP_POLL_FD].events = POLLIN;
-#endif // LEGACY_ECPRI
 
     return SUCCESS;
 }
@@ -306,7 +205,6 @@ int do_socket(void)
         return COMMS_ERROR;
     }
 
-    // TODO need to decide how to handle errors here, stop or continue?
     while (!quit)
     {
         // Poll the connections
@@ -346,24 +244,13 @@ int do_socket(void)
             }
             else if (result == TERMINATE)
             {
-                TRACE("Terminating application\n");
+                TRACE("Terminating server\n");
                 quit = 1;
             }
 
             // Close connection
             close(new_socket_fd);
         }
-#ifdef LEGACY_ECPRI
-        else if (fds[UDP_POLL_FD].revents & (POLLIN | POLLERR))
-        {
-            // Handle UDP socket events...
-            int result = proto_ecpri_handle_incoming_msg(fds[UDP_POLL_FD].fd, fds[UDP_POLL_FD].revents, NULL);
-            if (result < 0)
-            {
-                PERROR("Error processing ECPRI protocol (%d)\n", result);
-            }
-        }
-#endif
     }
 
     // Close connections

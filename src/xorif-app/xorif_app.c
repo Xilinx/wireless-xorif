@@ -32,19 +32,25 @@ enum op_mode
     SERVER_MODE = 0,
     CMD_LINE_MODE,
     FILE_MODE,
+    INTERACTIVE_MODE,
 };
 
 // Global variables
-int trace = 0;
+int app_trace = 0;
 int remote_host = 0;
 int remote_target = 0;
 int port = 5001; // Default port
 const char *ip_addr_name = "127.0.0.1"; // Default IP address
-const char *eth_device_name = "eth0"; // Default ethernet device
 const char *pid_file = "/var/run/xorif-app.pid";
-const char *copy_right = "(c) Copyright 2019 – 2021 Xilinx, Inc. All rights reserved.";
-const char * const app_server_str = "XORIF-APP-SERVER";
-const char * const app_client_str = "XORIF-APP-CLIENT";
+const char *copy_right = "(c) Copyright 2019 - 2022 Xilinx, Inc. All rights reserved.";
+#ifdef XNRAAS_APP
+const char * const app_server_str = "XNRAAS-APP-SRV";
+const char * const app_client_str = "XNRAAS-APP-CLI";
+#else
+const char * const app_server_str = "XORIF-APP-SRV";
+const char * const app_client_str = "XORIF-APP-CLI";
+#endif
+const char * const app_version_str = "2.0"; // Version string
 const char *app_name;
 int no_fhi = 0;
 int no_bf = 0;
@@ -77,12 +83,13 @@ int main(int argc, char *argv[])
     int do_help = 0;
     int do_banner = 1;
     int do_init = 0;
+    int do_version = 0;
     const char *file = "";
     int opt;
 
     // Process command line options
     opterr = 0;
-    while ((opt = getopt(argc, argv, "bce:f:hin:p:svBF")) != -1)
+    while ((opt = getopt(argc, argv, "bcf:hin:p:svBFIV")) != -1)
     {
         switch (opt)
         {
@@ -92,9 +99,6 @@ int main(int argc, char *argv[])
         case 'c':
             mode = CMD_LINE_MODE;
             do_banner = 0;
-            break;
-        case 'e':
-            eth_device_name = optarg;
             break;
         case 'f':
             mode = FILE_MODE;
@@ -120,13 +124,19 @@ int main(int argc, char *argv[])
             mode = SERVER_MODE;
             break;
         case 'v':
-            trace = 1;
+            app_trace = 1;
             break;
         case 'B':
             no_bf = 1;
             break;
         case 'F':
             no_fhi = 1;
+            break;
+        case 'I':
+            mode = INTERACTIVE_MODE;
+            break;
+        case 'V':
+            do_version = 1;
             break;
         case '?':
             if (optopt == 'e' || optopt == 'f' || optopt == 'n' || optopt == 'p')
@@ -158,18 +168,22 @@ int main(int argc, char *argv[])
 
     if (do_help)
     {
-        printf("Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {\"<command> {<arguments>}\"}\n");
-        printf("\t-b Disable banner\n");
-        printf("\t-c Client mode using the command line\n");
-        printf("\t-e <device> Specified ethernet device (default eth0)\n");
-        printf("\t-f <file> Client mode using the specified file\n");
+        printf("Usage: %s [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>] {\"<command> {<arguments>}\"}\n", argv[0]);
         printf("\t-h Show help\n");
-        printf("\t-i Auto-initialize (server mode only)\n");
-        printf("\t-n <ip_addr> Specified IP address (for client mode) (defaults to localhost)\n");
-        printf("\t-p <port> Specified port (defaults to 5001)\n");
+        printf("\t-c Client mode using the command line\n");
+        printf("\t-f <file> Client mode using the specified file\n");
+        printf("\t-I Client mode using interactive input (type exit to leave)\n");
         printf("\t-s Server mode (default)\n");
+        printf("\t-n <ip_addr> Specified IP address (client mode only) (defaults to localhost)\n");
+        printf("\t-p <port> Specified port (defaults to 5001)\n");
+
+        printf("\t-b Disable banner on start\n");
+        printf("\t-i Auto-initialize (server mode only)\n");
         printf("\t-v Verbose\n");
+        printf("\t-V Display version of the application\n");
+
         printf("\t<command> {<arguments>} For command line mode only\n");
+
         return (do_help > 0) ? SUCCESS : FAILURE;
     }
 
@@ -177,11 +191,19 @@ int main(int argc, char *argv[])
     {
         // Banner
         printf("\n");
+#ifdef XNRAAS_APP
+        printf(" __  ___   _ ____      _        _    ____          _    ____  ____  \n");
+        printf(" \\ \\/ / \\ | |  _ \\    / \\      / \\  / ___|        / \\  |  _ \\|  _ \\ \n");
+        printf("  \\  /|  \\| | |_) |  / _ \\    / _ \\ \\___ \\ _____ / _ \\ | |_) | |_) |\n");
+        printf("  /  \\| |\\  |  _ <  / ___ \\  / ___ \\ ___) |_____/ ___ \\|  __/|  __/ \n");
+        printf(" /_/\\_\\_| \\_|_| \\_\\/_/   \\_\\/_/   \\_\\____/     /_/   \\_\\_|   |_|    \n");
+#else
         printf(" __  _____  ____  ___ _____       _    ____  ____  \n");
         printf(" \\ \\/ / _ \\|  _ \\|_ _|  ___|     / \\  |  _ \\|  _ \\ \n");
         printf("  \\  / | | | |_) || || |_ _____ / _ \\ | |_) | |_) |\n");
         printf("  /  \\ |_| |  _ < | ||  _|_____/ ___ \\|  __/|  __/ \n");
         printf(" /_/\\_\\___/|_| \\_\\___|_|      /_/   \\_\\_|   |_|    \n");
+#endif
         printf("%s\n", copy_right);
         printf("\n");
     }
@@ -189,9 +211,17 @@ int main(int argc, char *argv[])
     // Set name according to server or client
     app_name = (mode == SERVER_MODE) ? app_server_str : app_client_str;
 
-    TRACE("mode = %d\n", mode);
-    TRACE("ip_addr_name = %s, port = %d\n", ip_addr_name, port);
+    if (do_version)
+    {
+        printf("Version %s\n", app_version_str);
+        return SUCCESS;
+    }
 
+    TRACE("Version = %s\n", app_version_str);
+    TRACE("Mode = %d\n", mode);
+    TRACE("IP addr = %s, Port = %d\n", ip_addr_name, port);
+
+    int result = 0;
     switch (mode)
     {
     case CMD_LINE_MODE:
@@ -204,8 +234,8 @@ int main(int argc, char *argv[])
             // Process commands
             for (; optind < argc; ++optind)
             {
-                int result = do_command(argv[optind]);
-                if (result < 0)
+                result = do_command(argv[optind]);
+                if ((result < 0) || (result == FAILURE))
                 {
                     PERROR("(%d) whilst processing command line\n", result);
                     PERROR("'%s'\n", argv[optind]);
@@ -231,6 +261,7 @@ int main(int argc, char *argv[])
         TRACE("Server mode\n");
 #ifdef NO_HW
         fprintf(stderr, "No hardware\n");
+        (void)do_init; // Prevent warning 'unused-but-set-variable'
         return FAILURE;
 #else
         remote_target = 0;
@@ -262,7 +293,7 @@ int main(int argc, char *argv[])
         }
 #endif
 
-        int result = do_socket();
+        result = do_socket();
 
 #ifdef USE_PIDFILE
         // Delete pid file before exit
@@ -271,6 +302,14 @@ int main(int argc, char *argv[])
 
         return result;
 #endif
+
+    case INTERACTIVE_MODE:
+        // Interactive mode
+        TRACE("Interactive mode\n");
+
+        remote_host = 0;
+        remote_target = 1;
+        return do_interactive("> ");
 
     default:
         // No mode selected

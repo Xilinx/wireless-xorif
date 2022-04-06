@@ -14,15 +14,14 @@ SRC_URI = " \
 	file://xorif_file.c \
 	file://xorif_command.c \
 	file://xorif_socket.c \
-	file://ecpri.c \
-	file://ecpri_proto.c \
-	file://ecpri_proto.h \
-	file://ecpri_str.h \
+	file://xorif_interactive.c \
+	file://xorif_parser.c \
+	file://xorif_parser.h \
 	"
 
 S = "${WORKDIR}"
 
-DEPENDS = "libxorif libmetal"
+DEPENDS = "libxorif libxobf"
 
 do_compile() {
 	oe_runmake

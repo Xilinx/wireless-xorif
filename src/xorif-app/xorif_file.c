@@ -26,7 +26,7 @@
 
 int do_file(const char *name)
 {
-    static char buff[MAX_BUFF_SIZE];
+    static char buff[LINE_BUFF_SIZE];
     int return_val = SUCCESS;
 
     // Open file for reading
@@ -42,23 +42,26 @@ int do_file(const char *name)
     int num_lines = 0;
 
     // Read lines
-    while (fgets(buff, MAX_BUFF_SIZE, fp) != NULL)
+    while (fgets(buff, LINE_BUFF_SIZE, fp) != NULL)
     {
-        // Remove any trailing newline character
-        if (buff[strlen(buff) - 1] == '\n')
-        {
-            buff[strlen(buff) - 1] = '\0';
-        }
+        // Trim leading white space
+        char *request = buff;
+        while(isspace(*request)) request++;
+
+        // Trim trailing white space
+        char *end = request + strlen(request) - 1;
+        while((end > request) && (isspace(*end))) end--;
+        end[1] = '\0';
 
         // Count lines for debug / error reporting
         ++num_lines;
 
         // Parse line
-        int result = do_command(buff);
+        int result = do_command(request);
         if (result < 0)
         {
             PERROR("(%d) whilst processing '%s', line %d\n", result, name, num_lines);
-            PERROR("'%s'\n", buff);
+            PERROR("'%s'\n", request);
             return_val = FAILURE;
             break;
         }

@@ -33,13 +33,6 @@
 #include <stdarg.h>
 #include <syslog.h>
 #include <unistd.h>
-#ifndef NO_HW
-#include "xorif_api.h"
-#ifdef BF_INCLUDED
-#include "xobf_api.h"
-#endif
-#endif
-#include "xorif_app.h"
 
 // Control codes for coloured text in console
 #define ANSI_COLOR_RED "\x1b[31m"
@@ -63,7 +56,7 @@ extern const char *app_name;
 
 #define TRACE(format, ...)                                  \
     {                                                       \
-        if (trace >= 1)                                     \
+        if (app_trace >= 1)                                 \
         {                                                   \
             printf("%s> " format, app_name, ##__VA_ARGS__); \
             fflush(stdout);                                 \
@@ -72,7 +65,7 @@ extern const char *app_name;
 
 #define INFO(format, ...)                                          \
     {                                                              \
-        if (trace >= 2)                                            \
+        if (app_trace >= 2)                                        \
         {                                                          \
             printf("%s> DEBUG: " format, app_name, ##__VA_ARGS__); \
             fflush(stdout);                                        \
@@ -94,7 +87,8 @@ extern const char *app_name;
 #endif
 
 // Constants, enums, typedefs, structures, etc.
-#define MAX_BUFF_SIZE 2048
+#define LINE_BUFF_SIZE 1024
+#define MAX_BUFF_SIZE 4096
 
 /**
  * @brief Error codes.
@@ -120,12 +114,12 @@ enum error_codes
 };
 
 // Global variables...
-extern int trace;
+extern int app_trace;
 extern int remote_host;
 extern int remote_target;
 extern int port;
 extern const char *ip_addr_name;
-extern const char *eth_device_name;
+extern const char * const app_version_str;
 extern int no_fhi;
 extern int no_bf;
 
@@ -137,6 +131,15 @@ extern int no_bf;
  *      - Error code on failure
  */
 int do_file(const char *name);
+
+/**
+ * @brief Entry point for interactive mode.
+ * @param[in] prompt Prompt string to use
+ * @returns
+ *      - SUCCESS on success
+ *      - Error code on failure
+ */
+int do_interactive(const char *prompt);
 
 /**
  * @brief Main entry point for the command parser / handler.

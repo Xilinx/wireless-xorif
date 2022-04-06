@@ -15,9 +15,11 @@ SRC_URI = " \
 	file://xorif_common.h \
 	file://xorif_fh_func.c \
 	file://xorif_fh_func.h \
+	file://xorif_registers.c \
+	file://xorif_registers.h \
 	file://xorif_utils.c \
 	file://xorif_utils.h \
-	file://oran_radio_if_v2_0_ctrl.h \
+	file://oran_radio_if_v2_2_ctrl.h \
 	"
 
 S = "${WORKDIR}"

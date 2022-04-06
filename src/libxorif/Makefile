@@ -4,10 +4,10 @@ MAJOR = 1.0
 MINOR = 1
 VERSION = $(MAJOR).$(MINOR)
 
-SRCS = xorif_common.c xorif_fh_func.c xorif_utils.c
+SRCS = xorif_common.c xorif_fh_func.c xorif_utils.c xorif_registers.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
-CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG
+CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG -Wno-unused-function
 LDFLAGS += -Wl,--version-script linker.script
 LDLIBS += -lm
 

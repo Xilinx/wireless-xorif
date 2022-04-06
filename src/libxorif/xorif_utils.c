@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,12 @@
  * @{
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <dirent.h>
 #include <endian.h>
-#include "xorif_api.h"
-#include "xorif_system.h"
 #include "xorif_common.h"
 #include "xorif_fh_func.h"
 #include "xorif_utils.h"
+#include "xorif_registers.h"
 
 // Structure to hold memory allocation info
 struct block
@@ -214,12 +210,12 @@ void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_
 #endif
 }
 
-#ifndef NO_HW
 const char *get_device_name(const char *short_name)
 {
+    static char buff[256];
+#ifndef NO_HW
     DIR *folder;
     struct dirent *entry;
-    static char buff[256];
 
     // Open directory
     folder = opendir("/sys/bus/platform/devices/");
@@ -242,15 +238,20 @@ const char *get_device_name(const char *short_name)
 
             // Close the directory and return result
             closedir(folder);
-            return &buff[0];
+            return buff;
         }
     }
 
     // Close the directory and return NULL
     closedir(folder);
     return NULL;
-}
+
+#else
+    // Fake it with NO_HW
+    sprintf(buff, "%x.%s", FAKE_BASE_ADDR, short_name);
+    return buff;
 #endif
+}
 
 #ifndef NO_HW
 int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value)
@@ -286,15 +287,16 @@ int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_
 }
 #endif
 
-#ifndef NO_HW
-int add_device(struct xorif_device_info *device, const char *bus_name, const char *dev_name)
+int add_device(struct xorif_device_info *device,
+               const char *bus_name,
+               const char *dev_name,
+               irq_handler_t irq_handler)
 {
     // Initialize device info structure
-    device->bus_name = bus_name;
-    device->dev_name = dev_name;
+    device->status = 0;
+#ifndef NO_HW
     device->dev = NULL;
     device->io = NULL;
-    device->status = 0;
 
     // Open a device
     INFO("Opening device '%s'\n", dev_name);
@@ -313,13 +315,28 @@ int add_device(struct xorif_device_info *device, const char *bus_name, const cha
         return XORIF_FAILURE;
     }
 
+    if (irq_handler)
+    {
+        int num = device->dev->irq_num;
+        if (num > 0)
+        {
+            int irq = (intptr_t)device->dev->irq_info;
+            if (irq != -1)
+            {
+                metal_irq_register(irq, irq_handler, device);
+                metal_irq_enable(irq);
+                INFO("IRQ registered (%d)\n", irq);
+            }
+        }
+    }
+#endif
+
     // Update device status
     device->status = 1;
 
     // Success
     return XORIF_SUCCESS;
 }
-#endif
 
 int check_numerology(uint16_t numerology, uint16_t extended_cp)
 {

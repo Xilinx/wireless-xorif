@@ -67,7 +67,14 @@ namespace eval ::roe::data {
       source ${ipRepo}/tcl/exdes/gen_torwave.tcl
       source ${ipRepo}/tcl/exdes/oran_monitor.tcl
       source ${ipRepo}/tcl/exdes/exdes_generate_procs.tcl
-      ::xilinx.com::${version}::build_ipi_demo_design_inner ${ipName} 1 1 0
+
+      ## Directly call the Exdes build Method
+      if { $board == "vck190" } {
+        ::xilinx.com::${version}::build_ipi_demo_design_inner ${ipName} 0 1 0
+      } else {
+        ::xilinx.com::${version}::build_ipi_demo_design_inner ${ipName} 1 1 0
+      }
+
       set wrapperFile [make_wrapper -files [get_files *.bd -filter {NAME =~ *framer*}] -top]
       add_files $wrapperFile
       set_property top [get_bd_designs -filter {NAME =~ *framer*}]_wrapper [current_fileset]     
@@ -225,20 +232,33 @@ namespace eval ::roe::data {
       
     set ipName [get_bd_cells -hier -filter {VLNV =~ *:oran_radio_if:*}]
     
-    set_property -dict [list CONFIG.C_NUM_OF_PROBES {12} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+    ## Add the probes as interfaces
+    set_property -dict [list CONFIG.C_NUM_OF_PROBES {3} CONFIG.C_NUM_MONITOR_SLOTS {4} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
     
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_cta_sym_num]        [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe0]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_sym_num]            [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe1]
-    connect_bd_net [get_bd_pins ${ipName}/m0_dl_update]             [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe2]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_cta_sym_num]        [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe3]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_sym_num]            [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe4]
-    connect_bd_net [get_bd_pins ${ipName}/m0_ul_update]             [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe5]
-    connect_bd_net [get_bd_pins ${ipName}/m0_radio_app_head_valid]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe6]
-    connect_bd_net [get_bd_pins ${ipName}/m0_section_header_valid]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe7]
-    connect_bd_net [get_bd_pins ${ipName}/m0_t_header_offset_valid] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe8]
-    connect_bd_net [get_bd_pins ${ipName}/m0_packet_in_window]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe9]
-    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/radio_start_recover_v_0/radio_start_10ms]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe10]
-    connect_bd_net [get_bd_pins ${ipName}/m0_offset_in_symbol]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe11]
+    set_property -dict [list CONFIG.C_SLOT_2_INTF_TYPE {xilinx.com:xroe_display:xroe_dl_xran_header_if_rtl:1.0}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+    set_property -dict [list CONFIG.C_SLOT_3_INTF_TYPE {xilinx.com:xroe_display:xorif_timing_if_rtl:1.0}]        [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+
+    connect_bd_intf_net [get_bd_intf_pins ${ipName}/m0_message_axis] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_int/SLOT_1_AXIS]                   
+    connect_bd_intf_net [get_bd_intf_pins ${ipName}/m0_xran_head   ] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_int/SLOT_2_XROE_DL_XRAN_HEADER_IF] 
+    connect_bd_intf_net [get_bd_intf_pins ${ipName}/cc0_timing     ] [get_bd_intf_pins datapath/framer_datapath/oran_mon/ila_int/SLOT_3_XORIF_TIMING_IF] 
+
+    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/radio_start_recover_v_0/radio_start_10ms]  [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe0]
+    connect_bd_net [get_bd_pins ${ipName}/m0_message_ts_tdata]                                               [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe1]
+    connect_bd_net [get_bd_pins ${ipName}/m0_message_ts_tvalid]                                              [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe2]
+
+    ## Add the One PPS
+    set_property -dict [list CONFIG.C_NUM_OF_PROBES {4}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_int]
+    create_bd_cell -type module -reference roe_radio_ctrl_sync datapath/framer_datapath/oran_mon/roe_radio_ctrl_sync_0
+    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/roe_radio_ctrl_sync_0/data_out] [get_bd_pins datapath/framer_datapath/oran_mon/ila_int/probe3]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/internal_bus_clk]               [get_bd_pins datapath/framer_datapath/oran_mon/roe_radio_ctrl_sync_0/clk]
+    connect_bd_net [get_bd_pins datapath/framer_datapath/oran_mon/roe_radio_ctrl_sync_0/data_in]  [get_bd_pins datapath/xxv_eth_subs/one_pps_0]
+
+    ## Update the ETH Probe
+    set_property -dict [list CONFIG.C_NUM_OF_PROBES {3} CONFIG.C_MON_TYPE {MIX}] [get_bd_cells datapath/framer_datapath/oran_mon/ila_eth]
+    
+    connect_bd_net [get_bd_pins ${ipName}/s0_eth_mac_bad_fcs]      [get_bd_pins datapath/framer_datapath/oran_mon/ila_eth/probe0]
+    connect_bd_net [get_bd_pins ${ipName}/s0_eth_mac_tstamp_out]   [get_bd_pins datapath/framer_datapath/oran_mon/ila_eth/probe1]
+    connect_bd_net [get_bd_pins ${ipName}/s0_eth_mac_tstamp_valid] [get_bd_pins datapath/framer_datapath/oran_mon/ila_eth/probe2]
 
     if { [get_property CONFIG.Physical_Ethernet_Ports [get_bd_cells $ipName]] == 2 } {
     
@@ -507,7 +527,7 @@ set exitOnDone 0
 ################################################################################
 ## Possible command sequence to launch Petalinux
 ################################################################################
-source /proj/petalinux/2021.1/petalinux-v2021.1_daily_latest/tool/petalinux-v2021.1-final/settings.csh
+source /proj/petalinux/2021.2/petalinux-v2021.2_daily_latest/tool/petalinux-v2021.2-final/settings.csh
 mkdir ../xsa/$target
 cp ${dir}/system.xsa ../xsa/${target}/system.xsa   
 make $target

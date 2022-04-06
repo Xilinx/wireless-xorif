@@ -1,8 +1,28 @@
 # Change Log
 
+## Release 2022.1
+* Modified Yocto recipes for 'honister' release
+* Makefile improvements
+* Split doxygen-generated documentation into separate configs
+* Added "set protocol_alt" command which just sets protocol, and not the packet filter configuration
+* Added "set packet_filter" command which is used to configure the packet filter
+* Added "set bf_fft_shift_mode" command which is used to set teh FFT shift mode
+* Added "wait" command (used to script a short delay, e.g. in a configuration file)
+* Added "interactive mode" (allows commands to be entered at prompt)
+* Added "exit" command (used to exit the interactive mode)
+* Removed the unused / legacy eCPRI 'one-way delay measurement' code
+* Overhauled application help command
+* Added "example" commands for demo purposes
+* Added "run" command
+* Enhanced "schedule_bf" commands (supports default, custom, with/without padding)
+* Add API for "ul_data_arrival_offset" (debug)
+* Added per-spatial stream decompression (see "set per_ss_decompression" command)
+* Add "get bf_error_flags" command
+* Modified "dump" debug commands
+
 ## Release 2021.2
 * Improved debug logging
-* Added RU port mapping table: 'set ru_ports_table_mmode', 'set ru_ports_table'
+* Added RU port mapping table: 'set ru_ports_table_mode', 'set ru_ports_table'
 * Added command to set system constants: 'set system_constants'
 * 'set time_advance' now take doubles rather than integer
 * Added command to set 'ul_radio_ch_dly' per component carrier

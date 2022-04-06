@@ -1,16 +1,14 @@
-# LIBXORIF
+# Xilinx O-RAN Radio Interface Software Driver Library (LIBXORIF)
 
-## LIBXORIF Source Directory
+* The C library (libxorif) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio Interface IP core.
 
-* This directory contains the source files and Makefile for the ORAN-Radio-Interface Front-Haul Interface C API Library (libxorif)
+## API
 
-### API
-
-* The C API Library API is documented [here](../../doc/html/group__libxorif-api.html)
+* The C library API is documented [here](../../doc/libxorif_html/group__libxorif-api.html)
 
 * The example application (xorif-app) demonstrates the use of the library API, and is a good starting point for reference
 
-### Building
+## Building
 
 * The libxorif library is built as part of the PetaLinux build system, and can be found in the `/usr/lib/` directory of the target Linux installation.
 
@@ -18,7 +16,7 @@
 
     * Run: `make`
 	
-### Usage
+## Usage
 
 * The basic use of the library API is as follows...
 	* Initialize library with `xorif_init()`
@@ -27,7 +25,7 @@
 	* Configure the component carrier (i.e. `xorif_configure_cc()`)
 		* The component carrier specification is validated to ensure it will fit in the hardware resources, and if successful the h/w register will be programmed appropriately
     * Enable the component carrier (i.e. `xorif_enable_cc()`)
-	* Multiple component carriers can be specified and configured, and this should always be done lowest CC id number first, i.e. CC[0], CC[1], CC[2], etc.
+	* Multiple component carriers can be specified and configured in the same manner
 	* Close the library cleanly with `xorif_finish()`
 * Other features of the library allow component carriers to disabled, re-configured, obtain stats, etc. See the API for details.
 * The library also provides a register read/write interface (e.g. `xorif_read_fhi_reg()` and `xorif_write_fhi_reg()`)
@@ -314,4 +312,4 @@ LIBXORIF> READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] => 0x19 (25)
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.

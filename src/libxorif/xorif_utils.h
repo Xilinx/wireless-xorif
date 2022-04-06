@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file xorif_utils.h
  * @author Steven Dickinson
- * @brief Header file for libxorif common utility functions.
+ * @brief Header file for libxorif common utility functions/definitions.
  * @addtogroup libxorif
  * @{
  */
@@ -55,6 +55,8 @@ struct reg_info
 };
 
 typedef struct reg_info reg_info_t;
+
+typedef int (*irq_handler_t)(int id, void *data);
 
 // Macro to perform ceil(x/y)
 #define CEIL_DIV(x, y) (((x) + (y) - 1) / (y))
@@ -117,7 +119,6 @@ uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint
  */
 void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value);
 
-#ifndef NO_HW
 /**
  * @brief Get the device's full name given the short name.
  * @param[in] short_name Device name to look for
@@ -133,7 +134,6 @@ void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_
  * contents are valid until the function is called again.
  */
 const char *get_device_name(const char *short_name);
-#endif
 
 #ifndef NO_HW
 /**
@@ -148,18 +148,20 @@ const char *get_device_name(const char *short_name);
 int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value);
 #endif
 
-#ifndef NO_HW
 /**
  * @brief Adds a device to libmetal framework
  * @param[in,out] device Pointer to structure containing device info
  * @param[in] bus_name Bus name
  * @param[in] dev_name Device name
+ * @param[in] irq_handler Interrupt handler (NULL if there is none)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - XORIF_FAILURE on error
  */
-int add_device(struct xorif_device_info *device, const char *bus_name, const char *dev_name);
-#endif
+int add_device(struct xorif_device_info *device,
+               const char *bus_name,
+               const char *dev_name,
+               irq_handler_t irq_handler);
 
 /**
  * @brief Check that the given numerology is supported.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file xorif_fh_func.h
  * @author Steven Dickinson
- * @brief Header file for libxorif Front-Haul Interface (FHI) functions.
+ * @brief Header file for libxorif miscellaneous functions/definitions.
  * @addtogroup libxorif
  * @{
  */
@@ -345,6 +345,20 @@ int xorif_fhi_configure_time_advance_offsets_ssb(uint16_t cc,
                                                  uint16_t numerology,
                                                  uint16_t sym_per_slot,
                                                  double advance_dl);
+
+#ifdef ENABLE_INTERRUPTS
+/**
+ * @brief Front Haul Interface interrupt handler.
+ * @param id ID of the IRQ
+ * @param data Data for the IRQ
+ * @return
+ *      - METAL_IRQ_HANDLED if the interrupt source was handled
+ *      - METAL_IRQ_NOT_HANDLED if the interrupt source was not handled
+ * @note
+ * The libmetal framework calls this handler.
+ */
+int fhi_irq_handler(int id, void *data);
+#endif
 
 #endif /* XORIF_FH_FUNC_H */
 

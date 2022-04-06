@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,30 +24,24 @@
  * "C" code for the Xilinx ORAN Radio Interface (libxorif)
  */
 
-#include <stdio.h>
-#include <string.h>
-#include "xorif_api.h"
-#include "xorif_system.h"
 #include "xorif_common.h"
 #include "xorif_fh_func.h"
 #include "xorif_utils.h"
+#include "xorif_registers.h"
 
-// Software version number
-#define SW_MAJ_VER 2
-#define SW_MIN_VER 0
-#define SW_REVISION 0
-
-// Globals
+// Globals variables
 uint16_t xorif_state;
 int xorif_trace = 0;
 struct xorif_caps fhi_caps;
 struct xorif_cc_config cc_config[MAX_NUM_CC];
-#ifndef NO_HW
 struct xorif_device_info fh_device;
-#endif
 #ifdef EXTRA_DEBUG
 FILE *log_file = NULL;
 #endif
+
+// Local variables
+static const char *fhi_names[] = {"oran_radio_if", NULL};
+
 
 // System "constants" (can be changed with API)
 struct xorif_system_constants fhi_sys_const =
@@ -80,6 +74,9 @@ static void initialize_configuration(void)
         cc_config[i].iq_comp_meth_ssb = IQ_COMP_NONE;
         cc_config[i].iq_comp_width_ssb = 16;
         cc_config[i].iq_comp_mplane_ssb = 1;
+        cc_config[i].iq_comp_meth_prach = IQ_COMP_NONE;
+        cc_config[i].iq_comp_width_prach = 16;
+        cc_config[i].iq_comp_mplane_prach = 1;
         cc_config[i].delay_comp_cp_ul = DEFAULT_DELAY_COMP;
         cc_config[i].delay_comp_cp_dl = DEFAULT_DELAY_COMP;
         cc_config[i].delay_comp_up = DEFAULT_DELAY_COMP;
@@ -128,15 +125,15 @@ void xorif_debug(int level)
 #endif
 }
 
-int xorif_init(const char *fh_dev_name)
+int xorif_init(const char *device_name)
 {
-    TRACE("xorif_init(%s)\n", fh_dev_name ? fh_dev_name : "NULL");
+    TRACE("xorif_init(%s)\n", device_name ? device_name : "NULL");
 
     // See if we're already initialized
     if (xorif_state != 0)
     {
         // Just warning here, doesn't appear to be an error case
-        INFO("Libmetal framework is already running.\n");
+        INFO("Libmetal framework is already running\n");
         return XORIF_SUCCESS;
     }
     else
@@ -166,34 +163,41 @@ int xorif_init(const char *fh_dev_name)
             return XORIF_LIBMETAL_ERROR;
         }
     }
+#endif
 
-    // Get FHI device name
-    if (fh_dev_name == NULL)
+    // Get BF device name
+    if (device_name == NULL)
     {
-        // No device name specified, so search for it in /sys/bus/platform/devices
-        if ((fh_dev_name = get_device_name("oran_radio_if")) != NULL)
+        // No device name specified
+        // Try the usual suspects in /sys/bus/platform/devices ...
+        int i = 0;
+        while (fhi_names[i] != NULL)
         {
-            INFO("FHI device is '%s'\n", fh_dev_name);
+            if ((device_name = get_device_name(fhi_names[i])) != NULL)
+            {
+                INFO("FHI device is '%s'\n", device_name);
+                break;
+            }
+            ++i;
         }
     }
 
     // Add FHI device
-    if (fh_dev_name == NULL)
+    if (device_name == NULL)
     {
         PERROR("No FHI device found\n");
         return XORIF_LIBMETAL_ERROR;
     }
-    else if (add_device(&fh_device, "platform", fh_dev_name) != XORIF_SUCCESS)
+    else if (add_device(&fh_device, "platform", device_name, fhi_irq_handler) != XORIF_SUCCESS)
     {
-        PERROR("Failed to add FHI device '%s'\n", fh_dev_name);
+        PERROR("Failed to add FHI device '%s'\n", device_name);
         return XORIF_LIBMETAL_ERROR;
     }
-#endif
 
     // Initialize FHI device
     xorif_fhi_init_device();
 
-    // Initialize the configuration
+    // Initialize the default component configuration
     initialize_configuration();
 
     // Update state to 'operational'
@@ -213,7 +217,7 @@ void xorif_finish(void)
         // Close FHI device
         if (fh_device.dev != NULL)
         {
-            INFO("Closing FHI device %s\n", fh_device.dev_name);
+            INFO("Closing FHI device %s\n", fh_device.dev->name);
             int irq = (intptr_t)fh_device.dev->irq_info;
             if (irq != -1)
             {
@@ -230,7 +234,6 @@ void xorif_finish(void)
         INFO("Finishing libmetal framework\n");
         metal_finish();
 #endif
-
 #endif
         // Set state to 'not operational'
         xorif_state = 0;
@@ -262,10 +265,18 @@ int xorif_has_front_haul_interface(void)
         // Device exists
         return 1;
     }
-    else if (get_device_name("oran_radio_if") != NULL)
+    else 
     {
-        // Oran-radio-if device exists in /sys/bus/platform/devices
-        return 1;
+        // Try the usual suspects in /sys/bus/platform/devices ...
+        int i = 0;
+        while (fhi_names[i] != NULL)
+        {
+            if (get_device_name(fhi_names[i]) != NULL)
+            {
+                return 1;
+            }
+            ++i;
+        }
     }
 
     return 0;
@@ -349,12 +360,12 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
     }
     else if (!check_iq_comp_mode(config->iq_comp_width_ul, config->iq_comp_meth_ul, CHAN_UL))
     {
-        PERROR("IQ compression mode not supported (UL)\n");
+        PERROR("IQ compression method/width not supported (UL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
     else if (!check_iq_comp_mode(config->iq_comp_width_dl, config->iq_comp_meth_dl, CHAN_DL))
     {
-        PERROR("IQ compression mode not supported (DL)\n");
+        PERROR("IQ compression method/width not supported (DL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
     else if (config->num_rbs_ssb  != SSB_NUM_RBS)
@@ -369,7 +380,12 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
     }
     else if (!check_iq_comp_mode(config->iq_comp_width_ssb, config->iq_comp_meth_ssb, CHAN_SSB))
     {
-        PERROR("IQ compression mode not supported (SSB)\n");
+        PERROR("IQ compression method/width not supported (SSB)\n");
+        return XORIF_COMP_MODE_NOT_SUPPORTED;
+    }
+    else if (!check_iq_comp_mode(config->iq_comp_width_prach, config->iq_comp_meth_prach, CHAN_PRACH))
+    {
+        PERROR("IQ compression method/width not supported (PRACH)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
@@ -550,7 +566,7 @@ int xorif_set_cc_dl_iq_compression(uint16_t cc,
     }
     else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_DL))
     {
-        PERROR("IQ compression mode not supported (DL)\n");
+        PERROR("IQ compression method/width not supported (DL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
@@ -575,7 +591,7 @@ int xorif_set_cc_ul_iq_compression(uint16_t cc,
     }
     else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_UL))
     {
-        PERROR("IQ compression mode not supported (UL)\n");
+        PERROR("IQ compression method/width not supported (UL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
@@ -600,13 +616,38 @@ int xorif_set_cc_iq_compression_ssb(uint16_t cc,
     }
     else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_SSB))
     {
-        PERROR("IQ compression mode not supported (SSB)\n");
+        PERROR("IQ compression method/width not supported (SSB)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
 
     cc_config[cc].iq_comp_width_ssb = bit_width;
     cc_config[cc].iq_comp_meth_ssb = comp_method;
     cc_config[cc].iq_comp_mplane_ssb = mplane;
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_cc_iq_compression_prach(uint16_t cc,
+                                     uint16_t bit_width,
+                                     enum xorif_iq_comp comp_method,
+                                     uint16_t mplane)
+{
+    TRACE("xorif_set_cc_iq_compression_prach(%d, %d, %d, %d)\n", cc, bit_width, comp_method, mplane);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
+    {
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+    else if (!check_iq_comp_mode(bit_width, comp_method, CHAN_PRACH))
+    {
+        PERROR("IQ compression method/width not supported (PRACH)\n");
+        return XORIF_COMP_MODE_NOT_SUPPORTED;
+    }
+
+    cc_config[cc].iq_comp_width_prach = bit_width;
+    cc_config[cc].iq_comp_meth_prach = comp_method;
+    cc_config[cc].iq_comp_mplane_prach = mplane;
 
     return XORIF_SUCCESS;
 }

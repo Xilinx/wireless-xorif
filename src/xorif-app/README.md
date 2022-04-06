@@ -1,17 +1,13 @@
-# XORIF-APP
+# Xilinx O-RAN Radio Interface Software Application (XORIF-APP)
 
-## XORIF-APP Source Directory
-
-* This directory contains the source files and Makefile for the ORAN-Radio-Interface Example Application (xorif-app)
-
-* The xorif-app is an example application, which uses the libxorif library to interface with the Front Haul Interface hardware.
+* The xorif-app is an example application, which uses the libxorif and libxobf libraries to interface with the O-RAN Radio Interface and Beamformer IP cores.
 
 * The xorif-app can operate as either a "server" or a "client".
     * As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
     * As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
     * Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).
 
-### Building
+## Building
 
 * The xorif-app executable is built as part of the PetaLinux build system, and can be found in the `/usr/bin/` directory of the target Linux installation.
 
@@ -21,20 +17,21 @@
 * A client-only version of the xorif-app executable can also be be built on a host Linux system, using native compilation tools and without dependency on the libmetal library.
     * Run: `make NO_HW=1`
 
-### Usage
+## Usage
 
 ~~~
-Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"<command> {<arguments>}"}
-        -b Disable banner
-        -c Client mode using the command line
-        -e <device> Specified ethernet device (default eth0)
-        -f <file> Client mode using the specified file
+Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>] {"<command> {<arguments>}"}
         -h Show help
-        -i Auto-initialize (server mode only)
-        -n <ip_addr> Specified IP address (for client mode) (defaults to localhost)
-        -p <port> Specified port (defaults to 5001)
+        -c Client mode using the command line
+        -f <file> Client mode using the specified file
+        -I Client mode using interactive input (type exit to leave)
         -s Server mode (default)
+        -n <ip_addr> Specified IP address (client mode only) (defaults to localhost)
+        -p <port> Specified port (defaults to 5001)
+        -b Disable banner on start
+        -i Auto-initialize (server mode only)
         -v Verbose
+        -V Display version of the application
         <command> {<arguments>} For command line mode only
 ~~~
 
@@ -42,13 +39,13 @@ Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"
     * Typical usage: `xorif-app -s`
     * Use `-s` for server mode (note, this is the default and so not necessary in most cases)
     * Use `-p` to change the TCP/IP port number
-    * Use `-e` to change the ethernet device name (when using time-stamping)
     * Use `-i` option to auto-initialize the server (instead of sending "init" command each time)
 
 * Client mode:
     * Typical usage: `xorif-app -n 192.168.0.55 ...`
     * Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version"`)
     * Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
+    * Use `-I` for "interactive mode" (runs commands entered at a prompt, use "exit" to leave)
     * Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
     * Use `-p` to change the TCP/IP port number
     * The xorif-app server needs to be initialized before , so first time: `xorif-app -c "init"`
@@ -57,78 +54,80 @@ Usage: [-bhiv] [-c | -f <file> | -s] [-n <ip_addr>] [-p <port>] [-e <device>] {"
     * It is important that the xorif-app server and client are using the same port number to communicate
     * The xorif-app server will not start if the specified port is not available (e.g. in use by another xorif-app instance). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.
 
-### Command-Line Mode
+## Command-Line Mode
 
 * This mode allows basic configuration and interaction with the system using the xorif-app command line.
 
 * Usage:
     * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-    * Issue a command using the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command e.g. `xorif-app -n 192.168.0.55 -c "get sw_version"`.
+    * Issue a command using the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command e.g. `xorif-app -n 192.168.0.55 -c "get sw_version"`
 
-* It is also possible to send multiple commands on the same command line. Because of the way command line arguments are handled, each command should be enclosed in quotes, e.g. `xorif-app -n 192.168.0.55 -c "get sw_version" "get fhi_hw_version"`.
+* It is also possible to send multiple commands on the same command line. Because of the way command line arguments are handled, each command should be enclosed in quotes, e.g. `xorif-app -n 192.168.0.55 -c "get sw_version" "get fhi_hw_version"`
 
 * See the section below on "Command Syntax" for details of the command syntax.
 
-### Command Syntax
+## Interactive Mode
+
+* This mode allows commands to be entered at a prompt, similar to the "command line mode".
+
+* Usage:
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
+    * Start xorif-app "client" in interactive mode, i.e. `xorif-app -I`
+    * Enter commands at the prompt
+    * Enter "exit" to leave interactive mode
+
+* See the section below on "Command Syntax" for details of the command syntax.
+
+## Command Syntax
+
+* The xorif-app provides basic help on the available commands and command syntax.
+
+* Run `xorif-app -c help` for available commands.
 
 ~~~
-help : help [<topic>]
-debug : debug <level = 0..2>
-init : init [fhi] [<device_name>]
-finish : finish [fhi]
-get : get...
-        get fhi_sw_version
-        get fhi_hw_version
-        get fhi_hw_internal_rev
-        get [fhi_capabilities | fhi_caps]
-        get fhi_cc_config <cc>
-        get fhi_cc_alloc <cc>
-        get fhi_stats <port>
-        get fhi_alarms
-        get fhi_state
-        get fhi_enabled
-set : set...
-        set num_rbs <cc> <number_of_rbs>
-        set numerology <cc> <numerology> <extended_cp = 0 | 1>
-        set numerology_ssb <cc> <numerology> <extended_cp = 0 | 1>
-        set time_advance <cc> <deskew> <advance_uplink> <advance_downlink> (deprecated)
-        set ul_timing_params <cc> <delay_comp> <advance> <radio_ch_delay>
-        set dl_timing_params <cc> <delay_comp_cp> <delay_comp_up> <advance>
-        set ul_bid_forward <cc> <time>
-        set ul_bid_forward_fine <cc> <symbols> <cycles>
-        set ul_radio_ch_dly <cc> <delay> (deprecated)
-        set [dl_iq_compression | dl_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
-        set [ul_iq_compression | ul_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
-        set [ssb_iq_compression | ssb_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
-        set [prach_iq_compression | prach_iq_comp] <cc> <width> <method> <mplane = 0 | 1>
-        set dl_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
-        set ul_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
-        set ssb_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>
-        set frames_per_sym <cc> <number_of_frames>
-        set frames_per_sym_ssb <cc> <number_of_frames>
-        set dest_mac_addr <port> <address>
-        set src_mac_addr <port> <address>
-        set protocol <ECPRI | 1914.3> <VLAN = 0 | 1> <RAW | IPv4 | IPv6>
-        set vlan <port> <id> <dei> <pcp>
-        set eaxc_id <DU bits> <BS bits> <CC bits> <RU bits>
-        set ru_ports <RU bits> <ss bits> <mask> <user_value> <prach_value> <ssb_value>
-        set ru_ports_table_mode <mode>
-        set ru_ports_table <address> <port> <type> [<number>]
-        set system_constants <fh_decap_dly> [...]
-reset : reset [fhi | bf] <mode>
-clear : clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]
-has : has [fhi | bf]
-configure : configure [fhi] <cc>
-enable : enable [fhi] <cc>
-disable : disable [fhi] <cc>
-read_reg : read_reg [fhi] <name>
-read_reg_offset : read_reg_offset [fhi] <name> <offset>
-write_reg : write_reg [fhi] <name> <value>
-write_reg_offset : write_reg_offset [fhi] <name> <offset> <value>
-dump_reg : dump_reg [fhi]
-peek : peek <address>
-poke : poke <address> <value>
-quit : quit
+Available commands:
+  help                 : Provide command help and syntax
+  terminate            : Terminate server
+  exit                 : Exit the client script / interactive session
+  wait                 : Wait for a short time
+  peek                 : Read from memory address
+  poke                 : Write to memory address
+  debug                : Set debugging level
+  init                 : Start-up device driver libraries
+  finish               : Close-down device driver libraries
+  has                  : Check for the presence of a device
+  reset                : Reset devices
+  get                  : Get various configuration and status data from a device
+  set                  : Set various configuration data for device
+  configure            : Program component carrier configuration
+  enable               : Enable component carrier
+  disable              : Disable component carrier
+  clear                : Clear various status, alarms, etc.
+  read_reg             : Read device registers
+  read_reg_offset      : Read device registers (with offsets)
+  write_reg            : Write device registers
+  write_reg_offset     : Write device registers (with offsets)
+  dump                 : Dump registers
+  schedule_bf          : Program the beamformer schedule table
+  load                 : Load data from file (e.g. M-Plane beam-weights)
+~~~
+
+* Run `xorif-app -c "help <topic>"` for help on a particular topic, e.g.
+
+~~~
+get : Get various configuration and status data from a device
+  usage: get (fhi_sw_version | fhi_hw_version | fhi_hw_internal_rev)
+  usage: get (fhi_capabilities | fhi_caps)
+  usage: get fhi_cc_config <cc>
+  usage: get fhi_cc_alloc <cc>
+  usage: get fhi_stats <port>
+  usage: get (fhi_alarms | fhi_state | fhi_enabled)
+  usage: get (bf_sw_version | bf_hw_version | bf_hw_internal_rev)
+  usage: get (bf_capabilities | bf_caps)
+  usage: get bf_cc_config <cc>
+  usage: get bf_cc_alloc <cc>
+  usage: get bf_stats
+  usage: get (bf_alarms | bf_stats | bf_enabled)
 ~~~
 
 * When executing a command, the app will echo the command and it's returned status, e.g. `set num_rbs 0 275 => status = 0`
@@ -137,8 +136,8 @@ quit : quit
 
 * The xorif-app server needs to be initialized before it can correctly accept most commands
     * This can be done by sending the "init" command, e.g. `xorif-app -c "init"`
-    * Note, the xorif-app server only needs to be initialized once (after starting, or after sending a the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
-    * The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. `xorif-app -c "init fhi a0000000.oran_radio_if"`.
+    * Note, the xorif-app server only needs to be initialized once (after starting, or again after sending the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
+    * The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. `xorif-app -c "init fhi a0000000.oran_radio_if"`. The device name can be found from the device tree (e.g. system.dts file).
     * The server can also be set to "auto-initialize" with the `-i` option when starting the xorif-app server.
 
 * Some commands also provide additional information, for example...
@@ -176,11 +175,11 @@ ss_id_limit = 5
 ru_ports_map_width = 8
 ~~~
 
-* Many of the commands map directly on to the libxorif library API calls. Others, such as "help" and "quit" are handled locally.
+* Many of the commands map directly on to the library API calls. Others, such as "help" and "exit" are handled locally.
 
 * The xorif-app commands also allow the user to read/write device registers, and even to peek/poke memory directly.
 
-### File Mode
+## File Mode
 
 * This mode allows basic configuration and interaction with the system using a text file.
 
@@ -251,7 +250,7 @@ configure 1 => status = 0
 enable 1 => status = 0
 ~~~
 
-### File Mode Simple Starter and PG370 examples
+## File Mode Simple Starter and PG370 examples
 
 * Simple uncompressed data example (input):
     * This is a good config to get started with:
@@ -335,7 +334,7 @@ configure 2
 enable 2
 ~~~
 
-### Debug Mode
+## Debug Mode
 
 * The "debug" command can be used to enable library's "trace" feature
     * Level 0: No trace, but errors are still reported
@@ -424,4 +423,4 @@ enable 0 => status = 0
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.

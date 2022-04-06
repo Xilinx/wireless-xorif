@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ enum xorif_error_codes
     XORIF_TIMEOUT_FAIL,                 /**< Timeout fail */
     XORIF_CONFIGURATION_ERRORS = -2000, /**< (Place-holder for configuration errors) */
     XORIF_INVALID_CC,                   /**< Component carrier instance is not valid */
+    XORIF_INVALID_SS,                   /**< Spatial stream number is not valid */
     XORIF_INVALID_RBS,                  /**< Number of RBs is not valid */
     XORIF_INVALID_CONFIG,               /**< Invalid configuration (general error) */
     XORIF_NUMEROLOGY_NOT_SUPPORTED,     /**< Requested numerology is not supported */
@@ -62,10 +63,12 @@ enum xorif_error_codes
     XORIF_INVALID_RU_PORT_MAPPING,      /**< Invalid RU port mapping assignment */
     XORIF_BEAMFORMER_ERRORS = -1400,    /**< (Place-holder for Beamformer-specific errors) */
     XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in Beamformer schedule table */
+    XORIF_SCHEDULING_ERROR,             /**< Error during scheduling */
     XORIF_INVALID_AG,                   /**< Antenna group is not valid */
     XORIF_FRAMEWORK_ERRORS = -1000,     /**< (Place holder for library / libmetal framwork errors) */
     XORIF_LIBMETAL_ERROR,               /**< Error with libmetal framework */
     XORIF_OTHER_ERRORS = -500,          /**< (Place-holder for other errors) */
+    XORIF_NOT_SUPPORTED,                /**< Generic "not-supported" error code */
     XORIF_INVALID_RESULT = -1,          /**< Represents an invalid result */
     XORIF_SUCCESS = 0,                  /**< Success! No error! */
     XORIF_FAILURE = 1,                  /**< Failure return code */
@@ -156,6 +159,9 @@ struct xorif_cc_config
     uint16_t iq_comp_meth_ssb;       /**< IQ compression method for SSB */
     uint16_t iq_comp_width_ssb;      /**< IQ compressed width for SSB */
     uint16_t iq_comp_mplane_ssb;     /**< Flag indicating M-plane compression for SSB */
+    uint16_t iq_comp_meth_prach;     /**< IQ compression method for PRACH */
+    uint16_t iq_comp_width_prach;    /**< IQ compressed width for PRACH */
+    uint16_t iq_comp_mplane_prach;   /**< Flag indicating M-plane compression for PRACH */
     double delay_comp_cp_ul;         /**< Delay compenstation (deskew) for uplink C-plane (in microseconds) */
     double delay_comp_cp_dl;         /**< Delay compenstation (deskew) for downlink C-plane (in microseconds) */
     double delay_comp_up;            /**< Delay compenstation (deskew) for downlink U-plane (in microseconds) */
@@ -319,6 +325,20 @@ void xorif_finish(void);
  *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
  */
 uint32_t xorif_get_sw_version(void);
+
+/**
+ * @brief Returns the Front-Haul Interface h/w version.
+ * @returns
+ *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
+ */
+uint32_t xorif_get_fhi_hw_version(void);
+
+/**
+ * @brief Returns the Front-Haul Interface h/w internal revision number.
+ * @returns
+ *      - Internal revision
+ */
+uint32_t xorif_get_fhi_hw_internal_rev(void);
 
 /**
  * @brief Get Front-Haul Interface capabilities.
@@ -491,7 +511,7 @@ int xorif_set_cc_dl_timing_parameters(uint16_t cc,
 /**
  * @brief Set the uplink beam-id forward time for the component carrier.
  * @param[in] cc Component carrier to configure
- * @param[in] advance Uplink beam-id forward time (in microseconds)
+ * @param[in] time Uplink beam-id forward time (in microseconds)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure.
@@ -533,6 +553,33 @@ int xorif_set_cc_dl_iq_compression(uint16_t cc,
                                    uint16_t bit_width,
                                    enum xorif_iq_comp comp_method,
                                    uint16_t mplane);
+
+/**
+ * @brief Configure the downlink IQ compression per spatial stream.
+ * @param[in] ss The base spatial stream
+ * @param[in] bit_width Bit width (0-16)
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] enable Flag indicating whether to enable (1) or disable (0)
+ * @param[in] number The number of spatial streams in this assignment
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * This special feature can be used to provide per-spatial stream decompression.
+ * This over-rides any per-component carrier static (i.e. M-Plane) decompression
+ * configuration. However, dynamic configuration has highest priority if enabled.
+ * Summary: per-cc dynamic > per-ss static > per-cc static
+ * The API allows N streams to be configured to the same values (number=N), or
+ * only a single stream (number=1).
+ * The API can be used to enable/disable the per-spatial stream configuration.
+ * The sizing of buffers is always based on the component carrier configuration.
+ */
+int xorif_set_cc_dl_iq_compression_per_ss(uint16_t ss,
+                                          uint16_t bit_width,
+                                          enum xorif_iq_comp comp_method,
+                                          uint16_t enable,
+                                          uint16_t number);
 
 /**
  * @brief Configure the uplink IQ compression for the component carrier.
@@ -579,6 +626,29 @@ int xorif_set_cc_iq_compression_ssb(uint16_t cc,
                                     uint16_t bit_width,
                                     enum xorif_iq_comp comp_method,
                                     uint16_t mplane);
+
+/**
+ * @brief Configure the PRACH compression for the component carrier.
+ * @param[in] cc Component carrier to configure
+ * @param[in] bit_width Bit width (0-16)
+ * @param[in] comp_method Compression method (see #xorif_iq_comp)
+ * @param[in] mplane Flag indicating M-plane (1) or C-plane (0) configuration
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * For alignment with O-RAN standard, a bit_width value of 0 is equivalent to 16.
+ * The 'mplane' indicates M-plane (static) or C-plane (dynamic) configuration.
+ * With static configuration, the M-plane is used to configure the compression
+ * mode using the supplied values (bit_width and comp_method). With dynamic
+ * configuration, the C-plane is used to configure the compression. However, the
+ * supplied values (bit_width and comp_method) are still used for internal
+ * buffer sizing.
+ */
+int xorif_set_cc_iq_compression_prach(uint16_t cc,
+                                      uint16_t bit_width,
+                                      enum xorif_iq_comp comp_method,
+                                      uint16_t mplane);
 
 /**
  * @brief Configure the number of sections and ctrl words per downlink symbol.
@@ -677,20 +747,6 @@ int xorif_set_cc_frames_per_symbol_ssb(uint16_t cc, uint16_t num_frames);
  * The reset operation should always succeed.
  */
 int xorif_reset_fhi(uint16_t mode);
-
-/**
- * @brief Returns the Front-Haul Interface h/w version.
- * @returns
- *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
- */
-uint32_t xorif_get_fhi_hw_version(void);
-
-/**
- * @brief Returns the Front-Haul Interface h/w internal revision number.
- * @returns
- *      - Internal revision
- */
-uint32_t xorif_get_fhi_hw_internal_rev(void);
 
 /**
  * @brief Get alarms for Front-Haul Interface.
@@ -793,7 +849,7 @@ int xorif_set_fhi_dest_mac_addr(int port, const uint8_t address[]);
 int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[]);
 
 /**
- * @brief Set the protocol and IP mode.
+ * @brief Set the protocol, vlan and IP mode.
  * @param[in] transport Transport protocol (eCPRI, IEEE 1914.3)
  * @param[in] vlan VLAN tagging mode (0 = no VLAN, 1 = add VLAN tag)
  * @param[in] ip_mode IP mode (Raw, IPv4, IPv6)
@@ -802,13 +858,33 @@ int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[]);
  *      - Error code on failure
  * @note
  * In addition to configuring the protocol, this function also configures
- * the packet filters appropriately for all the Ethernet ports.
- * If additional configuration of the packet filter is required,
- * then this should be done after the call to this function.
+ * the packet filters for all the Ethernet ports.
+ * The default filter configuration is very basic, and just configures the
+ * filter for the transport protocol (eCPRI or IEEE 1914.3) and VLAN tagging.
+ * Use the #xorif_set_fhi_packet_filter function for more precise control
+ * of the filter configuration.
+ * Use #xorif_set_fhi_protocol_alt to set the protocol without affecting
+ * the packet filter configuration.
  */
 int xorif_set_fhi_protocol(enum xorif_transport_protocol transport,
                            uint16_t vlan,
                            enum xorif_ip_mode ip_mode);
+
+/**
+ * @brief Set the protocol, vlan and IP mode.
+ * @param[in] transport Transport protocol (eCPRI, IEEE 1914.3)
+ * @param[in] vlan VLAN tagging mode (0 = no VLAN, 1 = add VLAN tag)
+ * @param[in] ip_mode IP mode (Raw, IPv4, IPv6)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This function just sets the protocol, without affecting the packet
+ * filter configuration (c.f. #xorif_set_fhi_protocol).
+ */
+int xorif_set_fhi_protocol_alt(enum xorif_transport_protocol transport,
+                               uint16_t vlan,
+                               enum xorif_ip_mode ip_mode);
 
 /**
  * @brief Set the VLAN tag for the specified port.

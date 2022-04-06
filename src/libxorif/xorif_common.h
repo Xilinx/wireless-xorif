@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2021 Xilinx, Inc.
+ * Copyright 2020 - 2022 Xilinx, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 /**
  * @file xorif_common.h
  * @author Steven Dickinson
- * @brief Header file for libxorif common functions.
+ * @brief Header file for libxorif common functions/definitions.
  * @addtogroup libxorif
  * @{
  */
@@ -27,13 +27,19 @@
 
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #ifndef NO_HW
 #include <metal/sys.h>
 #include <metal/device.h>
 #include <metal/io.h>
 #include <metal/irq.h>
+#else
+#define METAL_IRQ_NOT_HANDLED 0
+#define METAL_IRQ_HANDLED 1
 #endif
 #include "xorif_api.h"
+#include "xorif_system.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/
@@ -54,6 +60,7 @@
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RESET "\x1b[0m"
 
+// Debug / logging macros
 #ifdef DEBUG
 #define PERROR(format, ...)                                         \
     {                                                               \
@@ -95,6 +102,7 @@
 #define ASSERT(expression)
 #endif
 
+// Additional debug logging macros
 #ifdef EXTRA_DEBUG
 #define LOG(log_file, format, ...)                    \
     {                                                 \
@@ -108,39 +116,35 @@
 #define LOG(log_file, format, ...)
 #endif
 
-#ifndef NO_HW
 /**
  * @brief Structure for device related information, including libmetal pointers
  */
 struct xorif_device_info
 {
     uint16_t status;            /**< Status (0 = bad, 1 = good) */
-    const char *bus_name;       /**< Bus name */
-    const char *dev_name;       /**< Device name */
+#ifndef NO_HW
     struct metal_device *dev;   /**< Pointer to libmetal device */
     struct metal_io_region *io; /**< Pointer to libmetal IO region */
-};
 #endif
+};
 
 // Globals
 extern uint16_t xorif_state;
 extern int xorif_trace;
 extern struct xorif_caps fhi_caps;
 extern struct xorif_cc_config cc_config[MAX_NUM_CC];
-#ifndef NO_HW
 extern struct xorif_device_info fh_device;
+#ifdef NO_HW
+extern uint32_t fake_reg_bank[0x10000 / 4];
 #endif
 #ifdef EXTRA_DEBUG
 extern FILE *log_file;
 #endif
-
-// System "constants" (can be changed with API)
 extern struct xorif_system_constants fhi_sys_const;
 
 /***************************/
 /*** Function prototypes ***/
 /***************************/
-//TBD
 
 #endif /* XORIF_COMMON_H */
 

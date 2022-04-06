@@ -15,8 +15,8 @@ SRC_URI = " \
 
 S = "${WORKDIR}"
 
-RDEPENDS_${PN} += "bash"
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+RDEPENDS:${PN} += "bash"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 inherit update-rc.d
 
@@ -31,4 +31,4 @@ do_install() {
 	install -m 0755 ${S}/runXorif.bash ${D}/${bindir}
 }
 
-FILES_${PN} += "${sysconfdir}/*"
+FILES:${PN} += "${sysconfdir}/*"

@@ -11,11 +11,9 @@ This project contains the C LibMetal driver for the oran_radio_if IP. Additional
 
 |Source|Description|
 |---|---|
-|[Register_Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the [**oran_radio_if lounge**](https://www.xilinx.com/member/oran-radio-if.html). The user guide, [**PG370**](https://www.xilinx.com/member/oran-radio-if.html) is also available for download. Registration required.|
-|[Library_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/libxorif)|Example of IP configuration using library calls. Includes full breakdown of IP register accesses. Note. this library contains C code that can be re-targeted for your application, if not using the library directly.|
-|[Library_C_Code](https://github.com/Xilinx/wireless-xorif/blob/master/src/libxorif/xorif_fh_func.c)|Direct link to xorif library C function definitions. Use in conjunction with link above.|
-|[Xorif_App_README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app)|App overview and examples of App configuration files.|
-
+|[Register Map](https://www.xilinx.com/member/oran-radio-if.html)|This can be downloaded from the [**oran_radio_if lounge**](https://www.xilinx.com/member/oran-radio-if.html). The user guide, [**PG370**](https://www.xilinx.com/member/oran-radio-if.html) is also available for download. Registration required.|
+|[SW Driver Library README](https://github.com/Xilinx/wireless-xorif/tree/master/src/libxorif/README.md)|Example of IP configuration using library calls. Includes full breakdown of IP register accesses. Note. this library contains C code that can be re-targeted for your application, if not using the library directly.|
+|[XORIF-APP README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app/README.md)|App overview and examples of App configuration files.|
 
 ## GitHub Usage
 The master branch of the GitHub repository contains the latest version for the current Xilinx release.
@@ -57,4 +55,4 @@ This directory contains the following sub-directories:
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.

@@ -33,25 +33,25 @@ endif
 set DEST=$STORE/${TAG}_${CREATIONTIME}
 set PL_SRC="$BASEPATH/${TAG}/petalinux/images/linux"
 
-#set PL_BOOTB=${PL_SRC}/BOOT.BIN
-#set PL_BOOTS=${PL_SRC}/boot.scr
-#set PL_IMGUB=${PL_SRC}/image.ub
+set PL_BOOTB=${PL_SRC}/BOOT.BIN
+set PL_BOOTS=${PL_SRC}/boot.scr
+set PL_IMGUB=${PL_SRC}/image.ub
 
 ## The new way!
-set PL_IMGUB=${PL_SRC}/petalinux-sdimage.wic.gz
+#set PL_IMGUB=${PL_SRC}/petalinux-sdimage.wic.gz
 
 set VI_LTX=$BASEPATH/${TAG}/vivado/${TAG}.runs/impl_1/design_1_wrapper.ltx
 set VI_LTX=$BASEPATH/${TAG}/vivado/*.runs/impl_1/*.ltx
 
-#if ( ! -e $PL_BOOTB ) then
-#   echo "Exiting, non-existing file $PL_BOOTB"
-#   exit
-#endif
+if ( ! -e $PL_BOOTB ) then
+   echo "Exiting, non-existing file $PL_BOOTB"
+   exit
+endif
 
-#if ( ! -e $PL_BOOTS ) then
-#   echo "Exiting, non-existing file $PL_BOOTS"
-#   exit
-#endif
+if ( ! -e $PL_BOOTS ) then
+   echo "Exiting, non-existing file $PL_BOOTS"
+   exit
+endif
 if ( ! -e $PL_IMGUB ) then
    echo "Exiting, non-existing file $PL_IMGUB"
    exit
@@ -70,8 +70,8 @@ endif
 mkdir $DEST
 
 echo "Copy PL files from $PL_SRC to $DEST"
-#cp ${PL_BOOTB} $DEST/.
-#cp ${PL_BOOTS} $DEST/.
+cp ${PL_BOOTB} $DEST/.
+cp ${PL_BOOTS} $DEST/.
 cp ${PL_IMGUB} $DEST/.
 cp ${VI_LTX}   $DEST/.
 

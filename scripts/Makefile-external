@@ -2,17 +2,20 @@
 
 # Set up environment
 SRC_DIR = ../src
-RCP_DIR = ../yocto-recipes
 OUT_DIR = ../output
 XSA_DIR = ../xsa
 TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/) {print "$$1_$$2"}')
 PLNX_VER = $(shell printenv PETALINUX_VER)
 DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/usr/bin/dtc
 
-ifeq ($(PLNX_VER),2021.1)
+# Release-sensitive settings
+ifeq ($(shell expr $(PLNX_VER) \>= 2021.1), 1)
 	YOCTO_BUILDTOOLS_EXTENDED = 1
-else ifeq ($(PLNX_VER),2021.2)
-	YOCTO_BUILDTOOLS_EXTENDED = 1
+endif
+ifeq ($(shell expr $(PLNX_VER) \>= 2022.1), 1)
+	RCP_DIR = ../yocto-recipes
+else
+	RCP_DIR = ../yocto-recipes-old
 endif
 
 YOCTO_INITRAMFS_IMAGE = 0
@@ -39,9 +42,6 @@ endif
 override ROOTFS_Y += linuxptp
 override ROOTFS_Y += peekpoke
 override ROOTFS_Y += perl
-override ROOTFS_Y += python
-override ROOTFS_Y += python-dev
-override ROOTFS_Y += python-argparse
 override ROOTFS_Y += python3
 override ROOTFS_Y += python3-dev
 override ROOTFS_Y += netcat
@@ -66,6 +66,8 @@ override ROOTFS_Y += libstdcPLUSPLUS-dev
 override ROOTFS_Y += gdb
 override ROOTFS_Y += gdbserver
 endif
+
+override ROOTFS_Y += imagefeature-debug-tweaks
 
 # Add rootfs (=N) config options here
 override ROOTFS_N +=
@@ -373,6 +375,10 @@ clean_all:
 	for x in $(ALL); do \
 		$(MAKE) PLX_DIR="$(OUT_DIR)/$${x}_$(TOOL_VER)/petalinux" mrproper; \
 	done
+
+doc:
+	cd ../doc; rm -rf html
+	cd ../doc; doxygen config.dox
 
 # TODO
 # - Only add the rootfs_config and user-rootfsconfig lines if they don't already exist

@@ -47,15 +47,15 @@ cfg:
 
     ## Simple 25G configuration.
     om5_25:
-      CONFIG.Physical_Ethernet_Rate : "25G"
-      CONFIG.Axis_Ports_Fram        : 1
-      CONFIG.Axis_Ports_Defm        : 1
+      CONFIG.Physical_Ethernet_Rate    : "25G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 4
       CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
       CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
       CONFIG.Xran_Max_Dl_Data_Pointers : 8
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
+      CONFIG.Fram_Eth_Pkt_Max          : 9000
+      CONFIG.Defm_Eth_Pkt_Max          : 9000
 
     ## SW develeopment configuration. This is a good example of a more complex configuration.
     ## Xilinx use this for Driver testing.
@@ -89,6 +89,23 @@ cfg:
       CONFIG.Defm_Eth_Pkt_Max          : 8000
       # 0x1000_0000
       CONFIG.Production_Simulation     : 268435456
+      
+    ## SLV
+    om5_2e10_slv:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 8
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Physical_Ethernet_Ports   : 2
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
+      # 0x1000_0000
+      CONFIG.Production_Simulation     : 268435456
 
     ## SLV
     z102_10_slv:
@@ -116,7 +133,10 @@ cfg:
     zcu102:
       PART:  "xczu9eg-ffvb1156-2-e"
       BOARD: "xilinx.com:zcu102:part0:3.3"
-      
+    vck190:
+      PART:  "xcvc1902-vsva2197-2MP-e-S"
+      BOARD: "xilinx.com:vck190:part0:2.2"
+            
   ## Flow settings
   flow:
     ipName: roe_framer_0
