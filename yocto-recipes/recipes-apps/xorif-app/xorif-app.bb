@@ -21,7 +21,7 @@ SRC_URI = " \
 
 S = "${WORKDIR}"
 
-DEPENDS = "libxorif libxobf"
+DEPENDS = "libxorif"
 
 do_compile() {
 	oe_runmake
