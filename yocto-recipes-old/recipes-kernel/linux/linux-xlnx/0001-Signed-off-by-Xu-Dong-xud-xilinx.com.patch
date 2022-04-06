@@ -1,0 +1,45 @@
+From d1cdf71456178708665b0855ca6ac6fd384e3320 Mon Sep 17 00:00:00 2001
+From: Xu Dong <xud@xilinx.com>
+Date: Mon, 25 Nov 2019 11:01:29 +0000
+Subject: [PATCH] Signed-off-by: Xu Dong <xud@xilinx.com>
+
+this patch remove two changes made in 2019.2 axienet_main, that uses to fix the PTP crash issue in master mode
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 6f67779..8f5e051 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -484,10 +484,10 @@ static void axienet_device_reset(struct net_device *ndev)
+ 			axienet_rxts_iow(lp, XAXIFIFO_TXTS_SRR,
+ 					 XAXIFIFO_TXTS_RESET_MASK);
+ 
+-			axienet_txts_iow(lp, XAXIFIFO_TXTS_RDFR,
+-					 XAXIFIFO_TXTS_RESET_MASK);
+-			axienet_txts_iow(lp, XAXIFIFO_TXTS_SRR,
+-					 XAXIFIFO_TXTS_RESET_MASK);
++
++
++
++
+ 		}
+ #endif
+ 	}
+@@ -861,9 +861,9 @@ static void axienet_create_tsheader(u8 *buf, u8 msg_type,
+ 	cur_p = &q->tx_bd_v[q->tx_bd_tail];
+ #endif
+ 
+-	if (msg_type == TX_TS_OP_NOOP) {
+-		buf[0] = TX_TS_OP_NOOP;
+-	} else if (msg_type == TX_TS_OP_ONESTEP) {
++
++
++if (msg_type == TX_TS_OP_ONESTEP) {
+ 		buf[0] = TX_TS_OP_ONESTEP;
+ 		buf[1] = TX_TS_CSUM_UPDATE;
+ 		buf[4] = TX_PTP_TS_OFFSET;
+-- 
+1.8.3.1
+

@@ -1,0 +1,21 @@
+&datapath_xxv_eth_subs_xxv_wrap_support_1588_2step_timer1588_subs_timer_1588_v2_0_0 {
+	compatible = "xlnx,timer-1588-2.0";
+	xlnx,period = <4000000>;
+};
+&datapath_xxv_eth_subs_xxv_wrap_xxv_ethernet_0 {
+	axistream-connected = <&datapath_xxv_eth_subs_subs_2_arm_mm_dma_axi_dma_0>;
+	axistream-control-connected = <&datapath_xxv_eth_subs_subs_2_arm_mm_dma_axi_dma_0>;
+	axififo-connected = <&datapath_xxv_eth_subs_xxv_wrap_support_1588_2step_tx_ts_fifo_axi_fifo_mm_s_0>;
+	xlnx,rxtsfifo = <&datapath_xxv_eth_subs_xxv_wrap_support_1588_2step_rx_ts_fifo_axi_fifo_mm_s_0>;
+	xlnx,num-queues = /bits/ 16 <0x1>;
+	xlnx,channel-ids = "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "10";
+	xlnx,include-dre;
+	interrupt-names = "mm2s_ch1_introut", "s2mm_ch1_introut";
+	interrupt-parent = <&gic>;
+	interrupts = <0 89 4 0 90 4>;
+	local-mac-address = [ff ff ff ff ff ff];
+};
+&datapath_xxv_eth_subs_subs_2_arm_mm_dma_axi_dma_0 {
+	compatible = "xlnx,eth-dma";
+	xlnx,include-dre;
+};
