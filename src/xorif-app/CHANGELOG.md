@@ -15,10 +15,10 @@
 * Added "example" commands for demo purposes
 * Added "run" command
 * Enhanced "schedule_bf" commands (supports default, custom, with/without padding)
-* Add API for "ul_data_arrival_offset" (debug)
 * Added per-spatial stream decompression (see "set per_ss_decompression" command)
 * Add "get bf_error_flags" command
 * Modified "dump" debug commands
+* Add API for "ul_data_arrival_offset" (debug)
 
 ## Release 2021.2
 * Improved debug logging

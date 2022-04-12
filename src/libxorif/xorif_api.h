@@ -65,6 +65,7 @@ enum xorif_error_codes
     XORIF_SCHEDULE_TABLE_EXCEEDED,      /**< Out of space in Beamformer schedule table */
     XORIF_SCHEDULING_ERROR,             /**< Error during scheduling */
     XORIF_INVALID_AG,                   /**< Antenna group is not valid */
+    XORIF_INVALID_DFE,                  /**< DFE instance is not valid */
     XORIF_FRAMEWORK_ERRORS = -1000,     /**< (Place holder for library / libmetal framwork errors) */
     XORIF_LIBMETAL_ERROR,               /**< Error with libmetal framework */
     XORIF_OTHER_ERRORS = -500,          /**< (Place-holder for other errors) */

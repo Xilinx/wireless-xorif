@@ -5,10 +5,10 @@
 * Modified Yocto recipes for 'honister' release
 * Makefile improvements
 * Split doxygen-generated documentation into separate configs
-* Added "xorif_set_fhi_protocol_alt()" API which just sets protocol, and not the packet filter configuration
+* Added xorif_set_fhi_protocol_alt() API which just sets protocol, and not the packet filter configuration
 * Added SW changes needed for dynamic compression (i.e. not M-Plane) which affects buffer sizing in DL & SSB
-* Added per-spatial stream decompression (see "xorif_set_cc_dl_iq_compression_per_ss()")
-* Added PRACH compresssion configuration API (see "xorif_set_cc_iq_compression_prach()")
+* Added per-spatial stream decompression (see xorif_set_cc_dl_iq_compression_per_ss())
+* Added PRACH compresssion configuration API (see xorif_set_cc_iq_compression_prach())
 
 ## Release 2021.2
 * Updated register map

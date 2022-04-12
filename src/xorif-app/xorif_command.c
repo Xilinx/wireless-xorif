@@ -214,7 +214,8 @@ const struct command command_set[] =
     {"get", NULL, "?get bf_cc_alloc <cc>"},
     {"get", NULL, "?get bf_stats | bf_error_flags"},
     {"get", NULL, "?get (bf_alarms | bf_state | bf_enabled)"},
-    {"get", NULL, "?get (latency_dl | latency_dl_dfe | latency_ul | ul_data_arrival_offset)"},
+    {"get", NULL, "?get (latency_dl | latency_dl_dfe | latency_ul)"},
+    {"get", NULL, "?get ul_data_arrival_offset <dfe>"},
     {"set", NULL, "?set (bw_compression | bw_comp) <cc> <width> <method = 0..4>"},
     {"set", NULL, "?set bf_fft_shift_mode <mode = 0..3>"},
     {"set", NULL, "?set bf_scheduler_mode <mode = 0..2>"},
@@ -1547,17 +1548,21 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "result = %d\n", result);
                     return SUCCESS;
                 }
-                else if (match(s, "ul_data_arrival_offset") && num_tokens == 2)
+                else if (match(s, "ul_data_arrival_offset") && num_tokens == 3)
                 {
-                    // get ul_data_arrival_offset
-                    uint16_t symbol = 0;
-                    uint16_t slot = 0;
-                    int result = xobf_get_bf_ul_data_arrival_offset(&symbol, &slot);
-                    response += sprintf(response, "status = 0\n");
-                    response += sprintf(response, "result = %d\n", result);
-                    response += sprintf(response, "symbol = %d\n", symbol);
-                    response += sprintf(response, "slot = %d\n", slot);
-                    return SUCCESS;
+                    unsigned int dfe;
+                    if (parse_integer(2, &dfe))
+                    {
+                        // get ul_data_arrival_offset <dfe>
+                        int16_t offset = 0;
+                        uint16_t symbol = 0;
+                        int result = xobf_get_bf_ul_data_arrival_offset(dfe, &offset, &symbol);
+                        response += sprintf(response, "status = 0\n");
+                        response += sprintf(response, "result = %d\n", result);
+                        response += sprintf(response, "offset = %d\n", offset);
+                        response += sprintf(response, "symbol = %d\n", symbol);
+                        return SUCCESS;
+                    }
                 }
 #endif // BF_INCLUDED
             }

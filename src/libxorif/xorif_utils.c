@@ -63,23 +63,44 @@ static int reg_comparator(const void *key, const void *data)
 
 const reg_info_t *find_register(const reg_info_t *reg_map, int num, const char *name)
 {
+    static reg_info_t dummy_reg = { "OFFSET", 0, 0xffffffff, 0, 32 };
+    uint32_t u;
+
     void *result = bsearch((const void *)name,
                            (const void *)reg_map,
                            num,
                            sizeof(reg_info_t),
                            reg_comparator);
 
-    return (const reg_info_t *)result;
+    if (result)
+    {
+        return (const reg_info_t *)result;
+    }
+    else if ((sscanf(name, "0x%X", &u) == 1) || (sscanf(name, "%u", &u) == 1))
+    {
+        // Interpret the "name" as an address, with 32-bit width
+        // Set the address in the "dummy_reg" entry
+        dummy_reg.addr = u;
+        return (const reg_info_t *)&dummy_reg;
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 uint32_t read_reg_raw(void *io, const char *name, uint32_t addr)
 {
 #ifndef NO_HW
-    ASSERT(io);
     if (!io)
     {
         // The device and/or IO region is not active, return 0
         PERROR("Libmetal device and/or IO region is not initialized\n");
+        return 0;
+    }
+    else if (addr >= ((struct metal_io_region *)io)->size)
+    {
+        PERROR("Address out of range\n");
         return 0;
     }
 
@@ -108,11 +129,15 @@ uint32_t read_reg_raw(void *io, const char *name, uint32_t addr)
 void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value)
 {
 #ifndef NO_HW
-    ASSERT(io);
     if (!io)
     {
         // The device and/or IO region is not active, return
         PERROR("Libmetal device and/or IO region is not initialized\n");
+        return;
+    }
+    else if (addr >= ((struct metal_io_region *)io)->size)
+    {
+        PERROR("Address out of range\n");
         return;
     }
 
@@ -140,11 +165,15 @@ void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value)
 uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)
 {
 #ifndef NO_HW
-    ASSERT(io);
     if (!io)
     {
         // The device and/or IO region is not active, return
         PERROR("Libmetal device and/or IO region is not initialized\n");
+        return 0;
+    }
+    else if (addr >= ((struct metal_io_region *)io)->size)
+    {
+        PERROR("Address out of range\n");
         return 0;
     }
 
@@ -175,11 +204,15 @@ uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint
 void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)
 {
 #ifndef NO_HW
-    ASSERT(io);
     if (!io)
     {
         // The device and/or IO region is not active, return
         PERROR("Libmetal device and/or IO region is not initialized\n");
+        return;
+    }
+    else if (addr >= ((struct metal_io_region *)io)->size)
+    {
+        PERROR("Address out of range\n");
         return;
     }
 
