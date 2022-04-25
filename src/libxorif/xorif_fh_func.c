@@ -834,19 +834,12 @@ int fhi_irq_handler(int id, void *data)
     {
         // Check interrupt status
         uint32_t status = READ_REG_RAW(FHI_INTR_STATUS_ADDR) & FHI_INTR_MASK;
+        INFO("fhi_irq_handler() status = 0x%X\n", status);
 
         if (status)
         {
-            INFO("fhi_irq_handler() status = 0x%X\n", status);
-
             // Record the alarm status
             fhi_alarm_status |= status;
-
-            if (fhi_callback)
-            {
-                // Call registered call-back function
-                (*fhi_callback)(status);
-            }
 
             // Default interrupt handling...
 
@@ -897,9 +890,15 @@ int fhi_irq_handler(int id, void *data)
             // Clear interrupts by writing to the "master interrupt"
             WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
             WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
-
-            return METAL_IRQ_HANDLED;
         }
+
+        if (fhi_callback)
+        {
+            // Call registered call-back function
+            (*fhi_callback)(status);
+        }
+
+        return METAL_IRQ_HANDLED;
     }
 
     return METAL_IRQ_NOT_HANDLED;

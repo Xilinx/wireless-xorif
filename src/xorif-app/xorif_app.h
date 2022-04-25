@@ -122,6 +122,7 @@ extern const char *ip_addr_name;
 extern const char * const app_version_str;
 extern int no_fhi;
 extern int no_bf;
+extern int no_srs;
 
 /**
  * @brief Entry point for file mode.

@@ -340,9 +340,12 @@ int add_device(struct xorif_device_info *device,
     }
 
     // Map the device to IO region
-    INFO("Mapping IO region for device '%s'\n", dev_name);
     device->io = metal_device_io_region(device->dev, 0);
-    if (device->io == NULL)
+    if (device->io != NULL)
+    {
+        INFO("Mapped IO region for device '%s'\n", dev_name);
+    }
+    else
     {
         PERROR("Failed to map IO region for device '%s'\n", dev_name);
         return XORIF_FAILURE;

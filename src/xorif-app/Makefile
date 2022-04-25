@@ -9,6 +9,14 @@ ifeq ($(BF),1)
 CFLAGS += -DBF_INCLUDED
 endif
 
+ifeq ($(SRS),1)
+CFLAGS += -DSRS_INCLUDED
+endif
+
+ifeq ($(EXAMPLE),1)
+CFLAGS += -DEXAMPLE_INCLUDED
+endif
+
 ifeq ($(NO_HW),1)
 CFLAGS += -DNO_HW
 else
@@ -21,6 +29,12 @@ CFLAGS += -I../libxobf -I=/usr/include/xobf
 LDFLAGS += -L../libxobf
 LDLIBS += -lxobf
 STATIC_LIBS += ../libxobf/libxobf.a
+endif
+ifeq ($(SRS),1)
+CFLAGS += -I../libxsrs -I=/usr/include/xsrs
+LDFLAGS += -L../libxsrs
+LDLIBS += -lxsrs
+STATIC_LIBS += ../libxsrs/libxsrs.a
 endif
 endif
 
@@ -35,14 +49,16 @@ CFLAGS += -DEXTRA_DEBUG
 endif
 
 ifeq ($(XNRAAS_APP),1)
-APP = xnr-aas-app
-CFLAGS += -DXNRAAS_APP -DEXAMPLE_INCLUDED
+APP = xnraas-app
+CFLAGS += -DXNRAAS_APP
 ifneq ($(NO_HW),1)
+ifeq ($(EXAMPLE),1)
 #SRCS += example_code.c
 CFLAGS += -I../example -I=/usr/include/example
 LDFLAGS += -L../example
 LDLIBS += -lexample
 STATIC_LIBS += ../libexample/libexample.a
+endif
 endif
 endif
 

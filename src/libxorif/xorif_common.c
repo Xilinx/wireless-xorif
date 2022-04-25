@@ -42,7 +42,6 @@ FILE *log_file = NULL;
 // Local variables
 static const char *fhi_names[] = {"oran_radio_if", NULL};
 
-
 // System "constants" (can be changed with API)
 struct xorif_system_constants fhi_sys_const =
 {
@@ -217,7 +216,7 @@ void xorif_finish(void)
         // Close FHI device
         if (fh_device.dev != NULL)
         {
-            INFO("Closing FHI device %s\n", fh_device.dev->name);
+            INFO("Closing FHI device '%s'\n", fh_device.dev->name);
             int irq = (intptr_t)fh_device.dev->irq_info;
             if (irq != -1)
             {

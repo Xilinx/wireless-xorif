@@ -54,6 +54,7 @@ const char * const app_version_str = "2.0"; // Version string
 const char *app_name;
 int no_fhi = 0;
 int no_bf = 0;
+int no_srs = 0;
 
 #ifdef TEST_CALLBACK
 static void isr_callback1(uint32_t status)
@@ -89,7 +90,7 @@ int main(int argc, char *argv[])
 
     // Process command line options
     opterr = 0;
-    while ((opt = getopt(argc, argv, "bcf:hin:p:svBFIV")) != -1)
+    while ((opt = getopt(argc, argv, "bcf:hin:p:svSBFIV")) != -1)
     {
         switch (opt)
         {
@@ -128,6 +129,9 @@ int main(int argc, char *argv[])
             break;
         case 'B':
             no_bf = 1;
+            break;
+        case 'S':
+            no_srs = 1;
             break;
         case 'F':
             no_fhi = 1;

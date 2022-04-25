@@ -18,8 +18,6 @@ else
 	RCP_DIR = ../yocto-recipes-old
 endif
 
-YOCTO_INITRAMFS_IMAGE = 0
-
 ### CONFIGURATION SECTION ###
 
 # Define targets for "all" here
@@ -68,9 +66,10 @@ override ROOTFS_Y += gdbserver
 endif
 
 override ROOTFS_Y += imagefeature-debug-tweaks
+override ROOTFS_Y += Init-manager-sysvinit
 
 # Add rootfs (=N) config options here
-override ROOTFS_N +=
+override ROOTFS_N += Init-manager-systemd
 
 # Extra bits
 override EXTRAS += linux
@@ -226,23 +225,23 @@ config1: $(PLX_DIR) $(PLX_DIR)/project-spec/hw-description/system.xsa $(APPS) $(
 # Configure step 2 (rootfs options, etc.)
 config2: config1 $(ROOTFS_Y) $(ROOTFS_N) $(EXTRAS)
 	@echo Configuring 2 $(PLX_DIR)
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_HOSTNAME.*/CONFIG_SUBSYSTEM_HOSTNAME="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_HOSTNAME.*/CONFIG_SUBSYSTEM_HOSTNAME="$(subst _,-,$(TARGET))"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_PRODUCT.*/CONFIG_SUBSYSTEM_PRODUCT="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
-ifeq ($(YOCTO_INITRAMFS_IMAGE),1)
+ifeq ($(INITRAMFS),1)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-initramfs-image"/' $(PLX_DIR)/project-spec/configs/config
 else
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"/' $(PLX_DIR)/project-spec/configs/config
 endif
-ifeq ($(TARGET),vck190_hw_emu)
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
-	sed -i '/CONFIG_SUBSYSTEM_INITRD_RAMDISK_LOADADDR/d' $(PLX_DIR)/project-spec/configs/config
-	sed -i '/CONFIG_SUBSYSTEM_RAMDISK_IMAGE/d' $(PLX_DIR)/project-spec/configs/config
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_EXT4.*/CONFIG_SUBSYSTEM_ROOTFS_EXT4=y/' $(PLX_DIR)/project-spec/configs/config
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_RFS_FORMATS.*/CONFIG_SUBSYSTEM_RFS_FORMATS="tar.gz cpio.gz cpio.gz.u-boot ext4 ext4.gz jffs2"/' $(PLX_DIR)/project-spec/configs/config
-	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_SDROOT_DEV="/dev/mmcblk0p2"' $(PLX_DIR)/project-spec/configs/config
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_BOOTARGS_AUTO=.*/# CONFIG_SUBSYSTEM_BOOTARGS_AUTO is not set/' $(PLX_DIR)/project-spec/configs/config
-	sed -i '/CONFIG_SUBSYSTEM_BOOTARGS_AUTO/a CONFIG_SUBSYSTEM_USER_CMDLINE="console=ttyAMA0 earlycon=pl011,mmio32,0xFF000000,115200n8 clk_ignore_unused mem=2G root=/dev/mmcblk0p2 rw rootwait cma=512M"' $(PLX_DIR)/project-spec/configs/config
-endif
+#ifeq ($(TARGET),vck190_hw_emu)
+#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
+#	sed -i '/CONFIG_SUBSYSTEM_INITRD_RAMDISK_LOADADDR/d' $(PLX_DIR)/project-spec/configs/config
+#	sed -i '/CONFIG_SUBSYSTEM_RAMDISK_IMAGE/d' $(PLX_DIR)/project-spec/configs/config
+#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_EXT4.*/CONFIG_SUBSYSTEM_ROOTFS_EXT4=y/' $(PLX_DIR)/project-spec/configs/config
+#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_RFS_FORMATS.*/CONFIG_SUBSYSTEM_RFS_FORMATS="tar.gz cpio.gz cpio.gz.u-boot ext4 ext4.gz jffs2"/' $(PLX_DIR)/project-spec/configs/config
+#	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_SDROOT_DEV="/dev/mmcblk0p2"' $(PLX_DIR)/project-spec/configs/config
+#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_BOOTARGS_AUTO=.*/# CONFIG_SUBSYSTEM_BOOTARGS_AUTO is not set/' $(PLX_DIR)/project-spec/configs/config
+#	sed -i '/CONFIG_SUBSYSTEM_BOOTARGS_AUTO/a CONFIG_SUBSYSTEM_USER_CMDLINE="console=ttyAMA0 earlycon=pl011,mmio32,0xFF000000,115200n8 clk_ignore_unused mem=2G root=/dev/mmcblk0p2 rw rootwait cma=512M"' $(PLX_DIR)/project-spec/configs/config
+#endif
 	petalinux-config --project $(PLX_DIR) --silentconfig
 
 # Configure step 3 (device tree mods)
@@ -256,6 +255,8 @@ else ifeq ($(BOARD),zcu111)
 	cat $(RCP_DIR)/recipes-bsp/device-tree/system-user_zcu111.dtsi >> $(PLX_DIR)/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 else ifeq ($(BOARD),vck190)
 	cat $(RCP_DIR)/recipes-bsp/device-tree/system-user_vck190.dtsi >> $(PLX_DIR)/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+else ifeq ($(BOARD),zcu670)
+	cat $(RCP_DIR)/recipes-bsp/device-tree/system-user_zcu670.dtsi >> $(PLX_DIR)/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
 endif
 ifeq ($(XXV),1)
 	cat $(RCP_DIR)/recipes-bsp/device-tree/system-user_xxv.dtsi >> $(PLX_DIR)/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
@@ -271,10 +272,12 @@ package: build $(PLX_DIR)/images/linux/system.dts
 	@echo Packaging $(PLX_DIR)
 ifeq ($(BOARD),vck190)
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --force
+else ifeq ($(BOARD),zcu670)
+	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga $(XSA_DIR)/$(TARGET)/system.bit --force
 else
-	petalinux-package --project $(PLX_DIR) --boot --u-boot --fpga --force
+	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga --force
 endif
-ifeq ($(YOCTO_INITRAMFS_IMAGE),1)
+ifeq ($(INITRAMFS),1)
 	cd $(PLX_DIR); petalinux-package --wic --extra-bootfiles "ramdisk.cpio.gz.u-boot"
 	gzip -f $(PLX_DIR)/images/linux/*.wic
 endif
@@ -293,37 +296,31 @@ ifneq ("$(wildcard $(PLX_DIR))","")
 	petalinux-build --project $(PLX_DIR) -x mrproper -f
 endif
 
-#### MAIN TARGETS BELOW ####
+#### HARDWARE TARGETS BELOW ####
 
-zcu102_bsp:
-	$(MAKE) BOARD=zcu102 TARGET=$@ \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu102-v$(PLNX_VER)-final.bsp \
-	package
+$(XSA_DIR)/zcu102_om5_exs/system.xsa:
+	mkdir -p $(shell dirname $@)
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5 -tclargs implNodateExit
+	cp $(OUT_DIR)/zcu102_om5_exs_$(TOOL_VER)/vivado/system.xsa $@
 
-zcu111_bsp:
-	$(MAKE) BOARD=zcu111 TARGET=$@ \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu111-v$(PLNX_VER)-final.bsp \
-	package
+$(XSA_DIR)/zcu111_om5_exs/system.xsa:
+	mkdir -p $(shell dirname $@)
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5 -tclargs implNodateExit
+	cp $(OUT_DIR)/zcu111_om5_exs_$(TOOL_VER)/vivado/system.xsa $@
 
-vck190_bsp:
-	$(MAKE) BOARD=vck190 TARGET=$@ \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-vck190-v$(PLNX_VER)-final.bsp \
-	package
+$(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
+	mkdir -p $(shell dirname $@)
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25 -tclargs implNodateExit
+	cp $(OUT_DIR)/zcu111_om5_25_exs_$(TOOL_VER)/vivado/system.xsa $@
+
+#### PETALINUX TARGETS BELOW ####
 
 zcu102_om5_exd:
 	$(MAKE) BOARD=zcu102 TARGET=$@ \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-zcu102_om5_exs:
-	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu102_om5_e4_exs:
+zcu102_om5_exs: $(XSA_DIR)/zcu102_om5_exs/system.xsa
 	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
@@ -343,12 +340,12 @@ zcu111_om5_10_slv_exd:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-zcu111_om5_exs:
+zcu111_om5_exs: $(XSA_DIR)/zcu111_om5_exs/system.xsa
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-zcu111_om5_25_exs:
+zcu111_om5_25_exs: $(XSA_DIR)/zcu111_om5_25_exs/system.xsa
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
@@ -358,13 +355,16 @@ zcu111_om5_e4_exs:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-vck190_hw:
+vck190:
 	$(MAKE) BOARD=vck190 TARGET=$@ \
+	BSP=$(PETALINUX)/../../bsp/release/xilinx-vck190-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-vck190_hw_emu:
-	$(MAKE) BOARD=vck190 TARGET=$@ \
+zcu670:
+	# Experimental build based on BSP
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 

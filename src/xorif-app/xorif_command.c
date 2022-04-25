@@ -33,6 +33,9 @@
 #ifdef BF_INCLUDED
 #include "xobf_api.h"
 #endif
+#ifdef SRS_INCLUDED
+#include "xsrs_api.h"
+#endif
 #ifdef EXAMPLE_INCLUDED
 #include "example_api.h"
 #endif
@@ -81,6 +84,16 @@ static int load(const char *request, char *response);
 static int test_bf(const char *request, char *response);
 #endif // EXTRA_DEBUG
 #endif // BF_INCLUDED
+
+// SRS commands
+#ifdef SRS_INCLUDED
+//static int schedule_bf(const char *request, char *response);
+//static int load(const char *request, char *response);
+//#ifdef EXTRA_DEBUG
+//static int test_bf(const char *request, char *response);
+//#endif // EXTRA_DEBUG
+static int load_ru_table(const char *request, char *response);
+#endif // SRS_INCLUDED
 
 // Other function prototypes...
 static int dump_fhi_register(char *response, const char *reg_name);
@@ -238,6 +251,21 @@ const struct command command_set[] =
     {"test_bf", test_bf, "?test_bf ..."},
 #endif // EXTRA_DEBUG
 #endif // BF_INCLUDED
+#ifdef SRS_INCLUDED
+    {"init", NULL, "?init srs [(<device> | NULL)]"},
+    {"finish", NULL, "?finish srs"},
+    {"reset", NULL, "?reset srs [<mode = 0|1>]"},
+    {"get", NULL, "?get srs_hw_version"},
+    {"get", NULL, "?get srs_cc_config <cc>"},
+    {"get", NULL, "?get srs_eaxc"},
+    {"set", NULL, "?set (srs_iq_compression | srs_iq_comp) <cc> <width> <method = 0..4> <mplane = 0|1>"},
+    {"set", NULL, "?set ruid_table_srs <ru_port_id> <antenna_id>"},
+    {"configure", NULL, "?configure srs <cc>"},
+    {"load_ru_table", load_ru_table, "Program the SRS RU Port ID Table"},
+    {"load_ru_table", NULL, "?load_ru_table srs"},
+    {"read_reg", NULL, "?read_reg srs <name>"},
+    {"write_reg", NULL, "?write_reg srs <name> <value>"},
+#endif // SRS_INCLUDED
     // Last line must be all NULL's
     {NULL, NULL, NULL}
 };
@@ -278,6 +306,24 @@ static int has_bf(void)
     return has_bf_flag;
 }
 #endif // BF_INCLUDED
+#ifdef SRS_INCLUDED
+/**
+ * @brief Has SRS device been detected.
+ * @returns
+ *      - 0 if no
+ *      - 1 if yes
+ */
+static int has_srs(void)
+{
+    static int has_srs_flag = -1;
+
+    if (has_srs_flag == -1)
+    {
+        has_srs_flag = no_srs ? 0 : xsrs_has_srs();
+    }
+    return has_srs_flag;
+}
+#endif // SRS_INCLUDED
 #endif // NO_HW
 
 /**
@@ -809,6 +855,9 @@ static int debug(const char *request, char *response)
 #ifdef BF_INCLUDED
                 xobf_debug(level);
 #endif
+#ifdef SRS_INCLUDED
+                xsrs_debug(level);
+#endif // SRS_INCLUDED
 #ifdef EXAMPLE_INCLUDED
                 example_debug(level);
 #endif
@@ -848,10 +897,19 @@ static int init(const char *request, char *response)
             {
                 if (has_bf())
                 {
-                    return xobf_init(NULL, NULL);
+                    result &= xobf_init(NULL);
                 }
             }
 #endif
+#ifdef SRS_INCLUDED
+            if (result == XORIF_SUCCESS)
+            {
+                if (has_srs())
+                {
+                    result &= xsrs_init(NULL);
+                }
+            }
+#endif //SRS_INCLUDED
             return result;
         }
         else if (num_tokens == 2)
@@ -867,9 +925,15 @@ static int init(const char *request, char *response)
 #ifdef BF_INCLUDED
                 else if (match(s, "bf"))
                 {
-                    return xobf_init(NULL, NULL);
+                    return xobf_init(NULL);
                 }
 #endif
+#ifdef SRS_INCLUDED
+                else if (match(s, "srs"))
+                {
+                    return xsrs_init(NULL);
+                }
+#endif // SRS_INCLUDED
             }
         }
         else if (num_tokens == 3)
@@ -897,32 +961,29 @@ static int init(const char *request, char *response)
                     return example_init(s2);
                 }
 #endif
-            }
-        }
-#ifdef BF_INCLUDED
-        else if (num_tokens == 4)
-        {
-            // init bf <device_name> <device name>
-            const char *s1;
-            const char *s2;
-            const char *s3;
-            if (parse_string(1, &s1) && parse_string(2, &s2) && parse_string(3, &s3))
-            {
-                if (match(s1, "bf"))
+#if BF_INCLUDED
+                else if (match(s1, "bf"))
                 {
                     if (match(s2, "NULL"))
                     {
                         s2 = NULL;
                     }
-                    if (match(s3, "NULL"))
-                    {
-                        s3 = NULL;
-                    }
-                    return xobf_init(s2, s3);
+                    return xobf_init(s2);
                 }
+#endif
+#ifdef SRS_INCLUDED
+                if (match(s1, "srs"))
+                {
+                    if (match(s2, "NULL"))
+                    {
+                        s2 = NULL;
+                    }
+                    return xsrs_init(s2);
+                }
+#endif // SRS_INCLUDED
+
             }
         }
-#endif
     }
     return UNKNOWN_COMMAND;
 #endif
@@ -957,6 +1018,12 @@ static int finish(const char *request, char *response)
                 xobf_finish();
             }
 #endif
+#ifdef SRS_INCLUDED
+            if (has_srs())
+            {
+                xsrs_finish();
+            }
+#endif // SRS_INCLUDED
             return SUCCESS;
         }
         else if (num_tokens == 2)
@@ -977,6 +1044,13 @@ static int finish(const char *request, char *response)
                     return SUCCESS;
                 }
 #endif
+#ifdef SRS_INCLUDED
+                else if (match(s, "srs"))
+                {
+                    xsrs_finish();
+                    return SUCCESS;
+                }
+#endif // SRS_INCLUDED
 #ifdef EXAMPLE_INCLUDED
                 else if (match(s, "example"))
                 {
@@ -1060,6 +1134,12 @@ static int reset(const char *request, char *response)
                     return xobf_reset_bf(mode);
                 }
 #endif
+#ifdef SRS_INCLUDED
+                else if (match(s, "srs"))
+                {
+                    return xsrs_reset_srs(mode);
+                }
+#endif // SRS_INCLUDED
             }
         }
     }
@@ -1107,6 +1187,18 @@ static int has(const char *request, char *response)
 #else
                     result = 0;
 #endif
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = %s\n", result ? "true" : "false");
+                    return SUCCESS;
+                }
+                else if (match(s, "srs"))
+                {
+                    int result;
+#ifdef SRS_INCLUDED
+                    result = no_srs ? 0 : xsrs_has_srs();
+#else
+                    result = 0;
+#endif // SRS_INCLUDED
                     response += sprintf(response, "status = 0\n");
                     response += sprintf(response, "result = %s\n", result ? "true" : "false");
                     return SUCCESS;
@@ -1565,6 +1657,61 @@ static int get(const char *request, char *response)
                     }
                 }
 #endif // BF_INCLUDED
+#ifdef SRS_INCLUDED
+                else if (match(s, "srs_hw_version") && num_tokens == 2)
+                {
+                    // get bf_hw_version
+                    response += sprintf(response, "status = 0\n");
+                    response += sprintf(response, "result = 0x%08X\n", xsrs_get_srs_hw_version());
+                    return SUCCESS;
+                }
+                else if (match(s, "srs_cc_config") && num_tokens == 3)
+                {
+                    unsigned int cc;
+                    if (parse_integer(2, &cc))
+                    {
+                        struct xsrs_cc_config srs_cc_config;
+                        int result = xsrs_get_cc_config(cc, &srs_cc_config);
+                        if (result == XSRS_SUCCESS)
+                        {
+                            response += sprintf(response, "status = 0\n");
+                            response += sprintf(response, "num_rbs        = %d\n", srs_cc_config.num_rbs);
+                            response += sprintf(response, "numerology     = %d\n", srs_cc_config.numerology);
+                            response += sprintf(response, "iq_comp_meth   = %d\n", srs_cc_config.iq_comp_meth);
+                            response += sprintf(response, "iq_comp_width  = %d\n", srs_cc_config.iq_comp_width);
+                            response += sprintf(response, "iq_comp_mplane = %d\n", srs_cc_config.iq_comp_mplane);
+                            return SUCCESS;
+                        }
+                    }
+                }
+                else if (match(s, "srs_eaxc") && num_tokens == 2)
+                {
+                    struct xsrs_antenna_carrier_config srs_eaxc_config;
+                    int display_counter = 0;
+                    int result = xsrs_get_antenna_carrier_config(&srs_eaxc_config);
+                    if (result == XSRS_SUCCESS)
+                    {
+                        response += sprintf(response, "status = 0\n");
+                        response += sprintf(response, "du_width = 0x%08X\n", srs_eaxc_config.du_port_id_width);
+                        response += sprintf(response, "bs_width = 0x%08X\n", srs_eaxc_config.bs_port_id_width);
+                        response += sprintf(response, "cc_width = 0x%08X\n", srs_eaxc_config.cc_port_id_width);
+                        response += sprintf(response, "ru_width = 0x%08X\n", srs_eaxc_config.ru_port_id_width);
+                        response += sprintf(response, "RU PORT ID TABLE:\n");
+                        for (int i = 0; i < 256; i++)
+                        {
+                            response += sprintf(response, "0x%02X ", srs_eaxc_config.ru_port_antenna[i]);
+                            display_counter++;
+                            if (display_counter == 8)
+                            {
+                                display_counter = 0;
+                                response += sprintf(response, "\n");
+                            }
+                        }
+                        response += sprintf(response, "\n");
+                    }
+                    return SUCCESS;
+                }
+#endif // SRS_INCLUDED
             }
         }
     }
@@ -1608,10 +1755,19 @@ static int set(const char *request, char *response)
                         {
                             if (has_bf())
                             {
-                                return xobf_set_cc_num_rbs(cc, val);
+                                result &= xobf_set_cc_num_rbs(cc, val);
                             }
                         }
 #endif
+#ifdef SRS_INCLUDED
+                        if (result == XORIF_SUCCESS)
+                        {
+                            if (has_srs())
+                            {
+                                result &= xsrs_set_cc_num_rbs(cc, val);
+                            }
+                        }
+#endif // SRS_INCLUDED
                         return result;
                     }
                 }
@@ -1627,10 +1783,19 @@ static int set(const char *request, char *response)
                         {
                             if (has_bf())
                             {
-                                return xobf_set_cc_numerology(cc, val1, val2);
+                                result &= xobf_set_cc_numerology(cc, val1, val2);
                             }
                         }
 #endif
+#ifdef SRS_INCLUDED
+                        if (result == XORIF_SUCCESS)
+                        {
+                            if (has_srs())
+                            {
+                                result &= xsrs_set_cc_numerology(cc, val1, val2);
+                            }
+                        }
+#endif // SRS_INCLUDED
                         return result;
                     }
                 }
@@ -1803,6 +1968,26 @@ static int set(const char *request, char *response)
                         return result;
                     }
                 }
+#ifdef SRS_INCLUDED
+                else if ((match(s, "srs_iq_compression") || match(s, "srs_iq_comp")) && num_tokens == 5)
+                {
+                    // set (srs_iq_compression | srs_iq_comp) <cc> <width> <method = 0..4>
+                    unsigned int cc, val1, val2;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2))
+                    {
+                        return xsrs_set_cc_comp(cc, val1, val2, 1);
+                    }
+                }
+                else if ((match(s, "srs_iq_compression") || match(s, "srs_iq_comp")) && num_tokens == 6)
+                {
+                    // set (dl_iq_compression | dl_iq_comp) <cc> <width> <method = 0..4> <mplane = 0|1>
+                    unsigned int cc, val1, val2, val3;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val1) && parse_integer(4, &val2) && parse_integer(5, &val3))
+                    {
+                        return xsrs_set_cc_comp(cc, val1, val2, val3);
+                    }
+                }
+#endif // SRS_INCLUDED
                 else if ((match(s, "per_ss_decompression") || match(s, "per_ss_decomp")) && num_tokens == 6)
                 {
                     // set (per_ss_decompression | per_ss_decomp) <ss> <width> <method = 0..4> <enable = 0|1>
@@ -2051,7 +2236,12 @@ static int set(const char *request, char *response)
                     if (parse_integer(2, &du_bits) && parse_integer(3, &bs_bits) &&
                         parse_integer(4, &cc_bits) && parse_integer(5, &ru_bits))
                     {
+#ifdef SRS_INCLUDED
+                        return xorif_set_fhi_eaxc_id(du_bits, bs_bits, cc_bits, ru_bits) &
+                               xsrs_set_eaxc_widths(du_bits, bs_bits, cc_bits, ru_bits);
+#else
                         return xorif_set_fhi_eaxc_id(du_bits, bs_bits, cc_bits, ru_bits);
+#endif
                     }
                 }
                 else if (match(s, "ru_ports") && num_tokens == 8)
@@ -2191,6 +2381,19 @@ static int set(const char *request, char *response)
                     }
                 }
 #endif
+#ifdef SRS_INCLUDED
+                else if ((match(s, "ruid_table_srs")) && num_tokens == 4)
+                {
+                    // set ruid_table_srs <ru_port_id> <ant_id>
+                    unsigned int ru_port;
+                    unsigned int ant_id;
+
+                    if (parse_integer(2, &ru_port) && parse_integer(3, &ant_id))
+                    {
+                        return xsrs_set_ru_port_id_table(ru_port, ant_id);
+                    }
+                }
+#endif // SRS_INCLUDED
             }
         }
     }
@@ -2292,10 +2495,19 @@ static int configure(const char *request, char *response)
                 {
                     if (has_bf())
                     {
-                        return xobf_configure_cc(cc);
+                        result &= xobf_configure_cc(cc);
                     }
                 }
 #endif
+#ifdef SRS_INCLUDED
+                if (result == XORIF_SUCCESS)
+                {
+                    if (has_srs())
+                    {
+                        result &= xsrs_configure_cc(cc);
+                    }
+                }
+#endif // SRS_INCLUDED
                 return result;
             }
         }
@@ -2316,6 +2528,12 @@ static int configure(const char *request, char *response)
                     return xobf_configure_cc(cc);
                 }
 #endif
+#ifdef SRS_INCLUDED
+                else if (match(s, "srs"))
+                {
+                    return xsrs_configure_cc(cc);
+                }
+#endif // SRS_INCLUDED
             }
         }
     }
@@ -2489,6 +2707,12 @@ static int read_reg(const char *request, char *response)
                     result = xobf_read_bf_reg(1, s2, &val);
                 }
 #endif // BF_INCLUDED
+#ifdef SRS_INCLUDED
+                else if (match(s1, "srs"))
+                {
+                    result = xsrs_read_srs_reg(s2, &val);
+                }
+#endif // SRS_INCLUDED
                 else
                 {
                     return UNKNOWN_COMMAND;
@@ -2618,6 +2842,12 @@ static int write_reg(const char *request, char *response)
                     result = xobf_write_bf_reg(1, s2, val);
                 }
 #endif // BF_INCLUDED
+#ifdef SRS_INCLUDED
+                else if (match(s1, "srs"))
+                {
+                    result = xsrs_write_srs_reg(s2, val);
+                }
+#endif // SRS_INCLUDED
                 else
                 {
                     return UNKNOWN_COMMAND;
@@ -3311,6 +3541,44 @@ static int load_prach_config(const char *name)
 #endif // PRACH_CONFIG
 #endif // NO_HW
 #endif // BF_INCLUDED
+
+#ifdef SRS_INCLUDED
+/**
+ * @brief "load_ru_table" command.
+ * @param[in] request Pointer to request string
+ * @param[in,out] response Pointer to response string
+ * @returns
+ *      - 0 if successful
+ *      - Error code if not successful
+ */
+static int load_ru_table(const char *request, char *response)
+{
+    if (remote_target)
+    {
+        return send_to_target(request, response);
+    }
+#ifdef NO_HW
+    return NO_HARDWARE;
+#else
+    else
+    {
+        if (num_tokens == 2)
+        {
+            // load_ru_table srs
+            const char *s1;
+            if (parse_string(1, &s1))
+            {
+                if (match(s1, "srs"))
+                {
+                    return xsrs_configure_antenna_carrier();
+                }
+            }
+        }
+    }
+    return UNKNOWN_COMMAND;
+#endif
+}
+#endif // SRS_INCLUDED
 
 #ifndef NO_HW
 static int dump_fhi_register(char *response, const char *reg_name)
