@@ -323,14 +323,14 @@ void xorif_finish(void);
 /**
  * @brief Return the s/w version.
  * @returns
- *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
+ *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[0..15])
  */
 uint32_t xorif_get_sw_version(void);
 
 /**
  * @brief Returns the Front-Haul Interface h/w version.
  * @returns
- *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15])
+ *      - Version (major = bits[24..31], minor = bits[16..23], version = bits[0..15])
  */
 uint32_t xorif_get_fhi_hw_version(void);
 

@@ -145,14 +145,15 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa831f15721b2160abbf5cc4fe7c719e71">XORIF_SCHEDULE_TABLE_EXCEEDED</a>, 
 <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa436e1c153c12de5c40bd47e116a17413">XORIF_SCHEDULING_ERROR</a>, 
 <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa8fdc834fd2e4fe38a2f8a9459d39c296">XORIF_INVALID_AG</a>, 
-<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa774af89ce327da0f5bb3dad6d0d8f048">XORIF_FRAMEWORK_ERRORS</a> = -1000, 
+<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2b213a6afb5f585bc912e78955668cee">XORIF_INVALID_DFE</a>, 
 <br/>
-&#160;&#160;<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa4714fa10d010ea3a706076deba21addc">XORIF_LIBMETAL_ERROR</a>, 
+&#160;&#160;<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa774af89ce327da0f5bb3dad6d0d8f048">XORIF_FRAMEWORK_ERRORS</a> = -1000, 
+<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa4714fa10d010ea3a706076deba21addc">XORIF_LIBMETAL_ERROR</a>, 
 <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa58d26412e9ade9963d87f109cc124392">XORIF_OTHER_ERRORS</a> = -500, 
 <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fab68e276251beec0446da47d72b2f490a">XORIF_NOT_SUPPORTED</a>, 
-<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faf431f4841dcd33bca7a22bf73f2e1376">XORIF_INVALID_RESULT</a> = -1, 
 <br/>
-&#160;&#160;<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa64437c7c5e97f4efece41f66478232d1">XORIF_SUCCESS</a> = 0, 
+&#160;&#160;<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faf431f4841dcd33bca7a22bf73f2e1376">XORIF_INVALID_RESULT</a> = -1, 
+<a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa64437c7c5e97f4efece41f66478232d1">XORIF_SUCCESS</a> = 0, 
 <a class="el" href="group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa9a03a40b03b36e83d8ebdc2a08ef6df4">XORIF_FAILURE</a> = 1
 <br/>
  }</td></tr>
@@ -476,6 +477,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="gga9a97d2a2455bd1b40ba42a84ddbe2f3fa8fdc834fd2e4fe38a2f8a9459d39c296"></a>XORIF_INVALID_AG</em>&nbsp;</td><td class="fielddoc">
 <p>Antenna group is not valid. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2b213a6afb5f585bc912e78955668cee"></a>XORIF_INVALID_DFE</em>&nbsp;</td><td class="fielddoc">
+<p>DFE instance is not valid. </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="gga9a97d2a2455bd1b40ba42a84ddbe2f3fa774af89ce327da0f5bb3dad6d0d8f048"></a>XORIF_FRAMEWORK_ERRORS</em>&nbsp;</td><td class="fielddoc">
 <p>(Place holder for library / libmetal framwork errors) </p>
@@ -1052,7 +1056,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 <p>Returns the Front-Haul Interface h/w version. </p>
 <dl class="section return"><dt>Returns</dt><dd><ul>
-<li>Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15]) </li>
+<li>Version (major = bits[24..31], minor = bits[16..23], version = bits[0..15]) </li>
 </ul>
 </dd></dl>
 
@@ -1097,7 +1101,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 <p>Return the s/w version. </p>
 <dl class="section return"><dt>Returns</dt><dd><ul>
-<li>Version (major = bits[24..31], minor = bits[16..23], version = bits[8..15]) </li>
+<li>Version (major = bits[24..31], minor = bits[16..23], version = bits[0..15]) </li>
 </ul>
 </dd></dl>
 

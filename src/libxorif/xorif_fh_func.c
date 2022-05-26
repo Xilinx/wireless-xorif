@@ -532,8 +532,18 @@ int xorif_set_ru_ports(uint16_t ru_bits,
     WRITE_REG(DEFM_CID_SS_MASK, ss_mask);
     WRITE_REG(DEFM_CID_U_MASK, xx_mask);
     WRITE_REG(DEFM_CID_U_VALUE, user_val & xx_mask);
-    WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
-    WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
+
+    if (prach_val > mask)
+    {
+        // Disable PRACH mapping (since masking with 0x00 can never == 0xFF)
+        WRITE_REG(DEFM_CID_PRACH_MASK, 0x00);
+        WRITE_REG(DEFM_CID_PRACH_VALUE, 0xFF);
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
+        WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
+    }
 
     if (ssb_val > mask)
     {
@@ -547,7 +557,7 @@ int xorif_set_ru_ports(uint16_t ru_bits,
         WRITE_REG(DEFM_CID_SSB_VALUE, ssb_val & xx_mask);
     }
 
-    // Disable LTE mapping (sonce masking with 0x00 can never == 0xFF)
+    // Disable LTE mapping (since masking with 0x00 can never == 0xFF)
     WRITE_REG(DEFM_CID_LTE_MASK, 0x00);
     WRITE_REG(DEFM_CID_LTE_VALUE, 0xFF);
 
@@ -558,7 +568,10 @@ int xorif_set_ru_ports(uint16_t ru_bits,
         INFO("SS mask:     %s\n", binary_mask_string(ss_mask, ss_mask, 16));
         INFO("Mask:        %s\n", binary_mask_string(xx_mask, xx_mask, 16));
         INFO("User value:  %s\n", binary_mask_string(user_val & xx_mask, xx_mask, 16));
-        INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
+        if (prach_val <= mask)
+        {
+            INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
+        }
         if (ssb_val <= mask)
         {
             INFO("SSB value:   %s\n", binary_mask_string(ssb_val & xx_mask, xx_mask, 16));
@@ -599,8 +612,18 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
     WRITE_REG(DEFM_CID_SS_MASK, ss_mask);
     WRITE_REG(DEFM_CID_U_MASK, xx_mask);
     WRITE_REG(DEFM_CID_U_VALUE, user_val & xx_mask);
-    WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
-    WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
+
+    if (prach_val > mask)
+    {
+        // Disable PRACH mapping (since masking with 0x00 can never == 0xFF)
+        WRITE_REG(DEFM_CID_PRACH_MASK, 0x00);
+        WRITE_REG(DEFM_CID_PRACH_VALUE, 0xFF);
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_PRACH_MASK, xx_mask);
+        WRITE_REG(DEFM_CID_PRACH_VALUE, prach_val & xx_mask);
+    }
 
     if (ssb_val > mask)
     {
@@ -633,7 +656,10 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
         INFO("SS mask:     %s\n", binary_mask_string(ss_mask, ss_mask, 16));
         INFO("Mask:        %s\n", binary_mask_string(xx_mask, xx_mask, 16));
         INFO("User value:  %s\n", binary_mask_string(user_val & xx_mask, xx_mask, 16));
-        INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
+        if (prach_val <= mask)
+        {
+            INFO("PRACH value: %s\n", binary_mask_string(prach_val & xx_mask, xx_mask, 16));
+        }
         if (ssb_val <= mask)
         {
             INFO("SSB value:   %s\n", binary_mask_string(ssb_val & xx_mask, xx_mask, 16));
@@ -1448,6 +1474,27 @@ int xorif_fhi_configure_cc(uint16_t cc)
 
     // Everything fits!
     INFO("Configuration valid\n");
+
+#ifdef DEBUG
+    if (xorif_trace >= 2)
+    {
+        // Temporarily suspend debug level
+        int temp = xorif_trace;
+        xorif_trace = 0;
+
+        // Get versions
+        uint32_t hw_version = xorif_get_fhi_hw_version();
+        uint32_t hw_internal = xorif_get_fhi_hw_internal_rev();
+        uint32_t sw_version = xorif_get_sw_version();
+
+        // Restore debug level
+        xorif_trace = temp;
+
+        INFO("HW Version = %08x\n", hw_version);
+        INFO("HW Internal Revision = %d\n", hw_internal);
+        INFO("SW Version = %08x\n", sw_version);
+    }
+#endif
 
     // Program the h/w
     xorif_fhi_init_cc_rbs(cc, ptr->num_rbs, ptr->numerology, ptr->extended_cp);

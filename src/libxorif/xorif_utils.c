@@ -343,7 +343,7 @@ int add_device(struct xorif_device_info *device,
     device->io = metal_device_io_region(device->dev, 0);
     if (device->io != NULL)
     {
-        INFO("Mapped IO region for device '%s'\n", dev_name);
+        INFO("Mapped IO region for device '%s' (0x%lX)\n", dev_name, metal_io_phys(device->io, 0));
     }
     else
     {

@@ -1,6 +1,6 @@
 # Xilinx O-RAN Radio Interface Software Driver Library (LIBXORIF)
 
-* The C library (libxorif) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio Interface IP core.
+* The C library (libxorif) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio Interface IP core
 
 ## API
 
@@ -10,23 +10,23 @@
 
 ## Building
 
-* The libxorif library is built as part of the PetaLinux build system, and can be found in the `/usr/lib/` directory of the target Linux installation.
+* The libxorif library is built as part of the PetaLinux build system, and can be found in the `/usr/lib/` directory of the target Linux installation
 
-* It can also be built separately using an appropriate SDK including the cross-compilation tools and dependencies (e.g. libmetal library).
+* It can also be built separately using an appropriate SDK including the cross-compilation tools and dependencies (e.g. libmetal library)
 
     * Run: `make`
 	
 ## Usage
 
 * The basic use of the library API is as follows...
-	* Initialize library with `xorif_init()`
-	* Specify component carrier configuration (e.g. `xorif_set_cc_num_rbs()`, `xorif_set_cc_numerology()`, etc.)
-		* Note, during the specification phase, the validated inputs are stored in the s/w, they do not get written to the h/w until the "configure" step (below)
-	* Configure the component carrier (i.e. `xorif_configure_cc()`)
-		* The component carrier specification is validated to ensure it will fit in the hardware resources, and if successful the h/w register will be programmed appropriately
+    * Initialize library with `xorif_init()`
+    * Specify component carrier configuration (e.g. `xorif_set_cc_num_rbs()`, `xorif_set_cc_numerology()`, etc.)
+        * Note, during the specification phase, the validated inputs are stored in the s/w, they do not get written to the h/w until the "configure" step (below)
+    * Configure the component carrier (i.e. `xorif_configure_cc()`)
+        * The component carrier specification is validated to ensure it will fit in the hardware resources, and if successful the h/w register will be programmed appropriately
     * Enable the component carrier (i.e. `xorif_enable_cc()`)
-	* Multiple component carriers can be specified and configured in the same manner
-	* Close the library cleanly with `xorif_finish()`
+    * Multiple component carriers can be specified and configured in the same manner
+    * Close the library cleanly with `xorif_finish()`
 * Other features of the library allow component carriers to disabled, re-configured, obtain stats, etc. See the API for details.
 * The library also provides a register read/write interface (e.g. `xorif_read_fhi_reg()` and `xorif_write_fhi_reg()`)
 
@@ -163,9 +163,9 @@ xorif_enable_cc(0)
 ## Debug Mode
 
 * The library API command `xorif_debug()` can be used to enable library's "trace" feature
-	* Level 0: No trace, but errors are still reported
-	* Level 1: The trace feature shows main API calls and register read/writes
-	* Level 2: The trace feature shows debug extra information in addition to the main API calls and register read/writes
+    * Level 0: No trace, but errors are still reported
+    * Level 1: The trace feature shows main API calls and register read/writes
+    * Level 2: The trace feature shows debug extra information in addition to the main API calls and register read/writes
 * This can be a very useful feature for debugging or checking the component carrier configurations. For example...
 
 ~~~
@@ -229,12 +229,12 @@ LIBXORIF> WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] <= 0x1 (1)
 ~~~
 
 * The register read/write debug information can be particularly useful. The debug trace shows...
-	* The READ_REG or WRITE_REG operation
-	* The symbolic name of the register
-	* The address offset (in hexadecimal)
-		* Note, the offset is relative to the base address of the device
-	* The bit field, e.g. [0:15] means that the specified register field is located in bits 0 to 15
-	* The value read or written in hexadecimal and decimal
+    * The READ_REG or WRITE_REG operation
+    * The symbolic name of the register
+    * The address offset (in hexadecimal)
+        * Note, the offset is relative to the base address of the device
+    * The bit field, e.g. [0:15] means that the specified register field is located in bits 0 to 15
+    * The value read or written in hexadecimal and decimal
 
 ## Additional Examples
 

@@ -188,7 +188,6 @@ const struct command command_set[] =
     {"set", NULL, "?set packet_filter <port> <filter = (16 x 32b)> <mask = (4 x 16b)>"},
     {"set", NULL, "?set vlan <port> <id> <dei> <pcp>"},
     {"set", NULL, "?set eaxc_id <DU_bits> <BS_bits> <CC_bits> <RU_bits>"},
-    {"set", NULL, "?set ru_ports <RU_bits> <SS_bits> <mask> <user_value> <prach_value> <ssb_value>"},
     {"set", NULL, "?set ru_ports <RU_bits> <SS_bits> <mask> <user_value> <prach_value> <ssb_value> [<lte_value>]"},
     {"set", NULL, "?set ru_ports_table_mode <mode>"},
     {"set", NULL, "?set ru_ports_table <address> <port> <type> [<number>]"},

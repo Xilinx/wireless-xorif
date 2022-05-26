@@ -130,6 +130,9 @@ cfg:
     zcu111:
       PART:  "xczu28dr-ffvg1517-2-e"
       BOARD: "xilinx.com:zcu111:part0:1.2"
+    zcu670:
+      PART:  "xczu67dr-fsve1156-2-i"
+      BOARD: "xilinx.com:zcu670:part0:2.0"
     zcu102:
       PART:  "xczu9eg-ffvb1156-2-e"
       BOARD: "xilinx.com:zcu102:part0:3.3"

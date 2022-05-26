@@ -10,6 +10,7 @@ var searchData=
   ['xorif_5finvalid_5fag',['XORIF_INVALID_AG',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa8fdc834fd2e4fe38a2f8a9459d39c296',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fcc',['XORIF_INVALID_CC',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3facda33b30a8f841b3fcbc3fe8c752eaa9',1,'xorif_api.h']]],
   ['xorif_5finvalid_5fconfig',['XORIF_INVALID_CONFIG',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa451fc990b012558a4b2d8028c781a7dd',1,'xorif_api.h']]],
+  ['xorif_5finvalid_5fdfe',['XORIF_INVALID_DFE',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa2b213a6afb5f585bc912e78955668cee',1,'xorif_api.h']]],
   ['xorif_5finvalid_5feaxc_5fid',['XORIF_INVALID_EAXC_ID',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3faefb2e12b88492d80d7edab5897587ccc',1,'xorif_api.h']]],
   ['xorif_5finvalid_5feth_5fport',['XORIF_INVALID_ETH_PORT',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa5d8be60fc908dae826f288a33c72959f',1,'xorif_api.h']]],
   ['xorif_5finvalid_5frbs',['XORIF_INVALID_RBS',['../group__libxorif-api.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa09ee5e8b650631ea5acb0d6aca182bd9',1,'xorif_api.h']]],

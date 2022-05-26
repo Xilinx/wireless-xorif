@@ -207,6 +207,81 @@ namespace eval ::roe::data {
     
     run_user_mods $projectName $board  $mode $ipRepo $designType
 
+
+    if { $board == "zcu670" } {
+      puts_xorif "Modify REFCLK for zcu670"
+
+    delete_bd_objs [get_bd_ports timer_gen_10ms_toggle_0]
+    delete_bd_objs [get_bd_nets datapath_one_pps_0]                 [get_bd_ports one_pps_0]
+    delete_bd_objs [get_bd_nets datapath_m0_dl_toggle_0]            [get_bd_ports m0_dl_toggle_0]
+    delete_bd_objs [get_bd_nets datapath_radio_start_1ms_toggle_0]  [get_bd_ports radio_start_1ms_toggle_0]
+    delete_bd_objs [get_bd_nets datapath_radio_start_10ms_toggle_0] [get_bd_ports radio_start_10ms_toggle_0]
+    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
+    delete_bd_objs [get_bd_nets pushbutton_reset_1]                 [get_bd_ports pushbutton_reset]
+    connect_bd_net [get_bd_pins xlconstant_0/dout]                  [get_bd_pins reset_retime/pushbutton_reset]
+    set_property -dict [list CONFIG.CONST_VAL {0}]                  [get_bd_cells xlconstant_0]
+    delete_bd_objs [get_bd_ports gpio_cdc_dipstatus]
+    copy_bd_objs /  [get_bd_cells {xlconstant_0}]
+    set_property -dict [list CONFIG.CONST_WIDTH {8}]   [get_bd_cells xlconstant_1]
+    connect_bd_net [get_bd_pins xlconstant_1/dout]                  [get_bd_pins datapath/gpio_cdc_dipstatus]
+
+    set_property -dict [list CONFIG.GT_REF_CLK_FREQ {156.25}] [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]
+    set_property CONFIG.FREQ_HZ 156250000                     [get_bd_intf_ports /gt_ref_clk]
+    
+    ## Update the syncer clock period for 390.625MHz
+    set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_tx]
+    set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_rx]
+    set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {2560}]              [get_bd_cells datapath/framer_datapath/roe_framer_0]
+
+    set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {390625}]         [get_bd_cells datapath/framer_datapath/roe_radio_top_0]
+    set_property -dict [list CONFIG.clocks_for_1ms {390625}]               [get_bd_cells datapath/framer_datapath/oran_mon/radio_start_recover_v_0]
+    set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {390.625} ] [get_bd_cells reset_retime/clk_wiz_syncE_timer]     
+
+    #delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
+    #connect_bd_net [get_bd_pins datapath/radio_start_10ms_toggle_0] [get_bd_pins datapath/radio_start_10ms_stretch_0] -boundary_type upper
+    ##connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]    
+    delete_bd_objs [get_bd_ports radio_start_10ms_stretch_0]
+    delete_bd_objs [get_bd_ports sfp_enable]    
+    
+    delete_bd_objs [get_bd_intf_ports LED]
+    make_bd_intf_pins_external  [get_bd_intf_pins led_driver_0/LED_O_4]
+    
+     set fName "maxRefDes.xdc"
+  set string "
+set_property PACKAGE_PIN AN10        \[get_ports \"clk_300m_0_clk_n\"\]
+set_property IOSTANDARD  DIFF_SSTL12 \[get_ports \"clk_300m_0_clk_n\"\]
+set_property PACKAGE_PIN AM10        \[get_ports \"clk_300m_0_clk_p\"\]
+set_property IOSTANDARD  DIFF_SSTL12 \[get_ports \"clk_300m_0_clk_p\"\]
+
+set_property PACKAGE_PIN C9          \[get_ports \"LED_O_4_0_tri_o\[0\]\"\]
+set_property IOSTANDARD  LVCMOS18    \[get_ports \"LED_O_4_0_tri_o\[0\]\"\]
+set_property PACKAGE_PIN D9          \[get_ports \"LED_O_4_0_tri_o\[1\]\"\]
+set_property IOSTANDARD  LVCMOS18    \[get_ports \"LED_O_4_0_tri_o\[1\]\"\]
+set_property PACKAGE_PIN A9          \[get_ports \"LED_O_4_0_tri_o\[2\]\"\]
+set_property IOSTANDARD  LVCMOS18    \[get_ports \"LED_O_4_0_tri_o\[2\]\"\]
+set_property PACKAGE_PIN A10         \[get_ports \"LED_O_4_0_tri_o\[3\]\"\]
+set_property IOSTANDARD  LVCMOS18    \[get_ports \"LED_O_4_0_tri_o\[3\]\"\]
+
+set_property PACKAGE_PIN N31         \[get_ports \"gt_serial_port_0_gtx_n\[0\]\"\]
+set_property PACKAGE_PIN N30         \[get_ports \"gt_serial_port_0_gtx_p\[0\]\"\]
+set_property PACKAGE_PIN P34         \[get_ports \"gt_serial_port_0_grx_n\[0\]\"\]
+set_property PACKAGE_PIN P33         \[get_ports \"gt_serial_port_0_grx_p\[0\]\"\]
+
+set_property PACKAGE_PIN K28         \[get_ports \"gt_ref_clk_clk_p\"\]
+set_property PACKAGE_PIN K29         \[get_ports \"gt_ref_clk_clk_n\"\]
+
+# Need to set via PS in this case
+#set_property PACKAGE_PIN H20         \[get_ports \"sfp_enable\[0\]\"\]
+#set_property IOSTANDARD  LVCMOS18    \[get_ports \"sfp_enable\[0\]\"\]  
+"
+  set fileId [open $fName "w"]
+  puts -nonewline $fileId $string
+  close $fileId
+  add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
+
+}
+
+
     ## redo validation
     puts_xorif "design_modification done, re-validate"
     validate_bd_design
@@ -500,7 +575,8 @@ set exitOnDone 0
     
     open_run impl_1
     report_utilization -hierarchical -hierarchical_depth 4 -hierarchical_percentages
-    
+    report_design_analysis -timing -routes -logic_level_distribution -of_timing_paths [get_timing_paths -routable_nets -max_paths 10000 -filter {LOGIC_LEVELS >= 5} ]
+
     puts $helpString
     
     return impl_1
