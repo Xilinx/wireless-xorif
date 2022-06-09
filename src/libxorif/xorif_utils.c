@@ -398,6 +398,7 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
     uint16_t methods;
     uint16_t bfp_widths;
     uint16_t mod_widths;
+    uint16_t nocomp_widths;
 
     // Get capabilities based on channel type
     if ((chan == CHAN_DL) || (chan == CHAN_SSB))
@@ -405,18 +406,21 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
         methods = fhi_caps.iq_de_comp_methods;
         bfp_widths = fhi_caps.iq_de_comp_bfp_widths;
         mod_widths = fhi_caps.iq_de_comp_mod_widths;
+        nocomp_widths = 0x0201; // 9-bit and 16-bit
     }
     else if ((chan == CHAN_UL) || (chan == CHAN_PRACH))
     {
         methods = fhi_caps.iq_comp_methods;
         bfp_widths = fhi_caps.iq_comp_bfp_widths;
         mod_widths = 0;
+        nocomp_widths = 0x0001; // 16-bit only
     }
     else
     {
         methods = IQ_COMP_NONE_SUPPORT;
         bfp_widths = 0;
         mod_widths = 0;
+        nocomp_widths = 0x0001; // 16-bit only
     }
 
     if (bit_width > 16)
@@ -434,7 +438,7 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
     switch (comp_method)
     {
     case IQ_COMP_NONE:
-        return (methods & (1 << comp_method)) && (bit_width == 0);
+        return (methods & (1 << comp_method)) && (nocomp_widths & (1 << bit_width));
 
     case IQ_COMP_BLOCK_FP:
         return (methods & (1 << comp_method)) && (bfp_widths & (1 << bit_width));
