@@ -1,7 +1,7 @@
-## Load the latest version
-## module load xilinx/ta/2020.1_daily_latest
-
-## 
+## -----------------------------------------------------------------------------
+## Basic Vivdo TCL script to Run the Block Automation or open the example 
+## design from a configured IP.
+## -----------------------------------------------------------------------------
 proc xorif_test_exdes { PROJECT } {
 
   set PROJECT "${PROJECT}_ip"
@@ -16,7 +16,15 @@ proc xorif_test_exdes { PROJECT } {
   
   open_bd_design [get_files design_1.bd]
   
-  create_bd_cell -type ip -vlnv xilinx.com:ip:oran_radio_if:1.0 oran_radio_if_0
+  create_bd_cell -type ip -vlnv xilinx.com:ip:oran_radio_if oran_radio_if_0
+
+  ## Change the IP settings, first create a TCL Dict
+  dict set ip_config CONFIG.Axis_Ports_Defm               4
+  dict set ip_config CONFIG.Axis_Ports_Fram               4
+  
+  ## Apply to the IP
+  set_property -dict $ip_config [get_bd_cells oran_radio_if_0]
+
   save_bd_design
   
   open_example_project -force -dir ${PROJECT}_exdes [get_ips]
@@ -38,6 +46,14 @@ proc xorif_test_ba { PROJECT } {
   open_bd_design [get_files design_1.bd]
   
   create_bd_cell -type ip -vlnv xilinx.com:ip:oran_radio_if oran_radio_if_0
+
+  ## Change the IP settings, first create a TCL Dict
+  dict set ip_config CONFIG.Axis_Ports_Defm               4
+  dict set ip_config CONFIG.Axis_Ports_Fram               4
+  
+  ## Apply to the IP
+  set_property -dict $ip_config [get_bd_cells oran_radio_if_0]
+
   save_bd_design
   
   apply_bd_automation -rule xilinx.com:bd_rule:oran_radio_if -config { cfg_addBlFifoReset {1} processorSelect {ARM_Linux} ptpSelect {XilinxPtpV1}}  [get_bd_cells oran_radio_if_0]
