@@ -30,7 +30,7 @@
 // Software version number
 #define SW_MAJ_VER 2
 #define SW_MIN_VER 2
-#define SW_REVISION 2
+#define SW_REVISION 3
 
 // System constants
 #define NUM_NUMEROLOGY 5 /**< Number of numerologies */

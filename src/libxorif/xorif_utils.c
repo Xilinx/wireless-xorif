@@ -406,21 +406,21 @@ int check_iq_comp_mode(uint16_t bit_width, enum xorif_iq_comp comp_method, enum 
         methods = fhi_caps.iq_de_comp_methods;
         bfp_widths = fhi_caps.iq_de_comp_bfp_widths;
         mod_widths = fhi_caps.iq_de_comp_mod_widths;
-        nocomp_widths = 0x0201; // 9-bit and 16-bit
+        nocomp_widths = 0xFF01; // 8-16 bits
     }
     else if ((chan == CHAN_UL) || (chan == CHAN_PRACH))
     {
         methods = fhi_caps.iq_comp_methods;
         bfp_widths = fhi_caps.iq_comp_bfp_widths;
         mod_widths = 0;
-        nocomp_widths = 0x0001; // 16-bit only
+        nocomp_widths = 0xFF01; // 8-16 bits
     }
     else
     {
         methods = IQ_COMP_NONE_SUPPORT;
         bfp_widths = 0;
         mod_widths = 0;
-        nocomp_widths = 0x0001; // 16-bit only
+        nocomp_widths = 0xFF01; // 8-16 bits
     }
 
     if (bit_width > 16)
