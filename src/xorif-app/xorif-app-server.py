@@ -44,7 +44,7 @@ VERSION = '1.0'
 if __name__ == "__main__":
     # Configure command line argument parser
     parser = argparse.ArgumentParser(prog=PROG,
-                                     description='Experimental Pyro O-RAN Radio Interface server')
+                                     description='Python O-RAN Radio Interface server')
     parser.add_argument('-V', '--Version', action='version',
                         version=f'{PROG} {VERSION}')
     parser.add_argument('-H', '--host', type=str, default='localhost',
