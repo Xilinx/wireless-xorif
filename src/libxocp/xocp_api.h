@@ -112,10 +112,11 @@ struct xocp_caps
  */
 struct xocp_cc_data
 {
-    uint8_t enable;     /**< 0 = disabled, 1 = enabled */
-    uint16_t num_rbs;    /**< Number of RBs (1-273) */
-    uint8_t numerology; /**< Numerology (0-4) */
-    uint8_t ccid;       /**< CCID (used by DFE) that this instance maps to */
+    uint8_t enable;         /**< 0 = disabled, 1 = enabled */
+    uint16_t num_rbs;       /**< Number of RBs (1-273) */
+    uint8_t numerology;     /**< Numerology (0-4) */
+    uint8_t ccid;           /**< CCID (used by DFE) that this instance maps to */
+    uint16_t inter_sym_gap; /**< Inter-symbol gap (in IP core cycles) */
 };
 
 /**

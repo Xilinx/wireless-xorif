@@ -102,9 +102,9 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga9ddec0c3126c359de6be730f199325e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga9ddec0c3126c359de6be730f199325e3">program_schedule_entry</a> (int instance, bool dl, uint32_t offset, uint8_t cc, uint8_t ccid, uint16_t start_re, uint16_t num_res, uint32_t antennas, bool last, bool final)</td></tr>
-<tr class="memdesc:ga9ddec0c3126c359de6be730f199325e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program a single entry of the schedule table.  <a href="#ga9ddec0c3126c359de6be730f199325e3">More...</a><br/></td></tr>
-<tr class="separator:ga9ddec0c3126c359de6be730f199325e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5002844a0c2699fcb59925b0b3c551e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga5002844a0c2699fcb59925b0b3c551e7">program_schedule_entry</a> (int instance, bool dl, uint32_t offset, uint8_t cc, uint8_t ccid, uint16_t start_re, uint16_t num_res, uint32_t antennas, uint16_t inter_sym_gap, bool last, bool final)</td></tr>
+<tr class="memdesc:ga5002844a0c2699fcb59925b0b3c551e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Program a single entry of the schedule table.  <a href="#ga5002844a0c2699fcb59925b0b3c551e7">More...</a><br/></td></tr>
+<tr class="separator:ga5002844a0c2699fcb59925b0b3c551e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf75b5c6fe472085f75eeb8d0543cb133"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#gaf75b5c6fe472085f75eeb8d0543cb133">xocp_irq_handler</a> (int id, void *data)</td></tr>
 <tr class="memdesc:gaf75b5c6fe472085f75eeb8d0543cb133"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interrupt handler for the device.  <a href="#gaf75b5c6fe472085f75eeb8d0543cb133">More...</a><br/></td></tr>
 <tr class="separator:gaf75b5c6fe472085f75eeb8d0543cb133"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -350,7 +350,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="ga9ddec0c3126c359de6be730f199325e3"></a>
+<a class="anchor" id="ga5002844a0c2699fcb59925b0b3c551e7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -405,6 +405,12 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>inter_sym_gap</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>last</em>, </td>
         </tr>
@@ -433,6 +439,7 @@ Functions</h2></td></tr>
     <tr><td class="paramname">start_re</td><td>The starting RE number </td></tr>
     <tr><td class="paramname">num_res</td><td>The number of REs </td></tr>
     <tr><td class="paramname">antennas</td><td>Bit-map containing the antennas for the antenna group </td></tr>
+    <tr><td class="paramname">inter_sym_gap</td><td>Inter-symbol gap (in IP core cycles) </td></tr>
     <tr><td class="paramname">last</td><td>Flag indicating last section for the symbol </td></tr>
     <tr><td class="paramname">final</td><td>Flag indicating the symbol </td></tr>
   </table>

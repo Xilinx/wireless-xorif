@@ -825,9 +825,9 @@ def set_cmd(args):
                 sys_const = {"FH_DECAP_DLY": delay}
                 return handle.xorif_set_system_constants(sys_const)
 
-        # set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid>
+        # set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid> [<inter_sym_gap>]
         if match(args[1], "ocp_cc_cfg"):
-            if len(args) == 7 and "OCP" in handles:
+            if (len(args) == 7 or len(args) == 8) and "OCP" in handles:
                 handle = handles["OCP"]
                 cc = integer(args[2])
                 cfg = {}
@@ -835,6 +835,10 @@ def set_cmd(args):
                 cfg["num_rbs"] = integer(args[4])
                 cfg["numerology"] = integer(args[5])
                 cfg["ccid"] = integer(args[6])
+                if len(args) == 8:
+                    cfg["inter_sym_gap"] = integer(args[7])
+                else:
+                    cfg["inter_sym_gap"] = 0
                 return handle.xocp_set_cc_cfg(0, cc, cfg)
 
         # set ocp_antenna_cfg <num_antennas> <interleave> <data = (8 x 4b)>
@@ -868,7 +872,7 @@ def set_cmd(args):
 
         # set ocp_schedule <mode> <length> {sequence}
         if match(args[1], "ocp_schedule"):
-            if len(args) >= 5 and "OCP" in handles:
+            if len(args) >= 4 and "OCP" in handles:
                 handle = handles["OCP"]
                 mode = integer(args[2])
                 length = integer(args[3])
@@ -1346,7 +1350,7 @@ cmds.append(("set", None, "?set num_rbs <cc> <number_of_rbs>"))
 cmds.append(("set", None, "?set numerology <cc> <numerology = 0..4> <extended_cp = 0|1>"))
 cmds.append(("set", None, "?set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>"))
 cmds.append(("set", None, "?set ocp_antenna_cfg <num_antennas> <interleave> <data = (8 x 4b)>"))
-cmds.append(("set", None, "?set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid>"))
+cmds.append(("set", None, "?set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid> [<inter_sym_gap>]"))
 cmds.append(("set", None, "?set ocp_schedule <mode> <length> {sequence}"))
 cmds.append(("set", None, "?set ocp_trigger_cfg <enable> <mode> <edge_level> <bit> <enable> <mode> <edge_level> <bit>"))
 cmds.append(("set", None, "?set oprach_cc_cfg {<enable> <sample_rate>}"))

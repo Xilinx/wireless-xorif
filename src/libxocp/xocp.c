@@ -74,6 +74,7 @@ static void initialize_instance(xocp_state_t *ptr)
         ptr->cc_cfg[i].num_rbs = 0;
         ptr->cc_cfg[i].numerology = 0;
         ptr->cc_cfg[i].ccid = 0;
+        ptr->cc_cfg[i].inter_sym_gap = 0;
     }
 
     // Initialize antenna configuration
@@ -121,17 +122,20 @@ static void initialize_instance(xocp_state_t *ptr)
  * @param start_re The starting RE number
  * @param num_res The number of REs
  * @param antennas Bit-map containing the antennas for the antenna group
+ * @param inter_sym_gap Inter-symbol gap (in IP core cycles)
  * @param last Flag indicating last section for the symbol
  * @param final Flag indicating the symbol
  */
 void program_schedule_entry(int instance, bool dl, uint32_t offset,
                             uint8_t cc, uint8_t ccid,
                             uint16_t start_re, uint16_t num_res,
-                            uint32_t antennas, bool last, bool final)
+                            uint32_t antennas, uint16_t inter_sym_gap,
+                            bool last, bool final)
 {
     // Each entry consists of 3 words
     uint32_t word1 = (num_res & 0xFFF) | (start_re & 0xFFF) << 16;
     uint32_t word2 = (ccid & 0xF) | (cc & 0xF) << 8 |
+                     ((dl ? inter_sym_gap : 0) & 0xFFF) << 16 |
                      (final ? 1U : 0) << 30 | (last ? 1U : 0) << 31;
     uint32_t word3 = antennas;
 
@@ -189,8 +193,7 @@ static int program_schedule(int instance,
     if (length == 0)
     {
         // TODO - need some way to indicate nothing scheduled
-        program_schedule_entry(instance, dl, 0, 0, 0, 0, 0, 0, false, false);
-        program_schedule_entry(instance, dl, 0, 0, 0, 0, 0, 0, true, true);
+        program_schedule_entry(instance, dl, 0, 0, 0, 0, 0, 0, 0, true, true);
         return XOCP_SUCCESS;
     }
 
@@ -217,8 +220,11 @@ static int program_schedule(int instance,
             antennas |= (ant & 0xF) << (j * 4);
         }
 
+        // Inter-symbol gap
+        uint16_t inter_sym_gap = ptr->cc_cfg[cc].inter_sym_gap;
+
         // REs are processed in 2 rounds, starting from the mid-point
-        uint16_t num_res = ptr->cc_cfg->num_rbs * RE_PER_RB;
+        uint16_t num_res = ptr->cc_cfg[cc].num_rbs * RE_PER_RB;
         uint16_t re_mid = num_res / 2;
 
         // 1st round: N/2..N-1
@@ -226,7 +232,8 @@ static int program_schedule(int instance,
                 cc, re_mid, num_res - 1, antennas);
         program_schedule_entry(instance, dl, offset, cc, ccid,
                                re_mid, num_res / 2,
-                               antennas, false, false);
+                               antennas, inter_sym_gap,
+                               false, false);
         ++entries;
         ASSERT_NV(entries < MAX_SCHEDULE_LENGTH, XOCP_SCHEDULING_ERROR);
         offset += (4 * 4); // 4 words allocated per entry
@@ -236,7 +243,8 @@ static int program_schedule(int instance,
                 cc, 0, re_mid - 1, antennas);
         program_schedule_entry(instance, dl, offset, cc, ccid,
                                0, num_res / 2,
-                               antennas, true, final);
+                               antennas, inter_sym_gap,
+                               true, final);
         ++entries;
         ASSERT_NV(entries < MAX_SCHEDULE_LENGTH, XOCP_SCHEDULING_ERROR);
         offset += (4 * 4); // 4 words allocated per entry
