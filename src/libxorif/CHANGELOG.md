@@ -1,5 +1,10 @@
 # Change Log
 
+## Release 2022.2
+* Added Python bindings for C library (libxorif)
+* Add xorif_set_modu_mode() and xorif_set_modu_dest_mac_addr() for multi O-DU MAC destination address / VLAN tags
+* Added "monitor" API: xorif_monitor_clear(), xorif_monitor_select(), xorif_monitor_snapshot(), xorif_monitor_read()
+
 ## Release 2022.1
 * Updated register map
 * Modified Yocto recipes for 'honister' release
@@ -8,7 +13,7 @@
 * Added xorif_set_fhi_protocol_alt() API which just sets protocol, and not the packet filter configuration
 * Added SW changes needed for dynamic compression (i.e. not M-Plane) which affects buffer sizing in DL & SSB
 * Added per-spatial stream decompression (see xorif_set_cc_dl_iq_compression_per_ss())
-* Added PRACH compresssion configuration API (see xorif_set_cc_iq_compression_prach())
+* Added PRACH compression configuration API (see xorif_set_cc_iq_compression_prach())
 
 ## Release 2021.2
 * Updated register map

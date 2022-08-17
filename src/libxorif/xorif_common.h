@@ -62,30 +62,30 @@
 
 // Debug / logging macros
 #ifdef DEBUG
-#define PERROR(format, ...)                                         \
-    {                                                               \
-        fprintf(stderr, ANSI_COLOR_RED);                            \
-        fprintf(stderr, "LIBXORIF> ERROR: " format, ##__VA_ARGS__); \
-        fprintf(stderr, ANSI_COLOR_RESET);                          \
-        fflush(stderr);                                             \
+#define PERROR(format, ...)                                      \
+    {                                                            \
+        fprintf(stderr, ANSI_COLOR_RED);                         \
+        fprintf(stderr, "XORIF> ERROR: " format, ##__VA_ARGS__); \
+        fprintf(stderr, ANSI_COLOR_RESET);                       \
+        fflush(stderr);                                          \
     }
 
-#define TRACE(format, ...)                              \
-    {                                                   \
-        if (xorif_trace >= 1)                           \
-        {                                               \
-            printf("LIBXORIF> " format, ##__VA_ARGS__); \
-            fflush(stdout);                             \
-        }                                               \
+#define TRACE(format, ...)                           \
+    {                                                \
+        if (xorif_trace >= 1)                        \
+        {                                            \
+            printf("XORIF> " format, ##__VA_ARGS__); \
+            fflush(stdout);                          \
+        }                                            \
     }
 
-#define INFO(format, ...)                                      \
-    {                                                          \
-        if (xorif_trace >= 2)                                  \
-        {                                                      \
-            printf("LIBXORIF> DEBUG: " format, ##__VA_ARGS__); \
-            fflush(stdout);                                    \
-        }                                                      \
+#define INFO(format, ...)                                   \
+    {                                                       \
+        if (xorif_trace >= 2)                               \
+        {                                                   \
+            printf("XORIF> DEBUG: " format, ##__VA_ARGS__); \
+            fflush(stdout);                                 \
+        }                                                   \
     }
 
 #define ASSERT(expression)                                         \

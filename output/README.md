@@ -26,4 +26,4 @@ For example:
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.

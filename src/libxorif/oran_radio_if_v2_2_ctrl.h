@@ -34,14 +34,14 @@
 #define CFG_VERSION_REVISION_MASK 0xff00 /* 65280 */
 #define CFG_VERSION_REVISION_OFFSET 0x8 /* 8 */
 #define CFG_VERSION_REVISION_WIDTH 0x8 /* 8 */
-#define CFG_VERSION_REVISION_DEFAULT 0x0 /* 0 */
+#define CFG_VERSION_REVISION_DEFAULT 0x1 /* 1 */
 
 /* Type = roInt  */
 #define CFG_INTERNAL_REVISION_ADDR 0x4 /* 4 */
 #define CFG_INTERNAL_REVISION_MASK 0xffffffff /* 4294967295 */
 #define CFG_INTERNAL_REVISION_OFFSET 0x0 /* 0 */
 #define CFG_INTERNAL_REVISION_WIDTH 0x20 /* 32 */
-#define CFG_INTERNAL_REVISION_DEFAULT 0x1504fc3 /* 22040515 */
+#define CFG_INTERNAL_REVISION_DEFAULT 0x150c7ad /* 22071213 */
 
 /* Type = rw  */
 #define CFG_TIMEOUT_VALUE_ADDR 0x8 /* 8 */
@@ -533,6 +533,55 @@
 #define CFG_CONFIG_MAP_TYPE_W_WIDTH 0x4 /* 4 */
 #define CFG_CONFIG_MAP_TYPE_W_DEFAULT 0x0 /* 0 */
 
+/* Type = rw  */
+#define CFG_MONITOR_SELECT_CNT_ADDR 0x800 /* 2048 */
+#define CFG_MONITOR_SELECT_CNT_MASK 0x3f /* 63 */
+#define CFG_MONITOR_SELECT_CNT_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_SELECT_CNT_WIDTH 0x6 /* 6 */
+#define CFG_MONITOR_SELECT_CNT_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define CFG_MONITOR_SELECT_READ_ADDR 0x804 /* 2052 */
+#define CFG_MONITOR_SELECT_READ_MASK 0x3f /* 63 */
+#define CFG_MONITOR_SELECT_READ_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_SELECT_READ_WIDTH 0x6 /* 6 */
+#define CFG_MONITOR_SELECT_READ_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define CFG_MONITOR_SNAPSHOT_ADDR 0x808 /* 2056 */
+#define CFG_MONITOR_SNAPSHOT_MASK 0x1 /* 1 */
+#define CFG_MONITOR_SNAPSHOT_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_SNAPSHOT_WIDTH 0x1 /* 1 */
+#define CFG_MONITOR_SNAPSHOT_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define CFG_MONITOR_SAMPLE_ADDR 0x80c /* 2060 */
+#define CFG_MONITOR_SAMPLE_MASK 0x1 /* 1 */
+#define CFG_MONITOR_SAMPLE_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_SAMPLE_WIDTH 0x1 /* 1 */
+#define CFG_MONITOR_SAMPLE_DEFAULT 0x0 /* 0 */
+
+/* Type = wPlsH  */
+#define CFG_MONITOR_CLEAR_ADDR 0x810 /* 2064 */
+#define CFG_MONITOR_CLEAR_MASK 0x1 /* 1 */
+#define CFG_MONITOR_CLEAR_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_CLEAR_WIDTH 0x1 /* 1 */
+#define CFG_MONITOR_CLEAR_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_MONITOR_READ_31__0_ADDR 0x820 /* 2080 */
+#define CFG_MONITOR_READ_31__0_MASK 0xffffffff /* 4294967295 */
+#define CFG_MONITOR_READ_31__0_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_READ_31__0_WIDTH 0x20 /* 32 */
+#define CFG_MONITOR_READ_31__0_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  */
+#define CFG_MONITOR_READ_63_32_ADDR 0x824 /* 2084 */
+#define CFG_MONITOR_READ_63_32_MASK 0xffffffff /* 4294967295 */
+#define CFG_MONITOR_READ_63_32_OFFSET 0x0 /* 0 */
+#define CFG_MONITOR_READ_63_32_WIDTH 0x20 /* 32 */
+#define CFG_MONITOR_READ_63_32_DEFAULT 0x0 /* 0 */
+
 
 /*-----------------------------------------------------------------------------
 * C Header bank register definitions for bank oran_radio_if_v2_2_fram 
@@ -559,6 +608,13 @@
 #define FRAM_ENABLE_PER_SYM_RESET_OFFSET 0x0 /* 0 */
 #define FRAM_ENABLE_PER_SYM_RESET_WIDTH 0x1 /* 1 */
 #define FRAM_ENABLE_PER_SYM_RESET_DEFAULT 0x1 /* 1 */
+
+/* Type = rwpdef  */
+#define FRAM_MTU_SIZE_ADDR 0x2008 /* 8200 */
+#define FRAM_MTU_SIZE_MASK 0x3fff /* 16383 */
+#define FRAM_MTU_SIZE_OFFSET 0x0 /* 0 */
+#define FRAM_MTU_SIZE_WIDTH 0xe /* 14 */
+#define FRAM_MTU_SIZE_DEFAULT 0x0 /* 0 */
 
 /* Type = rw  */
 #define FRAM_XRAN_RU_PORT_ID_FIELD_WIDTH_ADDR 0x2080 /* 8320 */
@@ -635,6 +691,13 @@
 #define DEFM_USE_ONE_SYMBOL_STROBE_OFFSET 0x0 /* 0 */
 #define DEFM_USE_ONE_SYMBOL_STROBE_WIDTH 0x1 /* 1 */
 #define DEFM_USE_ONE_SYMBOL_STROBE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  */
+#define DEFM_DEBUG_ADDR 0x600c /* 24588 */
+#define DEFM_DEBUG_MASK 0xf /* 15 */
+#define DEFM_DEBUG_OFFSET 0x0 /* 0 */
+#define DEFM_DEBUG_WIDTH 0x4 /* 4 */
+#define DEFM_DEBUG_DEFAULT 0x1 /* 1 */
 
 /* Type = wPlsH  */
 #define DEFM_SNAP_SHOT_ADDR 0x6010 /* 24592 */
@@ -1334,6 +1397,111 @@
 #define ETH_IPV6_DESTINATION_ADD_127_96_OFFSET 0x0 /* 0 */
 #define ETH_IPV6_DESTINATION_ADD_127_96_WIDTH 0x20 /* 32 */
 #define ETH_IPV6_DESTINATION_ADD_127_96_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_MULTI_ODU_SUPPORT_ADDR 0xa0d0 /* 41168 */
+#define ETH_MULTI_ODU_SUPPORT_MASK 0x1 /* 1 */
+#define ETH_MULTI_ODU_SUPPORT_OFFSET 0x0 /* 0 */
+#define ETH_MULTI_ODU_SUPPORT_WIDTH 0x1 /* 1 */
+#define ETH_MULTI_ODU_SUPPORT_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_31_0_ADDR 0xa0e0 /* 41184 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_31_0_MASK 0xffffffff /* 4294967295 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_31_0_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_31_0_WIDTH 0x20 /* 32 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_31_0_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_47_32_ADDR 0xa0e4 /* 41188 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_47_32_MASK 0xffff /* 65535 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_47_32_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_47_32_WIDTH 0x10 /* 16 */
+#define ETH_DU_TABLE_WR_DEST_ADDR_47_32_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_VLAN_ID_ADDR 0xa0e8 /* 41192 */
+#define ETH_DU_TABLE_WR_VLAN_ID_MASK 0xfff /* 4095 */
+#define ETH_DU_TABLE_WR_VLAN_ID_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_WR_VLAN_ID_WIDTH 0xc /* 12 */
+#define ETH_DU_TABLE_WR_VLAN_ID_DEFAULT 0x1 /* 1 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_VLAN_DEI_ADDR 0xa0e8 /* 41192 */
+#define ETH_DU_TABLE_WR_VLAN_DEI_MASK 0x1000 /* 4096 */
+#define ETH_DU_TABLE_WR_VLAN_DEI_OFFSET 0xc /* 12 */
+#define ETH_DU_TABLE_WR_VLAN_DEI_WIDTH 0x1 /* 1 */
+#define ETH_DU_TABLE_WR_VLAN_DEI_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_VLAN_PCP_ADDR 0xa0e8 /* 41192 */
+#define ETH_DU_TABLE_WR_VLAN_PCP_MASK 0xe000 /* 57344 */
+#define ETH_DU_TABLE_WR_VLAN_PCP_OFFSET 0xd /* 13 */
+#define ETH_DU_TABLE_WR_VLAN_PCP_WIDTH 0x3 /* 3 */
+#define ETH_DU_TABLE_WR_VLAN_PCP_DEFAULT 0x7 /* 7 */
+
+/* Type = wPlsH  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_STROBE_ADDR 0xa0ec /* 41196 */
+#define ETH_DU_TABLE_WR_STROBE_MASK 0x80000000 /* 2147483648 */
+#define ETH_DU_TABLE_WR_STROBE_OFFSET 0x1f /* 31 */
+#define ETH_DU_TABLE_WR_STROBE_WIDTH 0x1 /* 1 */
+#define ETH_DU_TABLE_WR_STROBE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_WR_TABLE_ADDR_ADDR 0xa0ec /* 41196 */
+#define ETH_DU_TABLE_WR_TABLE_ADDR_MASK 0xf /* 15 */
+#define ETH_DU_TABLE_WR_TABLE_ADDR_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_WR_TABLE_ADDR_WIDTH 0x4 /* 4 */
+#define ETH_DU_TABLE_WR_TABLE_ADDR_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_31_0_ADDR 0xa0f0 /* 41200 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_31_0_MASK 0xffffffff /* 4294967295 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_31_0_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_31_0_WIDTH 0x20 /* 32 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_31_0_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_47_32_ADDR 0xa0f4 /* 41204 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_47_32_MASK 0xffff /* 65535 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_47_32_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_47_32_WIDTH 0x10 /* 16 */
+#define ETH_DU_TABLE_RD_DEST_ADDR_47_32_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_VLAN_ID_ADDR 0xa0f8 /* 41208 */
+#define ETH_DU_TABLE_RD_VLAN_ID_MASK 0xfff /* 4095 */
+#define ETH_DU_TABLE_RD_VLAN_ID_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_RD_VLAN_ID_WIDTH 0xc /* 12 */
+#define ETH_DU_TABLE_RD_VLAN_ID_DEFAULT 0x1 /* 1 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_VLAN_DEI_ADDR 0xa0f8 /* 41208 */
+#define ETH_DU_TABLE_RD_VLAN_DEI_MASK 0x1000 /* 4096 */
+#define ETH_DU_TABLE_RD_VLAN_DEI_OFFSET 0xc /* 12 */
+#define ETH_DU_TABLE_RD_VLAN_DEI_WIDTH 0x1 /* 1 */
+#define ETH_DU_TABLE_RD_VLAN_DEI_DEFAULT 0x0 /* 0 */
+
+/* Type = roSig  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_VLAN_PCP_ADDR 0xa0f8 /* 41208 */
+#define ETH_DU_TABLE_RD_VLAN_PCP_MASK 0xe000 /* 57344 */
+#define ETH_DU_TABLE_RD_VLAN_PCP_OFFSET 0xd /* 13 */
+#define ETH_DU_TABLE_RD_VLAN_PCP_WIDTH 0x3 /* 3 */
+#define ETH_DU_TABLE_RD_VLAN_PCP_DEFAULT 0x7 /* 7 */
+
+/* Type = wPlsH  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_STROBE_ADDR 0xa0fc /* 41212 */
+#define ETH_DU_TABLE_RD_STROBE_MASK 0x80000000 /* 2147483648 */
+#define ETH_DU_TABLE_RD_STROBE_OFFSET 0x1f /* 31 */
+#define ETH_DU_TABLE_RD_STROBE_WIDTH 0x1 /* 1 */
+#define ETH_DU_TABLE_RD_STROBE_DEFAULT 0x0 /* 0 */
+
+/* Type = rw  repeats using C_ETH_W @ multiples of 0x100 */
+#define ETH_DU_TABLE_RD_TABLE_ADDR_ADDR 0xa0fc /* 41212 */
+#define ETH_DU_TABLE_RD_TABLE_ADDR_MASK 0xf /* 15 */
+#define ETH_DU_TABLE_RD_TABLE_ADDR_OFFSET 0x0 /* 0 */
+#define ETH_DU_TABLE_RD_TABLE_ADDR_WIDTH 0x4 /* 4 */
+#define ETH_DU_TABLE_RD_TABLE_ADDR_DEFAULT 0x0 /* 0 */
 
 
 /*-----------------------------------------------------------------------------

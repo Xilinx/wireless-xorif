@@ -82,7 +82,7 @@ static void initialize_configuration(void)
         cc_config[i].advance_ul = DEFAULT_ADVANCE_UL;
         cc_config[i].advance_dl = DEFAULT_ADVANCE_DL;
         cc_config[i].ul_bid_forward = DEFAULT_UL_BID_FWD;
-        cc_config[i].ul_radio_ch_dly = DEFAUT_UL_RADIO_CH_DLY;
+        cc_config[i].ul_radio_ch_dly = DEFAULT_UL_RADIO_CH_DLY;
         cc_config[i].num_ctrl_per_sym_ul = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_dl = DEFAULT_CTRL_PER_SYM;
         cc_config[i].num_ctrl_per_sym_ssb = DEFAULT_CTRL_PER_SYM_SSB;
@@ -164,7 +164,7 @@ int xorif_init(const char *device_name)
     }
 #endif
 
-    // Get BF device name
+    // Get FHI device name
     if (device_name == NULL)
     {
         // No device name specified

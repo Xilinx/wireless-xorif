@@ -1,5 +1,10 @@
 # Change Log
 
+## Release 2022.2
+* Added multi-ODU support ("set modu_mode" and "set modu_dest_mac_addr")
+* Added experimental Python/Pyro version of the xorif-app application
+* Added "monitor" commands
+
 ## Release 2022.1
 * Modified Yocto recipes for 'honister' release
 * Makefile improvements

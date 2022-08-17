@@ -67,7 +67,7 @@ typedef int (*irq_handler_t)(int id, void *data);
 
 /**
  * @brief Find register field in register-map.
- * @param[in] reg_map Pointer to regsiter map array
+ * @param[in] reg_map Pointer to register map array
  * @param[in] num Number of elements in register map array
  * @param[in] name Name of register
  * @returns

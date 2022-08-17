@@ -30,9 +30,11 @@ endif
 ############################################################################
 # Some simple setup variables
 ############################################################################
+echo "Set paths"
 set DEST=$STORE/${TAG}_${CREATIONTIME}
 set PL_SRC="$BASEPATH/${TAG}/petalinux/images/linux"
 
+echo "Set Linux files to copy"
 set PL_BOOTB=${PL_SRC}/BOOT.BIN
 set PL_BOOTS=${PL_SRC}/boot.scr
 set PL_IMGUB=${PL_SRC}/image.ub
@@ -40,6 +42,7 @@ set PL_IMGUB=${PL_SRC}/image.ub
 ## The new way!
 #set PL_IMGUB=${PL_SRC}/petalinux-sdimage.wic.gz
 
+echo "Set LTX files to copy"
 set VI_LTX=$BASEPATH/${TAG}/vivado/${TAG}.runs/impl_1/design_1_wrapper.ltx
 set VI_LTX=$BASEPATH/${TAG}/vivado/*.runs/impl_1/*.ltx
 

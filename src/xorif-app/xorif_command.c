@@ -72,6 +72,7 @@ static int read_reg_offset(const char *request, char *response);
 static int write_reg(const char *request, char *response);
 static int write_reg_offset(const char *request, char *response);
 static int dump(const char *request, char *response);
+static int monitor(const char *request, char *response);
 #ifdef EXTRA_DEBUG
 static int test_fhi(const char *request, char *response);
 #endif // EXTRA_DEBUG
@@ -183,10 +184,13 @@ const struct command command_set[] =
     {"set", NULL, "?set frames_per_sym_ssb <cc> <number_of_frames>"},
     {"set", NULL, "?set dest_mac_addr <port> <address = XX:XX:XX:XX:XX:XX>"},
     {"set", NULL, "?set src_mac_addr <port> <address = XX:XX:XX:XX:XX:XX>"},
+    {"set", NULL, "?set vlan <port> <id> <dei> <pcp>"},
+    {"set", NULL, "?set modu_mode <0 = disabled | 1 = enabled>"},
+    {"set", NULL, "?set modu_dest_mac_addr <du> <address = XX:XX:XX:XX:XX:XX> [<id> <dei> <pcp>]"},
+    {"set", NULL, "?set mtu_size <size>"},
     {"set", NULL, "?set protocol <ECPRI | 1914.3> <VLAN = 0|1> <RAW | IPv4 | IPv6> # sets packet filter"},
     {"set", NULL, "?set protocol_alt <ECPRI | 1914.3> <VLAN = 0|1> <RAW | IPv4 | IPv6> # doesn't set packet filter"},
     {"set", NULL, "?set packet_filter <port> <filter = (16 x 32b)> <mask = (4 x 16b)>"},
-    {"set", NULL, "?set vlan <port> <id> <dei> <pcp>"},
     {"set", NULL, "?set eaxc_id <DU_bits> <BS_bits> <CC_bits> <RU_bits>"},
     {"set", NULL, "?set ru_ports <RU_bits> <SS_bits> <mask> <user_value> <prach_value> <ssb_value> [<lte_value>]"},
     {"set", NULL, "?set ru_ports_table_mode <mode>"},
@@ -213,6 +217,11 @@ const struct command command_set[] =
     {"write_reg_offset", NULL, "?write_reg_offset fhi <name> <offset> <value>"},
     {"dump", dump, "Dump debug information"},
     {"dump", NULL, "?dump fhi"},
+    {"monitor", monitor, "Configure / use monitor block"},
+    {"monitor", NULL, "?monitor fhi clear"},
+    {"monitor", NULL, "?monitor fhi select <stream>"},
+    {"monitor", NULL, "?monitor fhi snapshot"},
+    {"monitor", NULL, "?monitor fhi read <counter>"},
 #ifdef EXTRA_DEBUG
     {"test_fhi", test_fhi, "?test_fhi ..."},
 #endif // EXTRA_DEBUG
@@ -338,7 +347,7 @@ static int help(const char *request, char *response)
     if (num_tokens == 1)
     {
         // help
-        response += sprintf(response, "Available commands:\n");
+        response += sprintf(response, "Available commands...\n");
         const struct command *ptr = &command_set[0];
         while (ptr->name)
         {
@@ -2134,6 +2143,73 @@ static int set(const char *request, char *response)
                         }
                     }
                 }
+                else if (match(s, "modu_mode") && num_tokens == 3)
+                {
+                    // set modu_mode <0 = disabled | 1 = enabled>
+                    unsigned int enable;
+                    if (parse_integer(2, &enable))
+                    {
+                        return xorif_set_modu_mode(enable);
+                    }
+                }
+                else if (match(s, "modu_dest_mac_addr") && num_tokens == 4)
+                {
+                    // set modu_dest_mac_addr <du> <address = XX:XX:XX:XX:XX:XX>
+                    unsigned int du;
+                    const char *s;
+                    if (parse_integer(2, &du) && parse_string(3, &s))
+                    {
+                        unsigned int val[6];
+                        if (sscanf(s, "%x:%x:%x:%x:%x:%x", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]) == 6)
+                        {
+                            // Pack the int's into byte array
+                            uint8_t address[6];
+                            address[0] = val[0];
+                            address[1] = val[1];
+                            address[2] = val[2];
+                            address[3] = val[3];
+                            address[4] = val[4];
+                            address[5] = val[5];
+                            return xorif_set_modu_dest_mac_addr(du, address, 0, 0, 0);
+                        }
+                    }
+                }
+                else if (match(s, "modu_dest_mac_addr") && num_tokens == 7)
+                {
+                    // set modu_dest_mac_addr <du> <address = XX:XX:XX:XX:XX:XX> [<id> <dei> <pcp>]
+                    unsigned int du;
+                    const char *s;
+                    unsigned int id;
+                    unsigned int dei;
+                    unsigned int pcp;
+                    if (parse_integer(2, &du) && parse_string(3, &s) &&
+                        parse_integer(4, &id) && parse_integer(5, &dei) &&
+                        parse_integer(6, &pcp))
+                    {
+                        unsigned int val[6];
+                        if (sscanf(s, "%x:%x:%x:%x:%x:%x", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]) == 6)
+                        {
+                            // Pack the int's into byte array
+                            uint8_t address[6];
+                            address[0] = val[0];
+                            address[1] = val[1];
+                            address[2] = val[2];
+                            address[3] = val[3];
+                            address[4] = val[4];
+                            address[5] = val[5];
+                            return xorif_set_modu_dest_mac_addr(du, address, id, dei, pcp);
+                        }
+                    }
+                }
+                else if (match(s, "mtu_size") && num_tokens == 3)
+                {
+                    // set mtu_size <size>
+                    unsigned int size;
+                    if (parse_integer(2, &size))
+                    {
+                        return xorif_set_mtu_size(size);
+                    }
+                }
                 else if (match(s, "protocol") && num_tokens == 5)
                 {
                     // set protocol <ECPRI | 1914.3> <VLAN = 0|1> <RAW | IPv4 | IPv6>
@@ -3035,6 +3111,80 @@ static int dump(const char *request, char *response)
             }
         }
 #endif // BF_INCLUDED
+    }
+    return UNKNOWN_COMMAND;
+#endif // NO_HW
+}
+
+/**
+ * @brief "monitor" command.
+ * @param[in] request Pointer to request string
+ * @param[in,out] response Pointer to response string
+ * @returns
+ *      - 0 if successful
+ *      - Error code if not successful
+ */
+static int monitor(const char *request, char *response)
+{
+    if (remote_target)
+    {
+        return send_to_target(request, response);
+    }
+#ifdef NO_HW
+    return NO_HARDWARE;
+#else
+    else
+    {
+        if (num_tokens == 3)
+        {
+            // monitor fhi clear
+            // monitor fhi snapshot
+            const char *s1;
+            const char *s2;
+            if (parse_string(1, &s1) && parse_string(2, &s2))
+            {
+                if (match(s1, "fhi"))
+                {
+                    if (match(s2, "clear"))
+                    {
+                        return xorif_monitor_clear();
+                    }
+                    else if (match(s2, "snapshot"))
+                    {
+                        return xorif_monitor_snapshot();
+                    }
+                }
+            }
+        }
+        else if (num_tokens == 4)
+        {
+            // monitor fhi select <stream>
+            // monitor fhi read <counter>
+            const char *s1;
+            const char *s2;
+            unsigned int val1;
+            if (parse_string(1, &s1) && parse_string(2, &s2) && parse_integer(3, &val1))
+            {
+                if (match(s1, "fhi"))
+                {
+                    if (match(s2, "select"))
+                    {
+                        return xorif_monitor_select(val1);
+                    }
+                    else if (match(s2, "read"))
+                    {
+                        unsigned long val2;
+                        int result = xorif_monitor_read(val1, &val2);
+                        if (result == XORIF_SUCCESS)
+                        {
+                            response += sprintf(response, "status = 0\n");
+                            response += sprintf(response, "counter = %lu\n", val2);
+                            return SUCCESS;
+                        }
+                    }
+                }
+            }
+        }
     }
     return UNKNOWN_COMMAND;
 #endif // NO_HW

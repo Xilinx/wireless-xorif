@@ -83,6 +83,25 @@ Subsequent updates of BOOT.bin can be performed using the following command:
 petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --fpga images/linux/system.bit --pmufw images/linux/pmufw.elf --u-boot --force
 ```
 
+### Full Sequence Examples
+Build the Example System for the zcu670.
+```console
+## If you have a local repo
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600 -tclargs implLoopNodateExit -tclargs <optionalPathToIpRepo>
+## To use the build
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600 -tclargs implLoopNodateExit 
+mkdir ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_exs
+cp ../output/zcu670_e1x9000x25_ss4x4_cc2x6600_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_exs/system.xsa
+make zcu670_e1x9000x25_ss4x4_cc2x6600_exs
+```
+Build the Example System for the zcu670. This includes the OCP.
+```console
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600_ocp -tclargs implLoopNodateExit 
+mkdir ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs
+cp ../output/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs/system.xsa
+make zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs
+```
+
 ---
 
 Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.

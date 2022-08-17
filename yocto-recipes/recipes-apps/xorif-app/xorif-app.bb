@@ -17,6 +17,8 @@ SRC_URI = " \
 	file://xorif_interactive.c \
 	file://xorif_parser.c \
 	file://xorif_parser.h \
+	file://xorif-app-server.py \
+	file://xorif-app-client.py \
 	"
 
 S = "${WORKDIR}"
@@ -30,4 +32,6 @@ do_compile() {
 do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 xorif-app ${D}${bindir}
+	install -m 0755 ${S}/xorif-app-server.py ${D}${bindir}
+	install -m 0755 ${S}/xorif-app-client.py ${D}${bindir}
 }

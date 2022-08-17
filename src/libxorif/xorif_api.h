@@ -752,7 +752,7 @@ int xorif_reset_fhi(uint16_t mode);
 /**
  * @brief Get alarms for Front-Haul Interface.
  * @returns
- *      - Bit-map of alarm status (see enum xorif_fhi_alarms)
+ *      - Bit-map of alarm status (see enum #xorif_fhi_alarms)
  */
 uint32_t xorif_get_fhi_alarms(void);
 
@@ -799,7 +799,7 @@ int xorif_read_fhi_reg(const char *name, uint32_t *val);
 int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val);
 
 /**
- * @brief Utility function to write a field to the Front-Haul Interface regsiter map.
+ * @brief Utility function to write a field to the Front-Haul Interface register map.
  * @param[in] name Register field name
  * @param[in] value The value to write to the register
  * @returns
@@ -809,7 +809,7 @@ int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val);
 int xorif_write_fhi_reg(const char *name, uint32_t value);
 
 /**
- * @brief Utility function to write a field to the Front-Haul Interface regsiter map.
+ * @brief Utility function to write a field to the Front-Haul Interface register map.
  * @param[in] name Register field name
  * @param[in] offset Offset to be used with register (useful for repeated register banks)
  * @param[in] value The value to write to the register
@@ -848,6 +848,60 @@ int xorif_set_fhi_dest_mac_addr(int port, const uint8_t address[]);
  *      - Error code on failure
  */
 int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[]);
+
+/**
+ * @brief Enable / disable the multi-O-DU MAC address / VLAN tag mapping.
+ * @param[in] enable (0 = disable, 1 = enable)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This API enables/disables the O-DU MAC address (and VLAN tag) mapping
+ * for multi-O-DU support. When this is disabled, the MAC address and VLAN
+ * tag are set by #xorif_set_fhi_dest_mac_addr and #xorif_set_fhi_vlan_tag
+ * API calls. When this is enabled, the MAC address and VLAN tag can be set
+ * by #xorif_set_modu_dest_mac_addr for different DU port address.
+ */
+int xorif_set_modu_mode(uint16_t enable);
+
+/**
+ * @brief Set the multi-O-DU MAC address / VLAN tag mapping for DU port address.
+ * @param[in] du O-DU port address
+ * @param[in] address MAC address (6 byte array)
+ * @param[in] id VLAN ID
+ * @param[in] dei VLAN DEI
+ * @param[in] pcp VLAN PCP
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This API allows different destination MAC addresses and VLAN IDs to be
+ * assigned by DU port address. This applies for uplink packets only.
+ * If VLAN is not required, then the relevant fields (id, dei, pcp) should
+ * be set to 0.
+ * The configuration is applied to all Ethernet ports.
+ */
+int xorif_set_modu_dest_mac_addr(uint16_t du,
+                                 const uint8_t address[],
+                                 uint16_t id,
+                                 uint16_t dei,
+                                 uint16_t pcp);
+
+/**
+ * @brief Sets the uplink MTU size.
+ * @param size Size of MTU
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This API programs the HW to use a value less than was configured in the
+ * IP GUI (which is the value shown in the config_xran_fram_eth_pkt_max
+ * register). This can be used to force the HW to generate smaller packets.
+ * However, its use is not recommended as it results in non optimal traffic
+ * with extra framing overhead.
+ * Allowed MTU size: 1 >= size >= config_xran_fram_eth_pkt_max.
+ */
+int xorif_set_mtu_size(uint16_t size);
 
 /**
  * @brief Set the protocol, vlan and IP mode.
@@ -1069,7 +1123,7 @@ int xorif_set_ru_ports_table(uint16_t address,
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * The mask bits are the same as in the enum xorif_fhi_alarms.
+ * The mask bits are the same as in the enum #xorif_fhi_alarms.
  */
 int xorif_enable_fhi_interrupts(uint32_t mask);
 
@@ -1106,6 +1160,41 @@ int xorif_set_system_constants(const struct xorif_system_constants *ptr);
  *      - Error code on failure
  */
 int xorif_set_symbol_strobe_source(uint16_t source);
+
+/**
+ * @brief Clear all "monitor block" counters.
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_monitor_clear(void);
+
+/**
+ * @brief Select stream to count with "monitor block".
+ * @param stream Stream
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_monitor_select(uint8_t stream);
+
+/**
+ * @brief Take snapshot of the "monitor block" counters.
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_monitor_snapshot(void);
+
+/**
+ * @brief Read specified counter from "monitor block".
+ * @param counter Counter to read (see TBD for details)
+ * @param value Pointer to write back the counter value
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ */
+int xorif_monitor_read(uint8_t counter, uint64_t *value);
 
 #endif // XORIF_API_H
 

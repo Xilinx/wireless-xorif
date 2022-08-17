@@ -53,8 +53,8 @@
 #define DEFAULT_FRAMES_PER_SYM_SSB 3 /**< Default Ethernet frames per symbol (SSB) */
 
 // Timing delay defaults
-#define DEFAULT_FH_DECAP_DLY 5.0    /**< Estimate of downlink delay (in microseconds). See PG370. */
-#define DEFAUT_UL_RADIO_CH_DLY 30.0 /**< Estimate of uplink delay (in microseconds). See PG370.*/
+#define DEFAULT_FH_DECAP_DLY 5.0     /**< Estimate of downlink delay (in microseconds). See PG370. */
+#define DEFAULT_UL_RADIO_CH_DLY 30.0 /**< Estimate of uplink delay (in microseconds). See PG370.*/
 
 #endif // XORIF_SYSTEM_H
 

@@ -191,10 +191,15 @@ namespace eval ::roe::data {
       add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/roe_framer_xdc_fifosync.xdc
     }
 
-    if {$loop} {
-      delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
-      connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]
-    }
+#    if { $board != "zcu670" } {
+      ## The 670 has no avaiable GPIO, so there only is LOOP and that is set by the board defaults
+      if { $loop || $board == "zcu670" } {
+        delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
+        #connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]
+        connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_pins /datapath/timer_gen_10ms_toggle_0] -boundary_type upper
+        
+      }
+ #   }
     
     ##
     puts_xorif "Add toggle for debug"
@@ -211,43 +216,44 @@ namespace eval ::roe::data {
     if { $board == "zcu670" } {
       puts_xorif "Modify REFCLK for zcu670"
 
-    delete_bd_objs [get_bd_ports timer_gen_10ms_toggle_0]
-    delete_bd_objs [get_bd_nets datapath_one_pps_0]                 [get_bd_ports one_pps_0]
-    delete_bd_objs [get_bd_nets datapath_m0_dl_toggle_0]            [get_bd_ports m0_dl_toggle_0]
-    delete_bd_objs [get_bd_nets datapath_radio_start_1ms_toggle_0]  [get_bd_ports radio_start_1ms_toggle_0]
-    delete_bd_objs [get_bd_nets datapath_radio_start_10ms_toggle_0] [get_bd_ports radio_start_10ms_toggle_0]
-    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
-    delete_bd_objs [get_bd_nets pushbutton_reset_1]                 [get_bd_ports pushbutton_reset]
-    connect_bd_net [get_bd_pins xlconstant_0/dout]                  [get_bd_pins reset_retime/pushbutton_reset]
-    set_property -dict [list CONFIG.CONST_VAL {0}]                  [get_bd_cells xlconstant_0]
-    delete_bd_objs [get_bd_ports gpio_cdc_dipstatus]
-    copy_bd_objs /  [get_bd_cells {xlconstant_0}]
-    set_property -dict [list CONFIG.CONST_WIDTH {8}]   [get_bd_cells xlconstant_1]
-    connect_bd_net [get_bd_pins xlconstant_1/dout]                  [get_bd_pins datapath/gpio_cdc_dipstatus]
+      delete_bd_objs [get_bd_ports timer_gen_10ms_toggle_0]
+      delete_bd_objs [get_bd_nets datapath_one_pps_0]                 [get_bd_ports one_pps_0]
+      delete_bd_objs [get_bd_nets datapath_m0_dl_toggle_0]            [get_bd_ports m0_dl_toggle_0]
+      delete_bd_objs [get_bd_nets datapath_radio_start_1ms_toggle_0]  [get_bd_ports radio_start_1ms_toggle_0]
+      delete_bd_objs [get_bd_nets datapath_radio_start_10ms_toggle_0] [get_bd_ports radio_start_10ms_toggle_0]
+      create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
+      delete_bd_objs [get_bd_nets pushbutton_reset_1]                 [get_bd_ports pushbutton_reset]
+      connect_bd_net [get_bd_pins xlconstant_0/dout]                  [get_bd_pins reset_retime/pushbutton_reset]
+      set_property -dict [list CONFIG.CONST_VAL {0}]                  [get_bd_cells xlconstant_0]
+      delete_bd_objs [get_bd_ports gpio_cdc_dipstatus]
+      copy_bd_objs /  [get_bd_cells {xlconstant_0}]
+      ## Set the constant as 2 for now. This means we use the RX clock, so Peusdo SyncE
+      set_property -dict [list CONFIG.CONST_WIDTH {8} CONFIG.CONST_VAL {2}]   [get_bd_cells xlconstant_1]
+      connect_bd_net [get_bd_pins xlconstant_1/dout]                  [get_bd_pins datapath/gpio_cdc_dipstatus]
 
-    set_property -dict [list CONFIG.GT_REF_CLK_FREQ {156.25}] [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]
-    set_property CONFIG.FREQ_HZ 156250000                     [get_bd_intf_ports /gt_ref_clk]
+      set_property -dict [list CONFIG.GT_REF_CLK_FREQ {156.25}] [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/xxv_ethernet_0]
+      set_property CONFIG.FREQ_HZ 156250000                     [get_bd_intf_ports /gt_ref_clk]
     
-    ## Update the syncer clock period for 390.625MHz
-    set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_tx]
-    set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_rx]
-    set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {2560}]              [get_bd_cells datapath/framer_datapath/roe_framer_0]
+      ## Update the syncer clock period for 390.625MHz
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_tx]
+      set_property -dict [list CONFIG.RESYNC_CLK_PERIOD {2560}]              [get_bd_cells datapath/xxv_eth_subs/xxv_wrap/support_1588_2step/timer1588_subs/timer_sync_rx]
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {2560}]              [get_bd_cells datapath/framer_datapath/roe_framer_0]
 
-    set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {390625}]         [get_bd_cells datapath/framer_datapath/roe_radio_top_0]
-    set_property -dict [list CONFIG.clocks_for_1ms {390625}]               [get_bd_cells datapath/framer_datapath/oran_mon/radio_start_recover_v_0]
-    set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {390.625} ] [get_bd_cells reset_retime/clk_wiz_syncE_timer]     
+      set_property -dict [list CONFIG.NO_OF_CLOCKS_FOR_1MS {390625}]         [get_bd_cells datapath/framer_datapath/roe_radio_top_0]
+      set_property -dict [list CONFIG.clocks_for_1ms {390625}]               [get_bd_cells datapath/framer_datapath/oran_mon/radio_start_recover_v_0]
+      set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {390.625} ] [get_bd_cells reset_retime/clk_wiz_syncE_timer]     
 
-    #delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
-    #connect_bd_net [get_bd_pins datapath/radio_start_10ms_toggle_0] [get_bd_pins datapath/radio_start_10ms_stretch_0] -boundary_type upper
-    ##connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]    
-    delete_bd_objs [get_bd_ports radio_start_10ms_stretch_0]
-    delete_bd_objs [get_bd_ports sfp_enable]    
+      #delete_bd_objs [get_bd_nets radio_start_10ms_stretch_0_1]
+      #connect_bd_net [get_bd_pins datapath/radio_start_10ms_toggle_0] [get_bd_pins datapath/radio_start_10ms_stretch_0] -boundary_type upper
+      ##connect_bd_net [get_bd_pins datapath/radio_start_10ms_stretch_0] [get_bd_ports timer_gen_10ms_toggle_0]    
+      delete_bd_objs [get_bd_ports radio_start_10ms_stretch_0]
+      delete_bd_objs [get_bd_ports sfp_enable]    
     
-    delete_bd_objs [get_bd_intf_ports LED]
-    make_bd_intf_pins_external  [get_bd_intf_pins led_driver_0/LED_O_4]
+      delete_bd_objs [get_bd_intf_ports LED]
+      make_bd_intf_pins_external  [get_bd_intf_pins led_driver_0/LED_O_4]
     
-     set fName "maxRefDes.xdc"
-  set string "
+      set fName "maxRefDes.xdc"
+      set string "
 set_property PACKAGE_PIN AN10        \[get_ports \"clk_300m_0_clk_n\"\]
 set_property IOSTANDARD  DIFF_SSTL12 \[get_ports \"clk_300m_0_clk_n\"\]
 set_property PACKAGE_PIN AM10        \[get_ports \"clk_300m_0_clk_p\"\]
@@ -274,13 +280,12 @@ set_property PACKAGE_PIN K29         \[get_ports \"gt_ref_clk_clk_n\"\]
 #set_property PACKAGE_PIN H20         \[get_ports \"sfp_enable\[0\]\"\]
 #set_property IOSTANDARD  LVCMOS18    \[get_ports \"sfp_enable\[0\]\"\]  
 "
-  set fileId [open $fName "w"]
-  puts -nonewline $fileId $string
-  close $fileId
-  add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
+      set fileId [open $fName "w"]
+      puts -nonewline $fileId $string
+      close $fileId
+      add_files -force -norecurse -fileset constrs_1 -copy_to [get_property DIRECTORY [current_project]] $fName
 
-}
-
+    }
 
     ## redo validation
     puts_xorif "design_modification done, re-validate"
@@ -699,6 +704,7 @@ proc process_tclargs { argc argv } {
     set startGui         0
     set noDateInProjName 0
     set loop             0
+    set armTlpMode       0
   
     ## This style uses a set of strings concatenated together to tell the 
     ## script what mode it should build in
@@ -727,6 +733,7 @@ proc process_tclargs { argc argv } {
       if { [regexp {loop}   $argIn] == 1}     { set loop       1     }
       if { [regexp {impl}   $argIn] == 1}     { set doimpl     1     }
       if { [regexp {exit}   $argIn] == 1}     { set exitOnDone 1     }
+      if { [regexp {tlp}    $argIn] == 1}     { set armTlpMode 1     }
       if { [regexp {nodate} $argIn] == 1}     { set noDateInProjName 1   }
     }
   
@@ -745,6 +752,12 @@ proc process_tclargs { argc argv } {
 
     ## Add board specific constraints in automation.
     ::roe::data::design_modification $projectName $board $mode $ipRepo $designType $loop
+
+    if { $armTlpMode == 1 } {
+      puts "roePROJECTNAME: Set the ARM to TLP Mode"
+      set_property SELECTED_SIM_MODEL tlm [get_bd_cells /app_cpu]
+      validate_bd_design
+    }
   
     foreach prop [list_property [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]] { 
       puts "[format %-40s $prop] [get_property $prop [get_bd_cells -hier -filter {VLNV =~ *oran_radio_if*}]]"

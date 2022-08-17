@@ -277,6 +277,63 @@ int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[])
     return XORIF_SUCCESS;
 }
 
+int xorif_set_modu_mode(uint16_t enable)
+{
+    TRACE("xorif_set_modu_mode(%d)\n", enable);
+
+    // Configure for all Ethernet ports
+    for (int i = 0; i < xorif_fhi_get_num_eth_ports(); ++i)
+    {
+         WRITE_REG_OFFSET(ETH_MULTI_ODU_SUPPORT, i * 0x100, enable);
+    }
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_modu_dest_mac_addr(uint16_t du,
+                                 const uint8_t address[],
+                                 uint16_t id,
+                                 uint16_t dei,
+                                 uint16_t pcp)
+{
+    TRACE("xorif_set_modu_dest_mac_addr(%d, ..., %d, %d, %d)\n", du, id, dei, pcp);
+
+    // Configure for all Ethernet ports
+    for (int i = 0; i < xorif_fhi_get_num_eth_ports(); ++i)
+    {
+        // MAC address
+        uint32_t addr_hi = address[0] << 8 | address[1];
+        uint32_t addr_lo = address[2] << 24 | address[3] << 16 | address[4] << 8 | address[5];
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_DEST_ADDR_47_32, i * 0x100, addr_hi);
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_DEST_ADDR_31_0, i * 0x100, addr_lo);
+
+        // VLAN tag
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_VLAN_ID, i * 0x100, id);
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_VLAN_DEI, i * 0x100, dei);
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_VLAN_PCP, i * 0x100, pcp);
+
+        // DU port address
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_TABLE_ADDR, i * 0x100, du);
+
+        // WR strobe (set high, it auto-clears)
+        WRITE_REG_OFFSET(ETH_DU_TABLE_WR_STROBE, i * 0x100, 1);
+    }
+    return XORIF_SUCCESS;
+}
+
+int xorif_set_mtu_size(uint16_t size)
+{
+    TRACE("xorif_set_mtu_size(%d)\n", size);
+
+    if (size < 1 || size > fhi_caps.max_framer_ethernet_pkt)
+    {
+        PERROR("Invalid MTU size\n");
+        return XORIF_INVALID_CONFIG;
+    }
+
+    WRITE_REG(FRAM_MTU_SIZE, size);
+    return XORIF_SUCCESS;
+}
+
 int xorif_set_fhi_protocol(enum xorif_transport_protocol transport,
                            uint16_t vlan,
                            enum xorif_ip_mode ip_mode)
@@ -732,7 +789,7 @@ int xorif_clear_ru_ports_table(void)
         for (int a = 0; a < size; ++a)
         {
             // Value: <write strobe> | <port = 0> | <type = UNKNOWN_STREAM_TYPE> | <address>
-            uint32_t value = (1 << 31) | (0 << 18) | (UNKNOWN_STREAM_TYPE << 12) | (a & 0x7FF);
+            uint32_t value = (1U << 31) | (0 << 18) | (UNKNOWN_STREAM_TYPE << 12) | (a & 0x7FF);
             WRITE_REG_RAW(DEFM_CID_MAP_WR_STROBE_ADDR, value);
         }
     }
@@ -755,7 +812,7 @@ int xorif_set_ru_ports_table(uint16_t address,
             // Value: <write strobe> | <port> | <type> | <address>
             uint16_t a = address + i;
             uint16_t p = port + i;
-            uint32_t value = (1 << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
+            uint32_t value = (1U << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
 
             if (a < size)
             {
@@ -952,7 +1009,7 @@ void xorif_fhi_init_device(void)
 
     // Compression is Uplink
     fhi_caps.iq_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
-    fhi_caps.iq_de_comp_bfp_widths = 0x5200); // 9, 12, 14
+    fhi_caps.iq_comp_bfp_widths = 0x5200); // 9, 12, 14
 #else
     // De-compression is downlink
     int de_comp = 0;
@@ -1262,8 +1319,8 @@ int xorif_set_cc_dl_iq_compression_per_ss(uint16_t ss,
     }
 
     // Construct the word to program
-    uint32_t value = (1 << 31) |
-                     (enable ? (1 << 16) : 0) |
+    uint32_t value = (1U << 31) |
+                     (enable ? (1U << 16) : 0) |
                      (comp_method << 12) |
                      ((bit_width & 0xF) << 8);
 
@@ -1491,7 +1548,7 @@ int xorif_fhi_configure_cc(uint16_t cc)
         xorif_trace = temp;
 
         INFO("HW Version = %08x\n", hw_version);
-        INFO("HW Internal Revision = %d\n", hw_internal);
+        INFO("HW Internal Revision = %u\n", hw_internal);
         INFO("SW Version = %08x\n", sw_version);
     }
 #endif
@@ -1716,5 +1773,45 @@ int xorif_test_error_injections(uint32_t status)
 #endif
 }
 #endif // EXTRA_DEBUG
+
+int xorif_monitor_clear(void)
+{
+    TRACE("xocp_monitor_clear()\n");
+
+    WRITE_REG(CFG_MONITOR_CLEAR, 1);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_monitor_select(uint8_t stream)
+{
+    TRACE("xorif_monitor_select(%d)\n", stream);
+
+    WRITE_REG(CFG_MONITOR_SELECT_CNT, stream);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_monitor_snapshot(void)
+{
+    TRACE("xorif_monitor_snapshot()\n");
+
+    WRITE_REG(CFG_MONITOR_SNAPSHOT, 1);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_monitor_read(uint8_t counter, uint64_t *value)
+{
+    TRACE("xorif_monitor_read(%d)\n", counter);
+
+    WRITE_REG(CFG_MONITOR_SELECT_READ, counter);
+    WRITE_REG(CFG_MONITOR_SAMPLE, 1);
+    uint64_t temp = (uint64_t)READ_REG(CFG_MONITOR_READ_31__0) |
+                    (uint64_t)READ_REG(CFG_MONITOR_READ_63_32) << 32;
+    *value = temp;
+
+    return XORIF_SUCCESS;
+}
 
 /** @} */

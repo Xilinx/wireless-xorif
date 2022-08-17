@@ -23,6 +23,10 @@
 
 * This directory contains the source files and Makefiles for the example PTP timer driver
 
+### libxocp
+
+* This directory contains source files and Makefiles for the O-RAN Channel Processor C Library
+
 ---
 
 Copyright (C) 2019 - 2022  Xilinx, Inc.  All rights reserved.

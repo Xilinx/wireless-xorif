@@ -96,6 +96,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 </li>
 </ul>
+<h2>Python Bindings</h2>
+<ul>
+<li>The Python module <code>pylibxorif.py</code> provides (Python 3) bindings for the C library<ul>
+<li>The <code>pylibxorif.py</code> module can be found in the current directory, and it is also installed as part of the PetaLinux build, and can be found in the <code>/usr/share/xorif</code> directory</li>
+<li>The Python bindings use CFFI and can be used directly, or in conjunction with other libraries such as Pyro4 which allows remote procedure calls to Python objects</li>
+<li>The Pyro4 and CFFI libraries are included as part of the Petalinux build, or can be installed manually with <code>pip install</code></li>
+<li>The Python bindings are provided for "ease of use". The Phython API is largely the same as the C API, but more "Pythonic", e.g. allowing "dicts" to be passed in rather than pointers to structures.</li>
+</ul>
+</li>
+</ul>
 <h2>Usage</h2>
 <ul>
 <li>The basic use of the library API is as follows...<ul>
@@ -114,7 +124,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 </li>
 <li>Other features of the library allow component carriers to disabled, re-configured, obtain stats, etc. See the API for details.</li>
-<li>The library also provides a register read/write interface (e.g. <code><a class="el" href="group__libxorif-api.html#ga83f0df0585606c4660e267b34ecd2077" title="Utility function to read a field from the Front-Haul Interface register map. ">xorif_read_fhi_reg()</a></code> and <code><a class="el" href="group__libxorif-api.html#gac5c6289aa4a4970e2e6c2244d876b20b" title="Utility function to write a field to the Front-Haul Interface regsiter map. ">xorif_write_fhi_reg()</a></code>)</li>
+<li>The library also provides a register read/write interface (e.g. <code><a class="el" href="group__libxorif-api.html#ga83f0df0585606c4660e267b34ecd2077" title="Utility function to read a field from the Front-Haul Interface register map. ">xorif_read_fhi_reg()</a></code> and <code><a class="el" href="group__libxorif-api.html#gac5c6289aa4a4970e2e6c2244d876b20b" title="Utility function to write a field to the Front-Haul Interface register map. ">xorif_write_fhi_reg()</a></code>)</li>
 </ul>
 <h3>Example 1: Configure 1 component carrier (275 RBS, numerology 1)</h3>
 <div class="fragment"><div class="line"><span class="comment">// Precondition: libxorif has already been initialized with xorif_init()</span></div>

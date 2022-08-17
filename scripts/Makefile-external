@@ -29,6 +29,7 @@ override MODULES += xlnx-ptp-timer
 # Add apps / libs here
 override APPS += libxorif
 override APPS += xorif-app
+override APPS += libxocp
 
 # Add scripts here
 ifeq ($(XXV),1)
@@ -49,10 +50,10 @@ override ROOTFS_Y += libmetal-dev
 override ROOTFS_Y += libmetal-dbg
 override ROOTFS_Y += libxorif-dev
 override ROOTFS_Y += libxorif-dbg
-override ROOTFS_Y += libxobf-dev
-override ROOTFS_Y += libxobf-dbg
 override ROOTFS_Y += xorif-app-dev
 override ROOTFS_Y += xorif-app-dbg
+override ROOTFS_Y += libxocp-dev
+override ROOTFS_Y += libxocp-dbg
 ifeq ($(DBG),1)
 override ROOTFS_Y += git
 override ROOTFS_Y += packagegroup-core-buildessential
@@ -78,6 +79,7 @@ override EXTRAS += perl-modules
 override EXTRAS += perl-module-findbin
 override EXTRAS += perl-module-carp
 override EXTRAS += perl-module-lib
+override EXTRAS += python3-modules
 
 # Add help / usage guide here
 usage:
@@ -125,6 +127,21 @@ perl-module-lib:
 	petalinux-config --project $(PLX_DIR) --silentconfig
 	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+
+python3-modules:
+	@echo Adding changes for $@
+	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@
+	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
+	echo CONFIG_python3-pyro4 >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-cffi >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	echo CONFIG_python3-pytest >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	petalinux-config --project $(PLX_DIR) --silentconfig
+	perl -i -pe 's/^# CONFIG_python3-pyro4\s.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-pyro4=n.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-cffi\s.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-cffi=n.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^# CONFIG_python3-pytest\s.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^CONFIG_python3-pytest=n.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 
 linux:
 	@echo Adding changes for $@
@@ -193,6 +210,11 @@ else ifeq ($(BOARD),zcu111)
 	cd $(shell dirname $@) && petalinux-create --type project --template zynqMP --name $(shell basename $@) --force
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_MACHINE_NAME.*/CONFIG_SUBSYSTEM_MACHINE_NAME="zcu111-reva"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_YOCTO_MACHINE_NAME.*/CONFIG_YOCTO_MACHINE_NAME="zcu111-zynqmp"/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_zynqmp_virt_defconfig"/' $@/project-spec/configs/config
+else ifeq ($(BOARD),zcu670)
+	cd $(shell dirname $@) && petalinux-create --type project --template zynqMP --name $(shell basename $@) --force
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_MACHINE_NAME.*/CONFIG_SUBSYSTEM_MACHINE_NAME="zcu670-revb"/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_YOCTO_MACHINE_NAME.*/CONFIG_YOCTO_MACHINE_NAME="xilinx-zcu670"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_zynqmp_virt_defconfig"/' $@/project-spec/configs/config
 else ifeq ($(BOARD),vck190)
 	cd $(shell dirname $@) && petalinux-create --type project --template versal --name $(shell basename $@) --force
@@ -272,8 +294,8 @@ package: build $(PLX_DIR)/images/linux/system.dts
 	@echo Packaging $(PLX_DIR)
 ifeq ($(BOARD),vck190)
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --force
-else ifeq ($(BOARD),zcu670)
-	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga $(XSA_DIR)/$(TARGET)/system.bit --force
+#else ifeq ($(BOARD),zcu670)
+#	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga $(XSA_DIR)/$(TARGET)/system.bit --force
 else
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga --force
 endif
@@ -300,18 +322,18 @@ endif
 
 $(XSA_DIR)/zcu102_om5_exs/system.xsa:
 	mkdir -p $(shell dirname $@)
-	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5 -tclargs implNodateExit
-	cp $(OUT_DIR)/zcu102_om5_exs_$(TOOL_VER)/vivado/system.xsa $@
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5 -tclargs implLoopNodateExit
+	cp $(OUT_DIR)/zcu102_om5_exs_$(TOOL_VER).0/vivado/system.xsa $@
 
 $(XSA_DIR)/zcu111_om5_exs/system.xsa:
 	mkdir -p $(shell dirname $@)
-	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5 -tclargs implNodateExit
-	cp $(OUT_DIR)/zcu111_om5_exs_$(TOOL_VER)/vivado/system.xsa $@
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5 -tclargs implLoopNodateExit
+	cp $(OUT_DIR)/zcu111_om5_exs_$(TOOL_VER).0/vivado/system.xsa $@
 
 $(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
 	mkdir -p $(shell dirname $@)
-	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25 -tclargs implNodateExit
-	cp $(OUT_DIR)/zcu111_om5_25_exs_$(TOOL_VER)/vivado/system.xsa $@
+	vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25 -tclargs implLoopNodateExit
+	cp $(OUT_DIR)/zcu111_om5_25_exs_$(TOOL_VER).0/vivado/system.xsa $@
 
 #### PETALINUX TARGETS BELOW ####
 
@@ -327,6 +349,12 @@ zcu102_om5_exs: $(XSA_DIR)/zcu102_om5_exs/system.xsa
 
 zcu102_om5_10_slv_exd:
 	$(MAKE) BOARD=zcu102 TARGET=$@ DBG=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu111_bsp:
+	$(MAKE) BOARD=zcu111 TARGET=$@ \
+	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu111-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
@@ -361,9 +389,48 @@ vck190:
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-zcu670:
+zcu670_om5_exs:
 	# Experimental build based on BSP
 	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_om5_25_exs: $(XSA_DIR)/zcu670_om5_25_exs/system.xsa
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_e1x9000x25_ss4x4_cc2x6600_exs: $(XSA_DIR)/zcu670_e1x9000x25_ss4x4_cc2x6600_exs/system.xsa
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs: $(XSA_DIR)/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs/system.xsa
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_e2x9000x25_ss8x8_cc2x6600_exs: $(XSA_DIR)/zcu670_e2x9000x25_ss8x8_cc2x6600_exs/system.xsa
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_e2x9000x25_ss8x8_cc2x6600_ocp_exs: $(XSA_DIR)/zcu670_e2x9000x25_ss8x8_cc2x6600_ocp_exs/system.xsa
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_om5_exd:
+	# Experimental build based on BSP
+	$(MAKE) BOARD=zcu670 TARGET=$@ \
+	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
+	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	package
+
+zcu670_om5_10_slv_exd:
+	# Experimental build based on BSP
+	$(MAKE) BOARD=zcu670 TARGET=$@ \
 	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
@@ -375,10 +442,3 @@ clean_all:
 	for x in $(ALL); do \
 		$(MAKE) PLX_DIR="$(OUT_DIR)/$${x}_$(TOOL_VER)/petalinux" mrproper; \
 	done
-
-doc:
-	cd ../doc; rm -rf html
-	cd ../doc; doxygen config.dox
-
-# TODO
-# - Only add the rootfs_config and user-rootfsconfig lines if they don't already exist

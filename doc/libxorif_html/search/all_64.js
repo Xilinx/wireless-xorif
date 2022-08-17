@@ -12,7 +12,7 @@ var searchData=
   ['default_5fsect_5fper_5fsym',['DEFAULT_SECT_PER_SYM',['../group__libxorif.html#ga710c2502a38fdb8f282caf492c8f0698',1,'xorif_system.h']]],
   ['default_5fsect_5fper_5fsym_5fssb',['DEFAULT_SECT_PER_SYM_SSB',['../group__libxorif.html#ga24601fa98098b0cea2f550b8d4fd5c14',1,'xorif_system.h']]],
   ['default_5ful_5fbid_5ffwd',['DEFAULT_UL_BID_FWD',['../group__libxorif.html#ga40bcd35e2583acbe41a24e604f6bbd5c',1,'xorif_system.h']]],
-  ['defaut_5ful_5fradio_5fch_5fdly',['DEFAUT_UL_RADIO_CH_DLY',['../group__libxorif.html#ga1893a67663a94f010318b5d235d79673',1,'xorif_system.h']]],
+  ['default_5ful_5fradio_5fch_5fdly',['DEFAULT_UL_RADIO_CH_DLY',['../group__libxorif.html#ga8f70d0a7af6a59dc1fef99ae12c31f91',1,'xorif_system.h']]],
   ['deframer_5feth_5fcirc_5fbuff_5fof',['DEFRAMER_ETH_CIRC_BUFF_OF',['../group__libxorif-api.html#ggab913aef59d6dfeb48ca044dd311f80baa48c541c16d67f948e2676d30d7b41508',1,'xorif_api.h']]],
   ['deframer_5feth_5fcirc_5fbuff_5fptr_5fof',['DEFRAMER_ETH_CIRC_BUFF_PTR_OF',['../group__libxorif-api.html#ggab913aef59d6dfeb48ca044dd311f80baa850c75064999b9990a3bfec10d50ce5c',1,'xorif_api.h']]],
   ['deframer_5fin_5ffifo_5fof',['DEFRAMER_IN_FIFO_OF',['../group__libxorif-api.html#ggab913aef59d6dfeb48ca044dd311f80baad0cc8a23001566871c8e28f655ee923e',1,'xorif_api.h']]],
