@@ -265,6 +265,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga4a3da356c6483228f09c42c2f5e2136e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a> (uint16_t cc, uint16_t numerology, uint16_t extended_cp)</td></tr>
 <tr class="memdesc:ga4a3da356c6483228f09c42c2f5e2136e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the numerology for the component carrier.  <a href="#ga4a3da356c6483228f09c42c2f5e2136e">More...</a><br/></td></tr>
 <tr class="separator:ga4a3da356c6483228f09c42c2f5e2136e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9fd1067dc7af1a96676441b93b0b8bb0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#ga9fd1067dc7af1a96676441b93b0b8bb0">xorif_set_cc_num_rbs_ssb</a> (uint16_t cc, uint16_t num_rbs)</td></tr>
+<tr class="memdesc:ga9fd1067dc7af1a96676441b93b0b8bb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the number of RBs for the component carrier' SSB.  <a href="#ga9fd1067dc7af1a96676441b93b0b8bb0">More...</a><br/></td></tr>
+<tr class="separator:ga9fd1067dc7af1a96676441b93b0b8bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac3373c25f26f3e81c2cd24f22f1ff807"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif-api.html#gac3373c25f26f3e81c2cd24f22f1ff807">xorif_set_cc_numerology_ssb</a> (uint16_t cc, uint16_t numerology, uint16_t extended_cp)</td></tr>
 <tr class="memdesc:gac3373c25f26f3e81c2cd24f22f1ff807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the numerology for the component carrier's SSB.  <a href="#gac3373c25f26f3e81c2cd24f22f1ff807">More...</a><br/></td></tr>
 <tr class="separator:gac3373c25f26f3e81c2cd24f22f1ff807"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1932,6 +1935,47 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga9fd1067dc7af1a96676441b93b0b8bb0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_set_cc_num_rbs_ssb </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>cc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>num_rbs</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the number of RBs for the component carrier' SSB. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_rbs</td><td>Number of RBs (see note) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The only valid values of num_rbs are 0 (no SSB) and 20 (standard SSB). </dd></dl>
 
 </div>
 </div>

@@ -4,6 +4,8 @@
 * Added Python bindings for C library (libxorif)
 * Add xorif_set_modu_mode() and xorif_set_modu_dest_mac_addr() for multi O-DU MAC destination address / VLAN tags
 * Added "monitor" API: xorif_monitor_clear(), xorif_monitor_select(), xorif_monitor_snapshot(), xorif_monitor_read()
+* Added xorif_set_cc_num_rbs_ssb() to allow SSB RBs to be set to 0 (no SSB)
+* Support for 9-bit uncompressed mode in DL
 
 ## Release 2022.1
 * Updated register map

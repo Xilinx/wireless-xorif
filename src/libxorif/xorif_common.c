@@ -367,7 +367,7 @@ int xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *config)
         PERROR("IQ compression method/width not supported (DL)\n");
         return XORIF_COMP_MODE_NOT_SUPPORTED;
     }
-    else if (config->num_rbs_ssb  != SSB_NUM_RBS)
+    else if (!(config->num_rbs_ssb == SSB_NUM_RBS || config->num_rbs_ssb == 0))
     {
         PERROR("Invalid number of RBs (SSB)\n");
         return XORIF_INVALID_RBS;
@@ -430,6 +430,27 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
 
     cc_config[cc].numerology = numerology;
     cc_config[cc].extended_cp = extended_cp;
+
+    return XORIF_SUCCESS;
+}
+
+
+int xorif_set_cc_num_rbs_ssb(uint16_t cc, uint16_t num_rbs)
+{
+    TRACE("xorif_set_cc_num_rbs_ssb(%d, %d)\n", cc, num_rbs);
+
+    if (cc >= MAX_NUM_CC || cc >= xorif_fhi_get_max_cc())
+    {
+        PERROR("Invalid CC value\n");
+        return XORIF_INVALID_CC;
+    }
+    else if (!(num_rbs == SSB_NUM_RBS || num_rbs == 0))
+    {
+        PERROR("Invalid number of RBs\n");
+        return XORIF_INVALID_RBS;
+    }
+
+    cc_config[cc].num_rbs_ssb = num_rbs;
 
     return XORIF_SUCCESS;
 }

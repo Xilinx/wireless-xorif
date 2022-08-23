@@ -1422,8 +1422,14 @@ int xorif_fhi_configure_cc(uint16_t cc)
     uint16_t ul_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_cp_ul + ptr->advance_ul + ptr->ul_radio_ch_dly);
     uint16_t dl_ctrl_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_cp_dl + ptr->advance_dl + fhi_sys_const.FH_DECAP_DLY);
     uint16_t dl_data_sym_num = calc_sym_num(ptr->numerology, ptr->extended_cp, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
-    uint16_t ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_cp_dl + ptr->advance_dl + fhi_sys_const.FH_DECAP_DLY);
-    uint16_t ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
+    uint16_t ssb_ctrl_sym_num = 0;
+    uint16_t ssb_data_sym_num = 0;
+
+    if (ptr->num_rbs_ssb)
+    {
+        ssb_ctrl_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_cp_dl + ptr->advance_dl + fhi_sys_const.FH_DECAP_DLY);
+        ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
+    }
 
     // Check number ctrl symbols
     if ((ul_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
@@ -1451,12 +1457,16 @@ int xorif_fhi_configure_cc(uint16_t cc)
                                                      ptr->num_frames_per_sym);
 
     // Calculate SSB data buffer size (per symbol)
-    uint16_t ssb_data_buff_size = calc_data_buff_size(ptr->num_rbs_ssb,
-                                                      ptr->iq_comp_meth_ssb,
-                                                      ptr->iq_comp_width_ssb,
-                                                      ptr->iq_comp_mplane_ssb,
-                                                      ptr->num_sect_per_sym_ssb,
-                                                      ptr->num_frames_per_sym_ssb);
+    uint16_t ssb_data_buff_size = 0;
+    if (ptr->num_rbs_ssb)
+    {
+        ssb_data_buff_size = calc_data_buff_size(ptr->num_rbs_ssb,
+                                                 ptr->iq_comp_meth_ssb,
+                                                 ptr->iq_comp_width_ssb,
+                                                 ptr->iq_comp_mplane_ssb,
+                                                 ptr->num_sect_per_sym_ssb,
+                                                 ptr->num_frames_per_sym_ssb);
+    }
 
     // Deallocate any memory associated with this component carrier
     deallocate_memory(cc);
@@ -1553,40 +1563,30 @@ int xorif_fhi_configure_cc(uint16_t cc)
     }
 #endif
 
-    // Program the h/w
+    // Program the h/w...
+
+    // DL / UL
     xorif_fhi_init_cc_rbs(cc, ptr->num_rbs, ptr->numerology, ptr->extended_cp);
-
-    xorif_fhi_init_cc_rbs_ssb(cc, ptr->num_rbs_ssb, ptr->numerology_ssb, ptr->extended_cp_ssb);
-
     xorif_fhi_init_cc_symbol_pointers(cc, dl_data_sym_num, dl_data_ptrs_offset, dl_ctrl_sym_num, ul_ctrl_sym_num);
-
-    xorif_fhi_init_cc_symbol_pointers_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_ctrl_sym_num);
-
     xorif_fhi_set_cc_dl_iq_compression(cc, ptr->iq_comp_width_dl, ptr->iq_comp_meth_dl, ptr->iq_comp_mplane_dl);
-
     xorif_fhi_set_cc_ul_iq_compression(cc, ptr->iq_comp_width_ul, ptr->iq_comp_meth_ul, ptr->iq_comp_mplane_ul);
-
-    xorif_fhi_set_cc_iq_compression_ssb(cc, ptr->iq_comp_width_ssb, ptr->iq_comp_meth_ssb, ptr->iq_comp_mplane_ssb);
-
-    xorif_fhi_set_cc_iq_compression_prach(cc, ptr->iq_comp_width_prach, ptr->iq_comp_meth_prach, ptr->iq_comp_mplane_prach);
-
     xorif_fhi_init_cc_dl_section_mem(cc, ptr->num_ctrl_per_sym_dl, dl_ctrl_offset);
-
     xorif_fhi_init_cc_ul_section_mem(cc, ptr->num_ctrl_per_sym_ul, ul_ctrl_offset, ul_ctrl_base_offset);
-
-    xorif_fhi_init_cc_section_mem_ssb(cc, ptr->num_ctrl_per_sym_ssb, ssb_ctrl_offset);
-
     xorif_fhi_init_cc_dl_data_offsets(cc, dl_data_sym_num, dl_data_ptrs_offset, dl_data_buff_offset, dl_data_buff_size);
-
-    xorif_fhi_init_cc_dl_data_offsets_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_data_buff_offset, ssb_data_buff_size);
-
     xorif_fhi_init_cc_ctrl_constants(cc, dl_ctrl_sym_num, ptr->num_ctrl_per_sym_dl, ul_ctrl_sym_num, ptr->num_ctrl_per_sym_ul);
-
-    xorif_fhi_init_cc_ctrl_constants_ssb(cc, ssb_ctrl_sym_num, ptr->num_ctrl_per_sym_ssb);
-
     xorif_fhi_configure_time_advance_offsets(cc, ptr->numerology, ptr->extended_cp, ptr->advance_ul, ptr->advance_dl, ptr->ul_bid_forward);
 
+    // SSB
+    xorif_fhi_init_cc_rbs_ssb(cc, ptr->num_rbs_ssb, ptr->numerology_ssb, ptr->extended_cp_ssb);
+    xorif_fhi_init_cc_symbol_pointers_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_ctrl_sym_num);
+    xorif_fhi_set_cc_iq_compression_ssb(cc, ptr->iq_comp_width_ssb, ptr->iq_comp_meth_ssb, ptr->iq_comp_mplane_ssb);
+    xorif_fhi_init_cc_section_mem_ssb(cc, ptr->num_ctrl_per_sym_ssb, ssb_ctrl_offset);
+    xorif_fhi_init_cc_dl_data_offsets_ssb(cc, ssb_data_sym_num, ssb_data_ptrs_offset, ssb_data_buff_offset, ssb_data_buff_size);
+    xorif_fhi_init_cc_ctrl_constants_ssb(cc, ssb_ctrl_sym_num, ptr->num_ctrl_per_sym_ssb);
     xorif_fhi_configure_time_advance_offsets_ssb(cc, ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->advance_dl);
+
+    // PRACH
+    xorif_fhi_set_cc_iq_compression_prach(cc, ptr->iq_comp_width_prach, ptr->iq_comp_meth_prach, ptr->iq_comp_mplane_prach);
 
     // Perform "reload" on the component carrier
     xorif_fhi_cc_reload(cc);
@@ -1658,8 +1658,8 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
 
     case IQ_COMP_NONE:
     default:
-        // (16 bits I + 16 bits Q) per RE and round-up
-        size = CEIL_DIV((16 * 2 * RE_PER_RB), 8);
+        // (n bits I + n bits Q) per RE and round-up
+        size = CEIL_DIV((comp_width * 2 * RE_PER_RB), 8);
         break;
     }
 

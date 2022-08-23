@@ -521,6 +521,17 @@ def set_cmd(args):
                         result &= (handle.xorif_set_cc_numerology(cc, numerology, ext_cp) == SUCCESS)
                 return SUCCESS if result else FAIL
 
+        # set num_rbs_ssb <cc> <number_of_rbs = 0|20>
+        if match(args[1], "num_rbs_ssb"):
+            if len(args) == 4:
+                cc = integer(args[2])
+                num_rbs = integer(args[3])
+                result = True
+                for name, handle in handles.items():
+                    if name == "FHI":
+                        result &= (handle.xorif_set_cc_num_rbs_ssb(cc, num_rbs) == SUCCESS)
+                return SUCCESS if result else FAIL
+
         # set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>
         if match(args[1], "numerology_ssb"):
             if len(args) == 5:
@@ -1348,6 +1359,7 @@ cmds.append(("set", None, "?set modu_dest_mac_addr <du> <address = XX:XX:XX:XX:X
 cmds.append(("set", None, "?set modu_mode <0 = disabled | 1 = enabled>"))
 cmds.append(("set", None, "?set num_rbs <cc> <number_of_rbs>"))
 cmds.append(("set", None, "?set numerology <cc> <numerology = 0..4> <extended_cp = 0|1>"))
+cmds.append(("set", None, "?set num_rbs_ssb <cc> <number_of_rbs = 0|20>"))
 cmds.append(("set", None, "?set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>"))
 cmds.append(("set", None, "?set ocp_antenna_cfg <num_antennas> <interleave> <data = (8 x 4b)>"))
 cmds.append(("set", None, "?set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid> [<inter_sym_gap>]"))

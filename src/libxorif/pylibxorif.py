@@ -218,6 +218,11 @@ class LIBXORIF:
         self.logger.info(f'xorif_set_cc_numerology: {cc}, {numerology}, {extended_cp}')
         return lib.xorif_set_cc_numerology(cc, numerology, extended_cp)
 
+    # int xorif_set_cc_num_rbs_ssb(uint16_t cc, uint16_t num_rbs)
+    def xorif_set_cc_num_rbs_ssb(self, cc, num_rbs):
+        self.logger.info(f'xorif_set_cc_num_rbs_ssb: {cc}, {num_rbs}')
+        return lib.xorif_set_cc_num_rbs_ssb(cc, num_rbs)
+
     # int xorif_set_cc_numerology_ssb(uint16_t cc, uint16_t numerology, uint16_t extended_cp)
     def xorif_set_cc_numerology_ssb(self, cc, numerology, extended_cp=False):
         self.logger.info(f'xorif_set_cc_numerology_ssb: {cc}, {numerology}, {extended_cp}')

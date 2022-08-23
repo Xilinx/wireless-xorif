@@ -4,6 +4,7 @@
 * Added multi-ODU support ("set modu_mode" and "set modu_dest_mac_addr")
 * Added experimental Python/Pyro version of the xorif-app application
 * Added "monitor" commands
+* Added "set num_rbs_ssb" to allow SSB RBs to be set to 0 (no SSB)
 
 ## Release 2022.1
 * Modified Yocto recipes for 'honister' release
