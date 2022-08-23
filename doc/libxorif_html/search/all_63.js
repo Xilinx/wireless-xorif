@@ -7,5 +7,5 @@ var searchData=
   ['chan_5ful',['CHAN_UL',['../group__libxorif.html#gga39d37b5bd222f3ad8f6bf67e97cb555ea35ca2cd1ec4d5ebe239872d5fd5403b1',1,'xorif_utils.h']]],
   ['check_5fiq_5fcomp_5fmode',['check_iq_comp_mode',['../group__libxorif.html#gafe7c0c8e58f4c94338d50b9f92c604e6',1,'xorif_utils.c']]],
   ['check_5fnumerology',['check_numerology',['../group__libxorif.html#ga49de484cfbc8e1e1f322d885aa1df4f0',1,'xorif_utils.c']]],
-  ['change_20log',['Change Log',['../md__home_stevend_projects_oran-radio-if-release_release_src_libxorif_CHANGELOG.html',1,'']]]
+  ['change_20log',['Change Log',['../md__home_stevend_projects_oran-radio-if-release2_release_src_libxorif_CHANGELOG.html',1,'']]]
 ];
