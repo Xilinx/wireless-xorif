@@ -435,6 +435,18 @@ int xorif_set_cc_num_rbs(uint16_t cc, uint16_t num_rbs);
 int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_cp);
 
 /**
+ * @brief Set the number of RBs for the component carrier' SSB.
+ * @param[in] cc Component carrier to configure
+ * @param[in] num_rbs Number of RBs (see note)
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * The only valid values of num_rbs are 0 (no SSB) and 20 (standard SSB).
+ */
+int xorif_set_cc_num_rbs_ssb(uint16_t cc, uint16_t num_rbs);
+
+/**
  * @brief Set the numerology for the component carrier's SSB.
  * @param[in] cc Component carrier to configure
  * @param[in] numerology Numerology

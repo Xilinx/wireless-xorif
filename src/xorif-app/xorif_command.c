@@ -164,6 +164,7 @@ const struct command command_set[] =
     {"set", set, "Set various configuration data for device"},
     {"set", NULL, "?set num_rbs <cc> <number_of_rbs>"},
     {"set", NULL, "?set numerology <cc> <numerology = 0..4> <extended_cp = 0|1>"},
+    {"set", NULL, "?set num_rbs_ssb <cc> <number_of_rbs = 0|20>"},
     {"set", NULL, "?set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>"},
     {"set", NULL, "?set time_advance <cc> <deskew> <advance_uplink> <advance_downlink> # deprecated"},
     {"set", NULL, "?set ul_timing_params <cc> <delay_comp> <advance> <radio_ch_delay>"},
@@ -1768,6 +1769,15 @@ static int set(const char *request, char *response)
                         }
 #endif // SRS_INCLUDED
                         return result;
+                    }
+                }
+                if (match(s, "num_rbs_ssb") && num_tokens == 4)
+                {
+                    // set num_rbs_ssb <cc> <number_of_rbs = 0|20>
+                    unsigned int cc, val;
+                    if (parse_integer(2, &cc) && parse_integer(3, &val))
+                    {
+                        return xorif_set_cc_num_rbs_ssb(cc, val);
                     }
                 }
                 else if (match(s, "numerology") && num_tokens == 5)
