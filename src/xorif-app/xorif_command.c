@@ -3221,7 +3221,7 @@ static int schedule_bf(const char *request, char *response)
         if (num_tokens == 1)
         {
             // schedule_bf
-            return xobf_schedule_bf();
+            return xobf_schedule_bf(xobf_get_enabled_cc_mask());
         }
         else if (num_tokens == 2)
         {
@@ -3229,16 +3229,10 @@ static int schedule_bf(const char *request, char *response)
             unsigned int mask = 0;
             if (parse_integer(1, &mask))
             {
-                uint16_t count;
-                const struct xobf_schedule_info *ptr;
-                int result = xobf_generate_bf_schedule(mask, &count, &ptr);
-                if (result == XORIF_SUCCESS)
-                {
-                    result = xobf_populate_bf_schedule(count, ptr);
-                }
-                return result;
+                return xobf_schedule_bf(mask);
             }
         }
+#if 0
         if (num_tokens >= 2)
         {
             // schedule_bf {(<CxAx> | <Cx>)}
@@ -3318,6 +3312,7 @@ static int schedule_bf(const char *request, char *response)
                 return result;
             }
         }
+#endif
     }
     return UNKNOWN_COMMAND;
 #endif

@@ -1,3 +1,9 @@
+/ {
+	aliases {
+		ethernet0 = &gem3;
+		ethernet1 = &datapath_xxv_eth_subs_xxv_wrap_xxv_ethernet_0;
+	};
+};
 &datapath_xxv_eth_subs_xxv_wrap_support_1588_2step_timer1588_subs_timer_1588_v2_0_0 {
 	compatible = "xlnx,timer-1588-2.0";
 	xlnx,period = <4000000>;

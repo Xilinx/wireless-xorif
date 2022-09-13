@@ -20,6 +20,9 @@ endif
 
 ### CONFIGURATION SECTION ###
 
+# Set ROOTFS type: 0 = INITRD, 1 = INITRAMFS, 2 = ETX4
+ROOTFS = 0
+
 # Define targets for "all" here
 ALL += zcu102_om5_exs zcu111_om5_exs zcu111_om5_25_exs
 
@@ -249,10 +252,23 @@ config2: config1 $(ROOTFS_Y) $(ROOTFS_N) $(EXTRAS)
 	@echo Configuring 2 $(PLX_DIR)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_HOSTNAME.*/CONFIG_SUBSYSTEM_HOSTNAME="$(subst _,-,$(TARGET))"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_PRODUCT.*/CONFIG_SUBSYSTEM_PRODUCT="$(TARGET)"/' $(PLX_DIR)/project-spec/configs/config
-ifeq ($(INITRAMFS),1)
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-initramfs-image"/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRAMFS.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRAMFS is not set/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_EXT4.*/# CONFIG_SUBSYSTEM_ROOTFS_EXT4 is not set/' $(PLX_DIR)/project-spec/configs/config
+	sed -i '/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME/d' $(PLX_DIR)/project-spec/configs/config
+	sed -i '/CONFIG_SUBSYSTEM_SDROOT_DEV/d' $(PLX_DIR)/project-spec/configs/config
+ifeq ($(ROOTFS),1)
+	# rootfs is INITRAMFS
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRAMFS.*/CONFIG_SUBSYSTEM_ROOTFS_INITRAMFS=y/' $(PLX_DIR)/project-spec/configs/config
+	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-initramfs-image"' $(PLX_DIR)/project-spec/configs/config
+else ifeq ($(ROOTFS),2)
+	# rootfs is EXT4
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_EXT4.*/CONFIG_SUBSYSTEM_ROOTFS_EXT4=y/' $(PLX_DIR)/project-spec/configs/config
+	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_SDROOT_DEV="/dev/mmcblk0p2"' $(PLX_DIR)/project-spec/configs/config
 else
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME.*/CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"/' $(PLX_DIR)/project-spec/configs/config
+	# rootfs is INITRD
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD.*/CONFIG_SUBSYSTEM_ROOTFS_INITRD=y/' $(PLX_DIR)/project-spec/configs/config
+	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"' $(PLX_DIR)/project-spec/configs/config
 endif
 #ifeq ($(TARGET),vck190_hw_emu)
 #	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
@@ -294,14 +310,11 @@ package: build $(PLX_DIR)/images/linux/system.dts
 	@echo Packaging $(PLX_DIR)
 ifeq ($(BOARD),vck190)
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --force
-#else ifeq ($(BOARD),zcu670)
-#	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga $(XSA_DIR)/$(TARGET)/system.bit --force
 else
 	petalinux-package --project $(PLX_DIR) --boot --u-boot --fsbl --fpga --force
 endif
-ifeq ($(INITRAMFS),1)
-	cd $(PLX_DIR); petalinux-package --wic --extra-bootfiles "ramdisk.cpio.gz.u-boot"
-	gzip -f $(PLX_DIR)/images/linux/*.wic
+ifneq ($(ROOTFS),0)
+	cd $(PLX_DIR); petalinux-package --wic --wic-extra-args "-c xz"
 endif
 
 # Clean build area
