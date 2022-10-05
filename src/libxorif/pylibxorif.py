@@ -23,8 +23,8 @@ from cffi import FFI
 import Pyro4
 
 # Use local files if available, otherwise use the standard locations
-lib_path = "./libxorif.so" if os.path.exists("./libxorif.so") else "/usr/lib/libxorif.so"
-inc_path = "./xorif_api.txt" if os.path.exists("./xorif_api.txt") else "/usr/include/xorif/xorif_api.txt"
+lib_path = "./libxorif.so.1" if os.path.exists("./libxorif.so.1") else "/usr/lib/libxorif.so.1"
+inc_path = "./xorif_api_cffi.h" if os.path.exists("./xorif_api_cffi.h") else "/usr/share/xorif/xorif_api_cffi.h"
 
 # Load library and definitions with CFFI
 ffi = FFI()

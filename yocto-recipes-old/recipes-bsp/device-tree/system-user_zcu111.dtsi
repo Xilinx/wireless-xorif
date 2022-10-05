@@ -1,3 +1,0 @@
-&gem3 {
-	local-mac-address = [ff ff ff ff ff ff];
-};

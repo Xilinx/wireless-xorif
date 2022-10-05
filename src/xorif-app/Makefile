@@ -25,7 +25,7 @@ LDFLAGS += -L../libxorif
 LDLIBS += -lxorif
 STATIC_LIBS += ../libxorif/libxorif.a
 ifeq ($(BF),1)
-CFLAGS += -I../libxobf -I=/usr/include/xobf
+CFLAGS += -I../libxobf -I=/usr/include/xorif
 LDFLAGS += -L../libxobf
 LDLIBS += -lxobf
 STATIC_LIBS += ../libxobf/libxobf.a

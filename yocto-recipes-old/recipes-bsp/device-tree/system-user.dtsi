@@ -1,6 +1,0 @@
-/include/ "system-conf.dtsi"
-/ {
-    /*chosen {
-		bootargs = "earlycon clk_ignore_unused cpuidle.off=1 uio_pdrv_genirq.of_id=generic-uio";
-    };*/
-};

@@ -23,8 +23,8 @@ from cffi import FFI
 import Pyro4
 
 # Use local files if available, otherwise use the standard locations
-lib_path = "./libxocp.so" if os.path.exists("./libxocp.so") else "/usr/lib/libxocp.so"
-inc_path = "./xocp_api.txt" if os.path.exists("./xocp_api.txt") else "/usr/include/xorif/xocp_api.txt"
+lib_path = "./libxocp.so.1" if os.path.exists("./libxocp.so.1") else "/usr/lib/libxocp.so.1"
+inc_path = "./xocp_api_cffi.h" if os.path.exists("./xocp_api_cffi.h") else "/usr/share/xorif/xocp_api_cffi.h"
 
 # Load library and definitions with CFFI
 ffi = FFI()

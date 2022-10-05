@@ -1,6 +1,6 @@
 LIB = xocp
 
-MAJOR = 1.0
+MAJOR = 1
 MINOR = 1
 VERSION = $(MAJOR).$(MINOR)
 
@@ -29,7 +29,7 @@ endif
 
 all: build
 
-build: lib$(LIB).so lib$(LIB).a xocp_api.txt
+build: lib$(LIB).so lib$(LIB).a xocp_api_cffi.h
 
 lib$(LIB).so: lib$(LIB).so.$(VERSION)
 	rm -f lib$(LIB).so.$(MAJOR) lib$(LIB).so
@@ -42,7 +42,7 @@ lib$(LIB).so.$(VERSION): $(OBJS) linker.script
 lib$(LIB).a: $(OBJS)
 	ar -crs $@ $(OBJS)
 
-xocp_api.txt: xocp_api.h
+xocp_api_cffi.h: xocp_api.h
 	$(CC) $(CFLAGS) -E -DCFFI_CDEF_HDR -fdirectives-only -nostdinc xocp_api.h > $@
 	sed -i '/# /d' $@
 	sed -i '/#define\s*__/d' $@
@@ -59,7 +59,7 @@ linker.script:
 clean:
 	rm -f *.o *.d *.so *.so.* *.a
 	rm -f *.gcov *.gcda *.gcno
-	rm -f xocp_api.txt
+	rm -f xocp_api_cffi.h
 	rm -f linker.script
 
 %.o: %.c

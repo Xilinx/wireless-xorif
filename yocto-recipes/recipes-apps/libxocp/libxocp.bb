@@ -34,9 +34,9 @@ do_install() {
 
 	install -d ${D}${includedir}/xorif
 	install -m 0644 ${S}/xocp_api.h ${D}${includedir}/xorif/
-	install -m 0644 ${S}/xocp_api.txt ${D}${includedir}/xorif/
 	install -d ${D}/usr/share/xorif/
 	install -m 0755 ${S}/pylibxocp.py ${D}/usr/share/xorif/
+	install -m 0644 ${S}/xocp_api_cffi.h ${D}/usr/share/xorif/
 }
 
 FILES:${PN} += " /usr/share/xorif/* "

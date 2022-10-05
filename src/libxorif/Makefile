@@ -1,6 +1,6 @@
 LIB = xorif
 
-MAJOR = 1.0
+MAJOR = 1
 MINOR = 1
 VERSION = $(MAJOR).$(MINOR)
 
@@ -29,7 +29,7 @@ endif
 
 all: build
 
-build: lib$(LIB).so lib$(LIB).a xorif_api.txt
+build: lib$(LIB).so lib$(LIB).a xorif_api_cffi.h
 
 lib$(LIB).so: lib$(LIB).so.$(VERSION)
 	rm -f lib$(LIB).so.$(MAJOR) lib$(LIB).so
@@ -42,9 +42,15 @@ lib$(LIB).so.$(VERSION): $(OBJS) linker.script
 lib$(LIB).a: $(OBJS)
 	ar -crs $@ $(OBJS)
 
-xorif_api.txt: xorif_api.h
-	$(CC) $(CFLAGS) -E -DCFFI_CDEF_HDR xorif_api.h > $@
-	sed -i '/#/d' $@
+xorif_api_cffi.h: xorif_api.h
+	$(CC) $(CFLAGS) -E -DCFFI_CDEF_HDR -fdirectives-only -nostdinc xorif_api.h > $@
+	sed -i '/# /d' $@
+	sed -i '/#define\s*__/d' $@
+	sed -i '/#define\s*_/d' $@
+	sed -i '/#undef\s*__/d' $@
+	sed -i '/#undef\s*_/d' $@
+	sed -i '/#define\s*\w*\s*$$/d' $@
+	sed -i '/#define\s*CFFI_CDEF_HDR/d' $@
 	sed -i '/^$$/d' $@
 
 linker.script:
@@ -53,7 +59,7 @@ linker.script:
 clean:
 	rm -f *.o *.d *.so *.so.* *.a
 	rm -f *.gcov *.gcda *.gcno
-	rm -f xorif_api.txt
+	rm -f xorif_api_cffi.h
 	rm -f linker.script
 
 %.o: %.c
