@@ -20,7 +20,6 @@ __copyright__ = "Copyright 2022, Xilinx"
 import os
 import logging
 from cffi import FFI
-import Pyro4
 
 # Use local files if available, otherwise use the standard locations
 lib_path = "./libxocp.so.1" if os.path.exists("./libxocp.so.1") else "/usr/lib/libxocp.so.1"
@@ -186,9 +185,8 @@ class LIBXOCP:
 
     # int xocp_register_event_callback(uint16_t instance, xocp_isr_func_t callback)
     def xocp_register_event_callback(self, instance, callback):
-        self.logger.info(f'xocp_register_event_callback: {callback}')
-        self.logger.error(f'Call-back not supported in this version')
-        return lib.XOPRACH_FAILURE
+        self.logger.info(f'xocp_register_event_callback: {instance}, {callback}')
+        return lib.xocp_register_event_callback(instance, callback)
 
     # int xocp_read_reg(uint16_t instance, const char *name, uint32_t *value)
     def xocp_read_reg(self, instance, name):

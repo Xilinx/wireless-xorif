@@ -8,6 +8,7 @@ SRCS = xorif_common.c xorif_fh_func.c xorif_utils.c xorif_registers.c
 OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG -Wno-unused-function
+CFLAGS += $(EXTRA_FLAGS)
 LDFLAGS += -Wl,--version-script linker.script
 LDLIBS += -lm
 
@@ -21,10 +22,6 @@ ifeq ($(GCOV),1)
 CFLAGS += -O0 -fprofile-arcs -ftest-coverage
 LDFLAGS += --coverage
 LDLIBS += -lgcov
-endif
-
-ifeq ($(DEBUG),1)
-CFLAGS += -DEXTRA_DEBUG
 endif
 
 all: build
@@ -58,9 +55,31 @@ linker.script:
 
 clean:
 	rm -f *.o *.d *.so *.so.* *.a
-	rm -f *.gcov *.gcda *.gcno
 	rm -f xorif_api_cffi.h
 	rm -f linker.script
+	rm -f *.gcov *.gcda *.gcno
+	rm -f .coverage
+	rm -rf htmlcov
+	rm -rf coverage.css
+	rm -f coverage.html
+	rm -f coverage.*.html
+	rm -f run-*.json
+
+test:
+	coverage run -a -m pytest -v test_*.py
+
+dev-build:
+	$(MAKE) build NO_HW=1 GCOV=1 EXTRA_FLAGS="-DEXTRA_DEBUG"
+
+coverage:
+	$(MAKE) -B build test NO_HW=1 GCOV=1 EXTRA_FLAGS="-DEXTRA_DEBUG -DIN_CORE_COMP=0"
+	gcovr --json run-1.json
+	$(MAKE) -B build test NO_HW=1 GCOV=1 EXTRA_FLAGS="-DEXTRA_DEBUG -DIN_CORE_COMP=1"
+	gcovr --json run-2.json
+	gcovr -a "run-*.json" --txt --html-details coverage.html
+	coverage report
+	coverage html
+	cppcheck --error-exitcode=1 --force *.c
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -fPIC $< > $@

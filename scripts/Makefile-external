@@ -45,18 +45,9 @@ override ROOTFS_Y += linuxptp
 override ROOTFS_Y += peekpoke
 override ROOTFS_Y += perl
 override ROOTFS_Y += python3
-override ROOTFS_Y += python3-dev
 override ROOTFS_Y += netcat
 override ROOTFS_Y += tcpdump
 override ROOTFS_Y += libmetal
-override ROOTFS_Y += libmetal-dev
-override ROOTFS_Y += libmetal-dbg
-override ROOTFS_Y += libxorif-dev
-override ROOTFS_Y += libxorif-dbg
-override ROOTFS_Y += xorif-app-dev
-override ROOTFS_Y += xorif-app-dbg
-override ROOTFS_Y += libxocp-dev
-override ROOTFS_Y += libxocp-dbg
 ifeq ($(DBG),1)
 override ROOTFS_Y += git
 override ROOTFS_Y += packagegroup-core-buildessential
@@ -270,16 +261,6 @@ else
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD.*/CONFIG_SUBSYSTEM_ROOTFS_INITRD=y/' $(PLX_DIR)/project-spec/configs/config
 	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"' $(PLX_DIR)/project-spec/configs/config
 endif
-#ifeq ($(TARGET),vck190_hw_emu)
-#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD=.*/# CONFIG_SUBSYSTEM_ROOTFS_INITRD is not set/' $(PLX_DIR)/project-spec/configs/config
-#	sed -i '/CONFIG_SUBSYSTEM_INITRD_RAMDISK_LOADADDR/d' $(PLX_DIR)/project-spec/configs/config
-#	sed -i '/CONFIG_SUBSYSTEM_RAMDISK_IMAGE/d' $(PLX_DIR)/project-spec/configs/config
-#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_EXT4.*/CONFIG_SUBSYSTEM_ROOTFS_EXT4=y/' $(PLX_DIR)/project-spec/configs/config
-#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_RFS_FORMATS.*/CONFIG_SUBSYSTEM_RFS_FORMATS="tar.gz cpio.gz cpio.gz.u-boot ext4 ext4.gz jffs2"/' $(PLX_DIR)/project-spec/configs/config
-#	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_SDROOT_DEV="/dev/mmcblk0p2"' $(PLX_DIR)/project-spec/configs/config
-#	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_BOOTARGS_AUTO=.*/# CONFIG_SUBSYSTEM_BOOTARGS_AUTO is not set/' $(PLX_DIR)/project-spec/configs/config
-#	sed -i '/CONFIG_SUBSYSTEM_BOOTARGS_AUTO/a CONFIG_SUBSYSTEM_USER_CMDLINE="console=ttyAMA0 earlycon=pl011,mmio32,0xFF000000,115200n8 clk_ignore_unused mem=2G root=/dev/mmcblk0p2 rw rootwait cma=512M"' $(PLX_DIR)/project-spec/configs/config
-#endif
 	petalinux-config --project $(PLX_DIR) --silentconfig
 
 # Configure step 3 (device tree mods)

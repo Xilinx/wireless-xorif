@@ -5,6 +5,7 @@
 * Added experimental Python/Pyro version of the xorif-app application
 * Added "monitor" commands
 * Added "set num_rbs_ssb" to allow SSB RBs to be set to 0 (no SSB)
+* Added Python-based "xorif-app" version (xorif-app-server.py / xorif-app-client.py)
 
 ## Release 2022.1
 * Modified Yocto recipes for 'honister' release

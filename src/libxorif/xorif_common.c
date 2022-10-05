@@ -434,7 +434,6 @@ int xorif_set_cc_numerology(uint16_t cc, uint16_t numerology, uint16_t extended_
     return XORIF_SUCCESS;
 }
 
-
 int xorif_set_cc_num_rbs_ssb(uint16_t cc, uint16_t num_rbs)
 {
     TRACE("xorif_set_cc_num_rbs_ssb(%d, %d)\n", cc, num_rbs);

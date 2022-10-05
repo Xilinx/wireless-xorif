@@ -6,7 +6,6 @@ libxorif:
 xorif-app:
 	doxygen xorif_app_config.dox
 
-
 libxocp:
 	doxygen libxocp_config.dox
 

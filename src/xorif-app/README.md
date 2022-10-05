@@ -1,15 +1,17 @@
 # Xilinx O-RAN Radio Interface Software Application (XORIF-APP)
 
-* The xorif-app is an example application, which uses the libxorif and libxobf libraries to interface with the O-RAN Radio Interface and Beamformer IP cores.
+* The xorif-app is an test/demo application, which uses the hardware device libraries (e.g. libxorif.so) to interface with the O-RAN Radio Interface IP core(s).
+
+* Prior to the 2022.2 release, the xorif-app application was a compiled executable. However, since the 2022.2 release a Python-based version of the application is also provided. There are some minor differences in how the legacy application and the Python application operate, but the fuctionality is more or less equivalent.
 
 * The xorif-app can operate as either a "server" or a "client".
     * As a server, the xorif-app will provide a communication interface (via TCP/IP sockets) which will accept messages (e.g. from an xorif-app client).
-    * As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode" or "file mode".
-    * Only the xorif-app in "server mode" can communicate directly with the h/w (via the C libraries).
+    * As a client, the xorif-app can be use to connect with an xorif-app server. The client can operate in several modes, including "command line mode", "file mode" or "interactive".
+    * Only the xorif-app server can communicate directly with the hardware device (via the device libraries).
 
-## Building
+## Building (Legacy Application)
 
-* The xorif-app executable is built as part of the PetaLinux build system, and can be found in the `/usr/bin/` directory of the target Linux installation.
+* The legacy xorif-app executable is built as part of the PetaLinux build, and can be found in the `/usr/bin/` directory of the target Linux installation.
 
 * It can also be built separately using an appropriate SDK including the cross-compilation tools and dependencies (e.g. libmetal library).
     * Run: `make`
@@ -17,7 +19,23 @@
 * A client-only version of the xorif-app executable can also be be built on a host Linux system, using native compilation tools and without dependency on the libmetal library.
     * Run: `make NO_HW=1`
 
-## Usage
+## Building (Python Application)
+
+* The Python xorif-app application is provided as part of the PetaLinux build, and can be found in the `/usr/bin/` directory of the target Linux installation.
+
+* Unlike the legacy xorif-app application, there are separate scripts for the server and client.
+    * The "server" is `xorif-app-server.py`
+    * The "client" is `xorif-app-client.py`
+
+* It is possible to run the client application on another host Linux system, although you will need to `pip install` a couple of Python packages (Pyro4 and CFFI)
+
+* The Python application requires a couple of Python packages to be installed, and requires Python 3.6.5 or greater.
+    * Run: `pip install Pyro4`
+    * Run: `pip install cffi`
+
+## Usage (Legacy Application)
+
+* Usage:
 
 ~~~
 Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>] {"<command> {<arguments>}"}
@@ -39,30 +57,92 @@ Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>
     * Typical usage: `xorif-app -s`
     * Use `-s` for server mode (note, this is the default and so not necessary in most cases)
     * Use `-p` to change the TCP/IP port number
-    * Use `-i` option to auto-initialize the server (instead of sending "init" command each time)
 
 * Client mode:
-    * Typical usage: `xorif-app -n 192.168.0.55 ...`
+    * Typical usage: `xorif-app -n 192.168.0.55`
     * Use `-c` for "command-line mode" (runs commands specified on the command line, e.g. `xorif-app -c "get sw_version"`)
     * Use `-f` for "file mode" (runs commands specified in a text file, e.g. `xorif-app -f config.txt`)
     * Use `-I` for "interactive mode" (runs commands entered at a prompt, use "exit" to leave)
     * Use `-n` to set the IP address (default is the localhost, i.e. 127.0.0.1)
     * Use `-p` to change the TCP/IP port number
-    * The xorif-app server needs to be initialized before , so first time: `xorif-app -c "init"`
+
+* Note on server/client ports
+    * It is important that the xorif-app server and client are using the same port number to communicate
+    * The xorif-app server will not start if the specified port is not available (e.g. in use by another application). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.
+
+## Usage (Python Application)
+
+* Usage:
+
+~~~
+usage: xorif-app-server [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [--fhi] [--no-fhi] [--ocp] [--no-ocp] [--oprach] [--no-oprach]
+
+Python O-RAN Radio Interface server
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -V, --Version         show program's version number and exit
+  -v VERBOSE, --verbose VERBOSE
+                        set verbosity level (0 = quiet, 1 = normal, 2 = high)
+  -H HOST, --host HOST  IP address (default is localhost)
+  -P PORT, --port PORT  port number (default is 9090)
+  --fhi                 with FHI support (default is yes)
+  --no-fhi              without FHI support
+  --ocp                 with OCP support (default is yes)
+  --no-ocp              without OCP support
+  --oprach              with OPRACH support (default is no)
+  --no-oprach           without OPRACH support
+~~~
+
+~~~
+usage: xorif-app-client [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [-I] [-f FILE [FILE ...]] [-c CMD [CMD ...]]
+
+Python O-RAN Radio Interface client
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -V, --Version         show program's version number and exit
+  -v VERBOSE, --verbose VERBOSE
+                        set verbosity level (0 = quiet, 1 = normal, 2 = high)
+  -H HOST, --host HOST  IP address (default is localhost)
+  -P PORT, --port PORT  port number (default is 9090)
+  -I, --interactive     process commands in interactive mode
+  -f FILE [FILE ...], --file FILE [FILE ...]
+                        process commands from file
+  -c CMD [CMD ...], --cmd CMD [CMD ...]
+                        process command directly
+~~~
+
+* Server:
+    * Typical usage: `xorif-app-server.py`
+    * Typical usage: `xorif-app-server.py -H 192.168.10.10 -P 9090`
+    * Use `-H` or `--host` to set the IP address (default is the localhost, i.e. 127.0.0.1)
+    * Use `-P` or `--port` to set the TCP/IP port number
+
+* Client:
+    * Typical usage: `xorif-app-client.py -c "init"`
+    * Typical usage: `xorif-app-client.py -c "debug 2"`
+    * Typical usage: `xorif-app-client.py -f test_100mhz_1cc.config`
+    * Typical usage: `xorif-app-client.py -H 192.168.10.10 -P 9090  -f test_100mhz_1cc.config`
+    * Use `-H` or `--host` to set the IP address (default is the localhost, i.e. 127.0.0.1)
+    * Use `-P` or `--port` to set the TCP/IP port number
+    * The verbosity can be set by the `-v` option. The default is to display errors and warnings only
 
 * Note on server/client ports
     * It is important that the xorif-app server and client are using the same port number to communicate
     * The xorif-app server will not start if the specified port is not available (e.g. in use by another xorif-app instance). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.
+    * The default IP address used is the localhost. However, when using localhost, the server only accepts client connections from the localhost. If you want to conect from a remote system, then you should specify the actual IP address (using `--host` / `-H` option) for both server and client.
 
 ## Command-Line Mode
 
 * This mode allows basic configuration and interaction with the system using the xorif-app command line.
 
 * Usage:
-    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-    * Issue a command using the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command e.g. `xorif-app -n 192.168.0.55 -c "get sw_version"`
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s` or `xorif-app-server.py`
+    * Start the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required command to execute, e.g. `xorif-app -c "get sw_version"` or `xorif-app-client.py -c "get sw_version"`
+    * Note, because of the way command line arguments are handled, multi-word commands should be enclosed in quotes.
 
-* It is also possible to send multiple commands on the same command line. Because of the way command line arguments are handled, each command should be enclosed in quotes, e.g. `xorif-app -n 192.168.0.55 -c "get sw_version" "get fhi_hw_version"`
+* It is also possible to send multiple commands on the same command line, e.g. `xorif-app -c "get sw_version" "get fhi_hw_version"` or `xorif-app-client.py -c "get sw_version" "get fhi_hw_version"`
 
 * See the section below on "Command Syntax" for details of the command syntax.
 
@@ -71,10 +151,10 @@ Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>
 * This mode allows commands to be entered at a prompt, similar to the "command line mode".
 
 * Usage:
-    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-    * Start xorif-app "client" in interactive mode, i.e. `xorif-app -I`
-    * Enter commands at the prompt
-    * Enter "exit" to leave interactive mode
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s` or `xorif-app-server.py`
+    * Start the xorif-app "client" in interactive mode (optionally specifying the IP address and port number of the "server" if needed), i.e. `xorif-app -I` or `xorif-app-client.py -I`
+    * Enter desired commands at the prompt
+    * Enter "exit" (or Ctrl-C) to leave interactive mode
 
 * See the section below on "Command Syntax" for details of the command syntax.
 
@@ -82,37 +162,41 @@ Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>
 
 * The xorif-app provides basic help on the available commands and command syntax.
 
-* Run `xorif-app -c help` for available commands.
+* Run `xorif-app -c help` or `xorif-app-client.py -c help` for available commands.
 
 ~~~
-Available commands:
-  help                 : Provide command help and syntax
-  terminate            : Terminate server
-  exit                 : Exit the client script / interactive session
-  wait                 : Wait for a short time
-  peek                 : Read from memory address
-  poke                 : Write to memory address
-  debug                : Set debugging level
-  init                 : Start-up device driver libraries
-  finish               : Close-down device driver libraries
-  has                  : Check for the presence of a device
-  reset                : Reset devices
-  get                  : Get various configuration and status data from a device
-  set                  : Set various configuration data for device
-  configure            : Program component carrier configuration
-  enable               : Enable component carrier
-  disable              : Disable component carrier
-  clear                : Clear various status, alarms, etc.
-  read_reg             : Read device registers
-  read_reg_offset      : Read device registers (with offsets)
-  write_reg            : Write device registers
-  write_reg_offset     : Write device registers (with offsets)
-  dump                 : Dump registers
-  schedule_bf          : Program the beamformer schedule table
-  load                 : Load data from file (e.g. M-Plane beam-weights)
+Available commands...
+    activate            : Activate HW, transitioning to operational state
+    clear               : Clear various status, alarms, etc.
+    configure           : Program component carrier configuration
+    deactivate          : Deactivate HW, transitioning to initialized state
+    debug               : Set debugging level
+    devices             : List devices accessible as Pyro proxies
+    disable             : Disable component carrier
+    dump                : Dump debug information
+    enable              : Enable component carrier
+    exit                : Exit the client script / interactive session
+    finish              : Close-down device driver libraries
+    get                 : Get various configuration and status data from a device
+    has                 : Check for the presence of a device
+    help                : Provide command help and syntax
+    init                : Start-up device driver libraries
+    monitor             : Configure / use monitor block
+    read_reg            : Read device registers
+    read_reg_offset     : Read device registers (with offsets)
+    reset               : Reset devices
+    run                 : Run a command file
+    set                 : Set various configuration data for device
+    slv                 : SLV test commands
+    terminate           : Terminate server
+    trigger             : Trigger HW update, e.g. causing update from 'current' to 'next'
+    version             : Display version of the application
+    wait                : Wait for a short time
+    write_reg           : Write device registers
+    write_reg_offset    : Write device registers (with offsets)
 ~~~
 
-* Run `xorif-app -c "help <topic>"` for help on a particular topic, e.g.
+* Run `xorif-app -c "help <topic>"` o `xorif-app-client.py -c "help <topic>"` for help on a particular topic, e.g.
 
 ~~~
 get : Get various configuration and status data from a device
@@ -122,23 +206,12 @@ get : Get various configuration and status data from a device
   usage: get fhi_cc_alloc <cc>
   usage: get fhi_stats <port>
   usage: get (fhi_alarms | fhi_state | fhi_enabled)
-  usage: get (bf_sw_version | bf_hw_version | bf_hw_internal_rev)
-  usage: get (bf_capabilities | bf_caps)
-  usage: get bf_cc_config <cc>
-  usage: get bf_cc_alloc <cc>
-  usage: get bf_stats
-  usage: get (bf_alarms | bf_stats | bf_enabled)
+  ...
 ~~~
 
 * When executing a command, the app will echo the command and it's returned status, e.g. `set num_rbs 0 275 => status = 0`
     * Status value of 0 means good/pass and any non-zero value is an error code
-    * Refer to the libxorif header file `xorif_api.h` for a list of error codes
-
-* The xorif-app server needs to be initialized before it can correctly accept most commands
-    * This can be done by sending the "init" command, e.g. `xorif-app -c "init"`
-    * Note, the xorif-app server only needs to be initialized once (after starting, or again after sending the "finish" command). However, sending "init" multiple times is not a problem, and it will be ignored by the server.
-    * The xorif-app will attempt to deduce the device name itself from the available platform devices. However, it can also be specified explicitly, e.g. `xorif-app -c "init fhi a0000000.oran_radio_if"`. The device name can be found from the device tree (e.g. system.dts file).
-    * The server can also be set to "auto-initialize" with the `-i` option when starting the xorif-app server.
+    * Refer to the library's API header file (e.g. `xorif_api.h`) for a list of error codes
 
 * Some commands also provide additional information, for example...
 
@@ -177,23 +250,23 @@ ru_ports_map_width = 8
 
 * Many of the commands map directly on to the library API calls. Others, such as "help" and "exit" are handled locally.
 
-* The xorif-app commands also allow the user to read/write device registers, and even to peek/poke memory directly.
+* The xorif-app commands also allow the user to read/write device registers directly.
 
 ## File Mode
 
 * This mode allows basic configuration and interaction with the system using a text file.
 
 * Usage:
-    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s`
-    * Start an instance of the xorif-app "client", specifying the IP address of the "server" and the command e.g. `xorif-app -n 192.168.0.55 -f config1.txt`
+    * Ensure that an instance of the xorif-app "server" is running on the target hardware, e.g. `xorif-app -s` or `xorif-app-server.py`
+    * Start the xorif-app "client" (optionally specifying the IP address and port number of the "server" if needed) and the required file to process, e.g. `xorif-app -f config1.txt` or `xorif-app-client.py -f config.txt`
 
 * File format:
     * A plain text file
     * A maximum of one command per line
     * Line breaks in the middle of commands are not permitted
     * Blank lines are skipped
-    * Hash characters ("#") can be used to provide comment lines in the file
-    * Command syntax is the same as described above
+    * Hash characters ("#") can be used to provide comment lines in the file (everything after the "#" is skipped)
+    * Command syntax is the same as described previously
 
 * Example file (input):
 

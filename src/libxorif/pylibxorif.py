@@ -20,7 +20,6 @@ __copyright__ = "Copyright 2022, Xilinx"
 import os
 import logging
 from cffi import FFI
-import Pyro4
 
 # Use local files if available, otherwise use the standard locations
 lib_path = "./libxorif.so.1" if os.path.exists("./libxorif.so.1") else "/usr/lib/libxorif.so.1"
@@ -98,7 +97,7 @@ class LIBXORIF:
             logging.basicConfig(format="%(name)s> %(levelname)s: %(message)s")
             cls._instance.logger = logging.getLogger("PYXORIF")
             cls._instance.logger.setLevel(logging.ERROR)
-            
+
             # We're going to expose all enums and integer #define constants
             constants = {}
             for a in dir(lib):
@@ -366,22 +365,30 @@ class LIBXORIF:
     # int xorif_set_fhi_dest_mac_addr(int port, const uint8_t address[])
     def xorif_set_fhi_dest_mac_addr(self, port, address):
         self.logger.info(f'xorif_set_fhi_dest_mac_addr: {port}, {address}')
-        array = [int(x, 16) for x in address.split(':')]
-        if len(array) == 6:
-            return lib.xorif_set_fhi_dest_mac_addr(port, array)
-        else:
-            self.logger.error(f'xorif_set_fhi_dest_mac_addr: invalid MAC address format')
+        try:
+            array = [int(x, 16) for x in address.split(':')]
+        except:
             return lib.XORIF_FAILURE
+        else:
+            if len(array) == 6:
+                return lib.xorif_set_fhi_dest_mac_addr(port, array)
+            else:
+                self.logger.error(f'xorif_set_fhi_dest_mac_addr: invalid MAC address format')
+                return lib.XORIF_FAILURE
 
     # int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[])
     def xorif_set_fhi_src_mac_addr(self, port, address):
         self.logger.info(f'xorif_set_fhi_src_mac_addr: {port}, {address}')
-        array = [int(x, 16) for x in address.split(':')]
-        if len(array) == 6:
-            return lib.xorif_set_fhi_src_mac_addr(port, array)
-        else:
-            self.logger.error(f'xorif_set_fhi_src_mac_addr: invalid MAC address format')
+        try:
+            array = [int(x, 16) for x in address.split(':')]
+        except:
             return lib.XORIF_FAILURE
+        else:
+            if len(array) == 6:
+                return lib.xorif_set_fhi_src_mac_addr(port, array)
+            else:
+                self.logger.error(f'xorif_set_fhi_src_mac_addr: invalid MAC address format')
+                return lib.XORIF_FAILURE
 
     # int xorif_set_modu_mode(uint16_t enable)
     def xorif_set_modu_mode(self, enable):
@@ -391,12 +398,16 @@ class LIBXORIF:
     # int xorif_set_modu_dest_mac_addr(uint16_t du, const uint8_t address[], uint16_t id, uint16_t dei, int16_t pcp)
     def xorif_set_modu_dest_mac_addr(self, du, address, id=0, dei=0, pcp=0):
         self.logger.info(f'xorif_set_modu_dest_mac_addr: {du}, {address}, {id}, {dei}, {pcp}')
-        array = [int(x, 16) for x in address.split(':')]
-        if len(array) == 6:
-            return lib.xorif_set_modu_dest_mac_addr(du, array, id, dei, pcp)
-        else:
-            self.logger.error(f'xorif_set_modu_dest_mac_addr: invalid MAC address format')
+        try:
+            array = [int(x, 16) for x in address.split(':')]
+        except:
             return lib.XORIF_FAILURE
+        else:
+            if len(array) == 6:
+                return lib.xorif_set_modu_dest_mac_addr(du, array, id, dei, pcp)
+            else:
+                self.logger.error(f'xorif_set_modu_dest_mac_addr: invalid MAC address format')
+                return lib.XORIF_FAILURE
 
     # int xorif_set_mtu_size(uint16_t size)
     def xorif_set_mtu_size(self, size):
@@ -411,7 +422,7 @@ class LIBXORIF:
     # int xorif_set_fhi_protocol_alt(enum xorif_transport_protocol transport, uint16_t vlan, enum xorif_ip_mode ip_mode)
     def xorif_set_fhi_protocol_alt(self, transport, vlan, ip_mode):
         self.logger.info(f'xorif_set_fhi_protocol_alt: {transport}, {vlan}, {ip_mode}')
-        return lib.xorif_set_fhi_protocol(transport, vlan, ip_mode)
+        return lib.xorif_set_fhi_protocol_alt(transport, vlan, ip_mode)
 
     # int xorif_set_fhi_vlan_tag(int port, uint16_t id, uint16_t dei, uint16_t pcp)
     def xorif_set_fhi_vlan_tag(self, port, id, dei, pcp):
@@ -476,8 +487,7 @@ class LIBXORIF:
     # int xorif_register_fhi_isr(isr_func_t callback)
     def xorif_register_fhi_isr(self, callback):
         self.logger.info(f'xorif_register_fhi_isr: {callback}')
-        self.logger.error(f'Call-back not supported in this version')
-        return lib.XORIF_FAILURE
+        return lib.xorif_register_fhi_isr(callback)
 
     #int xorif_monitor_clear()
     def xorif_monitor_clear(self):
@@ -491,8 +501,8 @@ class LIBXORIF:
 
     # int xorif_monitor_snapshot(void)
     def xorif_monitor_snapshot(self):
-        self.logger.info(f'xorif_monitor_clear:')
-        return lib.xorif_monitor_clear()
+        self.logger.info(f'xorif_monitor_snapshot:')
+        return lib.xorif_monitor_snapshot()
 
     # int xorif_monitor_read(uint8_t counter, uint64_t *value)
     def xorif_monitor_read(self, counter):

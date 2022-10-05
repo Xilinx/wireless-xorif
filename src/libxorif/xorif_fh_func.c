@@ -1001,34 +1001,52 @@ void xorif_fhi_init_device(void)
     fhi_caps.num_eth_ports = READ_REG(CFG_CONFIG_NO_OF_ETH_PORTS);
     fhi_caps.numerologies = 0x1F; // bit-map: u0 - u4
     fhi_caps.extended_cp = 0;
-#if 0
-    // De-compression is downlink
-    fhi_caps.iq_de_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT | IQ_COMP_MODULATION_SUPPORT;
-    fhi_caps.iq_de_comp_bfp_widths = 0x5200); // 9, 12, 14
-    fhi_caps.iq_de_comp_mod_widths = 0x3E; // 1, 2, 3, 4, 5
 
-    // Compression is Uplink
-    fhi_caps.iq_comp_methods = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
-    fhi_caps.iq_comp_bfp_widths = 0x5200); // 9, 12, 14
-#else
-    // De-compression is downlink
-    int de_comp = 0;
-    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
-    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
-    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC) ? IQ_COMP_BLOCK_SCALE_SUPPORT : 0;
-    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU) ? IQ_COMP_U_LAW_SUPPORT : 0;
-    de_comp |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP) ? IQ_COMP_MODULATION_SUPPORT : 0;
-    fhi_caps.iq_de_comp_methods = de_comp;
-    fhi_caps.iq_de_comp_bfp_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS);
-    fhi_caps.iq_de_comp_mod_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS);
+    // De-compression (i.e. downlink)
+    uint16_t modes;
+    uint16_t bfp_widths;
+    uint16_t mod_widths;
+    if (READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED))
+    {
+        INFO("Using in-core decompression\n");
+        modes = 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BSC) ? IQ_COMP_BLOCK_SCALE_SUPPORT : 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MU) ? IQ_COMP_U_LAW_SUPPORT : 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP) ? IQ_COMP_MODULATION_SUPPORT : 0;
+        bfp_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS);
+        mod_widths = READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS);
+    }
+    else
+    {
+        INFO("Using external decompression\n");
+        modes = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT | IQ_COMP_MODULATION_SUPPORT;
+        bfp_widths = 0xFFFF;
+        mod_widths = 0x3E;
+    }
+    fhi_caps.iq_de_comp_methods = modes;
+    fhi_caps.iq_de_comp_bfp_widths = bfp_widths;
+    fhi_caps.iq_de_comp_mod_widths = mod_widths;
 
-    // Compression is Uplink
-    int comp = 0;
-    comp |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
-    comp |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
-    fhi_caps.iq_comp_methods = comp;
-    fhi_caps.iq_comp_bfp_widths = READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS);
-#endif
+    // Compression (i.e. uplink)
+    if (READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED))
+    {
+        INFO("Using in-core compression\n");
+        modes = 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP) ? IQ_COMP_NONE_SUPPORT : 0;
+        modes |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP) ? IQ_COMP_BLOCK_FP_SUPPORT : 0;
+        bfp_widths = READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS);
+    }
+    else
+    {
+        INFO("Using external compression\n");
+        modes = IQ_COMP_NONE_SUPPORT | IQ_COMP_BLOCK_FP_SUPPORT;
+        bfp_widths = 0xFFFF;
+    }
+    fhi_caps.iq_comp_methods = modes;
+    fhi_caps.iq_comp_bfp_widths = bfp_widths;
+
     fhi_caps.no_framer_ss = READ_REG(CFG_CONFIG_NO_OF_FRAM_ANTS);
     fhi_caps.no_deframer_ss = READ_REG(CFG_CONFIG_NO_OF_DEFM_ANTS);
     fhi_caps.max_framer_ethernet_pkt = READ_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX);
@@ -1736,11 +1754,17 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_LIMIT_RU_I_W, 8);
     WRITE_REG(CFG_CONFIG_LIMIT_RU_O_W, 5);
     WRITE_REG(CFG_CONFIG_MAP_TABLE_W, 8); // Use 0, 8, 11 ?
+#ifdef IN_CORE_COMP
+    WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED, IN_CORE_COMP); // 0 = external, 1 = in-core
+#endif
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS, 0x3E); // 1, 2, 3, 4, 5
+#ifdef IN_CORE_COMP
+    WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED, IN_CORE_COMP); // 0 = external, 1 = in-core
+#endif
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14

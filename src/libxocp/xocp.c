@@ -48,7 +48,8 @@ int xocp_trace = 0;
 xocp_state_t xocp_state[XOCP_NUM_INSTANCES];
 
 #ifndef HW
-static const char *compatible = "xlnx,o-pxxch-1.0";
+//static const char *compatible = "xlnx,o-pxxch-1.0";
+static const char *compatible = "xlnx,xorif-chan-proc-1.0";
 #endif
 
 /****************************/
@@ -973,4 +974,33 @@ int xocp_monitor_read(uint16_t instance, uint8_t counter, uint64_t *value)
 
     return XOCP_SUCCESS;
 }
+
+#ifdef EXTRA_DEBUG
+/**
+ * @brief Inject error for testing purposes.
+ * @param instance Device instance ID (0..N)
+ * @param status Interrupt status bits
+ * @return
+ *      - METAL_IRQ_HANDLED
+ *      - METAL_IRQ_NOT_HANDLED
+ * @note
+ * This function is for testing only, and is not exposed in the
+ * API header file.
+ */
+int xocp_test_error_injections(uint16_t instance, uint32_t status)
+{
+#ifdef NO_HW
+    ASSERT_NV(instance < XOCP_NUM_INSTANCES, XOCP_INVALID_INSTANCE);
+    xocp_state_t *ptr = &xocp_state[instance];
+
+    WR_REG_ALT(ptr->instance, ISR_STATUS, status);
+    int result = xocp_irq_handler(99, (void *)ptr);
+    WR_REG_ALT(ptr->instance, ISR_STATUS, 0);
+    return result;
+#else
+    return XOCP_NOT_SUPPORTED;
+#endif
+}
+#endif // EXTRA_DEBUG
+
 /** @} */

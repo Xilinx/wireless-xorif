@@ -88,8 +88,8 @@ const char *get_device_name(const char *dev_name, const char *compatible)
 
         if (dev_name)
         {
-            // Check for existence of the given device name, supporting
-            // partial match, e.g. deviceXYZ matches a0000000.deviceXYZ
+            // Look for devices with the given device name
+            // Partial match allowed, e.g. "devXYZ" matches "a0000000.devXYZ"
             if (strstr(entry->d_name, dev_name))
             {
                 // Matched given device name
@@ -100,14 +100,15 @@ const char *get_device_name(const char *dev_name, const char *compatible)
 
         if (compatible)
         {
-            // Look for devices with the given "compatible" property
             char property[MAX_PATH_LENGTH];
 
+            // Look for devices with the given compatible property
             if (get_node_property(entry->d_name,
                                   "compatible",
                                   property,
                                   MAX_PATH_LENGTH))
             {
+                // Partial match allowed, e.g. "dev-xyz" matches "dev-xyz-1.0"
                 if (strstr(property, compatible))
                 {
                     // Matched compatible property
@@ -117,10 +118,10 @@ const char *get_device_name(const char *dev_name, const char *compatible)
             }
         }
 
-        if ((dev_name && name_match && comp_match) || (!dev_name && comp_match))
+        if ((dev_name && name_match) || (!dev_name && comp_match))
         {
             // TODO - could keep searching, e.g. for other matching devices
-            // but for now this will do
+            // TODO - always match comp_match too? Or leave flexible?
             match = true;
             strncpy(buff, entry->d_name, MAX_PATH_LENGTH);
             break;

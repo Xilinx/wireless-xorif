@@ -22,28 +22,23 @@ import logging
 import argparse
 import Pyro4
 import time
+import tty
+import termios
 from pprint import pprint
 
 PROG = 'xorif-app-client'
 PROG_SHORT = "XORIF-APP"
-VERSION = '1.0'
+VERSION = '1.1'
 
 SUCCESS = 0
 FAIL = 1
 EXIT = 2
 
 logger = logging.getLogger(PROG_SHORT)
+
 handles = {}
 commands = []
-
-"""
-TODO
-add reverse-look-up of error codes
-add BF
-add OCP
-add OPRACH
-add better output
-"""
+history = []
 
 def match(s1, s2):
     """Perform case-insensitive string match."""
@@ -145,7 +140,7 @@ def debug_cmd(args):
                 handle.set_log_level(logging_level)
         return SUCCESS
 
-    # debug (fhi | bf | ocp | ...) <level>
+    # debug (fhi | ocp | ...) <level>
     elif len(args) == 3:
         name = args[1].upper()
         level = integer(args[2])
@@ -189,7 +184,7 @@ def init_cmd(args):
                 result &= (instance >= 0)
         return SUCCESS if result else FAIL
 
-    # init (fhi | bf | ocp | ...) [<device>]
+    # init (fhi | ocp | ...) [<device>]
     elif len(args) == 2 or len(args) == 3:
         name = args[1].upper()
         if len(args) == 3:
@@ -219,7 +214,7 @@ def finish_cmd(args):
                handle.xoprach_finish(0)
         return SUCCESS
 
-    # finish (fhi | bf | ocp | ...)
+    # finish (fhi | ocp | ...)
     elif len(args) == 2:
         name = args[1].upper()
         if name in handles:
@@ -233,7 +228,7 @@ def finish_cmd(args):
             return SUCCESS
 
 def has_cmd(args):
-    # has (fhi | bf | ocp | ...)
+    # has (fhi | ocp | ...)
     if len(args) == 2:
         print(f"{args[1].upper() in handles}")
         return SUCCESS
@@ -251,7 +246,7 @@ def reset_cmd(args):
                 result &= (handle.xoprach_reset(0) == SUCCESS)
         return SUCCESS if result else FAIL
 
-    # reset (fhi | bf | ocp | ...) [<mode>]
+    # reset (fhi | ocp | ...) [<mode>]
     elif len(args) == 2 or len(args) == 3:
         name = args[1].upper()
         mode = integer(args[2]) if len(args) == 3 else 0
@@ -272,8 +267,6 @@ def get_cmd(args):
                 for name, handle in handles.items():
                     if name == "FHI":
                         print(f"{name}: {handle.xorif_get_sw_version()}")
-                    elif name == "BF":
-                        print(f"{name}: {handle.xobf_get_sw_version()}")
                     elif name == "OCP":
                         print(f"{name}: {handle.xocp_get_sw_version()}")
                     elif name == "OPRACH":
@@ -343,18 +336,18 @@ def get_cmd(args):
         if match(args[1], "fhi_cc_alloc"):
             if len(args) == 3 and "FHI" in handles:
                 handle = handles["FHI"]
-                result, config = handle.xorif_get_fhi_cc_alloc(integer(args[2]))
+                result, alloc = handle.xorif_get_fhi_cc_alloc(integer(args[2]))
                 if result == SUCCESS:
-                    pprint(config)
+                    pprint(alloc)
                 return result
 
         # get fhi_stats <port>
         if match(args[1], "fhi_stats"):
             if len(args) == 3 and "FHI" in handles:
                 handle = handles["FHI"]
-                result, config = handle.xorif_get_fhi_eth_stats(integer(args[2]))
+                result, stats = handle.xorif_get_fhi_eth_stats(integer(args[2]))
                 if result == SUCCESS:
-                    pprint(config)
+                    pprint(stats)
                 return result
 
         # get ocp_sw_version
@@ -940,7 +933,7 @@ def configure_cmd(args):
                 result &= (handle.xorif_configure_cc(cc) == SUCCESS)
         return SUCCESS if result else FAIL
 
-    # configure (fhi | bf) <cc>
+    # configure (fhi | ...) <cc>
     elif len(args) == 3:
         name = args[1].upper()
         cc = integer(args[2])
@@ -959,7 +952,7 @@ def enable_cmd(args):
                 result &= (handle.xorif_enable_cc(cc) == SUCCESS)
         return SUCCESS if result else FAIL
 
-    # enable (fhi | bf | ...) <cc>
+    # enable (fhi | ...) <cc>
     elif len(args) == 3:
         name = args[1].upper()
         cc = integer(args[2])
@@ -978,7 +971,7 @@ def disable_cmd(args):
                 result &= (handle.xorif_disable_cc(cc) == SUCCESS)
         return SUCCESS if result else FAIL
 
-    # disable (fhi | bf | ...) <cc>
+    # disable (fhi | ...) <cc>
     elif len(args) == 3:
         name = args[1].upper()
         cc = integer(args[2])
@@ -1015,7 +1008,7 @@ def clear_cmd(args):
                 return handle.xoprach_clear_event_status(0)
 
 def read_reg_cmd(args):
-    # read_reg (fhi | bf | ...) <name>
+    # read_reg (fhi | ...) <name>
     if len(args) == 3:
         name = args[1].upper()
         reg = args[2]
@@ -1024,8 +1017,6 @@ def read_reg_cmd(args):
             handle = handles[name]
             if name == "FHI":
                 result, value = handle.xorif_read_fhi_reg(reg)
-            elif name == "BF":
-                result, value = handle.xobf_read_bf_reg(reg)
             elif name == "OCP":
                 result, value = handle.xocp_read_reg(0, reg)
             elif name == "OPRACH":
@@ -1035,7 +1026,7 @@ def read_reg_cmd(args):
         return result
 
 def read_reg_offset_cmd(args):
-    # read_reg_offset (fhi | bf | ocp | ...) <name> <offset>
+    # read_reg_offset (fhi | ocp | ...) <name> <offset>
     if len(args) == 4:
         name = args[1].upper()
         reg = args[2]
@@ -1045,8 +1036,6 @@ def read_reg_offset_cmd(args):
             handle = handles[name]
             if name == "FHI":
                 result, value = handle.xorif_read_fhi_reg_offset(reg, offset)
-            elif name == "BF":
-                result, value = handle.xobf_read_bf_reg_offset(reg, offset)
             elif name == "OCP":
                 result, value = handle.xocp_read_reg(0, reg, offset)
             elif name == "OPRACH":
@@ -1056,7 +1045,7 @@ def read_reg_offset_cmd(args):
         return result
 
 def write_reg_cmd(args):
-    # write_reg (fhi | bf | ocp | ...) <name> <value>
+    # write_reg (fhi | ocp | ...) <name> <value>
     if len(args) == 4:
         name = args[1].upper()
         reg = args[2]
@@ -1065,15 +1054,13 @@ def write_reg_cmd(args):
             handle = handles[name]
             if name == "FHI":
                 return handle.xorif_write_fhi_reg(reg, value)
-            elif name == "BF":
-                return handle.xobf_write_bf_reg(reg, value)
             elif name == "OCP":
                 return handle.xocp_write_reg(0, reg, value)
             elif name == "OPRACH":
                 return handle.xoprach_write_reg(0, reg, value)
 
 def write_reg_offset_cmd(args):
-    # write_reg_offset (fhi | bf | ocp | ...) <name> <offset> <value>
+    # write_reg_offset (fhi | ocp | ...) <name> <offset> <value>
     if len(args) == 5:
         name = args[1].upper()
         reg = args[2]
@@ -1083,8 +1070,6 @@ def write_reg_offset_cmd(args):
             handle = handles[name]
             if name == "FHI":
                 return handle.xorif_write_fhi_reg_offset(reg, offset, value)
-            elif name == "BF":
-                return handle.xobf_write_bf_reg_offset(reg, offset, value)
             elif name == "OCP":
                 return handle.xocp_write_reg_offset(0, reg, offset, value)
             elif name == "OPRACH":
@@ -1172,6 +1157,60 @@ def deactivate_cmd(args):
             if name == "OPRACH":
                 return handle.xoprach_deactivate(0)
 
+def slv_cmd(args):
+    # slv (clear | stats | monitor | ...)
+    if len(args) == 2:
+        if match(args[1], "clear"):
+            for name, handle in handles.items():
+                if name == "FHI":
+                    handle.xorif_clear_fhi_stats()
+                    handle.xorif_monitor_clear()
+                elif name == "OCP":
+                    handle.xocp_monitor_clear(0)
+            return SUCCESS
+        elif match(args[1], "stats"):
+            for name, handle in handles.items():
+                if name == "FHI":
+                    stats = []
+                    caps = handle.xorif_get_capabilities()
+                    for p in range(caps["num_eth_ports"]):
+                        result, temp = handle.xorif_get_fhi_eth_stats(p)
+                        if result == SUCCESS:
+                            stats.append(temp)
+                    if stats:
+                        print(f"{'Counter':25}", end="")
+                        for i in range(len(stats)):
+                            print(f"{i:>15}", end="")
+                        print()
+                        print("="*(len(stats) * 10 + 25))
+                        for key in stats[0].keys():
+                            print(f"{key:25}", end="")
+                            for i in range(len(stats)):
+                                print(f"{stats[i][key]:>15}", end="")
+                            print()
+            return SUCCESS
+        elif match(args[1], "monitor"):
+            stats = {}
+            for name, handle in handles.items():
+                if name == "FHI":
+                    result = handle.xorif_monitor_snapshot()
+                    if result == SUCCESS:
+                        for i in range(2):
+                            result, temp = handle.xorif_monitor_read(i)
+                            if result == SUCCESS:
+                                stats[f"FHI counter[{i}]"] = temp
+                elif name == "OCP":
+                    result = handle.xocp_monitor_snapshot(0)
+                    if result == SUCCESS:
+                        for i in range(2):
+                            result, temp = handle.xocp_monitor_read(0, i)
+                            if result == SUCCESS:
+                                stats[f"OCP counter[{i}]"] = temp
+            if stats:
+                for k, v in stats.items():
+                    print(f"{k}: {v}")
+            return SUCCESS
+
 def parse(command):
     """
     Parse command (space-separated tokens).
@@ -1216,7 +1255,7 @@ def parse(command):
             logger.error(f"Unknown command: '{command}'")
             #help_cmd(["help"])
         else:
-            logger.error(f"Malformed / invalid command: '{command}'")
+            logger.error(f"Error executing command: '{command}'")
             #help_cmd(["help", args[0]])
         return FAIL
     else:
@@ -1229,6 +1268,104 @@ def do_command(command):
     """
     return parse(command)
 
+def read_line_tty(prompt):
+    print(prompt, end="", flush=True)
+    history_pos = len(history)
+    try:
+        # Set up the terminal as "cbreak" mode
+        fd = sys.stdin.fileno()
+        old = termios.tcgetattr(fd)
+        new = termios.tcgetattr(fd)
+        new[tty.LFLAG] &= ~(termios.ECHO | termios.ICANON)
+        new[tty.CC][termios.VMIN] = 1
+        new[tty.CC][termios.VTIME] = 0
+        termios.tcsetattr(fd, termios.TCSAFLUSH, new)
+        buffer = ""
+        pos = 0
+        while True:
+            ch = sys.stdin.read(1)
+            if ch == '\r' or ch == '\n':
+                ch = "RETURN"
+            elif ord(ch) == 127:
+                ch = "BACKSPACE"
+            elif ch == '\x1b':
+                # Escape sequences
+                esc = sys.stdin.read(2)
+                if esc[0] == '[':
+                    if esc[1].isalpha():
+                        if esc[1] == 'D':
+                            ch = "LEFT"
+                        elif esc[1] == 'C':
+                            ch = "RIGHT"
+                        elif esc[1] == 'A':
+                            ch = "UP"
+                        elif esc[1] == 'B':
+                            ch = "DOWN"
+                        elif esc[1] == 'H':
+                            ch = "HOME"
+                        elif esc[1] == 'F':
+                            ch = "END"
+                    elif esc[1].isdigit():
+                        esc += sys.stdin.read(1)
+                        if esc[2] == '~':
+                            if esc[1] == '3':
+                                ch = "DELETE"
+                            elif esc[1] == '1' or esc[1] == '7':
+                                ch = "HOME"
+                            elif esc[1] == '4' or esc[1] == '8':
+                                ch = "END"
+                        elif esc[2] == ';':
+                            esc += sys.stdin.read(2)
+            elif ch.isprintable():
+                buffer = buffer[:pos] + ch + buffer[pos:]
+                pos +=1
+
+            if ch == "BACKSPACE":
+                if pos > 0:
+                    buffer = buffer[:pos-1] + buffer[pos:]
+                    pos -= 1
+            elif ch == "DELETE":
+                if pos < len(buffer):
+                    buffer = buffer[:pos] + buffer[pos+1:]
+            elif ch == "LEFT":
+                if pos > 0:
+                    pos -= 1
+            elif ch == "RIGHT":
+                if pos < len(buffer):
+                    pos += 1
+            elif ch == "UP":
+                if history_pos > 0:
+                    history_pos -= 1
+                    buffer = history[history_pos]
+                    pos = len(buffer)
+            elif ch == "DOWN":
+                if history_pos < len(history) - 1:
+                    history_pos += 1
+                    buffer = history[history_pos]
+                    pos = len(buffer)
+                elif history_pos == len(history) - 1:
+                    history_pos += 1
+                    buffer = ""
+                    pos = len(buffer)
+            elif ch == "HOME":
+                pos = 0
+            elif ch == "END":
+                pos = len(buffer)
+            elif ch == "RETURN":
+                buffer = buffer.strip()
+                if buffer:
+                    history.append(buffer)
+                return buffer
+
+            # Display prompt and buffer and position cursor
+            print(f"\x1b[?25l\r{prompt}{buffer}\x1b[K\x1b[?25h", end="", flush=True)
+            if len(buffer) > pos:
+                print(f"\x1b[{len(buffer) - pos}D", end="", flush=True)
+    finally:
+        # Restore original terminal settings
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+        print()
+
 def do_interactive(_):
     """
     Interactive mode.
@@ -1237,10 +1374,17 @@ def do_interactive(_):
     """
     try:
         while True:
-            if parse(input('> ')) == EXIT:
+            if sys.stdin.isatty():
+                buffer = read_line_tty("> ")
+            else:
+                buffer = input("> ")
+            if parse(buffer) == EXIT:
                 return EXIT
     except KeyboardInterrupt:
-        logger.error("Exiting...")
+        logger.info("Exiting (Ctrl-C)...")
+        return EXIT
+    except EOFError as e:
+        logger.info("Exiting (EOF)...")
         return EXIT
     except Exception as e:
         logger.error(f"Error: {e}")
@@ -1281,27 +1425,27 @@ cmds.append(("clear", None, "?clear (fhi_alarms | fhi_stats | ru_ports_table)"))
 cmds.append(("clear", None, "?clear ocp_events"))
 cmds.append(("clear", None, "?clear oprach_events"))
 cmds.append(("configure", configure_cmd, "Program component carrier configuration"))
-cmds.append(("configure", None, "?configure (fhi | bf) <cc>"))
+cmds.append(("configure", None, "?configure (fhi | ...) <cc>"))
 cmds.append(("configure", None, "?configure <cc>"))
 cmds.append(("deactivate", deactivate_cmd, "Deactivate HW, transitioning to initialized state"))
 cmds.append(("deactivate", None, "?deactivate oprach"))
 cmds.append(("debug", debug_cmd, "Set debugging level"))
-cmds.append(("debug", None, "?debug (fhi | bf | ocp | ...) <level = 0..2>"))
+cmds.append(("debug", None, "?debug (fhi | ocp | ...) <level = 0..2>"))
 cmds.append(("debug", None, "?debug <level = 0..2>"))
 cmds.append(("devices", devices_cmd, "List devices accessible as Pyro proxies"))
 cmds.append(("devices", None, "?devices"))
 cmds.append(("disable", disable_cmd, "Disable component carrier"))
-cmds.append(("disable", None, "?disable (fhi | bf) <cc>"))
+cmds.append(("disable", None, "?disable (fhi | ...) <cc>"))
 cmds.append(("disable", None, "?disable <cc>"))
 cmds.append(("dump", dump_cmd, "Dump debug information"))
-cmds.append(("dump", None, "?dump (fhi | bf | ocp | ...)"))
+cmds.append(("dump", None, "?dump (fhi | ocp | ...)"))
 cmds.append(("enable", enable_cmd, "Enable component carrier"))
-cmds.append(("enable", None, "?enable (fhi | bf) <cc>"))
+cmds.append(("enable", None, "?enable (fhi | ...) <cc>"))
 cmds.append(("enable", None, "?enable <cc>"))
 cmds.append(("exit", exit_cmd, "Exit the client script / interactive session"))
 cmds.append(("exit", None, "?exit"))
 cmds.append(("finish", finish_cmd, "Close-down device driver libraries"))
-cmds.append(("finish", None, "?finish (fhi | bf | ocp | ...)"))
+cmds.append(("finish", None, "?finish (fhi | ocp | ...)"))
 cmds.append(("finish", None, "?finish"))
 cmds.append(("get", get_cmd, "Get various configuration and status data from a device"))
 cmds.append(("get", None, "?get (fhi_alarms | fhi_state | fhi_enabled)"))
@@ -1323,24 +1467,24 @@ cmds.append(("get", None, "?get oprach_cc_cfg"))
 cmds.append(("get", None, "?get oprach_rcid_cfg"))
 cmds.append(("get", None, "?get oprach_trigger_cfg"))
 cmds.append(("has", has_cmd, "Check for the presence of a device"))
-cmds.append(("has", None, "?has (fhi | bf | ocp | ...)"))
+cmds.append(("has", None, "?has (fhi | ocp | ...)"))
 cmds.append(("init", init_cmd, "Start-up device driver libraries"))
-cmds.append(("init", None, "?init (fhi | bf | ocp | ...) [<device>]"))
+cmds.append(("init", None, "?init (fhi | ocp | ...) [<device>]"))
 cmds.append(("init", None, "?init"))
 cmds.append(("magic", magic_cmd, None))
 cmds.append(("monitor", monitor_cmd, "Configure / use monitor block"))
 cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) clear"))
 cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) read <counter>"))
-cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) select <stream>"))
+cmds.append(("monitor", None, "?monitor (fhi | ...) select <stream>"))
 cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) snapshot"))
 cmds.append(("quit", exit_cmd, None))
 cmds.append(("read_reg", read_reg_cmd, "Read device registers"))
-cmds.append(("read_reg", None, "?read_reg (fhi | bf | ocp | ...) <name>"))
+cmds.append(("read_reg", None, "?read_reg (fhi | ocp | ...) <name>"))
 cmds.append(("read_reg_offset", read_reg_offset_cmd, "Read device registers (with offsets)"))
-cmds.append(("read_reg_offset", None, "?read_reg_offset (fhi | bf | ocp | ...) <name> <offset>"))
+cmds.append(("read_reg_offset", None, "?read_reg_offset (fhi | ocp | ...) <name> <offset>"))
 cmds.append(("reset", reset_cmd, "Reset devices"))
 cmds.append(("reset", None, "?reset"))
-cmds.append(("reset", None, "?reset (fhi | bf | ocp | ...) [<mode = 0|1>]"))
+cmds.append(("reset", None, "?reset (fhi | ocp | ...) [<mode = 0|1>]"))
 cmds.append(("run", run_cmd, "Run a command file"))
 cmds.append(("run", None, "?run <file>"))
 cmds.append(("set", set_cmd, "Set various configuration data for device"))
@@ -1393,9 +1537,11 @@ cmds.append(("version", None, "?version"))
 cmds.append(("wait", wait_cmd, "Wait for a short time"))
 cmds.append(("wait", None, "?wait <seconds>"))
 cmds.append(("write_reg", write_reg_cmd, "Write device registers"))
-cmds.append(("write_reg", None, "?write_reg (fhi | bf | ocp | ...) <name> <value>"))
+cmds.append(("write_reg", None, "?write_reg (fhi | ocp | ...) <name> <value>"))
 cmds.append(("write_reg_offset", write_reg_offset_cmd, "Write device registers (with offsets)"))
-cmds.append(("write_reg_offset", None, "?write_reg_offset (fhi | bf | ocp | ...) <name> <offset> <value>"))
+cmds.append(("write_reg_offset", None, "?write_reg_offset (fhi | ocp | ...) <name> <offset> <value>"))
+cmds.append(("slv", slv_cmd, "SLV test commands"))
+cmds.append(("slv", None, "?slv (clear | stats | monitor | ...)"))
 
 if __name__ == "__main__":
     # Configure command line argument parser
@@ -1403,18 +1549,18 @@ if __name__ == "__main__":
                                      description='Python O-RAN Radio Interface client')
     parser.add_argument('-V', '--Version', action='version',
                         version=f'{PROG} {VERSION}')
-    parser.add_argument('-v', '--verbose', action='count', default=0,
-                        help='set verbosity level, e.g. -v, -vv, -vvv')
+    parser.add_argument('-v', '--verbose', type=int, action='store', default=1,
+                        help='set verbosity level (0 = quiet, 1 = normal, 2 = high)')
     parser.add_argument('-H', '--host', type=str, default='localhost',
                         help='IP address (default is localhost)')
     parser.add_argument('-P', '--port', type=int, default=9090,
                         help='port number (default is 9090)')
     parser.add_argument('-I', '--interactive', action='store_true',
                         help='process commands in interactive mode')
-    parser.add_argument('-f', '--file', type=str,
+    parser.add_argument('-f', '--file', type=str, nargs='+',
                         help='process commands from file')
-    parser.add_argument('-c', '--command', metavar='CMD', type=str,
-                        help='process command directly')
+    parser.add_argument('-c', '--cmd', type=str, nargs='+',
+                        help='process command directly', metavar='CMD')
 
     # Parse command line arguments
     # Note, parse_args() exits on -h and -V or if an error occurs
@@ -1422,20 +1568,17 @@ if __name__ == "__main__":
 
     # Configure logging
     logging.basicConfig(format="%(name)s> %(levelname)s: %(message)s")
-    if args.verbose >= 3:
+    if args.verbose >= 2:
         level = logging.DEBUG
-    elif args.verbose == 2:
-        level = logging.INFO
     elif args.verbose == 1:
         level = logging.INFO
     else:
-        level = logging.ERROR
+        level = logging.WARNING
     logger.setLevel(level)
 
     # Mapping of 'nicknames' to formal class names
     targets = {
         "FHI": "XORIF",
-        "BF": "XOBF",
         "OCP": "XOCP",
         "OPRACH": "XOPRACH",
     }
@@ -1449,7 +1592,7 @@ if __name__ == "__main__":
         except Pyro4.errors.CommunicationError:
             pass
         except Exception as e:
-             logger.error(f"Error: {e}")
+             logger.warning(f"Error: {e}")
         else:
             # If no error was raised, then we have a valid/active object
             handles[nickname] = handle
@@ -1461,10 +1604,10 @@ if __name__ == "__main__":
     # Commands can be processed from multiple sources
     # We'll process them in the order: command line, file, interactive
     actions = []
-    if args.command:
-        actions.append((do_command, args.command))
+    if args.cmd:
+        actions += [(do_command, c) for c in args.cmd]
     if args.file:
-        actions.append((do_file, args.file))
+        actions += [(do_file, c) for c in args.file]
     if args.interactive:
         actions.append((do_interactive, None))
 
