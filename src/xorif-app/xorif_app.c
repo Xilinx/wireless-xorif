@@ -42,7 +42,7 @@ int remote_target = 0;
 int port = 5001; // Default port
 const char *ip_addr_name = "127.0.0.1"; // Default IP address
 const char *pid_file = "/var/run/xorif-app.pid";
-const char *copy_right = "(c) Copyright 2019 - 2022 Xilinx, Inc. All rights reserved.";
+const char *copy_right = "(c) Copyright 2019 - 2022 Advanced Micro Devices, Inc. All rights reserved.";
 #ifdef XNRAAS_APP
 const char * const app_server_str = "XNRAAS-APP-SRV";
 const char * const app_client_str = "XNRAAS-APP-CLI";

@@ -6,4 +6,4 @@ This directory is for recipe files for the yocto build system (used by PetaLinux
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022  Advanced Micro Devices, Inc.  All rights reserved.

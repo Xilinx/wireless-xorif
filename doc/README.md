@@ -25,4 +25,4 @@ For more information on Doxygen refer to:
 
 ---
 
-Copyright (C) 2019 - 2022  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022  Advanced Micro Devices, Inc.  All rights reserved.

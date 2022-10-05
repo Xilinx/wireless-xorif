@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020 - 2022 Xilinx, Inc.
+# Copyright 2020 - 2022 Advanced Micro Devices, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import sys
 import logging
 import argparse
 import Pyro4
+import os
 
 sys.path.append('/usr/share/xorif')
 
@@ -35,8 +36,8 @@ if __name__ == "__main__":
                         version=f'{PROG} {VERSION}')
     parser.add_argument('-v', '--verbose', type=int, action='store', default=1,
                         help='set verbosity level (0 = quiet, 1 = normal, 2 = high)')
-    parser.add_argument('-H', '--host', type=str, default='localhost',
-                        help='IP address (default is localhost)')
+    parser.add_argument('-N', '--net', type=str,
+                        help='Network device to use for IP address (default is localhost IP address))')
     parser.add_argument('-P', '--port', type=int, default=9090,
                         help='port number (default is 9090)')
     parser.add_argument('--fhi', default=True, action='store_true',
@@ -66,6 +67,15 @@ if __name__ == "__main__":
         level = logging.WARNING
     logger.setLevel(level)
 
+    # Get the IP address
+    ipaddr = "localhost"
+    if args.net:
+        try:
+            ipaddr = os.popen(f'ip addr show {args.net}').read().split("inet ")[1].split("/")[0]
+        except:
+            logger.error(f"Network device {args.net} not found, defaulting to localhost")
+    logger.info(f"Using IP address: {ipaddr}")
+
     # Expose selected Pyro objects
     exposed = {}
     if args.fhi:
@@ -94,7 +104,7 @@ if __name__ == "__main__":
         # Start the Pyro server daemon
         Pyro4.Daemon.serveSimple(
                 exposed,
-                host=args.host,
+                host=ipaddr,
                 port=args.port,
                 ns=False)
     except Exception as e:

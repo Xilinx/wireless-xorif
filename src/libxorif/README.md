@@ -320,4 +320,4 @@ LIBXORIF> READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] => 0x19 (25)
 
 ---
 
-Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.
+Copyright (C) 2019 - 2022 Advanced Micro Devices, Inc. All rights reserved.

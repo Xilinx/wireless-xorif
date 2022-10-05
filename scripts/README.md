@@ -104,4 +104,4 @@ make zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs
 
 ---
 
-Copyright (C) 2019 - 2021  Xilinx, Inc.  All rights reserved.
+Copyright (C) 2019 - 2022  Advanced Micro Devices, Inc.  All rights reserved.

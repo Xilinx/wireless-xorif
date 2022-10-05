@@ -2,6 +2,7 @@
 
 * The xorif-app is an test/demo application, which uses the hardware device libraries (e.g. libxorif.so) to interface with the O-RAN Radio Interface IP core(s).
 
+
 * Prior to the 2022.2 release, the xorif-app application was a compiled executable. However, since the 2022.2 release a Python-based version of the application is also provided. There are some minor differences in how the legacy application and the Python application operate, but the fuctionality is more or less equivalent.
 
 * The xorif-app can operate as either a "server" or a "client".
@@ -75,7 +76,8 @@ Usage: xorif-app [-c | -f <file> |-I | -s] [-n <ip_addr>] [-p <port>] [<options>
 * Usage:
 
 ~~~
-usage: xorif-app-server [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [--fhi] [--no-fhi] [--ocp] [--no-ocp] [--oprach] [--no-oprach]
+usage: xorif-app-server [-h] [-V] [-v VERBOSE] [-N NET] [-P PORT] [--fhi]
+                        [--no-fhi] [--ocp] [--no-ocp] [--oprach] [--no-oprach]
 
 Python O-RAN Radio Interface server
 
@@ -84,7 +86,8 @@ optional arguments:
   -V, --Version         show program's version number and exit
   -v VERBOSE, --verbose VERBOSE
                         set verbosity level (0 = quiet, 1 = normal, 2 = high)
-  -H HOST, --host HOST  IP address (default is localhost)
+  -N NET, --net NET     Network device to use for IP address (default is
+                        localhost IP address))
   -P PORT, --port PORT  port number (default is 9090)
   --fhi                 with FHI support (default is yes)
   --no-fhi              without FHI support
@@ -95,7 +98,8 @@ optional arguments:
 ~~~
 
 ~~~
-usage: xorif-app-client [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [-I] [-f FILE [FILE ...]] [-c CMD [CMD ...]]
+usage: xorif-app-client [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [-I]
+                        [-f FILE [FILE ...]] [-c CMD [CMD ...]]
 
 Python O-RAN Radio Interface client
 
@@ -115,8 +119,8 @@ optional arguments:
 
 * Server:
     * Typical usage: `xorif-app-server.py`
-    * Typical usage: `xorif-app-server.py -H 192.168.10.10 -P 9090`
-    * Use `-H` or `--host` to set the IP address (default is the localhost, i.e. 127.0.0.1)
+    * Typical usage: `xorif-app-server.py -N eth0 -P 9090`
+    * Use `-N` or `--net` to select the network device used for determining the IP address (default is to use localhost IP address, i.e. 127.0.0.1)
     * Use `-P` or `--port` to set the TCP/IP port number
 
 * Client:
@@ -131,7 +135,7 @@ optional arguments:
 * Note on server/client ports
     * It is important that the xorif-app server and client are using the same port number to communicate
     * The xorif-app server will not start if the specified port is not available (e.g. in use by another xorif-app instance). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.
-    * The default IP address used is the localhost. However, when using localhost, the server only accepts client connections from the localhost. If you want to conect from a remote system, then you should specify the actual IP address (using `--host` / `-H` option) for both server and client.
+    * The default IP address used is the localhost. However, when using localhost, the server only accepts client connections from the localhost. If you want to connect from a remote system, then you should specify the actual IP address. You can do this by specifying a network device on the server with the `--net` / `-N` option, and the IP address on the client with the `--host` / `-H` option.
 
 ## Command-Line Mode
 
@@ -326,7 +330,7 @@ enable 1 => status = 0
 ## File Mode Simple Starter and PG370 examples
 
 * Simple uncompressed data example (input):
-    * This is a good config to get started with:
+    * This is a good configuration to get started with:
     * Limit to one Component Carrier, 1 Spatial Stream and a limited number of RB'S.
     * Compared to the detail in the PG370, using the API removes the need to manually program these registers.
 
@@ -496,4 +500,4 @@ enable 0 => status = 0
 
 ---
 
-Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved.
+Copyright (C) 2019 - 2022 Advanced Micro Devices, Inc. All rights reserved.
