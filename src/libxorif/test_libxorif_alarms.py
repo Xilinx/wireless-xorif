@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
+import sys
 import os
 import pytest
 import logging
 import pytest
-import pylibxorif
 from collections import namedtuple
 from cffi import FFI
+
+sys.path.append('/usr/share/xorif')
+import pylibxorif
 
 lib = pylibxorif.LIBXORIF()
 lib.set_log_level(logging.DEBUG)

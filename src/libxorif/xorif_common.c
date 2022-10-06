@@ -174,23 +174,32 @@ int xorif_init(const char *device_name)
         {
             if ((device_name = get_device_name(fhi_names[i])) != NULL)
             {
-                INFO("FHI device is '%s'\n", device_name);
                 break;
             }
             ++i;
         }
     }
+    else
+    {
+        // Get full device name
+        device_name = get_device_name(device_name);
+    }
 
-    // Add FHI device
     if (device_name == NULL)
     {
         PERROR("No FHI device found\n");
         return XORIF_LIBMETAL_ERROR;
     }
-    else if (add_device(&fh_device, "platform", device_name, fhi_irq_handler) != XORIF_SUCCESS)
+    else
     {
-        PERROR("Failed to add FHI device '%s'\n", device_name);
-        return XORIF_LIBMETAL_ERROR;
+        // Add FHI device
+        INFO("FHI device is '%s'\n", device_name);
+
+        if (add_device(&fh_device, "platform", device_name, fhi_irq_handler) != XORIF_SUCCESS)
+        {
+            PERROR("Failed to add FHI device '%s'\n", device_name);
+            return XORIF_LIBMETAL_ERROR;
+        }
     }
 
     // Initialize FHI device

@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+import sys
 import pytest
 import logging
-import pylibxocp
 from collections import namedtuple
 from cffi import FFI
+
+sys.path.append('/usr/share/xorif')
+import pylibxocp
 
 lib = pylibxocp.LIBXOCP()
 lib.set_log_level(logging.DEBUG)

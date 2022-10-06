@@ -250,11 +250,11 @@ def test_ro_reg_CFG_CONFIG_XRAN_PRECODING_EXT3_PORT():
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_MAX_CC():
-    do_ro_reg("CFG_CONFIG_XRAN_MAX_CC", 0x2c, 0x1f, 0, 5)
+    do_ro_reg("CFG_CONFIG_XRAN_MAX_CC", 0x2c, 0x3f, 0, 6)
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_MAX_DL_SYMBOLS():
-    do_ro_reg("CFG_CONFIG_XRAN_MAX_DL_SYMBOLS", 0x30, 0x1f, 0, 5)
+    do_ro_reg("CFG_CONFIG_XRAN_MAX_DL_SYMBOLS", 0x30, 0x7f, 0, 7)
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_MAX_NUMEROLOGY():

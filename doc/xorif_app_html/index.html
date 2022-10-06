@@ -160,7 +160,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <ul>
 <li>Usage:</li>
 </ul>
-<div class="fragment"><div class="line">usage: xorif-app-server [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [--fhi] [--no-fhi] [--ocp] [--no-ocp] [--oprach] [--no-oprach]</div>
+<div class="fragment"><div class="line">usage: xorif-app-server [-h] [-V] [-v VERBOSE] [-N NET] [-P PORT] [--fhi]</div>
+<div class="line">                        [--no-fhi] [--ocp] [--no-ocp] [--oprach] [--no-oprach]</div>
 <div class="line"></div>
 <div class="line">Python O-RAN Radio Interface server</div>
 <div class="line"></div>
@@ -169,7 +170,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  -V, --Version         show program<span class="stringliteral">&#39;s version number and exit</span></div>
 <div class="line"><span class="stringliteral">  -v VERBOSE, --verbose VERBOSE</span></div>
 <div class="line"><span class="stringliteral">                        set verbosity level (0 = quiet, 1 = normal, 2 = high)</span></div>
-<div class="line"><span class="stringliteral">  -H HOST, --host HOST  IP address (default is localhost)</span></div>
+<div class="line"><span class="stringliteral">  -N NET, --net NET     Network device to use for IP address (default is</span></div>
+<div class="line"><span class="stringliteral">                        localhost IP address))</span></div>
 <div class="line"><span class="stringliteral">  -P PORT, --port PORT  port number (default is 9090)</span></div>
 <div class="line"><span class="stringliteral">  --fhi                 with FHI support (default is yes)</span></div>
 <div class="line"><span class="stringliteral">  --no-fhi              without FHI support</span></div>
@@ -177,7 +179,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="stringliteral">  --no-ocp              without OCP support</span></div>
 <div class="line"><span class="stringliteral">  --oprach              with OPRACH support (default is no)</span></div>
 <div class="line"><span class="stringliteral">  --no-oprach           without OPRACH support</span></div>
-</div><!-- fragment --><div class="fragment"><div class="line">usage: xorif-app-client [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [-I] [-f FILE [FILE ...]] [-c CMD [CMD ...]]</div>
+</div><!-- fragment --><div class="fragment"><div class="line">usage: xorif-app-client [-h] [-V] [-v VERBOSE] [-H HOST] [-P PORT] [-I]</div>
+<div class="line">                        [-f FILE [FILE ...]] [-c CMD [CMD ...]]</div>
 <div class="line"></div>
 <div class="line">Python O-RAN Radio Interface client</div>
 <div class="line"></div>
@@ -196,8 +199,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --><ul>
 <li>Server:<ul>
 <li>Typical usage: <code>xorif-app-server.py</code></li>
-<li>Typical usage: <code>xorif-app-server.py -H 192.168.10.10 -P 9090</code></li>
-<li>Use <code>-H</code> or <code>--host</code> to set the IP address (default is the localhost, i.e. 127.0.0.1)</li>
+<li>Typical usage: <code>xorif-app-server.py -N eth0 -P 9090</code></li>
+<li>Use <code>-N</code> or <code>--net</code> to select the network device used for determining the IP address (default is to use localhost IP address, i.e. 127.0.0.1)</li>
 <li>Use <code>-P</code> or <code>--port</code> to set the TCP/IP port number</li>
 </ul>
 </li>
@@ -214,7 +217,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Note on server/client ports<ul>
 <li>It is important that the xorif-app server and client are using the same port number to communicate</li>
 <li>The xorif-app server will not start if the specified port is not available (e.g. in use by another xorif-app instance). In this case, an error is also displayed. Either close/kill the other xorif-app server, or select a different port number to continue.</li>
-<li>The default IP address used is the localhost. However, when using localhost, the server only accepts client connections from the localhost. If you want to conect from a remote system, then you should specify the actual IP address (using <code>--host</code> / <code>-H</code> option) for both server and client.</li>
+<li>The default IP address used is the localhost. However, when using localhost, the server only accepts client connections from the localhost. If you want to connect from a remote system, then you should specify the actual IP address. You can do this by specifying a network device on the server with the <code>--net</code> / <code>-N</code> option, and the IP address on the client with the <code>--host</code> / <code>-H</code> option.</li>
 </ul>
 </li>
 </ul>
@@ -399,7 +402,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --><h2>File Mode Simple Starter and PG370 examples</h2>
 <ul>
 <li>Simple uncompressed data example (input):<ul>
-<li>This is a good config to get started with:</li>
+<li>This is a good configuration to get started with:</li>
 <li>Limit to one Component Carrier, 1 Spatial Stream and a limited number of RB'S.</li>
 <li>Compared to the detail in the PG370, using the API removes the need to manually program these registers.</li>
 </ul>
@@ -561,7 +564,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">LIBXORIF&gt; WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x1 (1)</div>
 <div class="line">enable 0 =&gt; status = 0</div>
 </div><!-- fragment --> <hr/>
-<p>Copyright (C) 2019 - 2022 Xilinx, Inc. All rights reserved. </p>
+<p>Copyright (C) 2019 - 2022 Advanced Micro Devices, Inc. All rights reserved. </p>
 </div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

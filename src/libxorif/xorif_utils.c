@@ -262,8 +262,7 @@ const char *get_device_name(const char *short_name)
     while ((entry = readdir(folder)))
     {
         // Check for matching short name
-        char *s = strstr(entry->d_name, short_name);
-        if (s != NULL && strlen(s) == strlen(short_name))
+        if (strstr(entry->d_name, short_name))
         {
             // Match found, copy the full device name
             strncpy(buff, entry->d_name, 255);

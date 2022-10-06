@@ -19,7 +19,7 @@ SRC_URI = " \
 	file://xorif_registers.h \
 	file://xorif_utils.c \
 	file://xorif_utils.h \
-	file://oran_radio_if_v2_2_ctrl.h \
+	file://oran_radio_if_v2_3_ctrl.h \
 	file://pylibxorif.py \
 	"
 
