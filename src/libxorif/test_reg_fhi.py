@@ -9,6 +9,7 @@ import re
 # Configure required tests here
 RO = True
 RW = True
+WO = True
 
 def get_device_address(device):
     """
@@ -86,7 +87,7 @@ def do_rw_reg(name, addr, mask, offset, width):
         do_rw_reg_value(addr, mask, offset, value_mask & 0x00000000)
         do_rw_reg_value(addr, mask, offset, value_mask & 0xFFFFFFFF)
     if True and width > 1:
-        # checkerboard r/w test
+        # checker-board r/w test
         do_rw_reg_value(addr, mask, offset, value_mask & 0x55555555)
         do_rw_reg_value(addr, mask, offset, value_mask & 0xAAAAAAAA)
     if True and width > 2:
@@ -103,6 +104,23 @@ def do_ro_reg(name, addr, mask, offset, width):
     write_reg(addr, mask, offset, ~value1)
     value2 = read_reg(addr, mask, offset)
     assert value1 == value2
+
+def do_wo_reg(name, addr, mask, offset, width):
+    '''Perform selected write-only tests for register.'''
+    value_mask = mask >> offset
+    if True:
+        # zero-one r/w test
+        write_reg(addr, mask, offset, value_mask & 0x00000000)
+        write_reg(addr, mask, offset, value_mask & 0xFFFFFFFF)
+    if True and width > 1:
+        # checker-board r/w test
+        write_reg(addr, mask, offset, value_mask & 0x55555555)
+        write_reg(addr, mask, offset, value_mask & 0xAAAAAAAA)
+    if True and width > 2:
+        # walking pattern r/w test
+        for i in range(0, width):
+            write_reg(addr, mask, offset, value_mask & (1 << i))
+            write_reg(addr, mask, offset, value_mask & ~(1 << i))
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_MAJOR_REVISION():
@@ -408,6 +426,18 @@ def test_rw_reg_CFG_MONITOR_SELECT_CNT():
 def test_rw_reg_CFG_MONITOR_SELECT_READ():
     do_rw_reg("CFG_MONITOR_SELECT_READ", 0x804, 0x3f, 0, 6)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_SNAPSHOT():
+    do_wo_reg("CFG_MONITOR_SNAPSHOT", 0x808, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_SAMPLE():
+    do_wo_reg("CFG_MONITOR_SAMPLE", 0x80c, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_CLEAR():
+    do_wo_reg("CFG_MONITOR_CLEAR", 0x810, 0x1, 0, 1)
+
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_MONITOR_READ_31__0():
     do_ro_reg("CFG_MONITOR_READ_31__0", 0x820, 0xffffffff, 0, 32)
@@ -475,6 +505,74 @@ def test_rw_reg_DEFM_USE_ONE_SYMBOL_STROBE():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_DEBUG():
     do_rw_reg("DEFM_DEBUG", 0x600c, 0xf, 0, 4)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_SNAP_SHOT():
+    do_wo_reg("DEFM_SNAP_SHOT", 0x6010, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E0_E():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E0_E", 0x6010, 0x10, 4, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E0_RWIN():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E0_RWIN", 0x6010, 0x20, 5, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E0_RCOR():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E0_RCOR", 0x6010, 0x40, 6, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E0_T():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E0_T", 0x6010, 0x80, 7, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E1_E():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E1_E", 0x6010, 0x100, 8, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E1_RWIN():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E1_RWIN", 0x6010, 0x200, 9, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E1_RCOR():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E1_RCOR", 0x6010, 0x400, 10, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E1_T():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E1_T", 0x6010, 0x800, 11, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E2_E():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E2_E", 0x6010, 0x1000, 12, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E2_RWIN():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E2_RWIN", 0x6010, 0x2000, 13, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E2_RCOR():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E2_RCOR", 0x6010, 0x4000, 14, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E2_T():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E2_T", 0x6010, 0x8000, 15, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E3_E():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E3_E", 0x6010, 0x10000, 16, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E3_RWIN():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E3_RWIN", 0x6010, 0x20000, 17, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E3_RCOR():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E3_RCOR", 0x6010, 0x40000, 18, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CTRL_SS_RESET_E3_T():
+    do_wo_reg("DEFM_CTRL_SS_RESET_E3_T", 0x6010, 0x80000, 19, 1)
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_CID_CC_SHIFT():
@@ -640,6 +738,10 @@ def test_rw_reg_DEFM_USER_DATA_FILTER_W3_MASK():
 def test_rw_reg_DEFM_CID_MAP_MODE():
     do_rw_reg("DEFM_CID_MAP_MODE", 0x6900, 0x3, 0, 2)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CID_MAP_WR_STROBE():
+    do_wo_reg("DEFM_CID_MAP_WR_STROBE", 0x6904, 0x80000000, 31, 1)
+
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_CID_MAP_WR_STREAM_PORTID():
     do_rw_reg("DEFM_CID_MAP_WR_STREAM_PORTID", 0x6904, 0x7c0000, 18, 5)
@@ -652,6 +754,10 @@ def test_rw_reg_DEFM_CID_MAP_WR_STREAM_TYPE():
 def test_rw_reg_DEFM_CID_MAP_WR_TABLE_ADDR():
     do_rw_reg("DEFM_CID_MAP_WR_TABLE_ADDR", 0x6904, 0x7ff, 0, 11)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_CID_MAP_RD_STROBE():
+    do_wo_reg("DEFM_CID_MAP_RD_STROBE", 0x6908, 0x80000000, 31, 1)
+
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_DEFM_CID_MAP_RD_STREAM_PORTID():
     do_ro_reg("DEFM_CID_MAP_RD_STREAM_PORTID", 0x6908, 0x7c0000, 18, 5)
@@ -663,6 +769,10 @@ def test_ro_reg_DEFM_CID_MAP_RD_STREAM_TYPE():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_CID_MAP_RD_TABLE_ADDR():
     do_rw_reg("DEFM_CID_MAP_RD_TABLE_ADDR", 0x6908, 0x7ff, 0, 11)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_DEFM_DECOMP_SS_WR():
+    do_wo_reg("DEFM_DECOMP_SS_WR", 0x6910, 0x80000000, 31, 1)
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_DECOMP_SS_MODE_ENABLE():
@@ -875,6 +985,11 @@ def test_rw_reg_ETH_DU_TABLE_WR_VLAN_PCP():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_DU_TABLE_WR_VLAN_PCP", 0xa0e8 + i * 0x100, 0xe000, 13, 3)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_ETH_DU_TABLE_WR_STROBE():
+    for i in range(0, C_ETH_W):
+        do_wo_reg("ETH_DU_TABLE_WR_STROBE", 0xa0ec + i * 0x100, 0x80000000, 31, 1)
+
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_DU_TABLE_WR_TABLE_ADDR():
     for i in range(0, C_ETH_W):
@@ -904,6 +1019,11 @@ def test_ro_reg_ETH_DU_TABLE_RD_VLAN_DEI():
 def test_ro_reg_ETH_DU_TABLE_RD_VLAN_PCP():
     for i in range(0, C_ETH_W):
         do_ro_reg("ETH_DU_TABLE_RD_VLAN_PCP", 0xa0f8 + i * 0x100, 0xe000, 13, 3)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_ETH_DU_TABLE_RD_STROBE():
+    for i in range(0, C_ETH_W):
+        do_wo_reg("ETH_DU_TABLE_RD_STROBE", 0xa0fc + i * 0x100, 0x80000000, 31, 1)
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_DU_TABLE_RD_TABLE_ADDR():
@@ -1080,6 +1200,10 @@ def test_ro_reg_STATS_OFFSET_EARLIEST_C_PKT():
     for i in range(0, C_ETH_W):
         do_ro_reg("STATS_OFFSET_EARLIEST_C_PKT", 0xc084 + i * 0x100, 0xfff, 0, 12)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_ORAN_CC_RELOAD():
+    do_wo_reg("ORAN_CC_RELOAD", 0xe000, 0xff, 0, 8)
+
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_ENABLE():
     do_rw_reg("ORAN_CC_ENABLE", 0xe004, 0xff, 0, 8)
@@ -1251,6 +1375,10 @@ def test_rw_reg_ORAN_SETUP_CNT():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_STRIP_FCS():
     do_rw_reg("ORAN_STRIP_FCS", 0xe604, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_ORAN_SETUP_SY_COUNTER():
+    do_wo_reg("ORAN_SETUP_SY_COUNTER", 0xe604, 0x2, 1, 1)
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_SETUP_SF():

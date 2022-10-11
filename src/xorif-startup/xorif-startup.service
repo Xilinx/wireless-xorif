@@ -1,0 +1,10 @@
+[Unit]
+Description=xorif-startup
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/xorif-startup.sh
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target

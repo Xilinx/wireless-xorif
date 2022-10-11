@@ -3,6 +3,7 @@
 # Set up environment
 SRC_DIR = ../src
 OUT_DIR = ../output
+RCP_DIR = ../yocto-recipes
 XSA_DIR = ../xsa
 TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/) {print "$$1_$$2"}')
 PLNX_VER = $(shell printenv PETALINUX_VER)
@@ -11,11 +12,6 @@ DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/u
 # Release-sensitive settings
 ifeq ($(shell expr $(PLNX_VER) \>= 2021.1), 1)
 	YOCTO_BUILDTOOLS_EXTENDED = 1
-endif
-ifeq ($(shell expr $(PLNX_VER) \>= 2022.1), 1)
-	RCP_DIR = ../yocto-recipes
-else
-	RCP_DIR = ../yocto-recipes-old
 endif
 
 ### CONFIGURATION SECTION ###
@@ -59,12 +55,9 @@ override ROOTFS_Y += libstdcPLUSPLUS-dev
 override ROOTFS_Y += gdb
 override ROOTFS_Y += gdbserver
 endif
-
 override ROOTFS_Y += imagefeature-debug-tweaks
-override ROOTFS_Y += Init-manager-sysvinit
 
 # Add rootfs (=N) config options here
-override ROOTFS_N += Init-manager-systemd
 
 # Extra bits
 override EXTRAS += linux
@@ -261,6 +254,7 @@ else
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ROOTFS_INITRD.*/CONFIG_SUBSYSTEM_ROOTFS_INITRD=y/' $(PLX_DIR)/project-spec/configs/config
 	sed -i '/CONFIG_SUBSYSTEM_ROOTFS_OTHER/a CONFIG_SUBSYSTEM_INITRAMFS_IMAGE_NAME="petalinux-image-minimal"' $(PLX_DIR)/project-spec/configs/config
 endif
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_ADD_EEPROM_ALIAS.*/CONFIG_SUBSYSTEM_ADD_EEPROM_ALIAS=y/' $(PLX_DIR)/project-spec/configs/config
 	petalinux-config --project $(PLX_DIR) --silentconfig
 
 # Configure step 3 (device tree mods)

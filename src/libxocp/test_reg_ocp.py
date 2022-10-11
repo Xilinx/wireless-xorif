@@ -9,6 +9,7 @@ import re
 # Configure required tests here
 RO = True
 RW = True
+WO = True
 
 def get_device_address(device):
     """
@@ -84,7 +85,7 @@ def do_rw_reg(name, addr, mask, offset, width):
         do_rw_reg_value(addr, mask, offset, value_mask & 0x00000000)
         do_rw_reg_value(addr, mask, offset, value_mask & 0xFFFFFFFF)
     if True and width > 1:
-        # checkerboard r/w test
+        # checker-board r/w test
         do_rw_reg_value(addr, mask, offset, value_mask & 0x55555555)
         do_rw_reg_value(addr, mask, offset, value_mask & 0xAAAAAAAA)
     if True and width > 2:
@@ -101,6 +102,23 @@ def do_ro_reg(name, addr, mask, offset, width):
     write_reg(addr, mask, offset, ~value1)
     value2 = read_reg(addr, mask, offset)
     assert value1 == value2
+
+def do_wo_reg(name, addr, mask, offset, width):
+    '''Perform selected write-only tests for register.'''
+    value_mask = mask >> offset
+    if True:
+        # zero-one r/w test
+        write_reg(addr, mask, offset, value_mask & 0x00000000)
+        write_reg(addr, mask, offset, value_mask & 0xFFFFFFFF)
+    if True and width > 1:
+        # checker-board r/w test
+        write_reg(addr, mask, offset, value_mask & 0x55555555)
+        write_reg(addr, mask, offset, value_mask & 0xAAAAAAAA)
+    if True and width > 2:
+        # walking pattern r/w test
+        for i in range(0, width):
+            write_reg(addr, mask, offset, value_mask & (1 << i))
+            write_reg(addr, mask, offset, value_mask & ~(1 << i))
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_MAJOR_REVISION():
@@ -186,6 +204,18 @@ def test_ro_reg_CFG_UL_SEQUENCE_TABLE_ERROR():
 def test_rw_reg_CFG_MONITOR_SELECT_READ():
     do_rw_reg("CFG_MONITOR_SELECT_READ", 0x104, 0x3f, 0, 6)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_SNAPSHOT():
+    do_wo_reg("CFG_MONITOR_SNAPSHOT", 0x108, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_SAMPLE():
+    do_wo_reg("CFG_MONITOR_SAMPLE", 0x10c, 0x1, 0, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CFG_MONITOR_CLEAR():
+    do_wo_reg("CFG_MONITOR_CLEAR", 0x110, 0x1, 0, 1)
+
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_MONITOR_READ_31__0():
     do_ro_reg("CFG_MONITOR_READ_31__0", 0x120, 0xffffffff, 0, 32)
@@ -230,6 +260,10 @@ def test_rw_reg_CTRL_DL_SEQUENCE_TABLE_CC_SEL():
 def test_rw_reg_CTRL_DL_SEQUENCE_TABLE_ENABLE():
     do_rw_reg("CTRL_DL_SEQUENCE_TABLE_ENABLE", 0x400c, 0x40000000, 30, 1)
 
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CTRL_DL_SEQUENCE_TABLE_WR_STROBE():
+    do_wo_reg("CTRL_DL_SEQUENCE_TABLE_WR_STROBE", 0x400c, 0x80000000, 31, 1)
+
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_CTRL_NEXT_DL_CC_NUMBER_OF_RES():
     for i in range(0, MAX_NUM_CC):
@@ -259,6 +293,10 @@ def test_rw_reg_CTRL_UL_SEQUENCE_TABLE_CC_SEL():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_CTRL_UL_SEQUENCE_TABLE_ENABLE():
     do_rw_reg("CTRL_UL_SEQUENCE_TABLE_ENABLE", 0x420c, 0x40000000, 30, 1)
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_CTRL_UL_SEQUENCE_TABLE_WR_STROBE():
+    do_wo_reg("CTRL_UL_SEQUENCE_TABLE_WR_STROBE", 0x420c, 0x80000000, 31, 1)
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_CTRL_NEXT_UL_CC_NUMBER_OF_RES():
