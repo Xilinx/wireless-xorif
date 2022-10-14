@@ -41,7 +41,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -80,7 +79,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Xilinx O-RAN Radio Unit Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-</div><!-- contents -->
+<div class="textblock"><ul>
+<li>The C library (libxocp) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio PXXCH Channel Processor IP core</li>
+</ul>
+<h2>API</h2>
+<ul>
+<li>The C library API is documented <a href="../../doc/libxocp_html/group__API.html">here</a></li>
+</ul>
+<h2>Building</h2>
+<ul>
+<li>The libxocp library is built as part of the PetaLinux build system, and can be found in the <code>/usr/lib/</code> directory of the target Linux installation</li>
+<li>It can also be built separately using an appropriate SDK including the cross-compilation tools and dependencies (e.g. libmetal library)<ul>
+<li>Run: <code>make</code></li>
+</ul>
+</li>
+</ul>
+<h2>Python Bindings</h2>
+<ul>
+<li>The Python module <code>pylibxocp.py</code> provides (Python 3) bindings for the C library<ul>
+<li>The <code>pylibxocp.py</code> module can be found in the current directory, and it is also installed as part of the PetaLinux build, and can be found in the <code>/usr/share/xorif</code> directory</li>
+<li>The Python bindings use CFFI and can be used directly, or in conjunction with other libraries such as Pyro4 which allows remote procedure calls to Python objects</li>
+<li>The Pyro4 and CFFI libraries are included as part of the Petalinux build, or can be installed manually with <code>pip install</code></li>
+<li>The Python bindings are provided for "ease of use". The Python API is largely the same as the C API, but more "Pythonic", e.g. allowing "dicts" to be passed in rather than pointers to structures. </li>
+</ul>
+</li>
+</ul>
+</div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="footer">Copyright &copy; 2022 Xilinx Inc. All rights reserved.</li>

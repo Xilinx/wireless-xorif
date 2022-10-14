@@ -28,6 +28,25 @@ VERSION = '1.1'
 
 logger = logging.getLogger(PROG_SHORT)
 
+class Server():
+    """
+    Simple class to allow remote shutdown and ping functionality
+    """
+
+    def __init__(self, daemon):
+        self.daemon = daemon
+
+    @Pyro4.expose
+    @Pyro4.oneway
+    def shutdown(self):
+        """Shutdown the server."""
+        self.daemon.shutdown()
+
+    @Pyro4.expose
+    def echo(self, message):
+        """Check connection by echoing message."""
+        return message
+
 if __name__ == "__main__":
     # Configure command line argument parser
     parser = argparse.ArgumentParser(prog=PROG,
@@ -44,12 +63,12 @@ if __name__ == "__main__":
                         help='with FHI support (default is yes)')
     parser.add_argument('--no-fhi', dest='fhi', action='store_false',
                         help='without FHI support')
-    parser.add_argument('--ocp', default=True, action='store_true',
-                        help='with OCP support (default is yes)')
+    parser.add_argument('--ocp', default=False, action='store_true',
+                        help='with OCP support (default is no)')
     parser.add_argument('--no-ocp', dest='ocp', action='store_false',
                         help='without OCP support')
     parser.add_argument('--oprach', default=False, action='store_true',
-                        help='with OPRACH support (default is no)')
+                        help='with OPRACH support (default no)')
     parser.add_argument('--no-oprach', dest='oprach', action='store_false',
                         help='without OPRACH support')
 
@@ -101,11 +120,14 @@ if __name__ == "__main__":
 
     # Start Pyro4 server with exposed objects
     try:
-        # Start the Pyro server daemon
-        Pyro4.Daemon.serveSimple(
-                exposed,
-                host=ipaddr,
-                port=args.port,
-                ns=False)
+        with Pyro4.Daemon(host=ipaddr, port=args.port) as daemon:
+            # Server object is added to allow remote shutdown & ping
+            exposed[Server(daemon)] = "SERVER"
+            for k, v in exposed.items():
+                uri = daemon.register(k, objectId=v)
+                logger.info(f"Object {k}: uri = {uri}")
+            daemon.requestLoop()
     except Exception as e:
-        print(f'Error starting Pyro4 server: {e}')
+        logger.error(f'Error starting Pyro4 server: {e}')
+
+    logger.info("Exiting...")

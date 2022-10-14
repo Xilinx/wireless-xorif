@@ -4,7 +4,7 @@
 
 ## API
 
-* The C library API is documented [here](../../doc/libxorif_html/group__libxorif-api.html)
+* The C library API is documented [here](../../doc/libxorif_html/group__API.html)
 
 * The example application (xorif-app) demonstrates the use of the library API, and is a good starting point for reference
 
@@ -22,7 +22,7 @@
     * The `pylibxorif.py` module can be found in the current directory, and it is also installed as part of the PetaLinux build, and can be found in the `/usr/share/xorif` directory
     * The Python bindings use CFFI and can be used directly, or in conjunction with other libraries such as Pyro4 which allows remote procedure calls to Python objects
     * The Pyro4 and CFFI libraries are included as part of the Petalinux build, or can be installed manually with `pip install`
-    * The Python bindings are provided for "ease of use". The Phython API is largely the same as the C API, but more "Pythonic", e.g. allowing "dicts" to be passed in rather than pointers to structures.
+    * The Python bindings are provided for "ease of use". The Python API is largely the same as the C API, but more "Pythonic", e.g. allowing "dicts" to be passed in rather than pointers to structures.
 
 ## Usage
 

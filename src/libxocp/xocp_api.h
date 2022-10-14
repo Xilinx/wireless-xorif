@@ -18,7 +18,7 @@
  * @file xocp_api.h
  * @author Steven Dickinson
  * @brief Main header file for the Xilinx ORAN Channel Processor (libxocp).
- * @addtogroup libxocp-api
+ * @addtogroup API
  * @{
  *
  * "C" API for the Xilinx ORAN Channel Processor (libxocp)
@@ -286,7 +286,7 @@ int xocp_register_event_callback(uint16_t instance,
  * This utility function takes a C-string representation of the register name,
  * e.g. "MODEL_PARAM". Alternatively, an offset value can be provided, e.g.
  * "0x8". Ths API is intended primarily for debug/development and might not be
- * available in the released library. 
+ * available in the released library.
  */
 int xocp_read_reg(uint16_t instance, const char *name, uint32_t *value);
 

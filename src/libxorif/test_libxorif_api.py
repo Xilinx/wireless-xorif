@@ -403,7 +403,7 @@ def test_set_config_api():
 
     config1['iq_comp_meth_ssb'] = const.IQ_COMP_NONE
     config1['iq_comp_width_ssb'] = 16
-    
+
     for m, w in ul_comp_list:
         config1['iq_comp_meth_prach'] = m
         config1['iq_comp_width_prach'] = w
@@ -510,11 +510,11 @@ def test_set_mac_address_api():
 
     addr = "01:23:45:67:89:ab"
     for p in range(0, caps['num_eth_ports']):
-        assert lib.xorif_set_fhi_dest_mac_addr(p, "") == const.XORIF_FAILURE 
-        assert lib.xorif_set_fhi_dest_mac_addr(p, "0123456789ab") == const.XORIF_FAILURE 
+        assert lib.xorif_set_fhi_dest_mac_addr(p, "") == const.XORIF_FAILURE
+        assert lib.xorif_set_fhi_dest_mac_addr(p, "0123456789ab") == const.XORIF_FAILURE
         assert lib.xorif_set_fhi_dest_mac_addr(p, addr) == const.XORIF_SUCCESS
-        assert lib.xorif_set_fhi_src_mac_addr(p, "") == const.XORIF_FAILURE 
-        assert lib.xorif_set_fhi_src_mac_addr(p, "0123456789ab") == const.XORIF_FAILURE 
+        assert lib.xorif_set_fhi_src_mac_addr(p, "") == const.XORIF_FAILURE
+        assert lib.xorif_set_fhi_src_mac_addr(p, "0123456789ab") == const.XORIF_FAILURE
         assert lib.xorif_set_fhi_src_mac_addr(p, addr) == const.XORIF_SUCCESS
     assert lib.xorif_set_fhi_dest_mac_addr(caps['num_eth_ports'], addr) == const.XORIF_INVALID_ETH_PORT
     assert lib.xorif_set_fhi_src_mac_addr(caps['num_eth_ports'], addr) == const.XORIF_INVALID_ETH_PORT

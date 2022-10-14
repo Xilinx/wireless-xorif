@@ -18,7 +18,7 @@
  * @file xorif_api.h
  * @author Steven Dickinson
  * @brief Main header file for the Xilinx ORAN Radio Interface (libxorif).
- * @addtogroup libxorif-api
+ * @addtogroup API
  * @{
  *
  * "C" API for the Xilinx ORAN Radio Interface (libxorif)
@@ -996,7 +996,7 @@ int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t ma
  * The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16.
  * RU port ids are mapped by one of 2 methods: mask or table.
  * For mask-based mapping see #xorif_set_ru_ports & #xorif_set_ru_ports_alt1
- * For table-based mapping see #xorif_set_ru_ports_table_mode and 
+ * For table-based mapping see #xorif_set_ru_ports_table_mode and
  * #xorif_set_ru_ports_table
  */
 int xorif_set_fhi_eaxc_id(uint16_t du_bits,

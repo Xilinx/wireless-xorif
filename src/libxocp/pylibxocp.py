@@ -97,7 +97,7 @@ class LIBXOCP:
             logging.basicConfig(format="%(name)s> %(levelname)s: %(message)s")
             cls._instance.logger = logging.getLogger("PYXOCP")
             cls._instance.logger.setLevel(logging.ERROR)
-            
+
             # We're going to expose all enums and integer #define constants
             constants = {}
             for a in dir(lib):

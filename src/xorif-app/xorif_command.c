@@ -3477,7 +3477,7 @@ static int test_bf(const char *request, char *response)
  * @note
  * The input file should contain an arbitrary number of beam-weight vectors descriptors.
  * The format of the beam-weight vector descriptor is shown in the following example...
- * 
+ *
  * beam_id = 1
  * comp_width = 12
  * comp_method = 1
@@ -3491,15 +3491,15 @@ static int test_bf(const char *request, char *response)
  * 65 -223
  * -195 -36
  * -377 112
- * 
+ *
  * The comp_width, comp_mode and comp_param values are encoded the same as in the ORAN spec.
  * After the "num_weights" line the file should contain a number of pairs of values.
  * For example, for num_weights = 32, there should be 32 pairs of values, with the 1st value
  * of each pair being the in-phase weight component, and the 2nd value of the pair being the
  * quadrature weight component.
- * 
+ *
  * This function does not perform any compression of the data.
- * 
+ *
  * The current version supports 3 "types" of data file:
  * 1) normal beam-weight vectors (for when external store is present)
  * 2) cache-based beam-weight vectors (for loading directly into specific cache, when no external
@@ -3507,7 +3507,7 @@ static int test_bf(const char *request, char *response)
  * 3) cache-based SSB beam-weight vectors (for loading directly into SSB cache, when no external
  *    store is present). These BMVs don't have beam-id, but have additional into for CC, SYM, SRB
  *    and NRB which are used by the SSB cache system.
- * 
+ *
  * @todo The file parsing is not particularly robust. Probably better to use more robust
  * format and parser, e.g. JSON file or similar.
  */

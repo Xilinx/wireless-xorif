@@ -41,7 +41,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="modules.html"><span>Modules</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -84,6 +83,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Libxocp</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>"C" code for the Xilinx ORAN Radio Interface (libxocp)  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -141,7 +143,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga2cbda271a8bfaaa3c8a1a0858a0ce4aa">xocp_enable_interrupts</a> (uint16_t instance, uint32_t mask)</td></tr>
 <tr class="memdesc:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the event interrupts (according to supplied mask).  <a href="#ga2cbda271a8bfaaa3c8a1a0858a0ce4aa">More...</a><br/></td></tr>
 <tr class="separator:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga25120e04d622474f04345064c902d006"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga25120e04d622474f04345064c902d006">xocp_register_event_callback</a> (uint16_t instance, <a class="el" href="group__libxocp-api.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a> callback)</td></tr>
+<tr class="memitem:ga25120e04d622474f04345064c902d006"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga25120e04d622474f04345064c902d006">xocp_register_event_callback</a> (uint16_t instance, <a class="el" href="group__API.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a> callback)</td></tr>
 <tr class="memdesc:ga25120e04d622474f04345064c902d006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a call-back function for event interrupts.  <a href="#ga25120e04d622474f04345064c902d006">More...</a><br/></td></tr>
 <tr class="separator:ga25120e04d622474f04345064c902d006"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga26c079fad72f78f8d9e86d53c8af7925"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxocp.html#ga26c079fad72f78f8d9e86d53c8af7925">xocp_read_reg</a> (uint16_t instance, const char *name, uint32_t *value)</td></tr>
@@ -212,6 +214,7 @@ Functions</h2></td></tr>
 <tr class="separator:ga45725fe316a907dc2ee3be02c0af347e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>"C" code for the Xilinx ORAN Radio Interface (libxocp) </p>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="gac1b558456aa02ad4cb1b03d39082c9a0"></a>
 <div class="memitem">
@@ -697,7 +700,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
-    <tr><td class="paramname">mask</td><td>Bit-map mask for enabled interrupts (see <a class="el" href="group__libxocp-api.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
+    <tr><td class="paramname">mask</td><td>Bit-map mask for enabled interrupts (see <a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
   </table>
   </dd>
 </dl>
@@ -889,7 +892,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
-    <tr><td class="paramname">status</td><td>Pointer to write-back the status (see <a class="el" href="group__libxocp-api.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
+    <tr><td class="paramname">status</td><td>Pointer to write-back the status (see <a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
   </table>
   </dd>
 </dl>
@@ -979,7 +982,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><ul>
-<li>State (see <a class="el" href="group__libxocp-api.html#gad4565d94bfd9eeaa7959e4a06db49d0f" title="Enumerations for state machine states. ">xocp_states</a>)</li>
+<li>State (see <a class="el" href="group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f" title="Enumerations for state machine states. ">xocp_states</a>)</li>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
@@ -1292,7 +1295,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__libxocp-api.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
 
 </div>
 </div>
@@ -1309,7 +1312,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__libxocp-api.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__API.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a>&#160;</td>
           <td class="paramname"><em>callback</em>&#160;</td>
         </tr>
         <tr>
@@ -1663,7 +1666,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__libxocp-api.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. </dd></dl>
 
 </div>
 </div>
@@ -1718,7 +1721,7 @@ Functions</h2></td></tr>
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__libxocp-api.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
 
 </div>
 </div>

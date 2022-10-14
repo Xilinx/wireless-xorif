@@ -22,9 +22,11 @@ import logging
 import argparse
 import Pyro4
 import time
-import tty
-import termios
 from pprint import pprint
+
+if sys.platform == "linux":
+    import tty
+    import termios
 
 PROG = 'xorif-app-client'
 PROG_SHORT = "XORIF-APP"
@@ -92,14 +94,18 @@ def magic_cmd(args):
 def terminate_cmd(args):
     # terminate
     if len(args) == 1:
-        result = True
+        # Finish with the devices
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_finish() == SUCCESS)
+                handle.xorif_finish()
             elif name == "OCP":
-                result &= (handle.xocp_finish(0) == SUCCESS)
+                handle.xocp_finish(0)
             elif name == "OPRACH":
-                result &= (handle.xoprach_finish(0) == SUCCESS)
+                handle.xoprach_finish(0)
+        # Finally shutdown the server
+        if "SERVER" in handles:
+            handle = handles["SERVER"]
+            handle.shutdown()
         return EXIT
 
 def exit_cmd(args):
@@ -172,17 +178,22 @@ def devices_cmd(args):
 def init_cmd(args):
     # init
     if len(args) == 1:
-        result = True
+        final = True
+        results = []
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_init() == SUCCESS)
+                result = handle.xorif_init()
+                results.append((name, result))
+                final &= (result == SUCCESS)
             elif name == "OCP":
-                instance = handle.xocp_start()
-                result &= (instance >= 0)
+                result = handle.xocp_start()
+                results.append((name, result))
+                final &= (result >= 0)
             elif name == "OPRACH":
-                instance = handle.xoprach_start()
-                result &= (instance >= 0)
-        return SUCCESS if result else FAIL
+                result = handle.xoprach_start()
+                results.append((name, result))
+                final &= (result >= 0)
+        return SUCCESS if final else results
 
     # init (fhi | ocp | ...) [<device>]
     elif len(args) == 2 or len(args) == 3:
@@ -236,15 +247,22 @@ def has_cmd(args):
 def reset_cmd(args):
     # reset
     if  len(args) == 1:
-        result = True
+        final = True
+        results = []
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_reset_fhi(0) == SUCCESS)
+                result = handle.xorif_reset_fhi(0)
+                results.append((name, result))
+                final &= (result == SUCCESS)
             elif name == "OCP":
-                result &= (handle.xocp_reset(0, 0) == SUCCESS)
+                result = handle.xocp_reset(0, 0)
+                results.append((name, result))
+                final &= (result == SUCCESS)
             elif name == "OPRACH":
-                result &= (handle.xoprach_reset(0) == SUCCESS)
-        return SUCCESS if result else FAIL
+                result = handle.xoprach_reset(0)
+                results.append((name, result))
+                final &= (result == SUCCESS)
+        return SUCCESS if final else results
 
     # reset (fhi | ocp | ...) [<mode>]
     elif len(args) == 2 or len(args) == 3:
@@ -493,49 +511,37 @@ def set_cmd(args):
     if len(args) >= 2:
         # set num_rbs <cc> <number_of_rbs>
         if match(args[1], "num_rbs"):
-            if len(args) == 4:
+            if len(args) == 4 and "FHI" in handles:
                 cc = integer(args[2])
                 num_rbs = integer(args[3])
-                result = True
-                for name, handle in handles.items():
-                    if name == "FHI":
-                        result &= (handle.xorif_set_cc_num_rbs(cc, num_rbs) == SUCCESS)
-                return SUCCESS if result else FAIL
+                handle = handles["FHI"]
+                return handle.xorif_set_cc_num_rbs(cc, num_rbs)
 
         # set numerology <cc> <numerology = 0..4> <extended_cp = 0|1>
         if match(args[1], "numerology"):
-            if len(args) == 5:
+            if len(args) == 5 and "FHI" in handles:
                 cc = integer(args[2])
                 numerology = integer(args[3])
                 ext_cp = integer(args[4])
-                result = True
-                for name, handle in handles.items():
-                    if name == "FHI":
-                        result &= (handle.xorif_set_cc_numerology(cc, numerology, ext_cp) == SUCCESS)
-                return SUCCESS if result else FAIL
+                handle = handles["FHI"]
+                return handle.xorif_set_cc_numerology(cc, numerology, ext_cp)
 
         # set num_rbs_ssb <cc> <number_of_rbs = 0|20>
         if match(args[1], "num_rbs_ssb"):
-            if len(args) == 4:
+            if len(args) == 4 and "FHI" in handles:
                 cc = integer(args[2])
                 num_rbs = integer(args[3])
-                result = True
-                for name, handle in handles.items():
-                    if name == "FHI":
-                        result &= (handle.xorif_set_cc_num_rbs_ssb(cc, num_rbs) == SUCCESS)
-                return SUCCESS if result else FAIL
+                handle = handles["FHI"]
+                return handle.xorif_set_cc_num_rbs_ssb(cc, num_rbs)
 
         # set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>
         if match(args[1], "numerology_ssb"):
-            if len(args) == 5:
+            if len(args) == 5 and "FHI" in handles:
                 cc = integer(args[2])
                 numerology = integer(args[3])
                 ext_cp = integer(args[4])
-                result = True
-                for name, handle in handles.items():
-                    if name == "FHI":
-                        result &= (handle.xorif_set_cc_numerology_ssb(cc, numerology, ext_cp) == SUCCESS)
-                return SUCCESS if result else FAIL
+                handle = handles["FHI"]
+                return handle.xorif_set_cc_numerology_ssb(cc, numerology, ext_cp)
 
         # set time_advance <cc> <deskew> <advance_uplink> <advance_downlink> # deprecated
         if match(args[1], "time_advance"):
@@ -927,11 +933,14 @@ def configure_cmd(args):
     # configure <cc>
     if len(args) == 2:
         cc = integer(args[1])
-        result = True
+        final = True
+        results = []
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_configure_cc(cc) == SUCCESS)
-        return SUCCESS if result else FAIL
+                result = handle.xorif_configure_cc(cc)
+                results.append((name, result))
+                final &= (result == SUCCESS)
+        return SUCCESS if final else results
 
     # configure (fhi | ...) <cc>
     elif len(args) == 3:
@@ -946,11 +955,14 @@ def enable_cmd(args):
     # enable <cc>
     if len(args) == 2:
         cc = integer(args[1])
-        result = True
+        final = True
+        results = []
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_enable_cc(cc) == SUCCESS)
-        return SUCCESS if result else FAIL
+                result = handle.xorif_enable_cc(cc)
+                results.append((name, result))
+                final &= (result == SUCCESS)
+        return SUCCESS if final else results
 
     # enable (fhi | ...) <cc>
     elif len(args) == 3:
@@ -965,11 +977,14 @@ def disable_cmd(args):
     # disable <cc>
     if len(args) == 2:
         cc = integer(args[1])
-        result = True
+        final = True
+        results =[]
         for name, handle in handles.items():
             if name == "FHI":
-                result &= (handle.xorif_disable_cc(cc) == SUCCESS)
-        return SUCCESS if result else FAIL
+                result = handle.xorif_disable_cc(cc)
+                results.append((name, result))
+                final &= (result == SUCCESS)
+        return SUCCESS if final else results
 
     # disable (fhi | ...) <cc>
     elif len(args) == 3:
@@ -1211,6 +1226,16 @@ def slv_cmd(args):
                     print(f"{k}: {v}")
             return SUCCESS
 
+def echo_cmd(args):
+    # echo <message>
+    if len(args) == 2:
+        if "SERVER" in handles:
+            handle = handles["SERVER"]
+            message = handle.echo(args[1])
+            print(message)
+            return SUCCESS
+    return FAIL
+
 def parse(command):
     """
     Parse command (space-separated tokens).
@@ -1238,7 +1263,7 @@ def parse(command):
                     try:
                         result = cmd_func(args)
                         if result == SUCCESS:
-                            logger.info(f"Success: '{command}'")
+                            logger.info(f"Success: '{command}' ({result})")
                             return SUCCESS
                         elif result == EXIT:
                             logger.info("Exiting...")
@@ -1374,7 +1399,7 @@ def do_interactive(_):
     """
     try:
         while True:
-            if sys.stdin.isatty():
+            if sys.platform == "linux" and sys.stdin.isatty():
                 buffer = read_line_tty("> ")
             else:
                 buffer = input("> ")
@@ -1542,6 +1567,8 @@ cmds.append(("write_reg_offset", write_reg_offset_cmd, "Write device registers (
 cmds.append(("write_reg_offset", None, "?write_reg_offset (fhi | ocp | ...) <name> <offset> <value>"))
 cmds.append(("slv", slv_cmd, "SLV test commands"))
 cmds.append(("slv", None, "?slv (clear | stats | monitor | ...)"))
+cmds.append(("echo", echo_cmd, "Echo message (e.g. to check connectivity with server)"))
+cmds.append(("echo", None, "?echo <message>"))
 
 if __name__ == "__main__":
     # Configure command line argument parser
@@ -1581,6 +1608,7 @@ if __name__ == "__main__":
         "FHI": "XORIF",
         "OCP": "XOCP",
         "OPRACH": "XOPRACH",
+        "SERVER": "SERVER",
     }
 
     # Get handles to possible target objects

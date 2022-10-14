@@ -273,7 +273,7 @@ int xorif_has_front_haul_interface(void)
         // Device exists
         return 1;
     }
-    else 
+    else
     {
         // Try the usual suspects in /sys/bus/platform/devices ...
         int i = 0;

@@ -20,6 +20,8 @@
  * @brief Source file for main libxocp functions/definitions.
  * @addtogroup libxocp
  * @{
+ *
+ * "C" code for the Xilinx ORAN Radio Interface (libxocp)
  */
 
 #include "xocp.h"
@@ -905,7 +907,7 @@ int xocp_set_trigger_cfg(uint16_t instance,
 
     // Set the DL "update" trigger configuration
     WR_REG(instance, CTRL_DL_SEQUENCE_TABLE_UPDATE_MODE, triggers->dl_update.mode);
-    
+
     // Set the UL "update" trigger configuration
     WR_REG(instance, CTRL_UL_SEQUENCE_TABLE_UPDATE_MODE, triggers->ul_update.mode);
 
