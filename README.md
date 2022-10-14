@@ -16,6 +16,7 @@ This project contains the C LibMetal driver for the oran_radio_if IP. Additional
 |[XORIF-APP README](https://github.com/Xilinx/wireless-xorif/tree/master/src/xorif-app/README.md)|App overview and examples of App configuration files.|
 
 ## GitHub Usage
+
 The master branch of the GitHub repository contains the latest version for the current Xilinx release.
 
 Releases are aligned with the Xilinx tools release schedule, at which point the archive is tagged e.g., v2021.2, and a "Release" is created on GitHub. All post-release fixes/changes are made on the master/HEAD.
