@@ -105,21 +105,13 @@ devmem 0xa0060010 32 0x0
 dipValue=$(devmem 0xa0060014)
 
 ${LOGGER} "Bring the 10/100 link down->up"
-ip link set dev ${eth_100m} down
-ip link set dev ${eth_100m} up
 
 if (( $( f_testMaskedValue $dipValue 0x02 ) != 0 )); then
    ${LOGGER} "Unit is slave assign IP address 10 on ${eth_10g}"
    xroe-config-XXV-ptp.sh 10 ${eth_10g}
-   if (( $( f_testMaskedValue $dipValue 0x08 ) == 0 )); then
-      ip addr add 192.168.10.120/24 dev ${eth_100m}
-   fi
 else
    ${LOGGER} "Unit is master assign IP address 9 on ${eth_10g}"
    xroe-config-XXV-ptp.sh 9 ${eth_10g}
-   if (( $( f_testMaskedValue $dipValue 0x08 ) == 0 )); then
-      ip addr add 192.168.10.100/24 dev ${eth_100m}
-   fi
 fi
 sleep 2
 
