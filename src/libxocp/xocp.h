@@ -136,9 +136,9 @@ typedef struct
     xocp_isr_func_t callback;   /**< Event ISR callback */
     uint32_t events;            /**< Event flags */
     struct xocp_caps caps;      /**< Device capabilities */
-    struct xocp_cc_data cc_cfg[XOCP_MAX_NUM_CC]; /**< Component carrier configutation */
+    struct xocp_cc_data cc_cfg[XOCP_MAX_NUM_CC]; /**< Component carrier configuration */
     struct xocp_antenna_data antenna_cfg; /**< Antenna configuration */
-    uint8_t prime_cc;           /**< Lowest numerology componen carrier */
+    uint8_t prime_cc;           /**< Lowest numerology component carrier */
 } xocp_state_t;
 
 /*************************/

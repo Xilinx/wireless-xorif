@@ -45,6 +45,7 @@ def poke(offset, value):
 
 # Get the base-address for the device
 try:
+    #base_addr = get_device_address("o_pxxch")
     base_addr = get_device_address("xorif_chan_proc")
 except:
     # Skip all tests if no device

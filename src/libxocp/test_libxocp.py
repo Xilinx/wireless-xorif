@@ -186,20 +186,22 @@ def test_xocp_set_antenna_cfg():
     result, ant_cfg = lib.xocp_get_antenna_cfg(instance)
     assert result == const.XOCP_SUCCESS
     print(ant_cfg)
+    result, caps = lib.xocp_get_capabilities(instance)
+    assert result == const.XOCP_SUCCESS
 
     # modify
-    ant_cfg["num_antennas"] = 4
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
     ant_cfg["interleave"] = 2
-    ant_cfg["data"] = [0, 2, 1, 3]
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # check modifications
     result, ant_cfg = lib.xocp_get_antenna_cfg(instance)
     assert result == const.XOCP_SUCCESS
     print(ant_cfg)
-    assert ant_cfg["num_antennas"] == 4
+    assert ant_cfg["num_antennas"] == caps["max_num_antenna"]
     assert ant_cfg["interleave"] == 2
-    assert ant_cfg["data"] == [0, 2, 1, 3, 0, 0, 0, 0]
+    assert ant_cfg["data"] == [x if x < caps["max_num_antenna"] else 0 for x in range(8)]
 
 def test_xocp_get_trigger_cfg():
     instance = go_to_operational()
@@ -244,6 +246,8 @@ def test_xocp_set_schedule1():
     instance = go_to_operational()
     result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
     assert result == const.XOCP_SUCCESS
+    result, caps = lib.xocp_get_capabilities(instance)
+    assert result == const.XOCP_SUCCESS
 
     # CC[0], 273 RBs, numerology 0
     cc_cfg["num_rbs"] = 273
@@ -254,9 +258,9 @@ def test_xocp_set_schedule1():
 
     # set antenna config
     ant_cfg = {}
-    ant_cfg["num_antennas"] = 8
-    ant_cfg["interleave"] = 1
-    ant_cfg["data"] = [0, 2, 4, 6, 1, 3, 5, 7]
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
+    ant_cfg["interleave"] = 2
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # schedule (DL & UL)
@@ -267,6 +271,8 @@ def test_xocp_set_schedule2():
     instance = go_to_operational()
     result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
     assert result == const.XOCP_SUCCESS
+    result, caps = lib.xocp_get_capabilities(instance)
+    assert result == const.XOCP_SUCCESS
 
     # CC[0], 273 RBs, numerology 0
     cc_cfg["num_rbs"] = 273
@@ -277,9 +283,9 @@ def test_xocp_set_schedule2():
 
     # set antenna config
     ant_cfg = {}
-    ant_cfg["num_antennas"] = 8
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
     ant_cfg["interleave"] = 2
-    ant_cfg["data"] = [0, 2, 4, 6, 1, 3, 5, 7]
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # schedule (DL & UL)
@@ -290,28 +296,7 @@ def test_xocp_set_schedule3():
     instance = go_to_operational()
     result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
     assert result == const.XOCP_SUCCESS
-
-    # CC[0], 273 RBs, numerology 0
-    cc_cfg["num_rbs"] = 273
-    cc_cfg["numerology"] = 0
-    cc_cfg["ccid"] = 0
-    cc_cfg["inter_sym_gap"] = 123
-    assert lib.xocp_set_cc_cfg(instance, 0, cc_cfg) == const.XOCP_SUCCESS
-
-    # set antenna config
-    ant_cfg = {}
-    ant_cfg["num_antennas"] = 8
-    ant_cfg["interleave"] = 4
-    ant_cfg["data"] = [0, 2, 4, 6, 1, 3, 5, 7]
-    assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
-
-    # schedule (DL & UL)
-    sequence = [0]
-    assert lib.xocp_set_schedule(instance, 3, len(sequence), sequence) == const.XOCP_SUCCESS
-
-def test_xocp_set_schedule4():
-    instance = go_to_operational()
-    result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
+    result, caps = lib.xocp_get_capabilities(instance)
     assert result == const.XOCP_SUCCESS
 
     # CC[0], 273 RBs, numerology 0
@@ -323,9 +308,34 @@ def test_xocp_set_schedule4():
 
     # set antenna config
     ant_cfg = {}
-    ant_cfg["num_antennas"] = 4
-    ant_cfg["interleave"] = 4
-    ant_cfg["data"] = [0, 1, 2, 3]
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
+    ant_cfg["interleave"] = 2
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
+    assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
+
+    # schedule (DL & UL)
+    sequence = [0]
+    assert lib.xocp_set_schedule(instance, 3, len(sequence), sequence) == const.XOCP_SUCCESS
+
+def test_xocp_set_schedule4():
+    instance = go_to_operational()
+    result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
+    assert result == const.XOCP_SUCCESS
+    result, caps = lib.xocp_get_capabilities(instance)
+    assert result == const.XOCP_SUCCESS
+
+    # CC[0], 273 RBs, numerology 0
+    cc_cfg["num_rbs"] = 273
+    cc_cfg["numerology"] = 0
+    cc_cfg["ccid"] = 0
+    cc_cfg["inter_sym_gap"] = 123
+    assert lib.xocp_set_cc_cfg(instance, 0, cc_cfg) == const.XOCP_SUCCESS
+
+    # set antenna config
+    ant_cfg = {}
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
+    ant_cfg["interleave"] = 2
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # schedule (DL & UL)
@@ -335,6 +345,8 @@ def test_xocp_set_schedule4():
 def test_xocp_set_schedule5():
     instance = go_to_operational()
     result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
+    assert result == const.XOCP_SUCCESS
+    result, caps = lib.xocp_get_capabilities(instance)
     assert result == const.XOCP_SUCCESS
 
     # CC[0], 273 RBs, numerology 0
@@ -353,9 +365,9 @@ def test_xocp_set_schedule5():
 
     # set antenna config
     ant_cfg = {}
-    ant_cfg["num_antennas"] = 8
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
     ant_cfg["interleave"] = 2
-    ant_cfg["data"] = [0, 2, 4, 6, 1, 3, 5, 7]
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # schedule (DL & UL)
@@ -365,6 +377,8 @@ def test_xocp_set_schedule5():
 def test_xocp_set_schedule6():
     instance = go_to_operational()
     result, cc_cfg = lib.xocp_get_cc_cfg(instance, 0)
+    assert result == const.XOCP_SUCCESS
+    result, caps = lib.xocp_get_capabilities(instance)
     assert result == const.XOCP_SUCCESS
 
     # CC[0], 273 RBs, numerology 0
@@ -383,9 +397,9 @@ def test_xocp_set_schedule6():
 
     # set antenna config
     ant_cfg = {}
-    ant_cfg["num_antennas"] = 8
+    ant_cfg["num_antennas"] = caps["max_num_antenna"]
     ant_cfg["interleave"] = 2
-    ant_cfg["data"] = [0, 2, 4, 6, 1, 3, 5, 7]
+    ant_cfg["data"] = [x for x in range(caps["max_num_antenna"])]
     assert lib.xocp_set_antenna_cfg(instance, ant_cfg) == const.XOCP_SUCCESS
 
     # schedule (DL & UL)
@@ -405,12 +419,13 @@ def test_xocp_monitor_read():
     print(value)
 
     # Writing to registers, but this only works with "fake reg-map"
-    assert lib.xocp_write_reg(instance, "CFG_MONITOR_READ_31__0", 0x89ABCDEF) == const.XOCP_SUCCESS
-    assert lib.xocp_write_reg(instance, "CFG_MONITOR_READ_63_32", 0x01234567) == const.XOCP_SUCCESS
-    assert lib.xocp_monitor_snapshot(instance) == const.XOCP_SUCCESS
-    result, value = lib.xocp_monitor_read(instance, 0)
-    assert result == const.XOCP_SUCCESS
-    assert value == 0x0123456789ABCDEF
+    if "NO_HW" in lib.constants:
+        assert lib.xocp_write_reg(instance, "CFG_MONITOR_READ_31__0", 0x89ABCDEF) == const.XOCP_SUCCESS
+        assert lib.xocp_write_reg(instance, "CFG_MONITOR_READ_63_32", 0x01234567) == const.XOCP_SUCCESS
+        assert lib.xocp_monitor_snapshot(instance) == const.XOCP_SUCCESS
+        result, value = lib.xocp_monitor_read(instance, 0)
+        assert result == const.XOCP_SUCCESS
+        assert value == 0x0123456789ABCDEF
 
 METAL_IRQ_NOT_HANDLED = 0
 METAL_IRQ_HANDLED = 1
@@ -421,6 +436,7 @@ interrupts = [
     const.XOCP_UL_SEQUENCE_ERROR, const.XOCP_UL_SEQUENCE_TABLE_ERROR,
 ]
 
+@pytest.mark.skipif("EXTRA_DEBUG" not in lib.constants, reason="No test code to inject errors")
 def test_inject_errors_basic():
     instance = go_to_operational()
 
@@ -458,6 +474,7 @@ def callback(instance, status):
     test_status = status
     print(f'OCP ISR callback status = {instance}, {status:08x}')
 
+@pytest.mark.skipif("EXTRA_DEBUG" not in lib.constants, reason="No test code to inject errors")
 def test_inject_errors_callback():
     instance = go_to_operational()
     global test_status

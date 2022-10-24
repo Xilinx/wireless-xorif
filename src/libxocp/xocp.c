@@ -66,32 +66,6 @@ static void initialize_instance(xocp_state_t *ptr)
 {
     ASSERT_V(ptr);
 
-    // Perform any initialization here...
-    ptr->callback = NULL;
-    ptr->events = 0;
-
-    // Initialize component carrier configuration
-    for (int i = 0; i < XOCP_MAX_NUM_CC; ++i)
-    {
-        ptr->cc_cfg[i].enable = 0;
-        ptr->cc_cfg[i].num_rbs = 0;
-        ptr->cc_cfg[i].numerology = 0;
-        ptr->cc_cfg[i].ccid = 0;
-        ptr->cc_cfg[i].inter_sym_gap = 0;
-    }
-
-    // Initialize antenna configuration
-    // Defaults to 2 AGs: (0, 1, 2, 3) and (4, 5, 6, 7)
-    ptr->antenna_cfg.num_antennas = 8;
-    ptr->antenna_cfg.interleave = 2;
-    for (int i = 0; i < XOCP_MAX_ANTENNA; ++i)
-    {
-        ptr->antenna_cfg.data[i] = i;
-    }
-
-    // Initialize the "prime CC" (lowest numerology component carrier)
-    ptr->prime_cc = 0;
-
 #ifdef NO_HW
     // Allocate fake register bank memory
     if (!ptr->io)
@@ -113,6 +87,32 @@ static void initialize_instance(xocp_state_t *ptr)
     ptr->caps.max_num_cc = RD_REG(ptr->instance, CFG_MAX_NUM_CC);
     ptr->caps.max_num_antenna = RD_REG(ptr->instance, CFG_MAX_NUM_ANTENNA);
     ptr->caps.max_interleave = RD_REG(ptr->instance, CFG_MAX_ANTENNA_INTERLEAVE);
+
+    // Perform any initialization here...
+    ptr->callback = NULL;
+    ptr->events = 0;
+
+    // Initialize component carrier configuration
+    for (int i = 0; i < XOCP_MAX_NUM_CC; ++i)
+    {
+        ptr->cc_cfg[i].enable = 0;
+        ptr->cc_cfg[i].num_rbs = 0;
+        ptr->cc_cfg[i].numerology = 0;
+        ptr->cc_cfg[i].ccid = 0;
+        ptr->cc_cfg[i].inter_sym_gap = 0;
+    }
+
+    // Initialize antenna configuration
+    // Defaults to 2 AGs, for example: (0, 1, 2, 3) and (4, 5, 6, 7)
+    ptr->antenna_cfg.num_antennas = ptr->caps.max_num_antenna;
+    ptr->antenna_cfg.interleave = 2;
+    for (int i = 0; i < XOCP_MAX_ANTENNA; ++i)
+    {
+        ptr->antenna_cfg.data[i] = i < ptr->antenna_cfg.num_antennas ? i : 0;
+    }
+
+    // Initialize the "prime CC" (lowest numerology component carrier)
+    ptr->prime_cc = 0;
 }
 
 /**

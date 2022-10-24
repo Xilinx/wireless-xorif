@@ -11,6 +11,9 @@ RO = True
 RW = True
 WO = True
 
+# Configure optional parts of tests
+OPTIMIZED = True
+
 def get_device_address(device):
     """
     Get the base address for the given device.
@@ -664,16 +667,19 @@ def test_rw_reg_DEFM_USER_DATA_FILTER_W1_31_0():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W1_31_0", 0x6120 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W1_63_32():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W1_63_32", 0x6124 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W1_95_64():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W1_95_64", 0x6128 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W1_127_96():
     for i in range(0, C_ETH_W):
@@ -684,51 +690,61 @@ def test_rw_reg_DEFM_USER_DATA_FILTER_W1_MASK():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W1_MASK", 0x6130 + i * 0x100, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W2_31_0():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W2_31_0", 0x6140 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W2_63_32():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W2_63_32", 0x6144 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W2_95_64():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W2_95_64", 0x6148 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W2_127_96():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W2_127_96", 0x614c + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W2_MASK():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W2_MASK", 0x6150 + i * 0x100, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W3_31_0():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W3_31_0", 0x6160 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W3_63_32():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W3_63_32", 0x6164 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W3_95_64():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W3_95_64", 0x6168 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W3_127_96():
     for i in range(0, C_ETH_W):
         do_rw_reg("DEFM_USER_DATA_FILTER_W3_127_96", 0x616c + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USER_DATA_FILTER_W3_MASK():
     for i in range(0, C_ETH_W):
@@ -825,131 +841,157 @@ def test_rw_reg_ETH_VLAN_PCP():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_VLAN_PCP", 0xa010 + i * 0x100, 0xe000, 13, 3)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_VERSION():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_VERSION", 0xa030 + i * 0x100, 0xf, 0, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_IHL():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_IHL", 0xa030 + i * 0x100, 0xf0, 4, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_DSCP():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_DSCP", 0xa034 + i * 0x100, 0x3f, 0, 6)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_ECN():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_ECN", 0xa034 + i * 0x100, 0xc0, 6, 2)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_ID():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_ID", 0xa038 + i * 0x100, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_FLAGS():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_FLAGS", 0xa03c + i * 0x100, 0x7, 0, 3)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_FRAGMENT_OFFSET():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_FRAGMENT_OFFSET", 0xa03c + i * 0x100, 0xfff8, 3, 13)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_TIME_TO_LIVE():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_TIME_TO_LIVE", 0xa040 + i * 0x100, 0xff, 0, 8)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_PROTOCOL():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_PROTOCOL", 0xa044 + i * 0x100, 0xff, 0, 8)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_SOURCE_ADD():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_SOURCE_ADD", 0xa048 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV4_DESTINATION_ADD():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV4_DESTINATION_ADD", 0xa04c + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_UDP_SOURCE_PORT():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_UDP_SOURCE_PORT", 0xa050 + i * 0x100, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_UDP_DESTINATION_PORT():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_UDP_DESTINATION_PORT", 0xa050 + i * 0x100, 0xffff0000, 16, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_V():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_V", 0xa080 + i * 0x100, 0xf, 0, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_TRAFFIC_CLASS():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_TRAFFIC_CLASS", 0xa084 + i * 0x100, 0xff, 0, 8)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_FLOW_LABEL():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_FLOW_LABEL", 0xa088 + i * 0x100, 0xfffff, 0, 20)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_NEXT_HEADER():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_NEXT_HEADER", 0xa08c + i * 0x100, 0xff, 0, 8)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_HOP_LIMIT():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_HOP_LIMIT", 0xa090 + i * 0x100, 0xff, 0, 8)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_SOURCE_ADD_31_0():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_SOURCE_ADD_31_0", 0xa094 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_SOURCE_ADD_63_32():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_SOURCE_ADD_63_32", 0xa098 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_SOURCE_ADD_95_64():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_SOURCE_ADD_95_64", 0xa09c + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_SOURCE_ADD_127_96():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_SOURCE_ADD_127_96", 0xa0a0 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_DESTINATION_ADD_31_0():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_DESTINATION_ADD_31_0", 0xa0a4 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_DESTINATION_ADD_63_32():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_DESTINATION_ADD_63_32", 0xa0a8 + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_DESTINATION_ADD_95_64():
     for i in range(0, C_ETH_W):
         do_rw_reg("ETH_IPV6_DESTINATION_ADD_95_64", 0xa0ac + i * 0x100, 0xffffffff, 0, 32)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ETH_IPV6_DESTINATION_ADD_127_96():
     for i in range(0, C_ETH_W):
@@ -1392,93 +1434,112 @@ def test_rw_reg_ORAN_SETUP_SL():
 def test_rw_reg_ORAN_SETUP_SY():
     do_rw_reg("ORAN_SETUP_SY", 0xe610, 0xf, 0, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_SYMPERSLOT():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_SYMPERSLOT", 0xe900 + i * 0x70, 0x1000000, 24, 1)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_NUMEROLOGY():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_NUMEROLOGY", 0xe900 + i * 0x70, 0x70000, 16, 3)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_NUMRBS():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_NUMRBS", 0xe900 + i * 0x70, 0x1ff, 0, 9)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_CTRL_OFFSETS():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_CTRL_OFFSETS", 0xe904 + i * 0x70, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_DATA_SYM_START_INDEX():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_DATA_SYM_START_INDEX", 0xe914 + i * 0x70, 0x3f, 0, 6)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_NUM_DATA_SYM_PER_CC():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_NUM_DATA_SYM_PER_CC", 0xe914 + i * 0x70, 0x3f00, 8, 6)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_NUM_SYM_PER_CC():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_NUM_SYM_PER_CC", 0xe914 + i * 0x70, 0x3f0000, 16, 6)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_UD_IQ_WIDTH():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_UD_IQ_WIDTH", 0xe91c + i * 0x70, 0xf, 0, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_UD_COMP_METH():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_UD_COMP_METH", 0xe91c + i * 0x70, 0xf0, 4, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL", 0xe91c + i * 0x70, 0x100, 8, 1)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_UD_IQ_WIDTH():
     do_rw_reg("ORAN_CC_PRACH_UD_IQ_WIDTH", 0xe920, 0xf, 0, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_UD_COMP_METH():
     do_rw_reg("ORAN_CC_PRACH_UD_COMP_METH", 0xe920, 0xf0, 4, 4)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL():
     do_rw_reg("ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL", 0xe920, 0x100, 8, 1)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_SETUP_C_ABS_SYMBOL():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_SETUP_C_ABS_SYMBOL", 0xe930 + i * 0x70, 0xfff, 0, 12)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_SETUP_C_CYCLES():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_SETUP_C_CYCLES", 0xe934 + i * 0x70, 0x1ffff, 0, 17)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_SETUP_D_CYCLES():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_SETUP_D_CYCLES", 0xe938 + i * 0x70, 0x1ffff, 0, 17)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC", 0xe960 + i * 0x70, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_SECTS_X_SYMBOLS():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_SSB_SECTS_X_SYMBOLS", 0xe968 + i * 0x70, 0xffff, 0, 16)
 
+@pytest.mark.skipif(OPTIMIZED, reason="Register optimized out of build")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_SSB_DATA_UNROLL_OFFSET():
     for i in range(0, C_MAX_DL_SYMS):

@@ -16,6 +16,9 @@ lib.xorif_init()
 const = namedtuple("xorif_const", lib.constants.keys())(*lib.constants.values())
 caps = lib.xorif_get_capabilities()
 
+# Configure optional parts of tests
+OPTIMIZED = True
+
 # Supported compression modes
 comp_list = [(const.IQ_COMP_NONE, 0),
              (const.IQ_COMP_NONE, 16),
@@ -152,8 +155,6 @@ def test_config_cc_1():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 0
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 0
@@ -163,11 +164,14 @@ def test_config_cc_1():
     assert alloc['dl_data_ptrs_offset'] == 0
     assert alloc['dl_data_buff_offset'] == 0
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 0
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 0
-    assert alloc['ssb_data_buff_offset'] == 0
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 0
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 0
+        assert alloc['ssb_data_buff_offset'] == 0
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(not(caps['iq_de_comp_methods'] & 0x2), reason = "Compression mode not supported")
 def test_config_cc_1b():
@@ -202,8 +206,6 @@ def test_config_cc_1b():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 0
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 0
@@ -213,11 +215,14 @@ def test_config_cc_1b():
     assert alloc['dl_data_ptrs_offset'] == 0
     assert alloc['dl_data_buff_offset'] == 0
     assert alloc['dl_data_buff_size'] == 96 * 1
-    assert alloc['ssb_ctrl_offset'] == 0
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 0
-    assert alloc['ssb_data_buff_offset'] == 0
-    assert alloc['ssb_data_buff_size'] == 77 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 0
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 0
+        assert alloc['ssb_data_buff_offset'] == 0
+        assert alloc['ssb_data_buff_size'] == 77 * 1
 
 @pytest.mark.skipif(not(caps['iq_de_comp_methods'] & 0x2), reason = "Compression mode not supported")
 def test_config_cc_1c():
@@ -252,8 +257,6 @@ def test_config_cc_1c():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 0
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 0
@@ -263,11 +266,14 @@ def test_config_cc_1c():
     assert alloc['dl_data_ptrs_offset'] == 0
     assert alloc['dl_data_buff_offset'] == 0
     assert alloc['dl_data_buff_size'] == 99 * 1
-    assert alloc['ssb_ctrl_offset'] == 0
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 0
-    assert alloc['ssb_data_buff_offset'] == 0
-    assert alloc['ssb_data_buff_size'] == 78 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 0
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 0
+        assert alloc['ssb_data_buff_offset'] == 0
+        assert alloc['ssb_data_buff_size'] == 78 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 2, reason = "Insufficient component carrier supported")
 def test_config_cc_2():
@@ -301,8 +307,6 @@ def test_config_cc_2():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 20
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 20
@@ -312,11 +316,14 @@ def test_config_cc_2():
     assert alloc['dl_data_ptrs_offset'] == 1
     assert alloc['dl_data_buff_offset'] == 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 10
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 1
-    assert alloc['ssb_data_buff_offset'] == 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 10
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 1
+        assert alloc['ssb_data_buff_offset'] == 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 3, reason = "Insufficient component carrier supported")
 def test_config_cc_3():
@@ -356,8 +363,6 @@ def test_config_cc_3():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 40
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 40
@@ -367,11 +372,14 @@ def test_config_cc_3():
     assert alloc['dl_data_ptrs_offset'] == 2
     assert alloc['dl_data_buff_offset'] == 146 + 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 20
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 2
-    assert alloc['ssb_data_buff_offset'] == 127 + 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 20
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 2
+        assert alloc['ssb_data_buff_offset'] == 127 + 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 4, reason = "Insufficient component carrier supported")
 @pytest.mark.skipif(caps['max_data_symbols'] < 8, reason = "Insufficient symbol space")
@@ -418,8 +426,6 @@ def test_config_cc_4():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 60
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 60
@@ -429,11 +435,14 @@ def test_config_cc_4():
     assert alloc['dl_data_ptrs_offset'] == 3
     assert alloc['dl_data_buff_offset'] == 146 + 146 + 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 30
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 3
-    assert alloc['ssb_data_buff_offset'] == 127 + 127 + 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 30
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 3
+        assert alloc['ssb_data_buff_offset'] == 127 + 127 + 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 2, reason = "Insufficient component carrier supported")
 def test_reconfig_cc_2():
@@ -475,8 +484,6 @@ def test_reconfig_cc_2():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 40
     assert alloc['ul_ctrl_size'] == 15 * 2
     assert alloc['ul_ctrl_base_offset'] == 40
@@ -486,11 +493,14 @@ def test_reconfig_cc_2():
     assert alloc['dl_data_ptrs_offset'] == 0
     assert alloc['dl_data_buff_offset'] == 146 + 146
     assert alloc['dl_data_buff_size'] == 206 * 1
-    assert alloc['ssb_ctrl_offset'] == 0
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 0
-    assert alloc['ssb_data_buff_offset'] == 0
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 0
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 0
+        assert alloc['ssb_data_buff_offset'] == 0
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 3, reason = "Insufficient component carrier supported")
 def test_reverse_config_cc_3():
@@ -530,8 +540,6 @@ def test_reverse_config_cc_3():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 40
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 40
@@ -541,11 +549,14 @@ def test_reverse_config_cc_3():
     assert alloc['dl_data_ptrs_offset'] == 2
     assert alloc['dl_data_buff_offset'] == 146 + 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 20
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 2
-    assert alloc['ssb_data_buff_offset'] == 127 + 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 20
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 2
+        assert alloc['ssb_data_buff_offset'] == 127 + 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 3, reason = "Insufficient component carrier supported")
 def test_reorder_config_cc_3():
@@ -601,8 +612,6 @@ def test_reorder_config_cc_3():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 40
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 40
@@ -612,11 +621,14 @@ def test_reorder_config_cc_3():
     assert alloc['dl_data_ptrs_offset'] == 2
     assert alloc['dl_data_buff_offset'] == 146 + 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 20
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 2
-    assert alloc['ssb_data_buff_offset'] == 127 + 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 20
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 2
+        assert alloc['ssb_data_buff_offset'] == 127 + 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1
 
 @pytest.mark.skipif(caps['max_cc'] < 4, reason = "Insufficient component carrier supported")
 @pytest.mark.skipif(caps['max_data_symbols'] < 8, reason = "Insufficient symbol space")
@@ -679,8 +691,6 @@ def test_reorder_config_cc_4():
     assert alloc['ul_ctrl_sym_num'] == 2
     assert alloc['dl_ctrl_sym_num'] == 2
     assert alloc['dl_data_sym_num'] == 1
-    assert alloc['ssb_ctrl_sym_num'] == 2
-    assert alloc['ssb_data_sym_num'] == 1
     assert alloc['ul_ctrl_offset'] == 60
     assert alloc['ul_ctrl_size'] == 10 * 2
     assert alloc['ul_ctrl_base_offset'] == 60
@@ -690,8 +700,11 @@ def test_reorder_config_cc_4():
     assert alloc['dl_data_ptrs_offset'] == 3
     assert alloc['dl_data_buff_offset'] == 146 + 146 + 146
     assert alloc['dl_data_buff_size'] == 146 * 1
-    assert alloc['ssb_ctrl_offset'] == 30
-    assert alloc['ssb_ctrl_size'] == 5 * 2
-    assert alloc['ssb_data_ptrs_offset'] == 3
-    assert alloc['ssb_data_buff_offset'] == 127 + 127 + 127
-    assert alloc['ssb_data_buff_size'] == 127 * 1
+    if not OPTIMIZED:
+        assert alloc['ssb_ctrl_sym_num'] == 2
+        assert alloc['ssb_data_sym_num'] == 1
+        assert alloc['ssb_ctrl_offset'] == 30
+        assert alloc['ssb_ctrl_size'] == 5 * 2
+        assert alloc['ssb_data_ptrs_offset'] == 3
+        assert alloc['ssb_data_buff_offset'] == 127 + 127 + 127
+        assert alloc['ssb_data_buff_size'] == 127 * 1

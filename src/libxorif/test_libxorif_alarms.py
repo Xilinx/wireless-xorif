@@ -32,6 +32,7 @@ METAL_IRQ_NOT_HANDLED = 0
 METAL_IRQ_HANDLED = 1
 test_status = 0 # global for testing status received via callback
 
+@pytest.mark.skipif("EXTRA_DEBUG" not in lib.constants, reason="No test code to inject errors")
 def test_inject_errors_basic():
     assert lib.xorif_get_state() == 1
 
@@ -55,6 +56,7 @@ def test_inject_errors_basic():
     lib.xorif_clear_fhi_alarms()
     assert lib.xorif_get_fhi_alarms() == 0
 
+@pytest.mark.skipif("EXTRA_DEBUG" not in lib.constants, reason="No test code to inject errors")
 def test_inject_errors_multiple():
     assert lib.xorif_get_state() == 1
 
@@ -78,6 +80,7 @@ def callback(status):
     test_status = status
     print(f'ORIF ISR callback status = {status:08x}')
 
+@pytest.mark.skipif("EXTRA_DEBUG" not in lib.constants, reason="No test code to inject errors")
 def test_inject_errors_callback():
     assert lib.xorif_get_state() == 1
     global test_status
