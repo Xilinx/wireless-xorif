@@ -19,8 +19,9 @@ fi
 ipAddr="192.168.99.${lByte}"
 
 echo "Setting up the XXV Ethernet link ${eTag} IP= ${ipAddr}"
-ip link set dev ${eTag} up
+ip link set dev ${eTag} down
 ip addr add ${ipAddr}/24 dev ${eTag}
+ip link set dev ${eTag} up
 
 ## Enable jumbo frames - MTU API not hooked up in driver yet
 ## but the driver currently forces jumbo frames on at probe() time 

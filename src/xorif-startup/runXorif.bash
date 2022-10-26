@@ -3,8 +3,8 @@ XROEROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 ###############################################################################
 ## Address Maps
-## In the default example the following base addresses are used for the 
-## Radio and Framer. 
+## In the default example the following base addresses are used for the
+## Radio and Framer.
 ## 0xA000_0000 = roe_framer
 ## 0xA006_0000 = radio traffic generator
 ###############################################################################
@@ -13,7 +13,7 @@ XROEROOTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 ## Local functions
 ###############################################################################
 USERAPPFILE=${XROEROOTDIR}/xorif-app
-LOGGER="/usr/bin/logger -t $0"
+#LOGGER="/usr/bin/logger -t $0"
 LOGGER="echo"
 
 ###############################################################################
@@ -23,9 +23,9 @@ LOGGER="echo"
 f_testMaskedValue () {
    result=$((($1) & ($2)))
    if [ $result -gt 0 ]; then
-   	  echo 1
+      echo 1
    else
-   	  echo 0
+      echo 0
    fi
 }
 
@@ -45,7 +45,7 @@ f_maskValue () {
 
    ## Create a 32 it mask
    maskedVal=$((((((2**($bitWidth))-1) << ($bitOffset))) & ($readValue)))
-   
+
    echo $maskedVal
 
 }
@@ -61,7 +61,7 @@ f_readModifyWrite32 () {
    mask=$(((~(((2**($bitWidth))-1) << ($bitOffset))) & (0xFFFFFFFF)))
    writeValue=$((($readValue) & ($mask)))
    writeValue=$((($writeValue) | (($newValue) << ($bitOffset))))
-   
+
    ## Show the result
    #printf "@ 0x%x read:0x%x write 0x%x\n" $1  $readValue $writeValue
    devmem $address w $writeValue
@@ -92,7 +92,7 @@ fi
 ${LOGGER} "** Ethernet Interfaces 10G = ${eth_10g}, 10/100 = ${eth_100m}"
 ${LOGGER} "** Supported antennas: $(devmem 0xa0000300)"
 
-## 
+##
 ${LOGGER} "Update the AXI4 timeout so we know this has been executed"
 devmem 0xa0000018 32 0x81
 
@@ -104,8 +104,6 @@ devmem 0xa0060010 32 0x0
 ###############################################################################
 dipValue=$(devmem 0xa0060014)
 
-${LOGGER} "Bring the 10/100 link down->up"
-
 if (( $( f_testMaskedValue $dipValue 0x02 ) != 0 )); then
    ${LOGGER} "Unit is slave assign IP address 10 on ${eth_10g}"
    xroe-config-XXV-ptp.sh 10 ${eth_10g}
@@ -116,12 +114,12 @@ fi
 sleep 2
 
 if (( $( f_testMaskedValue $dipValue 0x01 ) != 0 )); then
-   ${LOGGER} "Board is in LED Mode 2" 
+   ${LOGGER} "Board is in LED Mode 2"
 fi
 
 if (( $( f_testMaskedValue $dipValue 0x80 ) != 0 )); then
    ${LOGGER} "Board is in Radio Loopback mode: enable framer"
-   ## This should be the Master board in the Demo. 
+   ## This should be the Master board in the Demo.
    devmem 0xa0002000 32 0
 fi
 
@@ -148,9 +146,9 @@ fi
 #fi
 
 ###############################################################################
-${LOGGER} "Bring the 10G link down->up one last time to flush system"
-ip link set dev ${eth_10g} down
-ip link set dev ${eth_10g} up
+#${LOGGER} "Bring the 10G link down->up one last time to flush system"
+#ip link set dev ${eth_10g} down
+#ip link set dev ${eth_10g} up
 
 ###############################################################################
 #runTimeMonitor=${XROEROOTDIR}/xroe_monitor.pl
@@ -168,7 +166,7 @@ blStatus=1
 blNotSetCount=0
 while [ 1 ];
    do
-   
+
    ##--------------------------------------------------------------------------
    ## Block lock check
    ##--------------------------------------------------------------------------
@@ -176,25 +174,31 @@ while [ 1 ];
    blockLockStatus=$(devmem 0xa002040c)
 
    ## Write BLOCK lock status to app scratch space in the radio
-   f_readModifyWrite32 0xA0060050 1 0 $(f_maskValue $blockLockStatus 1 0) 
+   f_readModifyWrite32 0xA0060050 1 0 $(f_maskValue $blockLockStatus 1 0)
 
    if (( $( f_testMaskedValue $blockLockStatus 0x01 ) == 0 )); then
-      ${LOGGER} "Block lock has been lost : $(devmem 0xa002040c) : $blockLockStatus : $blNotSetCount"
-      if (($blNotSetCount > 10)); then
-        ${LOGGER} "Try XXV reset."
-        f_resetXxvMac
-      fi 
       blStatus=0
       blNotSetCount=$((blNotSetCount + 1))
+      ${LOGGER} "Block lock has been lost : $(devmem 0xa002040c) : $blockLockStatus : $blNotSetCount"
+      if (($blNotSetCount >= 5)); then
+        ${LOGGER} "Trying XXV reset."
+        f_resetXxvMac
+        sleep 5
+      fi
+      if (($blNotSetCount >= 10)); then
+        ${LOGGER} "Going quiet..."
+        LOGGER=:
+      fi
       sleep 2
    else
       if (( $blStatus == 0 )); then
+         LOGGER=echo
          ${LOGGER} "Block lock has been reacquired : $blockLockStatus"
          blStatus=1
          blNotSetCount=0
       fi
    fi
-   
+
    ##--------------------------------------------------------------------------
    ## Sleep
    ##--------------------------------------------------------------------------

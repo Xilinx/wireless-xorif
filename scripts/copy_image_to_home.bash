@@ -45,6 +45,7 @@ set PL_IMGUB=${PL_SRC}/image.ub
 echo "Set LTX files to copy"
 set VI_LTX=$BASEPATH/${TAG}/vivado/${TAG}.runs/impl_1/design_1_wrapper.ltx
 set VI_LTX=$BASEPATH/${TAG}/vivado/*.runs/impl_1/*.ltx
+set VI_LTX=$BASEPATH/${TAG}/vivado/*.runs/impl_1/debug_nets.ltx
 
 if ( ! -e $PL_BOOTB ) then
    echo "Exiting, non-existing file $PL_BOOTB"
@@ -76,7 +77,7 @@ echo "Copy PL files from $PL_SRC to $DEST"
 cp ${PL_BOOTB} $DEST/.
 cp ${PL_BOOTS} $DEST/.
 cp ${PL_IMGUB} $DEST/.
-cp ${VI_LTX}   $DEST/.
+cp ${VI_LTX}   $DEST/${TAG}_${CREATIONTIME}.ltx
 
 echo "##### CONTENT OF $DEST"
 ls -la $DEST
