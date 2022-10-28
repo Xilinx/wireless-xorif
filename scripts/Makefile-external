@@ -19,6 +19,9 @@ endif
 # Set ROOTFS type: 0 = INITRD, 1 = INITRAMFS, 2 = ETX4
 ROOTFS = 0
 
+# Set System Init type: 0 = sysvinit, 1 = systemd
+SYS_INIT = 0
+
 # Define targets for "all" here
 ALL += zcu102_om5_exs zcu111_om5_exs zcu111_om5_25_exs
 
@@ -32,7 +35,6 @@ override APPS += libxocp
 
 # Add scripts here
 ifeq ($(XXV),1)
-override INSTALL += xorif-startup
 override INSTALL += xorif-scripts
 endif
 
@@ -59,14 +61,25 @@ override ROOTFS_Y += imagefeature-debug-tweaks
 
 # Add rootfs (=N) config options here
 
+ifeq ($(SYS_INIT),0)
+override ROOTFS_Y += Init-manager-sysvinit
+override ROOTFS_N += Init-manager-systemd
+else
+override ROOTFS_N += Init-manager-sysvinit
+override ROOTFS_Y += Init-manager-systemd
+endif
+
 # Extra bits
 override EXTRAS += linux
-override EXTRAS += init-ifupdown
 override EXTRAS += perl-modules
 override EXTRAS += perl-module-findbin
 override EXTRAS += perl-module-carp
 override EXTRAS += perl-module-lib
 override EXTRAS += python3-modules
+ifeq ($(XXV),1)
+override EXTRAS += init-ifupdown
+override EXTRAS += xorif-startup
+endif
 
 # Add help / usage guide here
 usage:
@@ -139,6 +152,18 @@ init-ifupdown:
 	@echo Adding changes for $@
 	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-core/$@
 	cp -pr $(RCP_DIR)/recipes-core/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-core/$@/.
+
+xorif-startup:
+	@echo Adding changes for $@
+	petalinux-create --project $(PLX_DIR) --type apps --template install --name $@ --enable --force
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/*
+	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
+	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
+ifeq ($(SYS_INIT),0)
+	-cp -p $(RCP_DIR)/recipes-apps/$@/xorif-startup-sysvinit.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
+else
+	-cp -p $(RCP_DIR)/recipes-apps/$@/xorif-startup-systemd.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
+endif
 
 # Recipe to add kernel module
 $(MODULES):

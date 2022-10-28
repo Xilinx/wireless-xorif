@@ -4,7 +4,7 @@ Description=xorif-startup
 [Service]
 Type=simple
 ExecStart=/usr/bin/xorif-startup.sh
-StandardOutput=journal+console
+StandardOutput=null
 
 [Install]
 WantedBy=multi-user.target
