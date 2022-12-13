@@ -384,7 +384,7 @@ out:
 static int xlnx_ptp_timer_remove(struct platform_device *pdev)
 {
   struct xlnx_ptp_timer *timer = platform_get_drvdata(pdev);
-  free_irq(timer->irq, timer->dev);
+  free_irq(timer->irq, timer);
   if (timer->ptp_clock) {
     ptp_clock_unregister(timer->ptp_clock);
     timer->ptp_clock = NULL;
