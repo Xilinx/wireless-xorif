@@ -1,10 +1,14 @@
 # Xilinx O-RAN Radio PXXCH Channel Processor (LIBXOCP)
 
-* The C library (libxocp) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio PXXCH Channel Processor IP core
+* The C library (libxocp) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio PXXCH Channel Processor IP core.
+
+* Release 2023.1 has the option of the ORAN Channel Processor (OCP) integrated with ORAN Radio Interface (ORIF), which uses common s/w driver library (libxorif), but with separate APIs.
 
 ## API
 
 * The C library API is documented [here](../../doc/libxocp_html/group__API.html)
+
+    * The main header for the ORAN Channel Processor (OCP) is `xocp_api.h`
 
 ## Building
 

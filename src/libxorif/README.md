@@ -2,9 +2,15 @@
 
 * The C library (libxorif) is a Linux shared library that provides the functions needed to access, configure and manage the O-RAN Radio Interface IP core
 
+* Release 2023.1 has the option of the ORAN Channel Processor (OCP) integrated with ORAN Radio Interface (ORIF), which uses common s/w driver library (libxorif), but with separate APIs.
+
 ## API
 
 * The C library API is documented [here](../../doc/libxorif_html/group__API.html)
+
+    * The main header file for the ORAN Radio Interface (ORIF) is `xorif_api.h`
+
+    * The main header for the integrated ORAN Channel Processor (OCP) is `xocp_api.h`
 
 * The example application (xorif-app) demonstrates the use of the library API, and is a good starting point for reference
 
@@ -18,11 +24,12 @@
 
 ## Python Bindings
 
-* The Python module `pylibxorif.py` provides (Python 3) bindings for the C library
+* The Python module `pylibxorif.py` provides (Python 3) bindings for the ORAN Radio Interface C library
     * The `pylibxorif.py` module can be found in the current directory, and it is also installed as part of the PetaLinux build, and can be found in the `/usr/share/xorif` directory
     * The Python bindings use CFFI and can be used directly, or in conjunction with other libraries such as Pyro4 which allows remote procedure calls to Python objects
     * The Pyro4 and CFFI libraries are included as part of the Petalinux build, or can be installed manually with `pip install`
     * The Python bindings are provided for "ease of use". The Python API is largely the same as the C API, but more "Pythonic", e.g. allowing "dicts" to be passed in rather than pointers to structures.
+* Similarly, there are Python bindings for the integrated ORAN Channel Processor which can be found in `pylibxocp.py`
 
 ## Usage
 
