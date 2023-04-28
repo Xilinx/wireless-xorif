@@ -1,0 +1,16 @@
+init
+get sw_version
+get fhi_sw_version
+get fhi_hw_version
+get fhi_hw_internal_rev
+get fhi_capabilities
+get fhi_caps
+get fhi_cc_config 0
+get fhi_cc_alloc 0
+get fhi_stats 0
+get fhi_alarms
+get fhi_state
+get fhi_enabled
+help fish
+fish
+exit

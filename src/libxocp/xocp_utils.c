@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@
 /************************/
 
 #ifdef NO_HW
-static const char *fake_device = "fake_device.00000000";
+static const char *fake_device = "af810000.o_pxxch";
 #endif
 
 /****************************/
@@ -133,7 +133,7 @@ const char *get_device_name(const char *dev_name, const char *compatible)
 
 #else
     // Fake it with NO_HW
-    if (!dev_name || strncmp(dev_name, fake_device, strlen(dev_name)) == 0)
+    if (!dev_name || strstr(fake_device, dev_name))
     {
         match = true;
         strncpy(buff, fake_device, MAX_PATH_LENGTH);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 #ifndef XORIF_UTILS_H
 #define XORIF_UTILS_H
 
-#include <inttypes.h>
+#include "xorif_common.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/
@@ -42,20 +42,6 @@ enum xorif_chan_type
     CHAN_PRACH,  /**< PRACH */
 };
 
-/**
- * @brief Structure contains information on device register field./
- */
-struct reg_info
-{
-    const char *name; /**< Register field name */
-    uint32_t addr;    /**< Register field address */
-    uint32_t mask;    /**< Register field mask */
-    uint16_t shift;   /**< Register field shift */
-    uint16_t width;   /**< Register field width */
-};
-
-typedef struct reg_info reg_info_t;
-
 typedef int (*irq_handler_t)(int id, void *data);
 
 // Macro to perform ceil(x/y)
@@ -66,76 +52,23 @@ typedef int (*irq_handler_t)(int id, void *data);
 /***************************/
 
 /**
- * @brief Find register field in register-map.
- * @param[in] reg_map Pointer to register map array
- * @param[in] num Number of elements in register map array
- * @param[in] name Name of register
+ * @brief Get the node property from device tree.
+ * @param device Path name of the device (e.g. /sys/bus/platform/devices/XYZ)
+ * @param property Name of the property
+ * @param dest Pointer to destination buffer
+ * @param max_len Maximum size of destination buffer
  * @returns
- *      - Pointer to register field info (or NULL if not found)
- */
-const reg_info_t *find_register(const reg_info_t *reg_map, int num, const char *name);
-
-/**
- * @brief Utility function to read from an address in the specified IO region.
- * @param[in] io Pointer to the IO region structure
- * @param[in] name Register field name (used for debug)
- * @param[in] addr Address to use
- * @returns
- *      - Register field value
- */
-uint32_t read_reg_raw(void *io, const char *name, uint32_t addr);
-
-/**
- * @brief Utility function to write to an address in the specified IO region.
- * @param[in] io Pointer to the IO region structure
- * @param[in] name Register field name (used for debug)
- * @param[in] addr Address to use
- * @param[in] value The value to write to the register
- */
-void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value);
-
-/**
- * @brief Utility function to read from a register field in the specified IO region.
- * @param[in] io Pointer to the IO region structure
- * @param[in] name Register field name (used for debug)
- * @param[in] addr Address to use
- * @param[in] mask Mask to be used with the field
- * @param[in] shift Number of bits to shift the field
- * @param[in] width Width of the field
- * @returns
- *      - Register field value
- */
-uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width);
-
-/**
- * @brief Utility function to write to a register field in the specified IO region.
- * @param[in] io Pointer to the IO region structure
- * @param[in] name Register field name (used for debug)
- * @param[in] addr Address to use
- * @param[in] mask Mask to be used with the field
- * @param[in] shift Number of bits to shift the field
- * @param[in] width Width of the field
- * @param[in] value The value to write to the register
- */
-void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value);
-
-/**
- * @brief Get the device's full name given the short name.
- * @param[in] short_name Device name to look for
- * @returns
- *      - NULL if not found
- *      - Pointer to name string
+ *      1 - if the property was successfully retrieved
+ *      0 - if the property was not found
  * @note
- * The short name is something like "oran_radio_if", and the returned result, is the fully
- * qualified name, e.g. "oran_radio_if.a0000000".
- * The function will return with the name of the first matching device, and if multiple names match
- * only the first gets reported.
- * The returned pointer points to a static char buffer that owned by this function. The buffer
- * contents are valid until the function is called again.
+ * Finds the device tree property, e.g. .../devices/XYZ/of_node/property
+ * which is written back to the supplied buffer.
  */
-const char *get_device_name(const char *short_name);
+int get_node_property(const char *device,
+                      const char *property,
+                      void *dest,
+                      size_t max_len);
 
-#ifndef NO_HW
 /**
  * @brief Get device 'u32' property from device tree file system.
  * @param[in] dev_name Device name
@@ -145,8 +78,25 @@ const char *get_device_name(const char *short_name);
  *      - 0 if not found
  *      - 1 if found
  */
-int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value);
-#endif
+int get_device_property_u32(const char *dev_name,
+                            const char *prop_name,
+                            uint32_t *value);
+
+/**
+ * @brief Get device name, given hint and/or compatible property.
+ * @param dev_name The name of the devivce (or a hint/partial name)
+ * @param compatible The compatible property
+ * @returns
+ *      - Pointer to full device name if a match is found
+ *      - NULL if no match is found
+ * @note
+ * The "dev_name" can the full name, e.g. "a0000000.oran_radio_if" or a
+ * partial name, e.g. "oran_radio", or can be left as NULL.
+ * The "compatible" property is the Linux device compatible property of
+ * the required device, or it can also be NULL.
+ * Either "dev_name" or "compatible" must be non-NULL.
+ */
+const char *get_device_name(const char *dev_name, const char *compatible);
 
 /**
  * @brief Adds a device to libmetal framework

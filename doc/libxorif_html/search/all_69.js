@@ -1,7 +1,10 @@
 var searchData=
 [
   ['init_5fmemory_5fallocator',['init_memory_allocator',['../group__libxorif.html#ga8dae882df7c50f3aa75c8dba1b5c81c3',1,'xorif_utils.c']]],
-  ['io',['io',['../structxorif__device__info.html#a427e9284870e6e71e11b876996f95d61',1,'xorif_device_info']]],
+  ['instance',['instance',['../structxocp__state__t.html#afe56e836d9e5d2305653e9ce3304a697',1,'xocp_state_t']]],
+  ['inter_5fsym_5fgap',['inter_sym_gap',['../structxocp__cc__data.html#a4280e2bbd3d02c13836a79c3ec1aba96',1,'xocp_cc_data']]],
+  ['interleave',['interleave',['../structxocp__antenna__data.html#afd5f21dbe9c299b3fa2ef82836455315',1,'xocp_antenna_data']]],
+  ['io',['io',['../structxocp__state__t.html#a7bda0387ded60dd435b5b1a340029c52',1,'xocp_state_t::io()'],['../structxorif__device__info.html#a427e9284870e6e71e11b876996f95d61',1,'xorif_device_info::io()']]],
   ['ip_5fmode_5fipv4',['IP_MODE_IPV4',['../group__API.html#ggada146a3a3559be5ef31bf10fac14ff24af87e096d037258dfd371fbfc34d3af79',1,'xorif_api.h']]],
   ['ip_5fmode_5fipv6',['IP_MODE_IPV6',['../group__API.html#ggada146a3a3559be5ef31bf10fac14ff24a8bde3d623e49b6310e35dfa4f098e6bb',1,'xorif_api.h']]],
   ['ip_5fmode_5fraw',['IP_MODE_RAW',['../group__API.html#ggada146a3a3559be5ef31bf10fac14ff24a2637e615001e14c5b17fffb76774f0b9',1,'xorif_api.h']]],

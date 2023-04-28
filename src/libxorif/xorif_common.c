@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
 #include "xorif_registers.h"
 
 // Globals variables
-uint16_t xorif_state;
+uint16_t xorif_state = 0;
 int xorif_trace = 0;
 struct xorif_caps fhi_caps;
 struct xorif_cc_config cc_config[MAX_NUM_CC];
@@ -40,13 +40,40 @@ FILE *log_file = NULL;
 #endif
 
 // Local variables
-static const char *fhi_names[] = {"oran_radio_if", NULL};
+static const char *compatible = "xlnx,oran-radio-if-3.0";
 
 // System "constants" (can be changed with API)
 struct xorif_system_constants fhi_sys_const =
 {
     .FH_DECAP_DLY = DEFAULT_FH_DECAP_DLY,      // Downlink delay estimate (see PG370)
 };
+
+#ifndef NO_HW
+/**
+ * @brief Retrieve libmetal device info.
+ * @param dev Pointer to write-back the libmetal device pointer
+ * @param io Pointer to write-back the libmetal io pointer
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * This function must be called after the FHI API s/w has been initialized,
+ * i.e. xorif_init() called successfully.
+*/
+int xorif_retrieve_device_info(struct metal_device **dev, struct metal_io_region **io)
+{
+    if (xorif_state)
+    {
+        *dev = fh_device.dev;
+        *io = fh_device.io;
+        return XORIF_SUCCESS;
+    }
+    else
+    {
+        return XORIF_LIBMETAL_ERROR;
+    }
+}
+#endif
 
 /**
  * @brief Initialize the configuration data.
@@ -164,27 +191,8 @@ int xorif_init(const char *device_name)
     }
 #endif
 
-    // Get FHI device name
-    if (device_name == NULL)
-    {
-        // No device name specified
-        // Try the usual suspects in /sys/bus/platform/devices ...
-        int i = 0;
-        while (fhi_names[i] != NULL)
-        {
-            if ((device_name = get_device_name(fhi_names[i])) != NULL)
-            {
-                break;
-            }
-            ++i;
-        }
-    }
-    else
-    {
-        // Get full device name
-        device_name = get_device_name(device_name);
-    }
-
+    // Get best-match device name
+    device_name = get_device_name(device_name, compatible);
     if (device_name == NULL)
     {
         PERROR("No FHI device found\n");
@@ -275,19 +283,28 @@ int xorif_has_front_haul_interface(void)
     }
     else
     {
-        // Try the usual suspects in /sys/bus/platform/devices ...
-        int i = 0;
-        while (fhi_names[i] != NULL)
-        {
-            if (get_device_name(fhi_names[i]) != NULL)
-            {
-                return 1;
-            }
-            ++i;
-        }
+        return 0;
     }
+#endif
+}
 
-    return 0;
+int xorif_has_oran_channel_processor(void)
+{
+    TRACE("xorif_has_oran_channel_processor()\n");
+
+#ifdef NO_HW
+    // Always fake it, when compiled with NO_HW
+    return 1;
+#else
+    if (fh_device.dev != NULL)
+    {
+        // Device exists
+        return READ_REG(CFG_CONFIG_XRAN_OCP_IN_CORE);
+    }
+    else
+    {
+        return 0;
+    }
 #endif
 }
 

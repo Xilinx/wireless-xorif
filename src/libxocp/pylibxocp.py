@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+# Copyright 2020 - 2023 Advanced Micro Devices, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# pylint: disable=too-many-public-methods
+# pylint: disable=no-member
 
 __author__ = "Steven Dickinson"
 __copyright__ = "Copyright 2022, Advanced Micro Devices, Inc."
@@ -32,12 +35,12 @@ try:
     ffi.cdef(f.read())
 except Exception as e:
     print(f"Failed to open/read header '{inc_path}'")
-    print(e)
+    raise e
 try:
     lib = ffi.dlopen(lib_path)
 except Exception as e:
     print(f"Failed to open/load library '{lib_path}'")
-    print(e)
+    raise e
 
 # Some utilities to convert cdata types to regular Python types...
 
@@ -101,7 +104,7 @@ class LIBXOCP:
             # We're going to expose all enums and integer #define constants
             constants = {}
             for a in dir(lib):
-                if type(getattr(lib, a)) == int:
+                if isinstance(getattr(lib, a), int):
                     constants[a] = getattr(lib, a)
             cls._instance._constants = constants
 
@@ -138,7 +141,7 @@ class LIBXOCP:
 
     # uint32_t xocp_get_sw_version(void)
     def xocp_get_sw_version(self):
-        self.logger.info(f'xocp_get_sw_version:')
+        self.logger.info('xocp_get_sw_version:')
         value = lib.xocp_get_sw_version()
         major = (value >> 24) & 0xFF
         minor = (value >> 16) & 0xFF
@@ -229,6 +232,11 @@ class LIBXOCP:
         result = lib.xocp_get_cc_cfg(instance, cc, data_ptr)
         return (result, cdata_to_py(data_ptr[0]))
 
+    def xocp_get_cc_cfg_struct(self):
+        self.logger.info(f'xocp_get_cc_cfg_struct:')
+        data_ptr = ffi.new("struct xocp_cc_data *")
+        return cdata_to_py(data_ptr[0])
+
     # int xocp_set_cc_cfg(uint16_t instance, uint8_t cc, const struct xocp_cc_data *data)
     def xocp_set_cc_cfg(self, instance, cc, data):
         self.logger.info(f'xocp_set_cc_cfg: {instance}, {cc}, {data}')
@@ -242,6 +250,11 @@ class LIBXOCP:
         result = lib.xocp_get_antenna_cfg(instance, data_ptr)
         return (result, cdata_to_py(data_ptr[0]))
 
+    def xocp_get_antenna_cfg_struct(self):
+        self.logger.info(f'xocp_get_antenna_cfg_struct:')
+        data_ptr = ffi.new("struct xocp_antenna_data *")
+        return cdata_to_py(data_ptr[0])
+
     # int xocp_set_antenna_cfg(uint16_t instance, const struct xocp_cc_data *data)
     def xocp_set_antenna_cfg(self, instance, data):
         self.logger.info(f'xocp_set_antenna_cfg: {instance}, {data}')
@@ -252,7 +265,7 @@ class LIBXOCP:
     def xocp_set_schedule(self, instance, mode, length, sequence):
         self.logger.info(f'xocp_set_schedule: {instance}, {mode}, {length}, {sequence}')
         data_ptr = ffi.new("const uint8_t sequence[]", sequence)
-        return lib.xocp_set_schedule(instance, mode, length, sequence)
+        return lib.xocp_set_schedule(instance, mode, length, data_ptr)
 
     # int xocp_get_trigger_cfg(uint16_t instance, struct xocp_triggers *triggers)
     def xocp_get_trigger_cfg(self, instance):
@@ -260,6 +273,11 @@ class LIBXOCP:
         data_ptr = ffi.new("struct xocp_triggers *")
         result = lib.xocp_get_trigger_cfg(instance, data_ptr)
         return (result, cdata_to_py(data_ptr[0]))
+
+    def xocp_get_trigger_cfg_struct(self):
+        self.logger.info(f'xocp_get_trigger_cfg_struct:')
+        data_ptr = ffi.new("struct xocp_triggers *")
+        return cdata_to_py(data_ptr[0])
 
     # int xocp_set_trigger_cfg(uint16_t instance, const struct xocp_triggers *triggers)
     def xocp_set_trigger_cfg(self, instance, triggers):

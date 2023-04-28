@@ -6,5 +6,6 @@ var searchData=
   ['ul_5fctrl_5foffset',['ul_ctrl_offset',['../structxorif__cc__alloc.html#a5799c519415739b018dd5d8c00cee731',1,'xorif_cc_alloc']]],
   ['ul_5fctrl_5fsize',['ul_ctrl_size',['../structxorif__cc__alloc.html#a2c058335d1363535e7fac34fd462d321',1,'xorif_cc_alloc']]],
   ['ul_5fctrl_5fsym_5fnum',['ul_ctrl_sym_num',['../structxorif__cc__alloc.html#ab3369e2390d6b04d52fb38c56163e965',1,'xorif_cc_alloc']]],
-  ['ul_5fradio_5fch_5fdly',['ul_radio_ch_dly',['../structxorif__cc__config.html#af9b342510d0c4d7681875f3023294b0f',1,'xorif_cc_config']]]
+  ['ul_5fradio_5fch_5fdly',['ul_radio_ch_dly',['../structxorif__cc__config.html#af9b342510d0c4d7681875f3023294b0f',1,'xorif_cc_config']]],
+  ['ul_5fupdate',['ul_update',['../structxocp__triggers.html#ab4bf1e198fc20d416e3d31fd3bcf1978',1,'xocp_triggers']]]
 ];

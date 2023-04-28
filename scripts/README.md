@@ -15,12 +15,12 @@ Once loaded, review the printed help. When you are familiar with the flow and wa
 ## This style uses a set of strings concatenated together to tell the 
 ## script what mode it should built in. Note. case is ignored.
 ## 
-## 1st TCLARGS = board to use (zcu111|zcu102)
-## 2nd TCLARGS = Ip Mode to select (om0|om5)
-## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)
+## 1st TCLARGS = board to use (zcu111|zcu102|zcu670)
+## 2nd TCLARGS = Ip Configuration to select from the xil_vivado_configs.yml file (e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest|e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144|...)
+## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)(loop)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5  -tclargs impl
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs impl
 ```
 
 #### **Vivado TCL going deeper**
@@ -30,9 +30,9 @@ can be TCL "sourced" in your own flow and extended to achieve your end design.
 ### Build Everything
 To run all the builds serially in a script, the following sequence can be called.
 ```console
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu102 -tclargs om5        -tclargs implNodateExit
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5        -tclargs implNodateExit
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25     -tclargs implNodateExit
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144        -tclargs implLoopNodateExit
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144 -tclargs implLoopNodateExit
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi               -tclargs implLoopNodateExit
 ```
 
 ### PetaLinux build instructions
@@ -40,25 +40,25 @@ vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs om5_25 
 The Linux and embedded software is built using PetaLinux tools and a Makefile.
 
 Build instructions:
-1. Source the appropriate PetaLinux tools setting script, e.g. `source /proj/petalinux/2021.1/petalinux-v2021.1_daily_latest/tool/petalinux-v2021.1-final/settings.csh`
+1. Source the appropriate PetaLinux tools setting script, e.g. `source /proj/petalinux/2023.1/petalinux-v2023.1_daily_latest/tool/petalinux-v2023.1-final/settings.csh`
 2. Copy the relevant hardware definition file (and rename if necessary) into `../xsa/<target>/system.xsa`
 3. Run `make <target>`
 
 Running `make` without a target specified displays some basic usage information, including the list of currently supported targets:
 
 ~~~
-Usage: make [target]
-Example: make zcu111_om5_exs
+Usage  : make [target]
+Example: make zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 
 Supported targets:
     all
     clean_all
-    zcu102_om5_exs
-    zcu111_om5_exs
+    zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+    zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 
 Notes:
-    Board: [zcu102 | zcu111]
-    Mode: [om5 = ORAN]
+    Board : [zcu102 | zcu111 | zcu670]
+    Config: [e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 = See content on YAML file for this entry.]
     Design: [exs = example system]
 ~~~
 
@@ -87,19 +87,19 @@ petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --fpga images/linux
 Build the Example System for the zcu670.
 ```console
 ## If you have a local repo
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600 -tclargs implLoopNodateExit -tclargs <optionalPathToIpRepo>
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit -tclargs <optionalPathToIpRepo>
 ## To use the build
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600 -tclargs implLoopNodateExit 
-mkdir ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_exs
-cp ../output/zcu670_e1x9000x25_ss4x4_cc2x6600_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_exs/system.xsa
-make zcu670_e1x9000x25_ss4x4_cc2x6600_exs
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit 
+mkdir ../xsa/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+cp ../output/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs/system.xsa
+make zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 ```
 Build the Example System for the zcu670. This includes the OCP.
 ```console
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss4x4_cc2x6600_ocp -tclargs implLoopNodateExit 
-mkdir ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs
-cp ../output/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs/system.xsa
-make zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi -tclargs implLoopNodateExit 
+mkdir ../xsa/zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs
+cp ../output/zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs/system.xsa
+make zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs
 ```
 
 ---

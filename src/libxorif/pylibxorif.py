@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+# Copyright 2020 - 2023 Advanced Micro Devices, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# pylint: disable=too-many-public-methods
+# pylint: disable=no-member
 
 __author__ = "Steven Dickinson"
 __copyright__ = "Copyright 2022, Advanced Micro Devices, Inc."
@@ -32,14 +35,15 @@ try:
     ffi.cdef(f.read())
 except Exception as e:
     print(f"Failed to open/read header '{inc_path}'")
-    print(e)
+    raise e
 try:
     lib = ffi.dlopen(lib_path)
 except Exception as e:
     print(f"Failed to open/read library '{lib_path}'")
-    print(e)
+    raise e
 
 # Some utilities to convert cdata types to regular Python types...
+
 
 def struct_to_py(CdataPtr, TypeFields):
     for Fld, FldType in TypeFields:
@@ -47,6 +51,7 @@ def struct_to_py(CdataPtr, TypeFields):
             yield (Fld, getattr(CdataPtr, Fld))
         else:
             yield (Fld, cdata_to_py(getattr(CdataPtr, Fld)))
+
 
 def array_to_py(CdataPtr):
     Type = ffi.typeof(CdataPtr)
@@ -58,6 +63,7 @@ def array_to_py(CdataPtr):
     else:
         return [cdata_to_py(CdataPtr[m]) for m in range(Type.length)]
 
+
 def cdata_to_py(CdataPtr):
     Type = ffi.typeof(CdataPtr)
     if Type.kind == 'struct':
@@ -67,14 +73,17 @@ def cdata_to_py(CdataPtr):
     elif Type.kind == 'array':
         return array_to_py(CdataPtr)
 
+
 def cptr_to_pylist(CdataPtr, len):
     List = []
     for i in range(len):
         List.append(CdataPtr[i])
     return List
 
+
 def cdata_string_to_py(CdataPtr):
     return ffi.string(CdataPtr)
+
 
 class LIBXORIF:
     """
@@ -101,7 +110,7 @@ class LIBXORIF:
             # We're going to expose all enums and integer #define constants
             constants = {}
             for a in dir(lib):
-                if type(getattr(lib, a)) == int:
+                if isinstance(getattr(lib, a), int):
                     constants[a] = getattr(lib, a)
             cls._instance._constants = constants
 
@@ -117,7 +126,7 @@ class LIBXORIF:
 
     # int xorif_get_state(void)
     def xorif_get_state(self):
-        self.logger.info(f'xorif_get_state:')
+        self.logger.info('xorif_get_state:')
         return lib.xorif_get_state()
 
     # void xorif_debug(int level)
@@ -136,12 +145,12 @@ class LIBXORIF:
 
     # void xorif_finish(void)
     def xorif_finish(self):
-        self.logger.info(f'xorif_finish:')
+        self.logger.info('xorif_finish:')
         return lib.xorif_finish()
 
     # uint32_t xorif_get_sw_version(void)
     def xorif_get_sw_version(self):
-        self.logger.info(f'xorif_get_sw_version:')
+        self.logger.info('xorif_get_sw_version:')
         value = lib.xorif_get_sw_version()
         major = (value >> 24) & 0xFF
         minor = (value >> 16) & 0xFF
@@ -150,7 +159,7 @@ class LIBXORIF:
 
     # uint32_t xorif_get_fhi_hw_version(void)
     def xorif_get_fhi_hw_version(self):
-        self.logger.info(f'xorif_get_fhi_hw_version:')
+        self.logger.info('xorif_get_fhi_hw_version:')
         value = lib.xorif_get_fhi_hw_version()
         major = (value >> 24) & 0xFF
         minor = (value >> 16) & 0xFF
@@ -159,24 +168,29 @@ class LIBXORIF:
 
     # uint32_t xorif_get_fhi_hw_internal_rev(void)
     def xorif_get_fhi_hw_internal_rev(self):
-        self.logger.info(f'xorif_get_fhi_hw_internal_rev:')
+        self.logger.info('xorif_get_fhi_hw_internal_rev:')
         value = lib.xorif_get_fhi_hw_internal_rev()
         return f'{value:08x}'
 
     # const struct xorif_caps *xorif_get_capabilities(void)
     def xorif_get_capabilities(self):
-        self.logger.info(f'xorif_get_capabilities:')
+        self.logger.info('xorif_get_capabilities:')
         caps_ptr = lib.xorif_get_capabilities()
         return cdata_to_py(caps_ptr[0])
 
     # int xorif_has_front_haul_interface(void)
     def xorif_has_front_haul_interface(self):
-        self.logger.info(f'xorif_get_capabilities:')
+        self.logger.info('xorif_has_front_haul_interface:')
         return lib.xorif_has_front_haul_interface()
+
+    # int xorif_has_oran_channel_processor(void)
+    def xorif_has_oran_channel_processor(self):
+        self.logger.info('xorif_has_oran_channel_processor:')
+        return lib.xorif_has_oran_channel_processor()
 
     # int xorif_configure_cc(uint16_t cc)
     def xorif_configure_cc(self, cc):
-        self.logger.info(f'xorif_get_capabilities: {cc}')
+        self.logger.info(f'xorif_configure_cc: {cc}')
         return lib.xorif_configure_cc(cc)
 
     # int xorif_disable_cc(uint16_t cc)
@@ -191,7 +205,7 @@ class LIBXORIF:
 
     # uint8_t xorif_get_enabled_cc_mask(void)
     def xorif_get_enabled_cc_mask(self):
-        self.logger.info(f'xorif_get_enabled_cc_mask:')
+        self.logger.info('xorif_get_enabled_cc_mask:')
         return lib.xorif_get_enabled_cc_mask()
 
     # xorif_set_cc_config(uint16_t cc, const struct xorif_cc_config *ptr)
@@ -206,6 +220,11 @@ class LIBXORIF:
         config_ptr = ffi.new("struct xorif_cc_config *")
         result = lib.xorif_get_cc_config(cc, config_ptr)
         return (result, cdata_to_py(config_ptr[0]))
+
+    def xorif_get_cc_config_struct(self):
+        self.logger.info(f'xorif_get_cc_config_struct:')
+        config_ptr = ffi.new("struct xorif_cc_config *")
+        return cdata_to_py(config_ptr[0])
 
     # int xorif_set_cc_num_rbs(uint16_t cc, uint16_t num_rbs)
     def xorif_set_cc_num_rbs(self, cc, num_rbs):
@@ -309,17 +328,17 @@ class LIBXORIF:
 
     # uint32_t xorif_get_fhi_alarms(void)
     def xorif_get_fhi_alarms(self):
-        self.logger.info(f'xorif_get_fhi_alarms:')
+        self.logger.info('xorif_get_fhi_alarms:')
         return lib.xorif_get_fhi_alarms()
 
     # void xorif_clear_fhi_alarms(void)
     def xorif_clear_fhi_alarms(self):
-        self.logger.info(f'xorif_clear_fhi_alarms:')
+        self.logger.info('xorif_clear_fhi_alarms:')
         return lib.xorif_clear_fhi_alarms()
 
     # void xorif_clear_fhi_stats(void)
     def xorif_clear_fhi_stats(self):
-        self.logger.info(f'xorif_clear_fhi_stats:')
+        self.logger.info('xorif_clear_fhi_stats:')
         return lib.xorif_clear_fhi_stats()
 
     # int xorif_get_fhi_cc_alloc(uint16_t cc, struct xorif_cc_alloc *ptr)
@@ -373,7 +392,7 @@ class LIBXORIF:
             if len(array) == 6:
                 return lib.xorif_set_fhi_dest_mac_addr(port, array)
             else:
-                self.logger.error(f'xorif_set_fhi_dest_mac_addr: invalid MAC address format')
+                self.logger.error('xorif_set_fhi_dest_mac_addr: invalid MAC address format')
                 return lib.XORIF_FAILURE
 
     # int xorif_set_fhi_src_mac_addr(int port, const uint8_t address[])
@@ -387,7 +406,7 @@ class LIBXORIF:
             if len(array) == 6:
                 return lib.xorif_set_fhi_src_mac_addr(port, array)
             else:
-                self.logger.error(f'xorif_set_fhi_src_mac_addr: invalid MAC address format')
+                self.logger.error('xorif_set_fhi_src_mac_addr: invalid MAC address format')
                 return lib.XORIF_FAILURE
 
     # int xorif_set_modu_mode(uint16_t enable)
@@ -406,7 +425,7 @@ class LIBXORIF:
             if len(array) == 6:
                 return lib.xorif_set_modu_dest_mac_addr(du, array, id, dei, pcp)
             else:
-                self.logger.error(f'xorif_set_modu_dest_mac_addr: invalid MAC address format')
+                self.logger.error('xorif_set_modu_dest_mac_addr: invalid MAC address format')
                 return lib.XORIF_FAILURE
 
     # int xorif_set_mtu_size(uint16_t size)
@@ -435,7 +454,7 @@ class LIBXORIF:
         if len(filter) == 16 and len(mask) == 4:
             return lib.xorif_set_fhi_packet_filter(port, filter, mask)
         else:
-            self.logger.error(f'xorif_set_fhi_packet_filter: invalid filter / mask size')
+            self.logger.error('xorif_set_fhi_packet_filter: invalid filter / mask size')
             return lib.XORIF_FAILURE
 
     # int xorif_set_fhi_eaxc_id(uint16_t du_bits, uint16_t bs_bits, uint16_t cc_bits, uint16_t ru_bits)
@@ -445,28 +464,45 @@ class LIBXORIF:
 
     # int xorif_set_ru_ports(uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val)
     def xorif_set_ru_ports(self, ru_bits, ss_bits, mask, user_val, prach_val, ssb_val):
-        self.logger.info(f'xorif_set_ru_ports: {ru_bits}, {ss_bits}, 0x{mask:02x}, 0x{user_val:02x}, 0x{prach_val:02x}, 0x{ssb_val:02x}')
+        self.logger.info(
+            f'xorif_set_ru_ports: {ru_bits}, {ss_bits}, 0x{mask:02x}, 0x{user_val:02x}, 0x{prach_val:02x}, 0x{ssb_val:02x}')
         return lib.xorif_set_ru_ports(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val)
 
-    # int xorif_set_ru_ports_alt1(uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)
-    def xorif_set_ru_ports_alt1(self, ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val):
-        self.logger.info(f'xorif_set_ru_ports_alt1: {ru_bits}, {ss_bits}, 0x{mask:02x}, 0x{user_val:02x}, 0x{prach_val:02x}, 0x{ssb_val:02x}, 0x{lte_val:02x}')
-        return lib.xorif_set_ru_ports_alt1(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val)
+    # int xorif_set_ru_ports_lte(uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)
+    def xorif_set_ru_ports_lte(self, ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val):
+        self.logger.info(
+            f'xorif_set_ru_ports_lte: {ru_bits}, {ss_bits}, 0x{mask:02x}, 0x{user_val:02x}, 0x{prach_val:02x}, 0x{ssb_val:02x}, 0x{lte_val:02x}')
+        return lib.xorif_set_ru_ports_lte(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val)
 
-    # int xorif_set_ru_ports_table_mode(uint16_t mode)
-    def xorif_set_ru_ports_table_mode(self, mode):
-        self.logger.info(f'xorif_set_ru_ports_table_mode: {mode}')
-        return lib.xorif_set_ru_ports_table_mode(mode)
+    # int xorif_set_ru_ports_table_mode(uint16_t mode, uint16_t sub_mode)
+    def xorif_set_ru_ports_table_mode(self, mode, sub_mode):
+        self.logger.info(f'xorif_set_ru_ports_table_mode: {mode}, {sub_mode}')
+        return lib.xorif_set_ru_ports_table_mode(mode, sub_mode)
 
-    # int xorif_clear_ru_ports_table(void)
+    # int xorif_set_ru_ports_table_mode1(void)
+    # def xorif_set_ru_ports_table_mode1(self):
+    #    self.logger.info('xorif_set_ru_ports_table_mode1:')
+    #    return lib.xorif_set_ru_ports_table_mode1()
+
+    # int xorif_set_ru_ports_table_mode2(uint16_t ss_mask, uint16_t u_mask)
+    # def xorif_set_ru_ports_table_mode2(self, ss_mask, u_mask):
+    #    self.logger.info(f'xorif_set_ru_ports_table_mode2: {ss_mask}, {u_mask}')
+    #    return lib.xorif_set_ru_ports_table_mode2(ss_mask, u_mask)
+
+    # int xorif_clear_ru_ports_table2(void)
     def xorif_clear_ru_ports_table(self):
-        self.logger.info(f'xorif_clear_ru_ports_table:')
+        self.logger.info('xorif_clear_ru_ports_table:')
         return lib.xorif_clear_ru_ports_table()
 
     # int xorif_set_ru_ports_table(uint16_t address, uint16_t port, uint16_t type, uint16_t number)
     def xorif_set_ru_ports_table(self, address, port, type, number):
         self.logger.info(f'xorif_set_ru_ports_table: {address}, {port}, {type}, {number}')
         return lib.xorif_set_ru_ports_table(address, port, type, number)
+
+    # int xorif_set_ru_ports_table_vcc(uint16_t address, uint16_t port, uint16_t type, uint16_t ccid, uint16_t number)
+    def xorif_set_ru_ports_table_vcc(self, address, port, type, ccid, number):
+        self.logger.info(f'xorif_set_ru_ports_table_vcc: {address}, {port}, {type}, {ccid}, {number}')
+        return lib.xorif_set_ru_ports_table_vcc(address, port, type, ccid, number)
 
     # int xorif_enable_fhi_interrupts(uint32_t mask)
     def xorif_enable_fhi_interrupts(self, mask):
@@ -481,7 +517,7 @@ class LIBXORIF:
 
     # int xorif_set_symbol_strobe_source(uint16_t source)
     def xorif_set_symbol_strobe_source(self, source):
-        self.logger.info(f't: {source}')
+        self.logger.info(f'xorif_set_symbol_strobe_source: {source}')
         return lib.xorif_set_symbol_strobe_source(source)
 
     # int xorif_register_fhi_isr(isr_func_t callback)
@@ -489,9 +525,9 @@ class LIBXORIF:
         self.logger.info(f'xorif_register_fhi_isr: {callback}')
         return lib.xorif_register_fhi_isr(callback)
 
-    #int xorif_monitor_clear()
+    # int xorif_monitor_clear()
     def xorif_monitor_clear(self):
-        self.logger.info(f'xorif_monitor_clear:')
+        self.logger.info('xorif_monitor_clear:')
         return lib.xorif_monitor_clear()
 
     # int xorif_monitor_select(uint8_t stream)
@@ -501,7 +537,7 @@ class LIBXORIF:
 
     # int xorif_monitor_snapshot(void)
     def xorif_monitor_snapshot(self):
-        self.logger.info(f'xorif_monitor_snapshot:')
+        self.logger.info('xorif_monitor_snapshot:')
         return lib.xorif_monitor_snapshot()
 
     # int xorif_monitor_read(uint8_t counter, uint64_t *value)

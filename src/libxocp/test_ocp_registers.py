@@ -1,10 +1,11 @@
+
 #!/usr/bin/env python3
 
-import pytest
 import os
 import mmap
 import ctypes
 import re
+import pytest
 
 # Configure required tests here
 RO = True

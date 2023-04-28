@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['io',['io',['../structxorif__device__info.html#a427e9284870e6e71e11b876996f95d61',1,'xorif_device_info']]],
+  ['instance',['instance',['../structxocp__state__t.html#afe56e836d9e5d2305653e9ce3304a697',1,'xocp_state_t']]],
+  ['inter_5fsym_5fgap',['inter_sym_gap',['../structxocp__cc__data.html#a4280e2bbd3d02c13836a79c3ec1aba96',1,'xocp_cc_data']]],
+  ['interleave',['interleave',['../structxocp__antenna__data.html#afd5f21dbe9c299b3fa2ef82836455315',1,'xocp_antenna_data']]],
+  ['io',['io',['../structxocp__state__t.html#a7bda0387ded60dd435b5b1a340029c52',1,'xocp_state_t::io()'],['../structxorif__device__info.html#a427e9284870e6e71e11b876996f95d61',1,'xorif_device_info::io()']]],
   ['iq_5fcomp_5fbfp_5fwidths',['iq_comp_bfp_widths',['../structxorif__caps.html#a2b97fcf405ef5858a5c291182443c02c',1,'xorif_caps']]],
   ['iq_5fcomp_5fmeth_5fdl',['iq_comp_meth_dl',['../structxorif__cc__config.html#a0fc7c81f6f6854a3a799b8af783f4a07',1,'xorif_cc_config']]],
   ['iq_5fcomp_5fmeth_5fprach',['iq_comp_meth_prach',['../structxorif__cc__config.html#a9cdda47d992de3d0133b1183b553029f',1,'xorif_cc_config']]],

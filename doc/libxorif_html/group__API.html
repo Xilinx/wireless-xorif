@@ -77,6 +77,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -85,11 +86,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>"C" API for the Xilinx ORAN Radio Interface (libxorif)  
+<p>"C" API for the Xilinx ORAN Channel Processor (libxocp)  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxocp__caps.html">xocp_caps</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for supported capabilities.  <a href="structxocp__caps.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxocp__cc__data.html">xocp_cc_data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for component carrier configuration used in <a class="el" href="group__API.html#ga91cb69c970d87cb2de7a465935151a93" title="Set the component carrier configuration. ">xocp_set_cc_cfg</a>, etc.  <a href="structxocp__cc__data.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxocp__antenna__data.html">xocp_antenna_data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for antenna configuration data used in <a class="el" href="group__API.html#ga5ee188ec91e4704e86f24d134f84ac61" title="Set the antenna configuration. ">xocp_set_antenna_cfg</a>, etc.  <a href="structxocp__antenna__data.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxocp__trigger__data.html">xocp_trigger_data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for trigger configuration.  <a href="structxocp__trigger__data.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxocp__triggers.html">xocp_triggers</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for all triggers used in <a class="el" href="group__API.html#ga6faf33afeb951c812a95d195a5d1fbe5" title="Set the HW trigger configuration for DL/UL &quot;update&quot;. ">xocp_set_trigger_cfg</a>, etc.  <a href="structxocp__triggers.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__caps.html">xorif_caps</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for supported capabilities.  <a href="structxorif__caps.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,8 +122,27 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for Front-Haul specific system "constants".  <a href="structxorif__system__constants.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga682b7a43e80776571d78c8588b9983ff"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga682b7a43e80776571d78c8588b9983ff"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga682b7a43e80776571d78c8588b9983ff">XOCP_NUM_INSTANCES</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:ga682b7a43e80776571d78c8588b9983ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of driver instances. <br/></td></tr>
+<tr class="separator:ga682b7a43e80776571d78c8588b9983ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga151cc3771661727a0bfcaef9fc8aa0c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga151cc3771661727a0bfcaef9fc8aa0c5"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga151cc3771661727a0bfcaef9fc8aa0c5">XOCP_MAX_NUM_CC</a>&#160;&#160;&#160;8</td></tr>
+<tr class="memdesc:ga151cc3771661727a0bfcaef9fc8aa0c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of component carriers supported. <br/></td></tr>
+<tr class="separator:ga151cc3771661727a0bfcaef9fc8aa0c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga675657e20d15f73a68e2d6f87fdb02d0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga675657e20d15f73a68e2d6f87fdb02d0"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga675657e20d15f73a68e2d6f87fdb02d0">XOCP_MAX_ANTENNA</a>&#160;&#160;&#160;8</td></tr>
+<tr class="memdesc:ga675657e20d15f73a68e2d6f87fdb02d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of antennas supported by SW. <br/></td></tr>
+<tr class="separator:ga675657e20d15f73a68e2d6f87fdb02d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:ga61aa694162ad82a2357bb6a180f662d6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga61aa694162ad82a2357bb6a180f662d6"></a>
+typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a> )(uint16_t instance, uint32_t status)</td></tr>
+<tr class="memdesc:ga61aa694162ad82a2357bb6a180f662d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type definition for event interrupts call-back function. <br/></td></tr>
+<tr class="separator:ga61aa694162ad82a2357bb6a180f662d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4e65a1fd5e6083731038ecc831f1e92e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga4e65a1fd5e6083731038ecc831f1e92e"></a>
 typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga4e65a1fd5e6083731038ecc831f1e92e">isr_func_t</a> )(uint32_t status)</td></tr>
 <tr class="memdesc:ga4e65a1fd5e6083731038ecc831f1e92e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type definition for alarm interrupt call-back function. <br/></td></tr>
@@ -115,6 +150,57 @@ typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
+<tr class="memitem:gaf451ae0ea9768ba9266531c370a55c94"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf451ae0ea9768ba9266531c370a55c94">xocp_error_codes</a> { <br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a794b4b16c40fdc8eb8c60707dadfe29a">XOCP_OPERATIONAL_ERRORS</a> = -3000, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a1df7c88f34e194938fa608f16590f7cc">XOCP_NULL_POINTER</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a54e7ef62dc8a5d50c5e01b7cc6c6e6d4">XOCP_REGISTER_NOT_FOUND</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94aafaefa566de3ba034b708009c3578be4">XOCP_MEMORY_ALLOCATION_FAIL</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a00e01abfade942c7ae2bb8ce6971d84f">XOCP_TIMEOUT_FAIL</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a663ede6ec196fa468f8ea6c1e7ab6060">XOCP_CONFIGURATION_ERRORS</a> = -2000, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a77e9e16463ab641c00a8912f37d5596b">XOCP_INVALID_CC</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a9e002468b6450125dcb7b47a3960d1e5">XOCP_INVALID_RBS</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94aa35b0cd782754b0a4dc838ab6662c6ff">XOCP_INVALID_NUMEROLOGY</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a4808c3d2a2edc65fb17c033c04b43f65">XOCP_INVALID_ANTENNAS</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94aaf8184e28652afc9cc695d2629de01ab">XOCP_SCHEDULING_ERROR</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94ae7a5dfbc6f6e1a032346b1ffdf322835">XOCP_FRAMEWORK_ERRORS</a> = -1000, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a3690197b67899b7b24d484544893c05c">XOCP_LIBMETAL_ERROR</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a2d323c9201910db34f5e9f1acd3cc94a">XOCP_NO_SUCH_DEVICE</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94adffcd4c49097bfc116c8d60f3f1877de">XOCP_NO_RESOURCES</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a7d343d91e5e2ef27617aa050b3a6f7f9">XOCP_INVALID_INSTANCE</a>, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a7407194a50b20a599938ce060344e4bc">XOCP_INVALID_STATE</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a9c8f4b684f5f945359e9d6688f04ac80">XOCP_OTHER_ERRORS</a> = -500, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94af1c7f4d1634f7a592b60d4537d24dc9f">XOCP_NOT_SUPPORTED</a>, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94afc0ac5ea9864017911e7bbfc0c02569a">XOCP_INVALID_RESULT</a> = -1, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a59302365415c9401277a5c89e2d717dc">XOCP_SUCCESS</a> = 0, 
+<a class="el" href="group__API.html#ggaf451ae0ea9768ba9266531c370a55c94a3d2b0813042f04655882f64a9ee0c836">XOCP_FAILURE</a> = 1
+<br/>
+ }</td></tr>
+<tr class="memdesc:gaf451ae0ea9768ba9266531c370a55c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerated type for error/status codes.  <a href="group__API.html#gaf451ae0ea9768ba9266531c370a55c94">More...</a><br/></td></tr>
+<tr class="separator:gaf451ae0ea9768ba9266531c370a55c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8be4e9d392425029993a9e8ad95b2be6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6">xocp_events</a> { <br/>
+&#160;&#160;<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6abc22c1565927dfec8392303c3003fddb">XOCP_DL_CC_UPDATE_TRIGGERED</a> = 0x1, 
+<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6af4389c5431a1c67bc749b798c0ed4c62">XOCP_DL_SEQUENCE_ERROR</a> = 0x2, 
+<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6ad48ac96c5eb710be181edcbc4a72ddf5">XOCP_DL_SEQUENCE_TABLE_ERROR</a> = 0x4, 
+<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6a28ee5450c2e063d6354e99a079ea20c7">XOCP_UL_CC_UPDATE_TRIGGERED</a> = 0x100, 
+<br/>
+&#160;&#160;<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6a35aa4b4942ebdc467144a9242543c864">XOCP_UL_SEQUENCE_ERROR</a> = 0x200, 
+<a class="el" href="group__API.html#gga8be4e9d392425029993a9e8ad95b2be6a2a824057e95d8053f1397fcf5f3b184c">XOCP_UL_SEQUENCE_TABLE_ERROR</a> = 0x400
+<br/>
+ }</td></tr>
+<tr class="memdesc:ga8be4e9d392425029993a9e8ad95b2be6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerations for error/event information.  <a href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6">More...</a><br/></td></tr>
+<tr class="separator:ga8be4e9d392425029993a9e8ad95b2be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad4565d94bfd9eeaa7959e4a06db49d0f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f">xocp_states</a> { <a class="el" href="group__API.html#ggad4565d94bfd9eeaa7959e4a06db49d0fa02536e433de6b5137abf629c4c4b466f">XOCP_IDLE</a> = 0, 
+<a class="el" href="group__API.html#ggad4565d94bfd9eeaa7959e4a06db49d0faf97eab56e7f58517570b71a6541b5cdc">XOCP_RESET</a>, 
+<a class="el" href="group__API.html#ggad4565d94bfd9eeaa7959e4a06db49d0fa36439db5df53566cf5730971b6ee1f42">XOCP_READY</a>, 
+<a class="el" href="group__API.html#ggad4565d94bfd9eeaa7959e4a06db49d0fa94df60623c029d864ba346bb08980e64">XOCP_OPERATIONAL</a>
+ }</td></tr>
+<tr class="memdesc:gad4565d94bfd9eeaa7959e4a06db49d0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerations for state machine states.  <a href="group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f">More...</a><br/></td></tr>
+<tr class="separator:gad4565d94bfd9eeaa7959e4a06db49d0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9a97d2a2455bd1b40ba42a84ddbe2f3f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga9a97d2a2455bd1b40ba42a84ddbe2f3f">xorif_error_codes</a> { <br/>
 &#160;&#160;<a class="el" href="group__API.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa25ee8ecd1294a4d25e52c3df60803a17">XORIF_OPERATIONAL_ERRORS</a> = -3000, 
 <a class="el" href="group__API.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fab1d76613a67b8b15db924f08bd127e4c">XORIF_NULL_POINTER</a>, 
@@ -212,6 +298,93 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga0f0dc0574e1f6fe358edba1145216309"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga0f0dc0574e1f6fe358edba1145216309">xocp_debug</a> (uint16_t level)</td></tr>
+<tr class="memdesc:ga0f0dc0574e1f6fe358edba1145216309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set debug/trace level.  <a href="#ga0f0dc0574e1f6fe358edba1145216309">More...</a><br/></td></tr>
+<tr class="separator:ga0f0dc0574e1f6fe358edba1145216309"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf6ffd8a57c5d7222b30ee1e27dad3160"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf6ffd8a57c5d7222b30ee1e27dad3160">xocp_start</a> (void)</td></tr>
+<tr class="memdesc:gaf6ffd8a57c5d7222b30ee1e27dad3160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a driver instance for the device.  <a href="#gaf6ffd8a57c5d7222b30ee1e27dad3160">More...</a><br/></td></tr>
+<tr class="separator:gaf6ffd8a57c5d7222b30ee1e27dad3160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaab4357f21c80d21ba991eee6fb5e0ecb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaab4357f21c80d21ba991eee6fb5e0ecb">xocp_finish</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:gaab4357f21c80d21ba991eee6fb5e0ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close/finalize the driver instance.  <a href="#gaab4357f21c80d21ba991eee6fb5e0ecb">More...</a><br/></td></tr>
+<tr class="separator:gaab4357f21c80d21ba991eee6fb5e0ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf6109de427bcae994b7b4c42aef71782"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf6109de427bcae994b7b4c42aef71782">xocp_get_state</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:gaf6109de427bcae994b7b4c42aef71782"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current state of the device.  <a href="#gaf6109de427bcae994b7b4c42aef71782">More...</a><br/></td></tr>
+<tr class="separator:gaf6109de427bcae994b7b4c42aef71782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga97785138a9cea8e247c6f412364d779c"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga97785138a9cea8e247c6f412364d779c">xocp_get_sw_version</a> (void)</td></tr>
+<tr class="memdesc:ga97785138a9cea8e247c6f412364d779c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the s/w version.  <a href="#ga97785138a9cea8e247c6f412364d779c">More...</a><br/></td></tr>
+<tr class="separator:ga97785138a9cea8e247c6f412364d779c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa10e3b7f3ff3a4269243b2cc70c20701"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaa10e3b7f3ff3a4269243b2cc70c20701">xocp_get_hw_version</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:gaa10e3b7f3ff3a4269243b2cc70c20701"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the h/w version.  <a href="#gaa10e3b7f3ff3a4269243b2cc70c20701">More...</a><br/></td></tr>
+<tr class="separator:gaa10e3b7f3ff3a4269243b2cc70c20701"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82472d6cb2902604c41880c81683f849"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga82472d6cb2902604c41880c81683f849">xocp_get_hw_internal_rev</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:ga82472d6cb2902604c41880c81683f849"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the internal h/w revision.  <a href="#ga82472d6cb2902604c41880c81683f849">More...</a><br/></td></tr>
+<tr class="separator:ga82472d6cb2902604c41880c81683f849"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f0a515e9398b7df6bb04e368295f398"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga2f0a515e9398b7df6bb04e368295f398">xocp_get_capabilities</a> (uint16_t instance, struct <a class="el" href="structxocp__caps.html">xocp_caps</a> *data)</td></tr>
+<tr class="memdesc:ga2f0a515e9398b7df6bb04e368295f398"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the device capabilities.  <a href="#ga2f0a515e9398b7df6bb04e368295f398">More...</a><br/></td></tr>
+<tr class="separator:ga2f0a515e9398b7df6bb04e368295f398"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2e857e841f5ba6d44aaae733cc75db8e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga2e857e841f5ba6d44aaae733cc75db8e">xocp_get_event_status</a> (uint16_t instance, uint32_t *status)</td></tr>
+<tr class="memdesc:ga2e857e841f5ba6d44aaae733cc75db8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current event status (e.g.  <a href="#ga2e857e841f5ba6d44aaae733cc75db8e">More...</a><br/></td></tr>
+<tr class="separator:ga2e857e841f5ba6d44aaae733cc75db8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9614a06cd606c1f2a3deef32132dbead"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga9614a06cd606c1f2a3deef32132dbead">xocp_clear_event_status</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:ga9614a06cd606c1f2a3deef32132dbead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the current event status (e.g.  <a href="#ga9614a06cd606c1f2a3deef32132dbead">More...</a><br/></td></tr>
+<tr class="separator:ga9614a06cd606c1f2a3deef32132dbead"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga2cbda271a8bfaaa3c8a1a0858a0ce4aa">xocp_enable_interrupts</a> (uint16_t instance, uint32_t mask)</td></tr>
+<tr class="memdesc:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable/disable the event interrupts (according to supplied mask).  <a href="#ga2cbda271a8bfaaa3c8a1a0858a0ce4aa">More...</a><br/></td></tr>
+<tr class="separator:ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25120e04d622474f04345064c902d006"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga25120e04d622474f04345064c902d006">xocp_register_event_callback</a> (uint16_t instance, <a class="el" href="group__API.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a> callback)</td></tr>
+<tr class="memdesc:ga25120e04d622474f04345064c902d006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a call-back function for event interrupts.  <a href="#ga25120e04d622474f04345064c902d006">More...</a><br/></td></tr>
+<tr class="separator:ga25120e04d622474f04345064c902d006"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga26c079fad72f78f8d9e86d53c8af7925"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925">xocp_read_reg</a> (uint16_t instance, const char *name, uint32_t *value)</td></tr>
+<tr class="memdesc:ga26c079fad72f78f8d9e86d53c8af7925"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read from a register / register field on the device.  <a href="#ga26c079fad72f78f8d9e86d53c8af7925">More...</a><br/></td></tr>
+<tr class="separator:ga26c079fad72f78f8d9e86d53c8af7925"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad69819662d0460ed5afb7b183a6fb2d3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gad69819662d0460ed5afb7b183a6fb2d3">xocp_read_reg_offset</a> (uint16_t instance, const char *name, uint16_t offset, uint32_t *value)</td></tr>
+<tr class="memdesc:gad69819662d0460ed5afb7b183a6fb2d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to read from a register / register field on the device.  <a href="#gad69819662d0460ed5afb7b183a6fb2d3">More...</a><br/></td></tr>
+<tr class="separator:gad69819662d0460ed5afb7b183a6fb2d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga247c77c2b87ec6e01dbdfcb20c0716eb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga247c77c2b87ec6e01dbdfcb20c0716eb">xocp_write_reg</a> (uint16_t instance, const char *name, uint32_t value)</td></tr>
+<tr class="memdesc:ga247c77c2b87ec6e01dbdfcb20c0716eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to write to a register / register field on the device.  <a href="#ga247c77c2b87ec6e01dbdfcb20c0716eb">More...</a><br/></td></tr>
+<tr class="separator:ga247c77c2b87ec6e01dbdfcb20c0716eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga272a85ffed433b3d5fc91f33dba6d961"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga272a85ffed433b3d5fc91f33dba6d961">xocp_write_reg_offset</a> (uint16_t instance, const char *name, uint16_t offset, uint32_t value)</td></tr>
+<tr class="memdesc:ga272a85ffed433b3d5fc91f33dba6d961"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function to write to a register / register field on the device.  <a href="#ga272a85ffed433b3d5fc91f33dba6d961">More...</a><br/></td></tr>
+<tr class="separator:ga272a85ffed433b3d5fc91f33dba6d961"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2d34a3237dfd74eb86a302913c60de28"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga2d34a3237dfd74eb86a302913c60de28">xocp_reset</a> (uint16_t instance, uint8_t mode)</td></tr>
+<tr class="memdesc:ga2d34a3237dfd74eb86a302913c60de28"><td class="mdescLeft">&#160;</td><td class="mdescRight">Puts the device and driver instance into reset.  <a href="#ga2d34a3237dfd74eb86a302913c60de28">More...</a><br/></td></tr>
+<tr class="separator:ga2d34a3237dfd74eb86a302913c60de28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga11cd61d97a8aa15b59980f476a157072"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga11cd61d97a8aa15b59980f476a157072">xocp_activate</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:ga11cd61d97a8aa15b59980f476a157072"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activate the O-RAN Channel Processor operation.  <a href="#ga11cd61d97a8aa15b59980f476a157072">More...</a><br/></td></tr>
+<tr class="separator:ga11cd61d97a8aa15b59980f476a157072"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae08ae7869a674d839707a4ab12723879"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gae08ae7869a674d839707a4ab12723879">xocp_get_cc_cfg</a> (uint16_t instance, uint8_t cc, struct <a class="el" href="structxocp__cc__data.html">xocp_cc_data</a> *data)</td></tr>
+<tr class="memdesc:gae08ae7869a674d839707a4ab12723879"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the component carrier configuration.  <a href="#gae08ae7869a674d839707a4ab12723879">More...</a><br/></td></tr>
+<tr class="separator:gae08ae7869a674d839707a4ab12723879"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga91cb69c970d87cb2de7a465935151a93"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga91cb69c970d87cb2de7a465935151a93">xocp_set_cc_cfg</a> (uint16_t instance, uint8_t cc, const struct <a class="el" href="structxocp__cc__data.html">xocp_cc_data</a> *data)</td></tr>
+<tr class="memdesc:ga91cb69c970d87cb2de7a465935151a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the component carrier configuration.  <a href="#ga91cb69c970d87cb2de7a465935151a93">More...</a><br/></td></tr>
+<tr class="separator:ga91cb69c970d87cb2de7a465935151a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad1032c0396e64c059895441bca7a00b8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gad1032c0396e64c059895441bca7a00b8">xocp_get_antenna_cfg</a> (uint16_t instance, struct <a class="el" href="structxocp__antenna__data.html">xocp_antenna_data</a> *data)</td></tr>
+<tr class="memdesc:gad1032c0396e64c059895441bca7a00b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the antenna configuration.  <a href="#gad1032c0396e64c059895441bca7a00b8">More...</a><br/></td></tr>
+<tr class="separator:gad1032c0396e64c059895441bca7a00b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5ee188ec91e4704e86f24d134f84ac61"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga5ee188ec91e4704e86f24d134f84ac61">xocp_set_antenna_cfg</a> (uint16_t instance, const struct <a class="el" href="structxocp__antenna__data.html">xocp_antenna_data</a> *data)</td></tr>
+<tr class="memdesc:ga5ee188ec91e4704e86f24d134f84ac61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the antenna configuration.  <a href="#ga5ee188ec91e4704e86f24d134f84ac61">More...</a><br/></td></tr>
+<tr class="separator:ga5ee188ec91e4704e86f24d134f84ac61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf80a5ea55ae57b99cfcc26dde3a54a20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf80a5ea55ae57b99cfcc26dde3a54a20">xocp_set_schedule</a> (uint16_t instance, uint8_t mode, uint8_t length, const uint8_t sequence[])</td></tr>
+<tr class="memdesc:gaf80a5ea55ae57b99cfcc26dde3a54a20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "next" symbol processing schedule.  <a href="#gaf80a5ea55ae57b99cfcc26dde3a54a20">More...</a><br/></td></tr>
+<tr class="separator:gaf80a5ea55ae57b99cfcc26dde3a54a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabc9cd8da6a264e8107fb4af205caa5fd"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gabc9cd8da6a264e8107fb4af205caa5fd">xocp_get_trigger_cfg</a> (uint16_t instance, struct <a class="el" href="structxocp__triggers.html">xocp_triggers</a> *triggers)</td></tr>
+<tr class="memdesc:gabc9cd8da6a264e8107fb4af205caa5fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the HW trigger configuration for DL/UL "update".  <a href="#gabc9cd8da6a264e8107fb4af205caa5fd">More...</a><br/></td></tr>
+<tr class="separator:gabc9cd8da6a264e8107fb4af205caa5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6faf33afeb951c812a95d195a5d1fbe5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga6faf33afeb951c812a95d195a5d1fbe5">xocp_set_trigger_cfg</a> (uint16_t instance, const struct <a class="el" href="structxocp__triggers.html">xocp_triggers</a> *triggers)</td></tr>
+<tr class="memdesc:ga6faf33afeb951c812a95d195a5d1fbe5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the HW trigger configuration for DL/UL "update".  <a href="#ga6faf33afeb951c812a95d195a5d1fbe5">More...</a><br/></td></tr>
+<tr class="separator:ga6faf33afeb951c812a95d195a5d1fbe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf6194042bff2a266ae3ebad7000cade4"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf6194042bff2a266ae3ebad7000cade4">xocp_trigger_update</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:gaf6194042bff2a266ae3ebad7000cade4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the "update" HW trigger.  <a href="#gaf6194042bff2a266ae3ebad7000cade4">More...</a><br/></td></tr>
+<tr class="separator:gaf6194042bff2a266ae3ebad7000cade4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga71441ce4e335da460f0044cac1eaaf34"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga71441ce4e335da460f0044cac1eaaf34">xocp_monitor_clear</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:ga71441ce4e335da460f0044cac1eaaf34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear all "monitor block" counters.  <a href="#ga71441ce4e335da460f0044cac1eaaf34">More...</a><br/></td></tr>
+<tr class="separator:ga71441ce4e335da460f0044cac1eaaf34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaed2e5d420ec409de195f1be04a42ae4a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaed2e5d420ec409de195f1be04a42ae4a">xocp_monitor_snapshot</a> (uint16_t instance)</td></tr>
+<tr class="memdesc:gaed2e5d420ec409de195f1be04a42ae4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take snapshot of the "monitor block" counters.  <a href="#gaed2e5d420ec409de195f1be04a42ae4a">More...</a><br/></td></tr>
+<tr class="separator:gaed2e5d420ec409de195f1be04a42ae4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad336b80523a9f214e2c026a68ec12bc1"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gad336b80523a9f214e2c026a68ec12bc1">xocp_monitor_read</a> (uint16_t instance, uint8_t counter, uint64_t *value)</td></tr>
+<tr class="memdesc:gad336b80523a9f214e2c026a68ec12bc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read specified counter from "monitor block".  <a href="#gad336b80523a9f214e2c026a68ec12bc1">More...</a><br/></td></tr>
+<tr class="separator:gad336b80523a9f214e2c026a68ec12bc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac3c1601fb0d91568c305ecf8fdf87811"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gac3c1601fb0d91568c305ecf8fdf87811">xorif_get_state</a> (void)</td></tr>
 <tr class="memdesc:gac3c1601fb0d91568c305ecf8fdf87811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current state of the library.  <a href="#gac3c1601fb0d91568c305ecf8fdf87811">More...</a><br/></td></tr>
 <tr class="separator:gac3c1601fb0d91568c305ecf8fdf87811"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -238,8 +411,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memdesc:ga6678916262074da7a53277e8d93ee80a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Front-Haul Interface capabilities.  <a href="#ga6678916262074da7a53277e8d93ee80a">More...</a><br/></td></tr>
 <tr class="separator:ga6678916262074da7a53277e8d93ee80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga354bba5bbf86cb1a6ea346e47590cb5b">xorif_has_front_haul_interface</a> (void)</td></tr>
-<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a Front-Haul Interface in the system.  <a href="#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
+<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN makeFront-Haul Interface in the system.  <a href="#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
 <tr class="separator:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga0c512ca218a568fdbeffacd599bfbf27">xorif_has_oran_channel_processor</a> (void)</td></tr>
+<tr class="memdesc:ga0c512ca218a568fdbeffacd599bfbf27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN Channel Processor in the system.  <a href="#ga0c512ca218a568fdbeffacd599bfbf27">More...</a><br/></td></tr>
+<tr class="separator:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga60d073a6ce61f808a5489f61a721a41b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a> (uint16_t cc)</td></tr>
 <tr class="memdesc:ga60d073a6ce61f808a5489f61a721a41b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure a component carrier.  <a href="#ga60d073a6ce61f808a5489f61a721a41b">More...</a><br/></td></tr>
 <tr class="separator:ga60d073a6ce61f808a5489f61a721a41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -380,18 +556,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga857309ea8ff7506568e3111761877eb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val)</td></tr>
 <tr class="memdesc:ga857309ea8ff7506568e3111761877eb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits.  <a href="#ga857309ea8ff7506568e3111761877eb8">More...</a><br/></td></tr>
 <tr class="separator:ga857309ea8ff7506568e3111761877eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaced1be08c60f1a23dd398c7da582eba5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaced1be08c60f1a23dd398c7da582eba5">xorif_set_ru_ports_alt1</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
-<tr class="memdesc:gaced1be08c60f1a23dd398c7da582eba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="#gaced1be08c60f1a23dd398c7da582eba5">More...</a><br/></td></tr>
-<tr class="separator:gaced1be08c60f1a23dd398c7da582eba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga27450fc8358a0bde441dc3a8f6975ea9">xorif_set_ru_ports_table_mode</a> (uint16_t mode)</td></tr>
-<tr class="memdesc:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the table mapping mode for the RU port id.  <a href="#ga27450fc8358a0bde441dc3a8f6975ea9">More...</a><br/></td></tr>
-<tr class="separator:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga9379066763d5ba7f1c7aa95467a2b69c">xorif_set_ru_ports_lte</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
+<tr class="memdesc:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="#ga9379066763d5ba7f1c7aa95467a2b69c">More...</a><br/></td></tr>
+<tr class="separator:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7">xorif_set_ru_ports_table_mode</a> (uint16_t mode, uint16_t sub_mode)</td></tr>
+<tr class="memdesc:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port table mapping mode.  <a href="#ga02e5936a62ac2c0a803c96adcc735fb7">More...</a><br/></td></tr>
+<tr class="separator:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f12916f671ba6ee001f71f7f308e991"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991">xorif_clear_ru_ports_table</a> (void)</td></tr>
 <tr class="memdesc:ga5f12916f671ba6ee001f71f7f308e991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the RU ports mapping table.  <a href="#ga5f12916f671ba6ee001f71f7f308e991">More...</a><br/></td></tr>
 <tr class="separator:ga5f12916f671ba6ee001f71f7f308e991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6fc3068a93476321d8449fcc7871a29f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t number)</td></tr>
 <tr class="memdesc:ga6fc3068a93476321d8449fcc7871a29f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings.  <a href="#ga6fc3068a93476321d8449fcc7871a29f">More...</a><br/></td></tr>
 <tr class="separator:ga6fc3068a93476321d8449fcc7871a29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c351b7236674c869768299e67127b1f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga0c351b7236674c869768299e67127b1f">xorif_set_ru_ports_table_vcc</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t ccid, uint16_t number)</td></tr>
+<tr class="memdesc:ga0c351b7236674c869768299e67127b1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings (alternative with "Virtual CCID").  <a href="#ga0c351b7236674c869768299e67127b1f">More...</a><br/></td></tr>
+<tr class="separator:ga0c351b7236674c869768299e67127b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga4eaaa1adb6e01922ff4576bd4e816a72">xorif_enable_fhi_interrupts</a> (uint32_t mask)</td></tr>
 <tr class="memdesc:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable Front-Haul Interface interrupts.  <a href="#ga4eaaa1adb6e01922ff4576bd4e816a72">More...</a><br/></td></tr>
 <tr class="separator:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -418,8 +597,153 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="separator:gaf6058ec85736dfc88d8c4927220f4775"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>"C" API for the Xilinx ORAN Radio Interface (libxorif) </p>
+<p>"C" API for the Xilinx ORAN Channel Processor (libxocp) </p>
+<p>"C" API for the Xilinx ORAN Radio Interface (libxorif)</p>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="gaf451ae0ea9768ba9266531c370a55c94"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__API.html#gaf451ae0ea9768ba9266531c370a55c94">xocp_error_codes</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumerated type for error/status codes. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a794b4b16c40fdc8eb8c60707dadfe29a"></a>XOCP_OPERATIONAL_ERRORS</em>&nbsp;</td><td class="fielddoc">
+<p>(Place-holder for operational errors) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a1df7c88f34e194938fa608f16590f7cc"></a>XOCP_NULL_POINTER</em>&nbsp;</td><td class="fielddoc">
+<p>Attempt to access memory with null pointer. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a54e7ef62dc8a5d50c5e01b7cc6c6e6d4"></a>XOCP_REGISTER_NOT_FOUND</em>&nbsp;</td><td class="fielddoc">
+<p>Unknown register name. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94aafaefa566de3ba034b708009c3578be4"></a>XOCP_MEMORY_ALLOCATION_FAIL</em>&nbsp;</td><td class="fielddoc">
+<p>Memory allocation fail. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a00e01abfade942c7ae2bb8ce6971d84f"></a>XOCP_TIMEOUT_FAIL</em>&nbsp;</td><td class="fielddoc">
+<p>Timeout fail. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a663ede6ec196fa468f8ea6c1e7ab6060"></a>XOCP_CONFIGURATION_ERRORS</em>&nbsp;</td><td class="fielddoc">
+<p>(Place-holder for configuration errors) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a77e9e16463ab641c00a8912f37d5596b"></a>XOCP_INVALID_CC</em>&nbsp;</td><td class="fielddoc">
+<p>Component carrier instance is not valid. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a9e002468b6450125dcb7b47a3960d1e5"></a>XOCP_INVALID_RBS</em>&nbsp;</td><td class="fielddoc">
+<p>Number of RBs is not valid. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94aa35b0cd782754b0a4dc838ab6662c6ff"></a>XOCP_INVALID_NUMEROLOGY</em>&nbsp;</td><td class="fielddoc">
+<p>Numerology is not valid. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a4808c3d2a2edc65fb17c033c04b43f65"></a>XOCP_INVALID_ANTENNAS</em>&nbsp;</td><td class="fielddoc">
+<p>Antenna configuration is not valid. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94aaf8184e28652afc9cc695d2629de01ab"></a>XOCP_SCHEDULING_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Error during scheduling. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94ae7a5dfbc6f6e1a032346b1ffdf322835"></a>XOCP_FRAMEWORK_ERRORS</em>&nbsp;</td><td class="fielddoc">
+<p>(Place holder for library / libmetal framework errors) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a3690197b67899b7b24d484544893c05c"></a>XOCP_LIBMETAL_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Error with libmetal framework. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a2d323c9201910db34f5e9f1acd3cc94a"></a>XOCP_NO_SUCH_DEVICE</em>&nbsp;</td><td class="fielddoc">
+<p>Requested device node does not exist. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94adffcd4c49097bfc116c8d60f3f1877de"></a>XOCP_NO_RESOURCES</em>&nbsp;</td><td class="fielddoc">
+<p>Insufficient resources to complete request. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a7d343d91e5e2ef27617aa050b3a6f7f9"></a>XOCP_INVALID_INSTANCE</em>&nbsp;</td><td class="fielddoc">
+<p>Invalid device instance specified. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a7407194a50b20a599938ce060344e4bc"></a>XOCP_INVALID_STATE</em>&nbsp;</td><td class="fielddoc">
+<p>Incorrect state to handle request. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a9c8f4b684f5f945359e9d6688f04ac80"></a>XOCP_OTHER_ERRORS</em>&nbsp;</td><td class="fielddoc">
+<p>(Place-holder for other errors) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94af1c7f4d1634f7a592b60d4537d24dc9f"></a>XOCP_NOT_SUPPORTED</em>&nbsp;</td><td class="fielddoc">
+<p>Generic "not-supported" error code. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94afc0ac5ea9864017911e7bbfc0c02569a"></a>XOCP_INVALID_RESULT</em>&nbsp;</td><td class="fielddoc">
+<p>Represents an invalid result. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a59302365415c9401277a5c89e2d717dc"></a>XOCP_SUCCESS</em>&nbsp;</td><td class="fielddoc">
+<p>Success! No error! </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggaf451ae0ea9768ba9266531c370a55c94a3d2b0813042f04655882f64a9ee0c836"></a>XOCP_FAILURE</em>&nbsp;</td><td class="fielddoc">
+<p>Failure return code. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="ga8be4e9d392425029993a9e8ad95b2be6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6">xocp_events</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumerations for error/event information. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6abc22c1565927dfec8392303c3003fddb"></a>XOCP_DL_CC_UPDATE_TRIGGERED</em>&nbsp;</td><td class="fielddoc">
+<p>Set when the DL CC update trigger has occurred. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6af4389c5431a1c67bc749b798c0ed4c62"></a>XOCP_DL_SEQUENCE_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Set when the DL sequence has not completed in a symbol period. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6ad48ac96c5eb710be181edcbc4a72ddf5"></a>XOCP_DL_SEQUENCE_TABLE_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Set when DL data has been received when the sequence table is still updating. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6a28ee5450c2e063d6354e99a079ea20c7"></a>XOCP_UL_CC_UPDATE_TRIGGERED</em>&nbsp;</td><td class="fielddoc">
+<p>Set when the UL CC update trigger has occurred. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6a35aa4b4942ebdc467144a9242543c864"></a>XOCP_UL_SEQUENCE_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Set when the DL sequence has not completed in a symbol period. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga8be4e9d392425029993a9e8ad95b2be6a2a824057e95d8053f1397fcf5f3b184c"></a>XOCP_UL_SEQUENCE_TABLE_ERROR</em>&nbsp;</td><td class="fielddoc">
+<p>Set when DL data has been received when the sequence table is still updating. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a class="anchor" id="gad4565d94bfd9eeaa7959e4a06db49d0f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f">xocp_states</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumerations for state machine states. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ggad4565d94bfd9eeaa7959e4a06db49d0fa02536e433de6b5137abf629c4c4b466f"></a>XOCP_IDLE</em>&nbsp;</td><td class="fielddoc">
+<p>Initial state (after libary loading) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggad4565d94bfd9eeaa7959e4a06db49d0faf97eab56e7f58517570b71a6541b5cdc"></a>XOCP_RESET</em>&nbsp;</td><td class="fielddoc">
+<p>State after instance creation / reset (see <a class="el" href="group__API.html#gaf6ffd8a57c5d7222b30ee1e27dad3160" title="Start a driver instance for the device. ">xocp_start</a> / <a class="el" href="group__API.html#ga2d34a3237dfd74eb86a302913c60de28" title="Puts the device and driver instance into reset. ">xocp_reset</a>) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggad4565d94bfd9eeaa7959e4a06db49d0fa36439db5df53566cf5730971b6ee1f42"></a>XOCP_READY</em>&nbsp;</td><td class="fielddoc">
+<p>State after releasing reset (see <a class="el" href="group__API.html#ga2d34a3237dfd74eb86a302913c60de28" title="Puts the device and driver instance into reset. ">xocp_reset</a>) </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggad4565d94bfd9eeaa7959e4a06db49d0fa94df60623c029d864ba346bb08980e64"></a>XOCP_OPERATIONAL</em>&nbsp;</td><td class="fielddoc">
+<p>State after activation (see <a class="el" href="group__API.html#ga11cd61d97a8aa15b59980f476a157072" title="Activate the O-RAN Channel Processor operation. ">xocp_activate</a>) </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a class="anchor" id="ga9a97d2a2455bd1b40ba42a84ddbe2f3f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -688,6 +1012,1096 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="ga11cd61d97a8aa15b59980f476a157072"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_activate </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Activate the O-RAN Channel Processor operation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Transitions the SW to operational state. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga9614a06cd606c1f2a3deef32132dbead"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_clear_event_status </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clears the current event status (e.g. </p>
+<p>events/errors). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0f0dc0574e1f6fe358edba1145216309"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xocp_debug </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>level</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set debug/trace level. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>Debug level (0 = none, 1 = minimal, 2 = verbose) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ga2cbda271a8bfaaa3c8a1a0858a0ce4aa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_enable_interrupts </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable/disable the event interrupts (according to supplied mask). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">mask</td><td>Bit-map mask for enabled interrupts (see <a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaab4357f21c80d21ba991eee6fb5e0ecb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xocp_finish </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Close/finalize the driver instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="gad1032c0396e64c059895441bca7a00b8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_antenna_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structxocp__antenna__data.html">xocp_antenna_data</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the antenna configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to write-back the antenna configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga2f0a515e9398b7df6bb04e368295f398"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_capabilities </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structxocp__caps.html">xocp_caps</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the device capabilities. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to write-back the capabilities (see <a class="el" href="structxocp__caps.html" title="Structure for supported capabilities. ">xocp_caps</a>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gae08ae7869a674d839707a4ab12723879"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_cc_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>cc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structxocp__cc__data.html">xocp_cc_data</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the component carrier configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">cc</td><td>Component carrier instance </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to write-back the component carrier configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga2e857e841f5ba6d44aaae733cc75db8e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_event_status </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>status</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current event status (e.g. </p>
+<p>events/errors). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">status</td><td>Pointer to write-back the status (see <a class="el" href="group__API.html#ga8be4e9d392425029993a9e8ad95b2be6" title="Enumerations for error/event information. ">xocp_events</a>) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga82472d6cb2902604c41880c81683f849"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t xocp_get_hw_internal_rev </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the internal h/w revision. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Internal revision </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaa10e3b7f3ff3a4269243b2cc70c20701"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t xocp_get_hw_version </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the h/w version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Version major = bits[24..31] minor = bits[16..23] revision = bits[8..15] </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf6109de427bcae994b7b4c42aef71782"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_state </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the current state of the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>State (see <a class="el" href="group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f" title="Enumerations for state machine states. ">xocp_states</a>)</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga97785138a9cea8e247c6f412364d779c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t xocp_get_sw_version </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return the s/w version. </p>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Version major = bits[24..31] minor = bits[16..23] revision = bits[8..15] patch = bits[0..7] </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gabc9cd8da6a264e8107fb4af205caa5fd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_get_trigger_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="structxocp__triggers.html">xocp_triggers</a> *&#160;</td>
+          <td class="paramname"><em>triggers</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the HW trigger configuration for DL/UL "update". </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">triggers</td><td>Pointer to write-back the trigger configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga71441ce4e335da460f0044cac1eaaf34"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_monitor_clear </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clear all "monitor block" counters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gad336b80523a9f214e2c026a68ec12bc1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_monitor_read </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>counter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read specified counter from "monitor block". </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">counter</td><td>Counter to read (see TBD for details) </td></tr>
+    <tr><td class="paramname">value</td><td>Pointer to write back the counter value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaed2e5d420ec409de195f1be04a42ae4a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_monitor_snapshot </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Take snapshot of the "monitor block" counters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga26c079fad72f78f8d9e86d53c8af7925"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_read_reg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to read from a register / register field on the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">name</td><td>Register field name </td></tr>
+    <tr><td class="paramname">value</td><td>Pointer to write-back the read value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This utility function takes a C-string representation of the register name, e.g. "MODEL_PARAM". Alternatively, an offset value can be provided, e.g. "0x8". Ths API is intended primarily for debug/development and might not be available in the released library. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gad69819662d0460ed5afb7b183a6fb2d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_read_reg_offset </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to read from a register / register field on the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">name</td><td>Register field name </td></tr>
+    <tr><td class="paramname">offset</td><td>Offset value to be used with register </td></tr>
+    <tr><td class="paramname">value</td><td>Pointer to write-back the read value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga25120e04d622474f04345064c902d006"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_register_event_callback </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__API.html#ga61aa694162ad82a2357bb6a180f662d6">xocp_isr_func_t</a>&#160;</td>
+          <td class="paramname"><em>callback</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Register a call-back function for event interrupts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">callback</td><td>Function pointer for call-back </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga2d34a3237dfd74eb86a302913c60de28"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_reset </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Puts the device and driver instance into reset. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">mode</td><td>Mode (0 = reset and release, 1 = hold in reset) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>When the mode = 1, the module is held in the reset state. Call the function again with mode = 0 to release the reset and to reset normally. This can be useful when coordinating the reset with other devices / modules. Use mode = 0 to perform the reset immediately. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga5ee188ec91e4704e86f24d134f84ac61"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_set_antenna_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct <a class="el" href="structxocp__antenna__data.html">xocp_antenna_data</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the antenna configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to the antenna configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga91cb69c970d87cb2de7a465935151a93"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_set_cc_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>cc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct <a class="el" href="structxocp__cc__data.html">xocp_cc_data</a> *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the component carrier configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">cc</td><td>Component carrier instance </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to the component carrier configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf80a5ea55ae57b99cfcc26dde3a54a20"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_set_schedule </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>length</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const uint8_t&#160;</td>
+          <td class="paramname"><em>sequence</em>[]&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the "next" symbol processing schedule. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">mode</td><td>Mode (1 = DL, 2 = UL, 3 = both DL &amp; UL) </td></tr>
+    <tr><td class="paramname">length</td><td>Length of sequence </td></tr>
+    <tr><td class="paramname">sequence</td><td>Pointer to array defining the symbol sequence </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The HW supports separate schedules for DL and UL. This API call can be used to program them separately (mode 1 or 2) or together (mode 3). The "sequence" parameter is an array (pointer) defining the sequence of component carrier symbols to process, e.g. {0, 0, 1} means a symbol from CC0, another symbol from CC0, and a symbol from CC1. Note, the component carrier IDs used here are the O-RAN CC IDs. Note, the actual symbol sequence needs to be coordinated with the DFE processing chain, and take into account the availability of symbols to/from the Front Haul Interface. This is left to the application SW. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga6faf33afeb951c812a95d195a5d1fbe5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_set_trigger_cfg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const struct <a class="el" href="structxocp__triggers.html">xocp_triggers</a> *&#160;</td>
+          <td class="paramname"><em>triggers</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Set the HW trigger configuration for DL/UL "update". </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">triggers</td><td>Pointer to the trigger configuration </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf6ffd8a57c5d7222b30ee1e27dad3160"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_start </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start a driver instance for the device. </p>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Instance number (0..N)</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaf6194042bff2a266ae3ebad7000cade4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_trigger_update </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enable the "update" HW trigger. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function enables the "update" HW trigger. On the configured trigger event, the HW will update the "current" register configuration with the values programmed into the "next" registers. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga247c77c2b87ec6e01dbdfcb20c0716eb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_write_reg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to write to a register / register field on the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">name</td><td>Register field name </td></tr>
+    <tr><td class="paramname">value</td><td>Value to write </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga272a85ffed433b3d5fc91f33dba6d961"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xocp_write_reg_offset </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>offset</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function to write to a register / register field on the device. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>Device instance ID (0..N) </td></tr>
+    <tr><td class="paramname">name</td><td>Register field name </td></tr>
+    <tr><td class="paramname">offset</td><td>Offset value to be used with register </td></tr>
+    <tr><td class="paramname">value</td><td>Value to write </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XOCP_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>See <a class="el" href="group__API.html#ga26c079fad72f78f8d9e86d53c8af7925" title="Function to read from a register / register field on the device. ">xocp_read_reg</a>. This function takes an additional offset, which is useful for indexing into a bank/block of registers. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga5f12916f671ba6ee001f71f7f308e991"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1144,7 +2558,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
       </table>
 </div><div class="memdoc">
 
-<p>Check if there is a Front-Haul Interface in the system. </p>
+<p>Check if there is a O-RAN makeFront-Haul Interface in the system. </p>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>0 = false (no)</li>
+<li>1 = true (yes) </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0c512ca218a568fdbeffacd599bfbf27"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_has_oran_channel_processor </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if there is a O-RAN Channel Processor in the system. </p>
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>0 = false (no)</li>
 <li>1 = true (yes) </li>
@@ -1636,8 +3073,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -1733,7 +3170,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximmum number of Ethernet frames per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximum number of Ethernet frames per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -1774,7 +3211,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximmum number of Ethernet frames per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximum number of Ethernet frames per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -2106,8 +3543,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -2264,8 +3701,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -2425,7 +3862,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16. RU port ids are mapped by one of 2 methods: mask or table. For mask-based mapping see <a class="el" href="group__libxorif.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports</a> &amp; <a class="el" href="group__libxorif.html#gaced1be08c60f1a23dd398c7da582eba5" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_alt1</a> For table-based mapping see <a class="el" href="group__libxorif.html#ga27450fc8358a0bde441dc3a8f6975ea9" title="Set the table mapping mode for the RU port id. ">xorif_set_ru_ports_table_mode</a> and <a class="el" href="group__libxorif.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16. RU port ids are mapped by one of 2 methods: mask or table. For mask-based mapping see <a class="el" href="group__libxorif.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports</a> &amp; <a class="el" href="group__libxorif.html#ga9379066763d5ba7f1c7aa95467a2b69c" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_lte</a> For table-based mapping see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a> and <a class="el" href="group__libxorif.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table</a> </dd></dl>
 
 </div>
 </div>
@@ -2858,12 +4295,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="gaced1be08c60f1a23dd398c7da582eba5"></a>
+<a class="anchor" id="ga9379066763d5ba7f1c7aa95467a2b69c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int xorif_set_ru_ports_alt1 </td>
+          <td class="memname">int xorif_set_ru_ports_lte </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>ru_bits</em>, </td>
@@ -2985,7 +4422,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga27450fc8358a0bde441dc3a8f6975ea9" title="Set the table mapping mode for the RU port id. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
 <li>0 = PDXCH</li>
 <li>1 = PUXCH</li>
 <li>2 = SSB</li>
@@ -2998,7 +4435,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="ga27450fc8358a0bde441dc3a8f6975ea9"></a>
+<a class="anchor" id="ga02e5936a62ac2c0a803c96adcc735fb7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3006,16 +4443,27 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
           <td class="memname">int xorif_set_ru_ports_table_mode </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>sub_mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the table mapping mode for the RU port id. </p>
+<p>Set the RU port table mapping mode. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>RU port id table mapping mode (see notes) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sub_mode</td><td>RU port id table mapping sub-mode (see notes) </td></tr>
   </table>
   </dd>
 </dl>
@@ -3024,7 +4472,78 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "mode" parameter allows flexibility in how addresses are mapped to ports. For example, in mode 1 the address is constructed from 'direction + RU bits'. See PG370 for details. Mode 0 = 'RU bits' Mode 1 = 'direction + RU bits' Mode 2 = 'band-sector bits + RU bits' Mode 3 = 'direction + band-sector bits + RU bits' The number of band-sector / RU bits is defined by <a class="el" href="group__libxorif.html#ga550a91743d3aa995cc2c3c550d3afd72" title="Set the eAxC ID (c.f. ">xorif_set_fhi_eaxc_id</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "mode" and "sub-mode" allows flexibility in how addresses are mapped to ports. See PG370 for further details, of modes, sub-modes, and address construction. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0c351b7236674c869768299e67127b1f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_set_ru_ports_table_vcc </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>ccid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>number</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign one or more RU port id mappings (alternative with "Virtual CCID"). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">address</td><td>The base (external) address to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>The base (internal) port to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The port type (see note for values) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ccid</td><td>The "virtual" CC ID (see note for values) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">number</td><td>The number of port mappings in this assignment </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping, specifically for "mode 2" operation, which uses concept of "Virtual CCID" (see PG370). "Mode 2" supports BS/CC sharing, and requires mapping of "real" CC ID (i.e. as understood by O-DU) to the "virtual" CC ID (i.e. the CC instance in the s/w driver). The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
+<li>0 = PDXCH</li>
+<li>1 = PUXCH</li>
+<li>2 = SSB</li>
+<li>3 = PRACH</li>
+<li>4 - LTE</li>
+<li>5..62 = user-defined</li>
+<li>63 = UNKNOWN (uses to indicate not-used) The "ccid" is the "virtual" CC ID (i.e. the CC instance in the s/w driver). The "number" indicates the number of mappings in the assignment. When number &gt; 1, the address and port values are incremented for each mapping. For example, address 0 -&gt; port 8, address 1 -&gt; port 9, address 2 -&gt; port 10, etc. </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
 import sys
-import os
-import pytest
 import logging
-import pytest
 from collections import namedtuple
 from cffi import FFI
+import pytest
 
 sys.path.append('/usr/share/xorif')
 import pylibxorif

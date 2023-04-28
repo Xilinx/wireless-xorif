@@ -97,7 +97,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p>Main header file for the Xilinx ORAN Radio Interface (libxorif).  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;inttypes.h&gt;</code><br/>
+<div class="textblock"><code>#include &lt;stdint.h&gt;</code><br/>
+<code>#include &lt;stdbool.h&gt;</code><br/>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -249,8 +250,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memdesc:ga6678916262074da7a53277e8d93ee80a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Front-Haul Interface capabilities.  <a href="group__API.html#ga6678916262074da7a53277e8d93ee80a">More...</a><br/></td></tr>
 <tr class="separator:ga6678916262074da7a53277e8d93ee80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga354bba5bbf86cb1a6ea346e47590cb5b">xorif_has_front_haul_interface</a> (void)</td></tr>
-<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a Front-Haul Interface in the system.  <a href="group__API.html#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
+<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN makeFront-Haul Interface in the system.  <a href="group__API.html#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
 <tr class="separator:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga0c512ca218a568fdbeffacd599bfbf27">xorif_has_oran_channel_processor</a> (void)</td></tr>
+<tr class="memdesc:ga0c512ca218a568fdbeffacd599bfbf27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN Channel Processor in the system.  <a href="group__API.html#ga0c512ca218a568fdbeffacd599bfbf27">More...</a><br/></td></tr>
+<tr class="separator:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga60d073a6ce61f808a5489f61a721a41b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a> (uint16_t cc)</td></tr>
 <tr class="memdesc:ga60d073a6ce61f808a5489f61a721a41b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure a component carrier.  <a href="group__API.html#ga60d073a6ce61f808a5489f61a721a41b">More...</a><br/></td></tr>
 <tr class="separator:ga60d073a6ce61f808a5489f61a721a41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -391,18 +395,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga857309ea8ff7506568e3111761877eb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val)</td></tr>
 <tr class="memdesc:ga857309ea8ff7506568e3111761877eb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits.  <a href="group__API.html#ga857309ea8ff7506568e3111761877eb8">More...</a><br/></td></tr>
 <tr class="separator:ga857309ea8ff7506568e3111761877eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaced1be08c60f1a23dd398c7da582eba5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaced1be08c60f1a23dd398c7da582eba5">xorif_set_ru_ports_alt1</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
-<tr class="memdesc:gaced1be08c60f1a23dd398c7da582eba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="group__API.html#gaced1be08c60f1a23dd398c7da582eba5">More...</a><br/></td></tr>
-<tr class="separator:gaced1be08c60f1a23dd398c7da582eba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga27450fc8358a0bde441dc3a8f6975ea9">xorif_set_ru_ports_table_mode</a> (uint16_t mode)</td></tr>
-<tr class="memdesc:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the table mapping mode for the RU port id.  <a href="group__API.html#ga27450fc8358a0bde441dc3a8f6975ea9">More...</a><br/></td></tr>
-<tr class="separator:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga9379066763d5ba7f1c7aa95467a2b69c">xorif_set_ru_ports_lte</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
+<tr class="memdesc:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="group__API.html#ga9379066763d5ba7f1c7aa95467a2b69c">More...</a><br/></td></tr>
+<tr class="separator:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7">xorif_set_ru_ports_table_mode</a> (uint16_t mode, uint16_t sub_mode)</td></tr>
+<tr class="memdesc:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port table mapping mode.  <a href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7">More...</a><br/></td></tr>
+<tr class="separator:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f12916f671ba6ee001f71f7f308e991"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991">xorif_clear_ru_ports_table</a> (void)</td></tr>
 <tr class="memdesc:ga5f12916f671ba6ee001f71f7f308e991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the RU ports mapping table.  <a href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991">More...</a><br/></td></tr>
 <tr class="separator:ga5f12916f671ba6ee001f71f7f308e991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6fc3068a93476321d8449fcc7871a29f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t number)</td></tr>
 <tr class="memdesc:ga6fc3068a93476321d8449fcc7871a29f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings.  <a href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">More...</a><br/></td></tr>
 <tr class="separator:ga6fc3068a93476321d8449fcc7871a29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c351b7236674c869768299e67127b1f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga0c351b7236674c869768299e67127b1f">xorif_set_ru_ports_table_vcc</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t ccid, uint16_t number)</td></tr>
+<tr class="memdesc:ga0c351b7236674c869768299e67127b1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings (alternative with "Virtual CCID").  <a href="group__API.html#ga0c351b7236674c869768299e67127b1f">More...</a><br/></td></tr>
+<tr class="separator:ga0c351b7236674c869768299e67127b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga4eaaa1adb6e01922ff4576bd4e816a72">xorif_enable_fhi_interrupts</a> (uint32_t mask)</td></tr>
 <tr class="memdesc:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable / disable Front-Haul Interface interrupts.  <a href="group__API.html#ga4eaaa1adb6e01922ff4576bd4e816a72">More...</a><br/></td></tr>
 <tr class="separator:ga4eaaa1adb6e01922ff4576bd4e816a72"><td class="memSeparator" colspan="2">&#160;</td></tr>

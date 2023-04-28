@@ -1,11 +1,16 @@
 # Change Log
 
+## Release 2023.1
+* Updated development build / tests / code coverage / linting
+
 ## Release 2022.2
 * Added multi-ODU support ("set modu_mode" and "set modu_dest_mac_addr")
 * Added experimental Python/Pyro version of the xorif-app application
 * Added "monitor" commands
 * Added "set num_rbs_ssb" to allow SSB RBs to be set to 0 (no SSB)
 * Added Python-based "xorif-app" version (xorif-app-server.py / xorif-app-client.py)
+* Modified "set ru_ports_table_mode" to support mode and sub_mode
+* Added "set ru_ports_table_vcc" which is alternate command for RU port table "mode 2" (uses "Virtual CCID")
 
 ## Release 2022.1
 * Modified Yocto recipes for 'honister' release

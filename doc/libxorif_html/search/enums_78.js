@@ -1,5 +1,8 @@
 var searchData=
 [
+  ['xocp_5ferror_5fcodes',['xocp_error_codes',['../group__API.html#gaf451ae0ea9768ba9266531c370a55c94',1,'xocp_api.h']]],
+  ['xocp_5fevents',['xocp_events',['../group__API.html#ga8be4e9d392425029993a9e8ad95b2be6',1,'xocp_api.h']]],
+  ['xocp_5fstates',['xocp_states',['../group__API.html#gad4565d94bfd9eeaa7959e4a06db49d0f',1,'xocp_api.h']]],
   ['xorif_5fchan_5ftype',['xorif_chan_type',['../group__libxorif.html#ga39d37b5bd222f3ad8f6bf67e97cb555e',1,'xorif_utils.h']]],
   ['xorif_5ferror_5fcodes',['xorif_error_codes',['../group__API.html#ga9a97d2a2455bd1b40ba42a84ddbe2f3f',1,'xorif_api.h']]],
   ['xorif_5ffhi_5falarms',['xorif_fhi_alarms',['../group__API.html#gab913aef59d6dfeb48ca044dd311f80ba',1,'xorif_api.h']]],

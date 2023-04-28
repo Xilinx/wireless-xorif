@@ -20,10 +20,7 @@ endif
 ROOTFS = 0
 
 # Set System Init type: 0 = sysvinit, 1 = systemd
-SYS_INIT = 0
-
-# Define targets for "all" here
-ALL += zcu102_om5_exs zcu111_om5_exs zcu111_om5_25_exs
+SYS_INIT = 1
 
 # Add kernel modules (e.g. drivers) here
 override MODULES += xlnx-ptp-timer
@@ -31,7 +28,6 @@ override MODULES += xlnx-ptp-timer
 # Add apps / libs here
 override APPS += libxorif
 override APPS += xorif-app
-override APPS += libxocp
 
 # Add scripts here
 ifeq ($(XXV),1)
@@ -46,6 +42,7 @@ override ROOTFS_Y += python3
 override ROOTFS_Y += netcat
 override ROOTFS_Y += tcpdump
 override ROOTFS_Y += libmetal
+override ROOTFS_Y += curl
 ifeq ($(DBG),1)
 override ROOTFS_Y += git
 override ROOTFS_Y += packagegroup-core-buildessential
@@ -71,10 +68,6 @@ endif
 
 # Extra bits
 override EXTRAS += linux
-override EXTRAS += perl-modules
-override EXTRAS += perl-module-findbin
-override EXTRAS += perl-module-carp
-override EXTRAS += perl-module-lib
 override EXTRAS += python3-modules
 ifeq ($(XXV),1)
 override EXTRAS += init-ifupdown
@@ -84,19 +77,7 @@ endif
 # Add help / usage guide here
 usage:
 	@echo "Usage: make [target]"
-	@echo "Example: make zcu111_om5_exs"
-	@echo
-	@echo "Supported targets:"
-	@echo "    all"
-	@echo "    clean_all"
-	@for x in $(ALL); do \
-		echo "    $${x}";\
-	done
-	@echo
-	@echo "Notes:"
-	@echo "    Board: [zcu102 | zcu111 | vck190]"
-	@echo "    Mode: [om5 = ORAN]"
-	@echo "    Design: [exs = example system | exd = example design]"
+	@echo "See README file for supported targets"
 
 ### MAIN RULES AND RECIPES ###
 
@@ -350,90 +331,47 @@ $(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
 
 #### PETALINUX TARGETS BELOW ####
 
-zcu102_om5_exd:
-	$(MAKE) BOARD=zcu102 TARGET=$@ \
+##------------------------------------------------------------------------------
+## Latest - update in progress
+##------------------------------------------------------------------------------
+## ExSys Builds
+## No Exs for 102, can be build, limited use as no URAM.
+##------------------------------------------------------------------------------
+zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
+zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
+zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exs \
+zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
+	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
-zcu102_om5_exs: $(XSA_DIR)/zcu102_om5_exs/system.xsa
-	$(MAKE) BOARD=zcu102 TARGET=$@ XXV=1 \
+zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
+zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
+zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
+	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
-
-zcu102_om5_10_slv_exd:
-	$(MAKE) BOARD=zcu102 TARGET=$@ DBG=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu111_bsp:
-	$(MAKE) BOARD=zcu111 TARGET=$@ \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu111-v$(PLNX_VER)-final.bsp \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu111_om5_exd:
-	$(MAKE) BOARD=zcu111 TARGET=$@ \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu111_om5_10_slv_exd:
+  
+##------------------------------------------------------------------------------
+## EXD Tests
+## These can also Target zcu102,zcu111,zcu670,vck190
+## Testing scope reduced to zcu111. Add back as required.
+##------------------------------------------------------------------------------
+## Make all the zcu111 Exd Targets
+zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exd \
+zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exd \
+zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
+zcu111_e4x8000x25_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
+zcu111_e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
+zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
-zcu111_om5_exs: $(XSA_DIR)/zcu111_om5_exs/system.xsa
-	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu111_om5_25_exs: $(XSA_DIR)/zcu111_om5_25_exs/system.xsa
-	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu111_om5_e4_exs:
-	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-vck190:
-	$(MAKE) BOARD=vck190 TARGET=$@ \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-vck190-v$(PLNX_VER)-final.bsp \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_om5_exs:
-	# Experimental build based on BSP
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_om5_25_exs: $(XSA_DIR)/zcu670_om5_25_exs/system.xsa
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_e1x9000x25_ss4x4_cc2x6600_exs: $(XSA_DIR)/zcu670_e1x9000x25_ss4x4_cc2x6600_exs/system.xsa
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs: $(XSA_DIR)/zcu670_e1x9000x25_ss4x4_cc2x6600_ocp_exs/system.xsa
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_e2x9000x25_ss8x8_cc2x6600_exs: $(XSA_DIR)/zcu670_e2x9000x25_ss8x8_cc2x6600_exs/system.xsa
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
-zcu670_e2x9000x25_ss8x8_cc2x6600_ocp_exs: $(XSA_DIR)/zcu670_e2x9000x25_ss8x8_cc2x6600_ocp_exs/system.xsa
-	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
-	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	package
-
+##------------------------------------------------------------------------------
 zcu670_om5_exd:
 	# Experimental build based on BSP
 	$(MAKE) BOARD=zcu670 TARGET=$@ \
@@ -446,6 +384,7 @@ zcu670_om5_10_slv_exd:
 	$(MAKE) BOARD=zcu670 TARGET=$@ \
 	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
+	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 all: $(ALL)

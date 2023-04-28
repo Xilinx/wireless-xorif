@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,18 +88,39 @@
         }                                                   \
     }
 
-#define ASSERT(expression)                                         \
-    {                                                              \
-        if (!(expression))                                         \
-        {                                                          \
-            PERROR("Assertion fail: %s %d\n", __FILE__, __LINE__); \
-        }                                                          \
+#define ASSERT(expression)                                                 \
+    {                                                                      \
+        if (!(expression))                                                 \
+        {                                                                  \
+            PERROR("Assertion: %s:%d:%s\n", __FILE__, __LINE__, __func__); \
+        }                                                                  \
     }
+
+#define ASSERT_V(expression)                                               \
+    {                                                                      \
+        if (!(expression))                                                 \
+        {                                                                  \
+            PERROR("Assertion: %s:%d:%s\n", __FILE__, __LINE__, __func__); \
+            return;                                                        \
+        }                                                                  \
+    }
+
+#define ASSERT_NV(expression, value)                                       \
+    {                                                                      \
+        if (!(expression))                                                 \
+        {                                                                  \
+            PERROR("Assertion: %s:%d:%s\n", __FILE__, __LINE__, __func__); \
+            return value;                                                  \
+        }                                                                  \
+    }
+
 #else
 #define PERROR(format, ...)
 #define TRACE(format, ...)
 #define INFO(format, ...)
 #define ASSERT(expression)
+#define ASSERT_V(expression)
+#define ASSERT_NV(expression, value)
 #endif
 
 // Additional debug logging macros

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 import sys
-import pytest
 import logging
-import pytest
 from collections import namedtuple
+import pytest
 
 sys.path.append('/usr/share/xorif')
 import pylibxorif
@@ -47,18 +46,20 @@ bad_comp_list = [(const.IQ_COMP_NONE, 17),
                  (const.IQ_COMP_BLOCK_SCALE, 12),
                  (const.IQ_COMP_U_LAW, 12)]
 
+
 def test_debug_api():
     """Check debug modes."""
     lib.xorif_debug(0)
     lib.xorif_debug(2)
+
 
 def test_init_api():
     """Check library finish/close API."""
     lib.xorif_finish()
     assert lib.xorif_get_state() == 0
 
-    # Inititialize with name
-    assert lib.xorif_init("oran_radio") == const.XORIF_SUCCESS
+    # Initialize with name
+    assert lib.xorif_init("oran_radio_if") == const.XORIF_SUCCESS
     assert lib.xorif_get_state() == 1
     lib.xorif_finish()
 
@@ -69,6 +70,7 @@ def test_init_api():
     # Initialize when already initialized
     assert lib.xorif_init() == const.XORIF_SUCCESS
     assert lib.xorif_get_state() == 1
+
 
 def test_versions_api():
     """Check the get version APIs."""
@@ -83,6 +85,7 @@ def test_versions_api():
     print(fhi_version)
     fhi_revision = lib.xorif_get_fhi_hw_internal_rev()
     print(fhi_revision)
+
 
 def test_capabilities_api():
     """Check the get capabilities APIs."""
@@ -102,10 +105,13 @@ def test_capabilities_api():
     assert caps['max_subcarriers'] >= 3300
     # Note, difficult to check values, since they will change
 
-def test_has_miscellaneous_api():
+
+def test_miscellaneous_api():
     """Check various miscellaneous APIs."""
     assert lib.xorif_has_front_haul_interface() == 1
+    assert lib.xorif_has_oran_channel_processor() is not None
     assert lib.xorif_reset_fhi(0) == const.XORIF_SUCCESS
+
 
 def test_num_rbs_api():
     """Test the number of RBs APIs."""
@@ -119,6 +125,7 @@ def test_num_rbs_api():
     for r in [1, 2, 50, 100, 200, 273, 275]:
         assert lib.xorif_set_cc_num_rbs(0, r) == const.XORIF_SUCCESS
 
+
 def test_numerology_api():
     """Test the numerology APIs."""
     assert lib.xorif_get_state() == 1
@@ -126,7 +133,7 @@ def test_numerology_api():
     assert lib.xorif_set_cc_numerology(caps['max_cc'], 0, 0) == const.XORIF_INVALID_CC
 
     for n in range(0, 5):
-        if (caps['numerologies'] & 1<<n):
+        if (caps['numerologies'] & 1 << n):
             if caps['extended_cp'] == 1:
                 if n == 2:
                     # Extended CP only valid for numerology 2
@@ -142,6 +149,7 @@ def test_numerology_api():
             assert lib.xorif_set_cc_numerology(0, n, 0) == const.XORIF_NUMEROLOGY_NOT_SUPPORTED
             assert lib.xorif_set_cc_numerology(0, n, 1) == const.XORIF_NUMEROLOGY_NOT_SUPPORTED
 
+
 def test_num_rbs_ssb_api():
     """Test the number of RBs (SSB) APIs."""
     assert lib.xorif_get_state() == 1
@@ -154,6 +162,7 @@ def test_num_rbs_ssb_api():
     for r in [0, 20]:
         assert lib.xorif_set_cc_num_rbs_ssb(0, r) == const.XORIF_SUCCESS
 
+
 def test_numerology_ssb_api():
     """Test the numerology (SSB) APIs."""
     assert lib.xorif_get_state() == 1
@@ -161,7 +170,7 @@ def test_numerology_ssb_api():
     assert lib.xorif_set_cc_numerology_ssb(caps['max_cc'], 0, 0) == const.XORIF_INVALID_CC
 
     for n in range(0, 5):
-        if (caps['numerologies'] & 1<<n):
+        if (caps['numerologies'] & 1 << n):
             if caps['extended_cp'] == 1:
                 if n == 2:
                     # Extended CP only valid for numerology 2
@@ -177,6 +186,7 @@ def test_numerology_ssb_api():
             assert lib.xorif_set_cc_numerology_ssb(0, n, 0) == const.XORIF_NUMEROLOGY_NOT_SUPPORTED
             assert lib.xorif_set_cc_numerology_ssb(0, n, 1) == const.XORIF_NUMEROLOGY_NOT_SUPPORTED
 
+
 def test_iq_compression_api():
     """Test the IQ compression APIs."""
     assert lib.xorif_get_state() == 1
@@ -186,13 +196,13 @@ def test_iq_compression_api():
 
     # Supported downlink compression modes
     for m, w in dl_comp_list:
-        if caps['iq_de_comp_methods'] & 1<<m:
+        if caps['iq_de_comp_methods'] & 1 << m:
             for mp in [0, 1]:
                 assert lib.xorif_set_cc_dl_iq_compression(0, w, m, mp) == const.XORIF_SUCCESS
 
     # Supported uplink compression modes
     for m, w in ul_comp_list:
-        if caps['iq_comp_methods'] & 1<<m:
+        if caps['iq_comp_methods'] & 1 << m:
             for mp in [0, 1]:
                 assert lib.xorif_set_cc_ul_iq_compression(0, w, m, mp) == const.XORIF_SUCCESS
 
@@ -202,6 +212,7 @@ def test_iq_compression_api():
             assert lib.xorif_set_cc_dl_iq_compression(0, w, m, mp) == const.XORIF_COMP_MODE_NOT_SUPPORTED
             assert lib.xorif_set_cc_ul_iq_compression(0, w, m, mp) == const.XORIF_COMP_MODE_NOT_SUPPORTED
 
+
 def test_iq_compression_ssb_api():
     """Test the IQ compression (SSB) APIs."""
     assert lib.xorif_get_state() == 1
@@ -210,7 +221,7 @@ def test_iq_compression_ssb_api():
 
     # Supported compression modes
     for m, w in dl_comp_list:
-        if caps['iq_de_comp_methods'] & 1<<m:
+        if caps['iq_de_comp_methods'] & 1 << m:
             for mp in [0, 1]:
                 assert lib.xorif_set_cc_iq_compression_ssb(0, w, m, mp) == const.XORIF_SUCCESS
 
@@ -218,6 +229,7 @@ def test_iq_compression_ssb_api():
     for m, w in bad_comp_list:
         for mp in [0, 1]:
             assert lib.xorif_set_cc_iq_compression_ssb(0, w, m, mp) == const.XORIF_COMP_MODE_NOT_SUPPORTED
+
 
 def test_iq_compression_prach_api():
     """Test the IQ compression (PRACH) APIs."""
@@ -227,7 +239,7 @@ def test_iq_compression_prach_api():
 
     # Supported compression modes
     for m, w in ul_comp_list:
-        if caps['iq_comp_methods'] & 1<<m:
+        if caps['iq_comp_methods'] & 1 << m:
             for mp in [0, 1]:
                 assert lib.xorif_set_cc_iq_compression_prach(0, w, m, mp) == const.XORIF_SUCCESS
 
@@ -235,6 +247,7 @@ def test_iq_compression_prach_api():
     for m, w in bad_comp_list:
         for mp in [0, 1]:
             assert lib.xorif_set_cc_iq_compression_prach(0, w, m, mp) == const.XORIF_COMP_MODE_NOT_SUPPORTED
+
 
 def test_time_advance_api():
     """Test time advance API."""
@@ -251,6 +264,7 @@ def test_time_advance_api():
     assert lib.xorif_set_cc_dl_timing_parameters(caps['max_cc'], 0, 0, 0) == const.XORIF_INVALID_CC
     assert lib.xorif_set_cc_dl_timing_parameters(0, 100, 100, 50) == const.XORIF_SUCCESS
 
+
 def test_sections_per_symbol_api():
     """Test sections per symbol API."""
     assert lib.xorif_get_state() == 1
@@ -262,6 +276,7 @@ def test_sections_per_symbol_api():
         assert lib.xorif_set_cc_dl_sections_per_symbol(0, s, s) == const.XORIF_SUCCESS
         assert lib.xorif_set_cc_ul_sections_per_symbol(0, s, s) == const.XORIF_SUCCESS
 
+
 def test_frames_per_symbol_api():
     """Test frames per symbol API."""
     assert lib.xorif_get_state() == 1
@@ -270,6 +285,7 @@ def test_frames_per_symbol_api():
 
     for s in [0, 1, 3, 5, 10, 15, 20]:
         assert lib.xorif_set_cc_frames_per_symbol(0, s) == const.XORIF_SUCCESS
+
 
 def test_sections_per_symbol_ssb_api():
     """Test sections per symbol (SSB) API."""
@@ -280,6 +296,7 @@ def test_sections_per_symbol_ssb_api():
     for s in [0, 5, 10, 20]:
         assert lib.xorif_set_cc_sections_per_symbol_ssb(0, s, s) == const.XORIF_SUCCESS
 
+
 def test_frames_per_symbol_ssb_api():
     """Test frames per symbol (SSB) API."""
     assert lib.xorif_get_state() == 1
@@ -288,6 +305,7 @@ def test_frames_per_symbol_ssb_api():
 
     for s in [0, 1, 3, 5, 10]:
         assert lib.xorif_set_cc_frames_per_symbol_ssb(0, s) == const.XORIF_SUCCESS
+
 
 def test_set_config_api():
     """Test set config API."""
@@ -333,7 +351,7 @@ def test_set_config_api():
         for r in [1, 2, 50, 100, 200, 273, 275]:
             config1['numerology'] = n
             config1['num_rbs'] = r
-            if (caps['numerologies'] & 1<<n):
+            if (caps['numerologies'] & 1 << n):
                 config1['numerology'] = n
                 config1['num_rbs'] = r
                 assert lib.xorif_set_cc_config(0, config1) == const.XORIF_SUCCESS
@@ -345,7 +363,7 @@ def test_set_config_api():
     config1['numerology'] = 1
 
     for n in range(0, 5):
-        if (caps['numerologies'] & 1<<n):
+        if (caps['numerologies'] & 1 << n):
             config1['numerology_ssb'] = n
             config1['num_rbs_ssb'] = 19
             assert lib.xorif_set_cc_config(0, config1) == const.XORIF_INVALID_RBS
@@ -365,7 +383,7 @@ def test_set_config_api():
     for m, w in ul_comp_list:
         config1['iq_comp_meth_ul'] = m
         config1['iq_comp_width_ul'] = w
-        if caps['iq_comp_methods'] & 1<<m:
+        if caps['iq_comp_methods'] & 1 << m:
             assert lib.xorif_set_cc_config(0, config1) == const.XORIF_SUCCESS
 
     for m, w in bad_comp_list:
@@ -379,7 +397,7 @@ def test_set_config_api():
     for m, w in dl_comp_list:
         config1['iq_comp_meth_dl'] = m
         config1['iq_comp_width_dl'] = w
-        if caps['iq_de_comp_methods'] & 1<<m:
+        if caps['iq_de_comp_methods'] & 1 << m:
             assert lib.xorif_set_cc_config(0, config1) == const.XORIF_SUCCESS
 
     for m, w in bad_comp_list:
@@ -393,7 +411,7 @@ def test_set_config_api():
     for m, w in dl_comp_list:
         config1['iq_comp_meth_ssb'] = m
         config1['iq_comp_width_ssb'] = w
-        if caps['iq_de_comp_methods'] & 1<<m:
+        if caps['iq_de_comp_methods'] & 1 << m:
             assert lib.xorif_set_cc_config(0, config1) == const.XORIF_SUCCESS
 
     for m, w in bad_comp_list:
@@ -407,7 +425,7 @@ def test_set_config_api():
     for m, w in ul_comp_list:
         config1['iq_comp_meth_prach'] = m
         config1['iq_comp_width_prach'] = w
-        if caps['iq_comp_methods'] & 1<<m:
+        if caps['iq_comp_methods'] & 1 << m:
             assert lib.xorif_set_cc_config(0, config1) == const.XORIF_SUCCESS
 
     for m, w in bad_comp_list:
@@ -417,6 +435,7 @@ def test_set_config_api():
 
     config1['iq_comp_meth_prach'] = const.IQ_COMP_NONE
     config1['iq_comp_width_prach'] = 16
+
 
 def test_get_config_api():
     """Test get config API."""
@@ -481,16 +500,17 @@ def test_get_config_api():
     assert config1['num_frames_per_sym'] == config2['num_frames_per_sym']
     assert config1['num_frames_per_sym_ssb'] == config2['num_frames_per_sym_ssb']
 
+
 def test_alarm_api():
     """Test the API to get/clear alarms."""
     assert lib.xorif_get_state() == 1
-
 
     if lib.xorif_has_front_haul_interface():
         lib.xorif_clear_fhi_alarms()
         fhi_alarms = lib.xorif_get_fhi_alarms()
         print(fhi_alarms)
         assert fhi_alarms == 0
+
 
 def test_stats_api():
     """Test the API to get/clear stats/counters."""
@@ -503,6 +523,7 @@ def test_stats_api():
             assert result == const.XORIF_SUCCESS
         result, stats = lib.xorif_get_fhi_eth_stats(caps['num_eth_ports'])
         assert result == const.XORIF_INVALID_ETH_PORT
+
 
 def test_set_mac_address_api():
     """Test the API to set MAC address."""
@@ -537,6 +558,7 @@ def test_set_modu_api():
 
     assert lib.xorif_set_modu_mode(0) == const.XORIF_SUCCESS
 
+
 def test_protocol_api():
     """Test the API to configure the Ethernet protocol, VLAN, etc."""
     assert lib.xorif_get_state() == 1
@@ -557,6 +579,7 @@ def test_protocol_api():
     assert lib.xorif_set_fhi_protocol(const.PROTOCOL_IEEE_1914_3, 1, const.IP_MODE_RAW) == const.XORIF_SUCCESS
     assert lib.xorif_set_fhi_protocol_alt(const.PROTOCOL_IEEE_1914_3, 1, const.IP_MODE_RAW) == const.XORIF_SUCCESS
 
+
 def test_vlan_tag_api():
     """Test the API to configure the Ethernet protocol, VLAN, etc."""
     assert lib.xorif_get_state() == 1
@@ -566,6 +589,7 @@ def test_vlan_tag_api():
             assert lib.xorif_set_fhi_vlan_tag(p, id, 1, 5) == const.XORIF_SUCCESS
 
     assert lib.xorif_set_fhi_vlan_tag(caps['num_eth_ports'], 2000, 1, 5) == const.XORIF_INVALID_ETH_PORT
+
 
 def test_ethernet_packet_filter_api():
     """Test the API to configure the Ethernet packet filter."""
@@ -577,6 +601,7 @@ def test_ethernet_packet_filter_api():
     assert lib.xorif_set_fhi_packet_filter(0, [0, 1, 2], mask) == const.XORIF_FAILURE
     assert lib.xorif_set_fhi_packet_filter(0, filter, [0, 1, 2]) == const.XORIF_FAILURE
     assert lib.xorif_set_fhi_packet_filter(0, filter, mask) == const.XORIF_SUCCESS
+
 
 def test_eaxc_id_api():
     """Test the API to set the eaxc id."""
@@ -592,18 +617,24 @@ def test_eaxc_id_api():
     assert lib.xorif_set_fhi_eaxc_id(4, 4, 3, 4) == const.XORIF_INVALID_EAXC_ID
     assert lib.xorif_set_fhi_eaxc_id(4, 4, 4, 3) == const.XORIF_INVALID_EAXC_ID
 
-    ## Sum of fields is 16, but some fields are bigger than allowed
+    # Sum of fields is 16, but some fields are bigger than allowed
     max = caps['du_id_limit'] + caps['bs_id_limit'] + caps['cc_id_limit'] + caps['ru_id_limit']
     x = max - 16
-    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'], caps['cc_id_limit'], caps['ru_id_limit'] - x) == const.XORIF_SUCCESS
-    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'] + 1, caps['bs_id_limit'], caps['cc_id_limit'], caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
-    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'] + 1, caps['cc_id_limit'], caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
-    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'], caps['cc_id_limit'] + 1, caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
-    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'] - x, caps['cc_id_limit'], caps['ru_id_limit'] + 1) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'],
+                                     caps['cc_id_limit'], caps['ru_id_limit'] - x) == const.XORIF_SUCCESS
+    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'] + 1, caps['bs_id_limit'],
+                                     caps['cc_id_limit'], caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'] + 1,
+                                     caps['cc_id_limit'], caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'],
+                                     caps['cc_id_limit'] + 1, caps['ru_id_limit'] - x - 1) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_fhi_eaxc_id(caps['du_id_limit'], caps['bs_id_limit'] - x,
+                                     caps['cc_id_limit'], caps['ru_id_limit'] + 1) == const.XORIF_INVALID_EAXC_ID
 
     # Finally, some known working configurations
     assert lib.xorif_set_fhi_eaxc_id(4, 2, 2, 8) == const.XORIF_SUCCESS
     assert lib.xorif_set_fhi_eaxc_id(4, 1, 3, 8) == const.XORIF_SUCCESS
+
 
 def test_set_ru_ports_api():
     """Test the API to set RU port ids."""
@@ -615,88 +646,101 @@ def test_set_ru_ports_api():
     assert lib.xorif_set_ru_ports(8, caps['ss_id_limit'], 0xC0, 0x00, 0x80, 0x40) == const.XORIF_SUCCESS
     assert lib.xorif_set_ru_ports(8, caps['ss_id_limit'], 0xC0, 0x00, 0xFF, 0xFF) == const.XORIF_SUCCESS
 
-def test_set_ru_ports_alt_api():
-    """Test the API to set RU port ids (alternative API)."""
+
+def test_set_ru_ports_lte_api():
+    """Test the API to set RU port ids (alternative API using LTE)."""
     assert lib.xorif_get_state() == 1
 
     assert lib.xorif_set_fhi_eaxc_id(4, 1, 3, 8) == const.XORIF_SUCCESS
-    assert lib.xorif_set_ru_ports_alt1(2, 4, 0xE0, 0, 0, 0, 0) == const.XORIF_INVALID_EAXC_ID
-    assert lib.xorif_set_ru_ports_alt1(8, caps['ss_id_limit'] + 1, 0xE0, 0, 0, 0, 0) == const.XORIF_INVALID_EAXC_ID
-    assert lib.xorif_set_ru_ports_alt1(8, caps['ss_id_limit'], 0xE0, 0x00, 0x80, 0x40, 0x20) == const.XORIF_SUCCESS
-    assert lib.xorif_set_ru_ports_alt1(8, caps['ss_id_limit'], 0xE0, 0x00, 0xFF, 0xFF, 0xFF) == const.XORIF_SUCCESS
+    assert lib.xorif_set_ru_ports_lte(2, 4, 0xE0, 0, 0, 0, 0) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_ru_ports_lte(8, caps['ss_id_limit'] + 1, 0xE0, 0, 0, 0, 0) == const.XORIF_INVALID_EAXC_ID
+    assert lib.xorif_set_ru_ports_lte(8, caps['ss_id_limit'], 0xE0, 0x00, 0x80, 0x40, 0x20) == const.XORIF_SUCCESS
+    assert lib.xorif_set_ru_ports_lte(8, caps['ss_id_limit'], 0xE0, 0x00, 0xFF, 0xFF, 0xFF) == const.XORIF_SUCCESS
+
 
 def test_set_ru_ports_table_api():
-    """Test the API to set RU port table mapping."""
+    """Test the API to set RU port table mapping (including with / without Virtual CCID)"""
     assert lib.xorif_get_state() == 1
 
     width = caps['ru_ports_map_width']
 
     if width == 0:
         # 0 addresses
-         # Set RU bits = 8, BS bits = 1
+        # Set RU bits = 8, BS bits = 1
         assert lib.xorif_set_fhi_eaxc_id(4, 1, 3, 8) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
 
         # Write some mappings
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 1) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 0, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 1, 1) == const.XORIF_INVALID_RU_PORT_MAPPING
 
     if width == 8:
         # 256 addresses
         # Set RU bits = 8, BS bits = 1
         assert lib.xorif_set_fhi_eaxc_id(4, 1, 3, 8) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_SUCCESS
 
         # Set RU bits = 6, BS bits = 3
         assert lib.xorif_set_fhi_eaxc_id(4, 3, 3, 6) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_INVALID_RU_PORT_MAPPING
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_SUCCESS
 
         # Write some mappings
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 1) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 16) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 256) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 257) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 0, 1) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 1, 16) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 2, 256) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 3, 257) == const.XORIF_INVALID_RU_PORT_MAPPING
 
     if width == 11:
         # 2048 addresses
         # Set RU bits = 8, BS bits = 1
         assert lib.xorif_set_fhi_eaxc_id(4, 1, 3, 8) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_SUCCESS
 
         # Set RU bits = 6, BS bits = 3
         assert lib.xorif_set_fhi_eaxc_id(4, 3, 3, 6) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_SUCCESS
 
         # Set RU bits = 8, BS bits = 3
         assert lib.xorif_set_fhi_eaxc_id(2, 3, 3, 8) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(0) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(1) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(2) == const.XORIF_SUCCESS
-        assert lib.xorif_set_ru_ports_table_mode(3) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_mode(0, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(1, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(2, 0) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_mode(3, 0) == const.XORIF_SUCCESS
 
         # Write some mappings
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 1) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 16) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 2048) == const.XORIF_SUCCESS
         assert lib.xorif_set_ru_ports_table(0, 0, 1, 2049) == const.XORIF_INVALID_RU_PORT_MAPPING
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 0, 1) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 1, 16) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 2, 2048) == const.XORIF_SUCCESS
+        assert lib.xorif_set_ru_ports_table_vcc(0, 0, 1, 3, 2049) == const.XORIF_INVALID_RU_PORT_MAPPING
 
-    assert lib.xorif_set_ru_ports_table_mode(4) == const.XORIF_INVALID_RU_PORT_MAPPING
+    assert lib.xorif_set_ru_ports_table_mode(4, 0) == const.XORIF_INVALID_RU_PORT_MAPPING
     assert lib.xorif_clear_ru_ports_table() == const.XORIF_SUCCESS
+
 
 def test_fhi_register_read_api():
     """Check the FHI register read API."""
@@ -722,6 +766,7 @@ def test_fhi_register_read_api():
         result, value = lib.xorif_read_fhi_reg(reg)
         assert result == const.XORIF_REGISTER_NOT_FOUND
 
+
 def test_fhi_register_read_offset_api():
     """Check the FHI register read offset API."""
     assert lib.xorif_get_state() == 1
@@ -741,6 +786,7 @@ def test_fhi_register_read_offset_api():
     for reg in reg_list2:
         result, value = lib.xorif_read_fhi_reg_offset(reg, 0)
         assert result == const.XORIF_REGISTER_NOT_FOUND
+
 
 def test_fhi_register_write_api():
     """Check the FHI register write API."""
@@ -771,6 +817,7 @@ def test_fhi_register_write_api():
                 'CFG_MAJOR_REVISIO']
     for reg in reg_list:
         assert lib.xorif_write_fhi_reg(reg, 0) == const.XORIF_REGISTER_NOT_FOUND
+
 
 def test_fhi_register_write_offset_api():
     """Check the FHI register write offset API."""
@@ -806,13 +853,14 @@ def test_fhi_register_write_offset_api():
     for reg in reg_list:
         assert lib.xorif_write_fhi_reg_offset(reg, 0, 0) == const.XORIF_REGISTER_NOT_FOUND
 
+
 def test_ul_bid_forward_api():
     """Check uplink beam-id forward API."""
     assert lib.xorif_get_state() == 1
 
-
     assert lib.xorif_set_ul_bid_forward(caps['max_cc'], 0) == const.XORIF_INVALID_CC
     assert lib.xorif_set_ul_bid_forward(0, 90) == const.XORIF_SUCCESS
+
 
 def test_ul_radio_ch_dly_api():
     """Check uplink radio chnnel delay API."""
@@ -820,6 +868,7 @@ def test_ul_radio_ch_dly_api():
 
     assert lib.xorif_set_ul_radio_ch_dly(caps['max_cc'], 0) == const.XORIF_INVALID_CC
     assert lib.xorif_set_ul_radio_ch_dly(0, 30) == const.XORIF_SUCCESS
+
 
 def test_timing_constants_api():
     """Check timing constants API."""
@@ -832,12 +881,14 @@ def test_timing_constants_api():
     sys_const['FH_DECAP_DLY'] = 5
     lib.xorif_set_system_constants(sys_const) == const.XORIF_SUCCESS
 
+
 def test_enable_interrupts_api():
     """Check the enable/disable interrupts API."""
     assert lib.xorif_get_state() == 1
 
     assert lib.xorif_enable_fhi_interrupts(0xFFFFFFFF) == const.XORIF_SUCCESS
     assert lib.xorif_enable_fhi_interrupts(0x0) == const.XORIF_SUCCESS
+
 
 def test_enable_disable_api():
     """Check the enable/disable APIs."""
@@ -848,6 +899,7 @@ def test_enable_disable_api():
     assert lib.xorif_disable_cc(caps['max_cc']) == const.XORIF_INVALID_CC
     assert lib.xorif_disable_cc(0) == const.XORIF_SUCCESS
     assert lib.xorif_get_enabled_cc_mask() == 0
+
 
 def test_symbol_strobe_api():
     """Check symbol strobe source API."""
@@ -863,6 +915,7 @@ def test_symbol_strobe_api():
     assert result == const.XORIF_SUCCESS
     assert value == 0
 
+
 def test_per_ss_decompression_api():
     """Test the per-SS decompression API."""
     assert lib.xorif_get_state() == 1
@@ -875,12 +928,13 @@ def test_per_ss_decompression_api():
 
     # Try some valid values
     for m, w in dl_comp_list:
-        if caps['iq_de_comp_methods'] & 1<<m:
+        if caps['iq_de_comp_methods'] & 1 << m:
             assert lib.xorif_set_cc_dl_iq_compression_per_ss(0, w, m, 1, 0) == const.XORIF_SUCCESS
             assert lib.xorif_set_cc_dl_iq_compression_per_ss(0, w, m, 1, caps['no_deframer_ss']) == const.XORIF_SUCCESS
 
     # Finally leave disabled
     assert lib.xorif_set_cc_dl_iq_compression_per_ss(0, 0, 0, 0, caps['no_deframer_ss']) == const.XORIF_SUCCESS
+
 
 def test_configure_api():
     """Test configure API."""
@@ -926,6 +980,7 @@ def test_configure_api():
     result, alloc = lib.xorif_get_fhi_cc_alloc(0)
     assert result == const.XORIF_SUCCESS
 
+
 def test_mtu_size_api():
     """Test the setting of MTU size API."""
     assert lib.xorif_get_state() == 1
@@ -934,6 +989,7 @@ def test_mtu_size_api():
     assert lib.xorif_set_mtu_size(caps['max_framer_ethernet_pkt'] + 1) == const.XORIF_INVALID_CONFIG
     assert lib.xorif_set_mtu_size(caps['max_framer_ethernet_pkt']) == const.XORIF_SUCCESS
     assert lib.xorif_set_mtu_size(8000) == const.XORIF_SUCCESS
+
 
 def test_monitor_api():
     """Test the monitor API."""

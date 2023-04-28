@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@
 
 // Software version number
 #define SW_MAJ_VER 2
-#define SW_MIN_VER 2
-#define SW_REVISION 3
+#define SW_MIN_VER 5
+#define SW_REVISION 0
 
 // System constants
 #define NUM_NUMEROLOGY 5 /**< Number of numerologies */

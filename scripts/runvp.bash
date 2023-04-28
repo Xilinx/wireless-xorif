@@ -2,7 +2,7 @@
 #source /proj/petalinux/2020.2/petalinux-v2020.2_daily_latest/tool/petalinux-v2020.2-final/settings.csh
 
 ## This is a global
-ipRepo="-tclargs /proj/ipeng/staff/maginnis/iiippp/IP3_maginnis_oran_radio_if_1_1_DEV_boot/DEV/output/internal/vivado/data/ip/xilinx/oran_radio_if_v1_1/"
+ipRepo="-tclargs /proj/ipeng_scratch/maginnis/w/IP3_maginnis_v30l/DEV/output/internal/vivado/data/ip/xilinx/oran_radio_if_v3_0/"
 
 ## This is a serial script. Run over night. If the config list gets too big, parallelise
 
@@ -19,9 +19,13 @@ function runVivadoBuild {
   extra=$4
   buildName="${board}_${ipMode}_${exMode}"
 
-  echo "Running Vivado    Build for $buildName"
-
-  vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs $board -tclargs $ipMode -tclargs implNodate${exMode}Exit${extra} $ipRepo
+  if [ $doVivado == 1 ]
+  then 
+    echo "Running Vivado    Build for $buildName"
+    vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs $board -tclargs $ipMode -tclargs implNodate${exMode}Exit${extra} $ipRepo
+  else
+    echo "BYPASS  Vivado    Build for $buildName"
+  fi
 
   buildName=`echo $buildName | tr [:upper:] [:lower:]`
   globalString="$buildName"
@@ -35,8 +39,18 @@ function runPetalinuxBuild {
   targetFull="${targetBase}_${toolVersion}"
 
   mkdir ../xsa/${targetBase}
-  cp ../output/${targetFull}/vivado/${targetFull}.sdk/${targetFull}.xsa ../xsa/${targetBase}/system.xsa   
-  make ${targetBase}
+  if [ $doXsaCopy == 1 ]
+  then 
+    echo "Copy System XSA to  ../xsa/${targetBase}"
+    cp ../output/${targetFull}/vivado/system.xsa ../xsa/${targetBase}/system.xsa   
+  fi
+  if [ $doPetaLinux == 1 ]
+  then 
+    echo "Copy Stsrem XSA to  ../xsa/${targetBase}"
+    make ${targetBase}   
+  fi
+  sleep 2
+  echo "./copy_image_to_home.bash ${targetFull}"
   ./copy_image_to_home.bash ${targetFull}
 
   echo "Petalinux done for ${targetFull}"
@@ -56,9 +70,24 @@ function runVpBuild {
   runPetalinuxBuild $buildName $toolVersion
 
 } 
-    
-#runVpBuild zcu111 om5        Exs 2020_2 ""
-#runVpBuild zcu111 om5_25     Exs 2020_2 ""
-#runVpBuild zcu111 om5_10_slv Exd 2020_2 ""
-runVpBuild zcu102 om5        Exs 2020_2 Loop
+
+##------------------------------------------------------------------------------
+## Control what happens
+##------------------------------------------------------------------------------
+doVivado=1
+doXsaCopy=1
+doPetaLinux=1
+
+##------------------------------------------------------------------------------
+## Builds to run, serially.
+##------------------------------------------------------------------------------
+#runVpBuild zcu111 e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144 Exd 2022_2 ""
+#runVpBuild zcu111 e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144 Exs 2022_2 "Loop"
+runVpBuild zcu111 e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144        Exd 2022_2 ""
+#runVpBuild zcu111 e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144        Exs 2022_2 "Loop"
+#runVpBuild zcu111 e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi               Exd 2022_2 ""
+#runVpBuild zcu111 e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi               Exs 2022_2 "Loop"
+#runVpBuild zcu111 e4x8000x25_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest             Exd 2022_2 ""
+#runVpBuild zcu111 e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest             Exd 2022_2 ""
+
 

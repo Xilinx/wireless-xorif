@@ -1,0 +1,237 @@
+# help [<topic>]
+help
+help get
+help set
+version
+magic
+
+# debug <level = 0..2>
+debug 0
+debug 1
+debug 2
+
+# init [fhi | bf] [<device_name>]
+init
+init fhi
+init fhi NULL
+init fhi oran_radio_if
+init bf
+init bf NULL
+init bf beamformer
+
+# finish [fhi | bf]
+finish
+finish fhi
+finish bf
+
+# init again, so everything is running
+init
+
+# get...
+get sw_version
+get fhi_sw_version
+get fhi_hw_version
+get fhi_hw_internal_rev
+get fhi_capabilities
+get fhi_caps
+get fhi_cc_config 0
+get fhi_cc_alloc 0
+get fhi_stats 0
+get fhi_alarms
+get fhi_state
+get fhi_enabled
+get bf_sw_version
+get bf_hw_version
+get bf_hw_internal_rev
+get bf_capabilities
+get bf_caps
+get bf_cc_config 0
+get bf_cc_alloc 0
+get bf_stats
+get bf_alarms
+get bf_state
+get bf_enabled
+get latency_dl
+get latency_dl_dfe
+get latency_ul
+get ul_data_arrival_offset 0
+get bf_error_flags
+
+# set...
+set num_rbs 0 106
+set numerology 0 1 0
+set num_rbs_ssb 0 20
+set numerology_ssb 0 1 0
+set time_advance 0 50 25 25
+set ul_timing_params 0 50 50 50
+set dl_timing_params 0 50 50 50
+set ul_bid_forward 0 90
+set ul_bid_forward_fine 0 1 2
+set ul_radio_ch_dly 0 90
+set dl_iq_compression 0 0 0
+set dl_iq_compression 0 0 0 1
+set dl_iq_comp 0 0 0
+set dl_iq_compression 0 12 1
+set dl_iq_compression 0 12 1 1
+set dl_iq_comp 0 12 1
+set ul_iq_compression 0 0 0
+set ul_iq_compression 0 0 0 1
+set ul_iq_comp 0 0 0
+set ul_iq_compression 0 12 1
+set ul_iq_compression 0 12 1 1
+set ul_iq_comp 0 12 1
+set ssb_iq_compression 0 0 0
+set ssb_iq_compression 0 0 0 1
+set ssb_iq_comp 0 0 0
+set ssb_iq_compression 0 12 1
+set ssb_iq_compression 0 12 1 1
+set ssb_iq_comp 0 12 1
+set prach_iq_compression 0 0 0
+set prach_iq_compression 0 0 0 1
+set prach_iq_comp 0 0 0
+set prach_iq_compression 0 12 1
+set prach_iq_compression 0 12 1 1
+set prach_iq_comp 0 12 1
+set per_ss_decompression 0 9 1 1
+set per_ss_decompression 0 12 1 1 20
+set per_ss_decompression 0 0 0 1 20
+set per_ss_decompression 0 0 0 0 20
+set per_ss_decomp 0 9 1 1
+set per_ss_decomp 0 12 1 1 20
+set per_ss_decomp 0 0 0 1 20
+set per_ss_decomp 0 0 0 0 20
+set dl_sections_per_sym 0 10
+set dl_sections_per_sym 0 10 10
+set ul_sections_per_sym 0 10
+set ul_sections_per_sym 0 10 10
+set ssb_sections_per_sym 0 10
+set ssb_sections_per_sym 0 10 10
+set frames_per_sym 0 5
+set frames_per_sym_ssb 0 5
+set dest_mac_addr 0 E8:B3:1F:0C:6D:19
+set src_mac_addr 0 93:FB:E5:3D:0E:BF
+set modu_mode 1
+set modu_dest_mac_addr 0 E8:B3:1F:0C:6D:01
+set modu_dest_mac_addr 1 E8:B3:1F:0C:6D:01
+set modu_dest_mac_addr 0 E8:B3:1F:0C:6D:01 2745 1 5
+set modu_dest_mac_addr 1 E8:B3:1F:0C:6D:01 2745 1 5
+set modu_mode 0
+set protocol ECPRI 1 RAW
+set protocol 1914.3 0 IPv4
+set protocol 1914.3 1 IPv6
+set protocol ECPRI 0 RAW
+set protocol_alt ECPRI 1 RAW
+set protocol_alt 1914.3 0 IPv4
+set protocol_alt 1914.3 1 IPv6
+set protocol_alt ECPRI 0 RAW
+set vlan 0 2745 1 5
+set eAxC_id 4 2 3 7
+set ru_ports 8 5 0xC0 0 0x80 0x40
+set ru_ports 8 5 0xE0 0 0x80 0x40 0x20
+set ru_ports_table_mode 0
+set ru_ports_table_mode 0 0
+set ru_ports_table 0 0 1
+set ru_ports_table 0 0 1 16
+set ru_ports_table_vcc 0 0 1 7
+set ru_ports_table_vcc 0 0 1 7 16
+clear ru_ports_table
+set bw_compression 0 12 1
+set bw_comp 0 12 1
+set system_constants 5
+set packet_filter 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+set packet_filter 0 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFEAE 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xCFFF 0xFFFF 0xFFFF 0xFFFF
+set mtu_size 5000
+set bf_fft_shift_mode 1
+set bf_fft_shift_mode 0
+set bf_scheduler_mode 2
+set bf_scheduler_mode 1
+set bf_scheduler_mode 0
+
+# reset [fhi | bf] <mode>
+reset
+reset fhi
+reset fhi 0
+reset bf
+reset bf 0
+
+# clear [fhi_alarms | fhi_stats | bf_alarms | bf_stats]
+clear fhi_alarms
+clear fhi_stats
+clear bf_alarms
+clear bf_stats
+
+# has [fhi | bf]
+has fhi
+has bf
+
+# disable [fhi | bf] <cc>
+disable 0
+disable fhi 0
+disable bf 0
+
+# enable [fhi | bf] <cc>
+enable 0
+enable fhi 0
+enable bf 0
+
+# configure [fhi | bf] <cc>
+configure 0
+configure fhi 0
+configure bf 0
+
+# schedule_bf
+schedule_bf
+schedule_bf 0x01
+schedule_bf 0x00
+#schedule_bf C0
+#schedule_bf C0A0 C0A1
+
+# load [beam_weights] <file>
+load bf_weights beam_weights.txt
+
+# read_reg [fhi | bf] <name>
+read_reg fhi CFG_INTERNAL_REVISION
+read_reg bf BF_IDENT_VERSION_INT
+read_reg bf0 BF_IDENT_VERSION_INT
+#read_reg bf1 BF_IDENT_VERSION_INT
+
+# write_reg [fhi | bf] <name> <value>
+write_reg fhi FRAM_DISABLE 0
+write_reg bf BF_CONFIG_CC_OFFSET_SYM0 0
+write_reg bf0 BF_CONFIG_CC_OFFSET_SYM0 0
+#write_reg bf1 BF_CONFIG_CC_OFFSET_SYM0 0
+
+# read_reg_offset [fhi | bf] <name> <offset>
+read_reg_offset fhi ORAN_CC_ENABLE 0
+read_reg_offset bf BF_CONFIG_CC_OFFSET_SYM0 0
+read_reg_offset bf0 BF_CONFIG_CC_OFFSET_SYM0 0
+#read_reg_offset bf1 BF_CONFIG_CC_OFFSET_SYM0 0
+
+# write_reg_offset [fhi | bf] <name> <offset> <value>
+write_reg_offset fhi ORAN_CC_ENABLE 0 0
+write_reg_offset bf BF_CONFIG_CC_OFFSET_SYM0 0 0
+write_reg_offset bf0 BF_CONFIG_CC_OFFSET_SYM0 0 0
+#write_reg_offset bf1 BF_CONFIG_CC_OFFSET_SYM0 0 0
+
+# dump [fhi | bf | bf0 | bf1]
+dump fhi
+dump bf
+dump bf errors
+
+# monitor ...
+monitor fhi clear
+monitor fhi select 0
+monitor fhi snapshot
+monitor fhi read 0
+
+# peek <address>
+# poke <address> <value>
+
+# wait <value (in seconds)>
+wait 5
+
+# run <file>
+run config1.txt
+
+# exit
+exit

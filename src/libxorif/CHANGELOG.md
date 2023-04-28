@@ -1,5 +1,15 @@
 # Change Log
 
+## Release 2031.1
+* Added "example1.py" script to test basic configuration of 1 CC (100MHz/30kHz) via Python/Pyro
+* Integrated O-RAN Channel Process block into IP (merged SW driver, separate APIs)
+* Updated development build / tests / code coverage / linting
+* Release 2023.1 has ORIF integrated with OCP, which uses common s/w driver with separate APIs
+* Added xorif_set_ru_ports_table_vcc() which is alternate API for RU port table "mode 2" (uses "Virtual CCID")
+* Added xorif_has_oran_channel_processor() to check for presence of OCP
+* Changed name of API function xorif_set_ru_ports_alt1() to xorif_set_ru_ports_lte()
+* Updated register map
+
 ## Release 2022.2
 * Added Python bindings for C library (libxorif)
 * Add xorif_set_modu_mode() and xorif_set_modu_dest_mac_addr() for multi O-DU MAC destination address / VLAN tags

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@
 #define FAKE_IO_SIZE 0x10000
 #define SW_MAJOR_VER 1
 #define SW_MINOR_VER 0
-#define SW_REVISION 0
+#define SW_REVISION 1
 
 // Aliases to the ISR status and enable registers
 #define ISR_ENABLE CFG_DL_CC_UPDATE_TRIGGERED_EN
@@ -49,10 +49,8 @@ bool xocp_first_time_flag = false;
 int xocp_trace = 0;
 xocp_state_t xocp_state[XOCP_NUM_INSTANCES];
 
-#ifndef HW
 //static const char *compatible = "xlnx,o-pxxch-1.0";
 static const char *compatible = "xlnx,xorif-chan-proc-1.0";
-#endif
 
 /****************************/
 /*** Function definitions ***/
@@ -200,9 +198,6 @@ static int program_schedule(int instance,
         return XOCP_SUCCESS;
     }
 
-    // Number of antennas per antenna group
-    uint16_t num_ant = ptr->antenna_cfg.num_antennas / ptr->antenna_cfg.interleave;
-
     // Loop over the sequence
     uint16_t entries = 0;
     uint16_t offset = 0;
@@ -217,7 +212,7 @@ static int program_schedule(int instance,
 
         // Compute antenna list (4-bits per antenna)
         uint32_t antennas = 0;
-        for (int j = 0; j < num_ant; ++j)
+        for (int j = 0; j < ptr->antenna_cfg.num_antennas; ++j)
         {
             uint8_t ant = ptr->antenna_cfg.data[j];
             antennas |= (ant & 0xF) << (j * 4);
@@ -433,7 +428,7 @@ int xocp_start(const char *dev_name)
     WR_REG(instance, FRAM_CHANP_DL_DISABLE, 1);
     ptr->state = XOCP_RESET;
 
-    return XOCP_SUCCESS;
+    return instance;
 }
 
 void xocp_finish(uint16_t instance)

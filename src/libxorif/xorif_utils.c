@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,255 +44,50 @@ typedef struct block block_t;
 // Tag value for free blocks
 #define FREE (-1)
 
-// Fake base address for debug "devmem"
-#define FAKE_BASE_ADDR 0xA0000000
+// Max string length for paths, etc.
+#define MAX_PATH_LENGTH 256
 
-/**
- * @brief Comparator function for bsearch algorithm.
- * @param[in] key Key to look for
- * @param[in] data Data element that we're comparing against
- * @returns
- *      - <0 if key is before data
- *      - =0 if key is equal to data
- *      - >0 if key is after data
- */
-static int reg_comparator(const void *key, const void *data)
+#ifdef NO_HW
+// Fake device
+static const char *fake_device = "af800000.oran_radio_if";
+#endif
+
+/****************************/
+/*** Function definitions ***/
+/****************************/
+
+int get_node_property(const char *device,
+                      const char *property,
+                      void *dest,
+                      size_t max_len)
 {
-    return strcmp((const char *)key, ((const reg_info_t *)data)->name);
-}
-
-const reg_info_t *find_register(const reg_info_t *reg_map, int num, const char *name)
-{
-    static reg_info_t dummy_reg = { "OFFSET", 0, 0xffffffff, 0, 32 };
-    uint32_t u;
-
-    void *result = bsearch((const void *)name,
-                           (const void *)reg_map,
-                           num,
-                           sizeof(reg_info_t),
-                           reg_comparator);
-
-    if (result)
+    char path[MAX_PATH_LENGTH];
+    snprintf(path,
+             MAX_PATH_LENGTH,
+             "/sys/bus/platform/devices/%s/of_node/%s",
+             device,
+             property);
+    FILE *fp = fopen(path, "r");
+    int status = 0;
+    if (fp)
     {
-        return (const reg_info_t *)result;
-    }
-    else if ((sscanf(name, "0x%X", &u) == 1) || (sscanf(name, "%u", &u) == 1))
-    {
-        // Interpret the "name" as an address, with 32-bit width
-        // Set the address in the "dummy_reg" entry
-        dummy_reg.addr = u;
-        return (const reg_info_t *)&dummy_reg;
-    }
-    else
-    {
-        return NULL;
-    }
-}
-
-uint32_t read_reg_raw(void *io, const char *name, uint32_t addr)
-{
-#ifndef NO_HW
-    if (!io)
-    {
-        // The device and/or IO region is not active, return 0
-        PERROR("Libmetal device and/or IO region is not initialized\n");
-        return 0;
-    }
-    else if (addr >= ((struct metal_io_region *)io)->size)
-    {
-        PERROR("Address out of range\n");
-        return 0;
-    }
-
-    // Libmetal read
-    uint32_t value = metal_io_read32((struct metal_io_region *)io, addr);
-#else
-    // Fake read
-    uint32_t value = ((uint32_t *)io)[addr / 4];
-#endif
-
-    TRACE("READ_REG: %s (0x%04X) => 0x%X (%u)\n", name, addr, value, value);
-
-#ifdef EXTRA_DEBUG
-    if (xorif_trace == 3)
-    {
-        LOG(log_file, "sw_driver_read(32'h%08X, 32'h%08X); // %s\n", addr, value, name);
-    }
-    else if (xorif_trace == 4)
-    {
-        LOG(log_file, "devmem 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), name);
-    }
-#endif
-    return value;
-}
-
-void write_reg_raw(void *io, const char *name, uint32_t addr, uint32_t value)
-{
-#ifndef NO_HW
-    if (!io)
-    {
-        // The device and/or IO region is not active, return
-        PERROR("Libmetal device and/or IO region is not initialized\n");
-        return;
-    }
-    else if (addr >= ((struct metal_io_region *)io)->size)
-    {
-        PERROR("Address out of range\n");
-        return;
-    }
-
-    // Libmetal write
-    metal_io_write32((struct metal_io_region *)io, addr, value);
-#else
-    // Fake write
-    ((uint32_t *)io)[addr / 4] = value;
-#endif
-
-    TRACE("WRITE_REG: %s (0x%04X) <= 0x%X (%u)\n", name, addr, value, value);
-
-#ifdef EXTRA_DEBUG
-    if (xorif_trace == 3)
-    {
-        LOG(log_file, "sw_driver_write(32'h%08X, 32'h%08X); // %s\n", addr, value, name);
-    }
-    else if (xorif_trace == 4)
-    {
-        LOG(log_file, "devmem 0x%08X 32 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), value, name);
-    }
-#endif
-}
-
-uint32_t read_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)
-{
-#ifndef NO_HW
-    if (!io)
-    {
-        // The device and/or IO region is not active, return
-        PERROR("Libmetal device and/or IO region is not initialized\n");
-        return 0;
-    }
-    else if (addr >= ((struct metal_io_region *)io)->size)
-    {
-        PERROR("Address out of range\n");
-        return 0;
-    }
-
-    // Libmetal read
-    uint32_t x = metal_io_read32((struct metal_io_region *)io, addr);
-#else
-    // Fake read
-    uint32_t x = ((uint32_t *)io)[addr / 4];
-#endif
-    uint32_t value = (x & mask) >> shift;
-
-    TRACE("READ_REG: %s (0x%04X)[%d:%d] => 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
-
-#ifdef EXTRA_DEBUG
-    if (xorif_trace == 3)
-    {
-        LOG(log_file, "sw_driver_read(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
-    }
-    else if (xorif_trace == 4)
-    {
-        LOG(log_file, "devmem 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), name);
-    }
-#endif
-
-    return value;
-}
-
-void write_reg(void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)
-{
-#ifndef NO_HW
-    if (!io)
-    {
-        // The device and/or IO region is not active, return
-        PERROR("Libmetal device and/or IO region is not initialized\n");
-        return;
-    }
-    else if (addr >= ((struct metal_io_region *)io)->size)
-    {
-        PERROR("Address out of range\n");
-        return;
-    }
-
-    // Libmetal read / modify / write
-    uint32_t x = metal_io_read32((struct metal_io_region *)io, addr);
-    x &= ~mask;
-    x |= (value << shift) & mask;
-    metal_io_write32((struct metal_io_region *)io, addr, x);
-#else
-    // Fake read / modify / write
-    uint32_t x = ((uint32_t *)io)[addr / 4];
-    x &= ~mask;
-    x |= (value << shift) & mask;
-    ((uint32_t *)io)[addr / 4] = x;
-#endif
-
-    TRACE("WRITE_REG: %s (0x%04X)[%d:%d] <= 0x%X (%u)\n", name, addr, shift, shift + width - 1, value, value);
-
-#ifdef EXTRA_DEBUG
-    if (xorif_trace == 3)
-    {
-        LOG(log_file, "sw_driver_write(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
-    }
-    else if (xorif_trace == 4)
-    {
-        LOG(log_file, "devmem 0x%08X 32 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), value, name);
-    }
-#endif
-}
-
-const char *get_device_name(const char *short_name)
-{
-    static char buff[256];
-#ifndef NO_HW
-    DIR *folder;
-    struct dirent *entry;
-
-    // Open directory
-    folder = opendir("/sys/bus/platform/devices/");
-    if (folder == NULL)
-    {
-        PERROR("Unable to open '%s'\n", "/sys/bus/platform/devices/");
-        return NULL;
-    }
-
-    // Iterate through files in directory
-    while ((entry = readdir(folder)))
-    {
-        // Check for matching short name
-        if (strstr(entry->d_name, short_name))
+        if (fgets(dest, max_len, fp))
         {
-            // Match found, copy the full device name
-            strncpy(buff, entry->d_name, 255);
-            buff[255] = '\0';
-
-            // Close the directory and return result
-            closedir(folder);
-            return buff;
+            status = 1;
         }
+        fclose(fp);
     }
 
-    // Close the directory and return NULL
-    closedir(folder);
-    return NULL;
-
-#else
-    // Fake it with NO_HW
-    sprintf(buff, "%x.%s", FAKE_BASE_ADDR, short_name);
-    return buff;
-#endif
+    return status;
 }
 
-#ifndef NO_HW
 int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_t *value)
 {
     FILE *fp;
-    char buff[256];
+    char buff[MAX_PATH_LENGTH];
 
     // Create filepath for property
-    sprintf(buff, "/sys/bus/platform/devices/%s/of_node/%s", dev_name, prop_name);
+    snprintf(buff, MAX_PATH_LENGTH, "/sys/bus/platform/devices/%s/of_node/%s", dev_name, prop_name);
 
     // Try to open file
     fp = fopen(buff, "rb");
@@ -317,7 +112,92 @@ int get_device_property_u32(const char *dev_name, const char *prop_name, uint32_
     fclose(fp);
     return 0;
 }
+
+const char *get_device_name(const char *dev_name, const char *compatible)
+{
+    static char buff[MAX_PATH_LENGTH];
+    bool match = false;
+#ifndef NO_HW
+    DIR *folder;
+    struct dirent *entry;
+
+    // Open directory
+    folder = opendir("/sys/bus/platform/devices/");
+    if (folder == NULL)
+    {
+        PERROR("Unable to open '%s'\n", "/sys/bus/platform/devices/");
+        return NULL;
+    }
+
+    // Iterate through files in directory
+    while ((entry = readdir(folder)))
+    {
+        bool name_match = false;
+        bool comp_match = false;
+
+        if (dev_name)
+        {
+            // Look for devices with the given device name
+            // Partial match allowed, e.g. "devXYZ" matches "a0000000.devXYZ"
+            if (strstr(entry->d_name, dev_name))
+            {
+                // Matched given device name
+                INFO("Matched device name (%s)\n", entry->d_name);
+                name_match = true;
+            }
+        }
+
+        if (compatible)
+        {
+            char property[MAX_PATH_LENGTH];
+
+            // Look for devices with the given compatible property
+            if (get_node_property(entry->d_name,
+                                  "compatible",
+                                  property,
+                                  MAX_PATH_LENGTH))
+            {
+                // Partial match allowed, e.g. "dev-xyz" matches "dev-xyz-1.0"
+                if (strstr(property, compatible))
+                {
+                    // Matched compatible property
+                    INFO("Matched compatible property (%s)\n", entry->d_name);
+                    comp_match = true;
+                }
+            }
+        }
+
+        if ((dev_name && name_match) || (!dev_name && comp_match))
+        {
+            // TODO - could keep searching, e.g. for other matching devices
+            // TODO - always match comp_match too? Or leave flexible?
+            match = true;
+            strncpy(buff, entry->d_name, MAX_PATH_LENGTH);
+            break;
+        }
+    }
+
+    // Close the directory
+    closedir(folder);
+
+#else
+    // Fake it with NO_HW
+    if (!dev_name || strstr(fake_device, dev_name))
+    {
+        match = true;
+        strncpy(buff, fake_device, MAX_PATH_LENGTH);
+    }
 #endif
+
+    if (match)
+    {
+        return buff;
+    }
+    else
+    {
+        return NULL;
+    }
+}
 
 int add_device(struct xorif_device_info *device,
                const char *bus_name,

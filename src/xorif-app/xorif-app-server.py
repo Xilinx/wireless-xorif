@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+# Copyright 2020 - 2023 Advanced Micro Devices, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -96,34 +96,34 @@ if __name__ == "__main__":
     logger.info(f"Using IP address: {ipaddr}")
 
     # Expose selected Pyro objects
-    exposed = {}
+    objects = {}
     if args.fhi:
         try:
             from pylibxorif import LIBXORIF
-            exposed[LIBXORIF] = "XORIF"
+            objects[LIBXORIF] = "XORIF"
         except ModuleNotFoundError:
-            logger.warning("Can not find pylibxorif.py")
+            logger.warning("pylibxorif not loaded")
     if args.ocp:
         try:
             from pylibxocp import LIBXOCP
-            exposed[LIBXOCP] = "XOCP"
+            objects[LIBXOCP] = "XOCP"
         except ModuleNotFoundError:
-            logger.warning("Can not find pylibxocp.py")
+            logger.warning("pylibxocp not loaded")
     if args.oprach:
         try:
             from pylibxoprach import LIBXOPRACH
-            exposed[LIBXOPRACH] = "XOPRACH"
+            objects[LIBXOPRACH] = "XOPRACH"
         except ModuleNotFoundError:
-            logger.warning("Can not find pylibxoprach.py")
-    for k in exposed:
-        Pyro4.expose(k)
+            logger.warning("pylibxoprach not loaded")
+    for o in objects:
+        Pyro4.expose(o)
 
     # Start Pyro4 server with exposed objects
     try:
         with Pyro4.Daemon(host=ipaddr, port=args.port) as daemon:
             # Server object is added to allow remote shutdown & ping
-            exposed[Server(daemon)] = "SERVER"
-            for k, v in exposed.items():
+            objects[Server(daemon)] = "SERVER"
+            for k, v in objects.items():
                 uri = daemon.register(k, objectId=v)
                 logger.info(f"Object {k}: uri = {uri}")
             daemon.requestLoop()

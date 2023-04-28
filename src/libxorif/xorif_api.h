@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,12 @@
 #define XORIF_API_H
 
 #ifndef CFFI_CDEF_HDR
-#include <inttypes.h>
+#include <stdint.h>
+#include <stdbool.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /*******************************************/
@@ -121,7 +126,7 @@ struct xorif_caps
     uint16_t no_deframer_ss;            /**< Number of "de-framer" spatial streams */
     uint16_t max_framer_ethernet_pkt;   /**< Maximum size of ethernet payload for "framer" */
     uint16_t max_deframer_ethernet_pkt; /**< Maximum size of ethernet payload for "de-framer" */
-    uint16_t max_subcarriers;           /**< Maximum number of subcarriers supported over all component carriers */
+    uint16_t max_subcarriers;           /**< Maximum number of sub-carriers supported over all component carriers */
     uint16_t max_data_symbols;          /**< Maximum number of symbols for downlink U-plane */
     uint16_t max_ctrl_symbols;          /**< Maximum number of control symbols per component carrier */
     uint16_t max_ul_ctrl_1kwords;       /**< Maximum up-link ctrl 1k words */
@@ -129,7 +134,7 @@ struct xorif_caps
     uint16_t max_dl_data_1kwords;       /**< Maximum down-link data 1k words */
     uint16_t max_ssb_ctrl_512words;     /**< Maximum SSB ctrl 512 words */
     uint16_t max_ssb_data_512words;     /**< Maximum SSB data 512 words */
-    uint16_t timer_clk_ps;              /**< Timer clk period in pico-seconds */
+    uint16_t timer_clk_ps;              /**< Timer clk period in picoseconds */
     uint16_t num_unsolicited_ports;     /**< Number of unsolicited port on the "framer" */
     uint16_t num_prach_ports;           /**< Number of PRACH ports on the "framer" */
     uint16_t du_id_limit;               /**< Maximum size (in bits) of the DU id */
@@ -163,9 +168,9 @@ struct xorif_cc_config
     uint16_t iq_comp_meth_prach;     /**< IQ compression method for PRACH */
     uint16_t iq_comp_width_prach;    /**< IQ compressed width for PRACH */
     uint16_t iq_comp_mplane_prach;   /**< Flag indicating M-plane compression for PRACH */
-    double delay_comp_cp_ul;         /**< Delay compenstation (deskew) for uplink C-plane (in microseconds) */
-    double delay_comp_cp_dl;         /**< Delay compenstation (deskew) for downlink C-plane (in microseconds) */
-    double delay_comp_up;            /**< Delay compenstation (deskew) for downlink U-plane (in microseconds) */
+    double delay_comp_cp_ul;         /**< Delay compensation (deskew) for uplink C-plane (in microseconds) */
+    double delay_comp_cp_dl;         /**< Delay compensation (deskew) for downlink C-plane (in microseconds) */
+    double delay_comp_up;            /**< Delay compensation (deskew) for downlink U-plane (in microseconds) */
     double advance_ul;               /**< Control time advance for uplink (in microseconds) */
     double advance_dl;               /**< Control time advance for downlink (in microseconds) */
     double ul_bid_forward;           /**< Uplink beam-id forward time (in microseconds) */
@@ -218,9 +223,9 @@ struct xorif_fhi_eth_stats
     uint64_t total_rx_bit_rate;     /**< Total received packets bit rate */
     uint64_t oran_rx_bit_rate;      /**< O-RAN (either U- or C-Plane) received packets bit rate */
     uint64_t oran_rx_total;         /**< O-RAN (either U- or C-Plane) total received packets */
-    uint64_t oran_rx_on_time;       /**< O-RAN (either U- or C-Plane) on-time received packets */
-    uint64_t oran_rx_early;         /**< O-RAN (either U- or C-Plane) received packets arrived before the start of time window */
-    uint64_t oran_rx_late;          /**< O-RAN (either U- or C-Plane) received packets arrived after the end of time window */
+    uint64_t oran_rx_on_time;       /**< O-RAN U-Plane on-time received packets */
+    uint64_t oran_rx_early;         /**< O-RAN U-Plane received packets arrived before the start of time window */
+    uint64_t oran_rx_late;          /**< O-RAN U-Plane received packets arrived after the end of time window */
     uint64_t oran_rx_total_c;       /**< O-RAN C-Plane total received packets */
     uint64_t oran_rx_on_time_c;     /**< O-RAN C-Plane on-time received packets */
     uint64_t oran_rx_early_c;       /**< O-RAN C-Plane received packets arrived before the start of time window */
@@ -349,12 +354,20 @@ uint32_t xorif_get_fhi_hw_internal_rev(void);
 const struct xorif_caps *xorif_get_capabilities(void);
 
 /**
- * @brief Check if there is a Front-Haul Interface in the system.
+ * @brief Check if there is a O-RAN makeFront-Haul Interface in the system.
  * @returns
  *      - 0 = false (no)
  *      - 1 = true (yes)
  */
 int xorif_has_front_haul_interface(void);
+
+/**
+ * @brief Check if there is a O-RAN Channel Processor in the system.
+ * @returns
+ *      - 0 = false (no)
+ *      - 1 = true (yes)
+ */
+int xorif_has_oran_channel_processor(void);
 
 /**
  * @brief Configure a component carrier.
@@ -666,8 +679,8 @@ int xorif_set_cc_iq_compression_prach(uint16_t cc,
 /**
  * @brief Configure the number of sections and ctrl words per downlink symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_sect Maximmum number of sections per symbol
- * @param[in] num_ctrl Maximmum number of control words per symbol
+ * @param[in] num_sect Maximum number of sections per symbol
+ * @param[in] num_ctrl Maximum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -685,8 +698,8 @@ int xorif_set_cc_dl_sections_per_symbol(uint16_t cc,
 /**
  * @brief Configure the number of sections and ctrl words per uplink symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_sect Maximmum number of sections per symbol
- * @param[in] num_ctrl Maximmum number of control words per symbol
+ * @param[in] num_sect Maximum number of sections per symbol
+ * @param[in] num_ctrl Maximum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -704,7 +717,7 @@ int xorif_set_cc_ul_sections_per_symbol(uint16_t cc,
 /**
  * @brief Configure the number of Ethernet frames per downlink symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_frames Maximmum number of Ethernet frames per symbol
+ * @param[in] num_frames Maximum number of Ethernet frames per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -717,8 +730,8 @@ int xorif_set_cc_frames_per_symbol(uint16_t cc, uint16_t num_frames);
 /**
  * @brief Configure the number of sections and ctrl words per SSB symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_sect Maximmum number of sections per symbol
- * @param[in] num_ctrl Maximmum number of control words per symbol
+ * @param[in] num_sect Maximum number of sections per symbol
+ * @param[in] num_ctrl Maximum number of control words per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -736,7 +749,7 @@ int xorif_set_cc_sections_per_symbol_ssb(uint16_t cc,
 /**
  * @brief Configure the number of Ethernet frames allowed per SSB symbol.
  * @param[in] cc Component carrier to configure
- * @param[in] num_frames Maximmum number of Ethernet frames per symbol
+ * @param[in] num_frames Maximum number of Ethernet frames per symbol
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
@@ -995,7 +1008,7 @@ int xorif_set_fhi_packet_filter(int port, const uint32_t filter[16], uint16_t ma
  * @note
  * The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16.
  * RU port ids are mapped by one of 2 methods: mask or table.
- * For mask-based mapping see #xorif_set_ru_ports & #xorif_set_ru_ports_alt1
+ * For mask-based mapping see #xorif_set_ru_ports & #xorif_set_ru_ports_lte
  * For table-based mapping see #xorif_set_ru_ports_table_mode and
  * #xorif_set_ru_ports_table
  */
@@ -1058,33 +1071,29 @@ int xorif_set_ru_ports(uint16_t ru_bits,
  * This function is an alternative to #xorif_set_ru_ports, which also provides mapping for
  * LTE spatial streams.
  */
-int xorif_set_ru_ports_alt1(uint16_t ru_bits,
-                            uint16_t ss_bits,
-                            uint16_t mask,
-                            uint16_t user_val,
-                            uint16_t prach_val,
-                            uint16_t ssb_val,
-                            uint16_t lte_val);
+int xorif_set_ru_ports_lte(uint16_t ru_bits,
+                           uint16_t ss_bits,
+                           uint16_t mask,
+                           uint16_t user_val,
+                           uint16_t prach_val,
+                           uint16_t ssb_val,
+                           uint16_t lte_val);
 
 /**
- * @brief Set the table mapping mode for the RU port id.
+ * @brief Set the RU port table mapping mode.
  * @param[in] mode RU port id table mapping mode (see notes)
+ * @param[in] sub_mode RU port id table mapping sub-mode (see notes)
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
  * RU port ids are mapped by one of 2 methods: mask or table.
  * This API relates to table-based RU port mapping.
- * The "mode" parameter allows flexibility in how addresses are mapped to ports.
- * For example, in mode 1 the address is constructed from 'direction + RU bits'.
- * See PG370 for details.
- * Mode 0 = 'RU bits'
- * Mode 1 = 'direction + RU bits'
- * Mode 2 = 'band-sector bits + RU bits'
- * Mode 3 = 'direction + band-sector bits + RU bits'
- * The number of band-sector / RU bits is defined by #xorif_set_fhi_eaxc_id.
+ * The "mode" and "sub-mode" allows flexibility in how addresses are mapped to
+ * ports.
+ * See PG370 for further details, of modes, sub-modes, and address construction.
  */
-int xorif_set_ru_ports_table_mode(uint16_t mode);
+int xorif_set_ru_ports_table_mode(uint16_t mode, uint16_t sub_mode);
 
 /**
  * @brief Reset the RU ports mapping table.
@@ -1127,6 +1136,45 @@ int xorif_set_ru_ports_table(uint16_t address,
                              uint16_t port,
                              uint16_t type,
                              uint16_t number);
+
+/**
+ * @brief Assign one or more RU port id mappings (alternative with "Virtual CCID").
+ * @param[in] address The base (external) address to use
+ * @param[in] port The base (internal) port to use
+ * @param[in] type The port type (see note for values)
+ * @param[in] ccid The "virtual" CC ID (see note for values)
+ * @param[in] number The number of port mappings in this assignment
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * RU port ids are mapped by one of 2 methods: mask or table.
+ * This API relates to table-based RU port mapping, specifically for "mode 2"
+ * operation, which uses concept of "Virtual CCID" (see PG370).
+ * "Mode 2" supports BS/CC sharing, and requires mapping of "real" CC ID (i.e.
+ * as understood by O-DU) to the "virtual" CC ID (i.e. the CC instance in the
+ * s/w driver).
+ * The "address" depends upon the mode (see #xorif_set_ru_ports_table_mode).
+ * The "port" is the internal port number to use.
+ * The "type" indicates which port group to use:
+ *      - 0 = PDXCH
+ *      - 1 = PUXCH
+ *      - 2 = SSB
+ *      - 3 = PRACH
+ *      - 4 - LTE
+ *      - 5..62 = user-defined
+ *      - 63 = UNKNOWN (uses to indicate not-used)
+ * The "ccid" is the "virtual" CC ID (i.e. the CC instance in the s/w driver).
+ * The "number" indicates the number of mappings in the assignment.
+ * When number > 1, the address and port values are incremented for each mapping.
+ * For example, address 0 -> port 8, address 1 -> port 9, address 2 -> port 10,
+ * etc.
+ */
+int xorif_set_ru_ports_table_vcc(uint16_t address,
+                                 uint16_t port,
+                                 uint16_t type,
+                                 uint16_t ccid,
+                                 uint16_t number);
 
 /**
  * @brief Enable / disable Front-Haul Interface interrupts.
@@ -1207,6 +1255,10 @@ int xorif_monitor_snapshot(void);
  *      - Error code on failure
  */
 int xorif_monitor_read(uint8_t counter, uint64_t *value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // XORIF_API_H
 

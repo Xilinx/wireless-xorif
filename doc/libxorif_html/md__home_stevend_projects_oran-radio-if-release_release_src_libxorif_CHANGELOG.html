@@ -79,7 +79,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Change Log </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Release 2022.2</h2>
+<div class="textblock"><h2>Release 2031.1</h2>
+<ul>
+<li>Added "example1.py" script to test basic configuration of 1 CC (100MHz/30kHz) via Python/Pyro</li>
+<li>Integrated O-RAN Channel Process block into IP (merged SW driver, separate APIs)</li>
+<li>Updated development build / tests / code coverage / linting</li>
+<li>Release 2023.1 has ORIF integrated with OCP, which uses common s/w driver with separate APIs</li>
+<li>Added <a class="el" href="group__API.html#ga0c351b7236674c869768299e67127b1f" title="Assign one or more RU port id mappings (alternative with &quot;Virtual CCID&quot;). ">xorif_set_ru_ports_table_vcc()</a> which is alternate API for RU port table "mode 2" (uses "Virtual CCID")</li>
+<li>Added <a class="el" href="group__API.html#ga0c512ca218a568fdbeffacd599bfbf27" title="Check if there is a O-RAN Channel Processor in the system. ">xorif_has_oran_channel_processor()</a> to check for presence of OCP</li>
+<li>Changed name of API function xorif_set_ru_ports_alt1() to <a class="el" href="group__API.html#ga9379066763d5ba7f1c7aa95467a2b69c" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_lte()</a></li>
+<li>Updated register map</li>
+</ul>
+<h2>Release 2022.2</h2>
 <ul>
 <li>Added Python bindings for C library (libxorif)</li>
 <li>Add <a class="el" href="group__API.html#gac12c71caeba9b52a930a9b4848471f58" title="Enable / disable the multi-O-DU MAC address / VLAN tag mapping. ">xorif_set_modu_mode()</a> and <a class="el" href="group__API.html#ga38ffe1b4e867ecfce419bd59bb6c12b6" title="Set the multi-O-DU MAC address / VLAN tag mapping for DU port address. ">xorif_set_modu_dest_mac_addr()</a> for multi O-DU MAC destination address / VLAN tags</li>
@@ -103,7 +114,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <h2>Release 2021.2</h2>
 <ul>
 <li>Updated register map</li>
-<li>Added RU port mapping table: <a class="el" href="group__API.html#ga27450fc8358a0bde441dc3a8f6975ea9" title="Set the table mapping mode for the RU port id. ">xorif_set_ru_ports_table_mode()</a>, <a class="el" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991" title="Reset the RU ports mapping table. ">xorif_clear_ru_ports_table()</a>, <a class="el" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table()</a></li>
+<li>Added RU port mapping table: <a class="el" href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode()</a>, <a class="el" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991" title="Reset the RU ports mapping table. ">xorif_clear_ru_ports_table()</a>, <a class="el" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table()</a></li>
 <li><a class="el" href="group__API.html#ga5c35a9fac66256693c3a76f7cfc654c1" title="Set system &quot;constants&quot;. ">xorif_set_system_constants()</a> API now uses 'struct' (currently only has FH_DECAP_DLY)</li>
 <li><a class="el" href="group__API.html#gaa3201eb51ec95a208a12a952da12fa26" title="Set the maximum deskew and control advance timing for the component carrier. ">xorif_set_cc_time_advance()</a> and <a class="el" href="group__API.html#ga2b1fa8a5ab92c334994a32f2d83e65fd" title="Set the uplink beam-id forward time for the component carrier. ">xorif_set_ul_bid_forward()</a> APIs now take doubles rather than uint32</li>
 <li><a class="el" href="group__API.html#ga4f5ebd79d6d83c0d6e37eff6cb7465d9" title="Set the uplink radio channel delay estimate for the component carrier. ">xorif_set_ul_radio_ch_dly()</a> API added to allow setting of UL_RADIO_CH_DLY per component carrier</li>
@@ -134,7 +145,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a class="el" href="group__API.html#ga29a935e45b74a6ed2766f286a6bc21d3" title="Configure the PRACH compression for the component carrier. ">xorif_set_cc_iq_compression_prach()</a> API added</li>
 <li><a class="el" href="group__API.html#ga2358c0211954f64b207879fe43e0e5bb" title="Returns the Front-Haul Interface h/w internal revision number. ">xorif_get_fhi_hw_internal_rev()</a> API modified (name changed)</li>
 <li><a class="el" href="group__API.html#ga39e46206326f26259890154207ba55d4" title="Set the VLAN tag for the specified port. ">xorif_set_fhi_vlan_tag()</a> API modified (takes separate 'ID', 'DEI' and 'PCP' fields)</li>
-<li><a class="el" href="group__API.html#gaced1be08c60f1a23dd398c7da582eba5" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_alt1()</a> API added (c.f. <a class="el" href="group__API.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports()</a> but has LTE option)</li>
+<li>xorif_set_ru_ports_alt1() API added (c.f. <a class="el" href="group__API.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports()</a> but has LTE option)</li>
 <li>xorif_set_timing_constants() API added (allows user to set FH_DECAP_DLY, UL_RADIO_CH_DLY values) </li>
 </ul>
 </div></div><!-- contents -->

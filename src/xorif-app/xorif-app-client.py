@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+# Copyright 2020 - 2023 Advanced Micro Devices, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -88,8 +88,9 @@ def version_cmd(args):
 
 def magic_cmd(args):
     # magic
-    print("Today's magic number is 42")
-    return SUCCESS
+    if len(args) == 1:
+        print("Today's magic number is 42")
+        return SUCCESS
 
 def terminate_cmd(args):
     # terminate
@@ -131,7 +132,7 @@ def debug_cmd(args):
         if level == 0:
             logging_level = logging.ERROR
         elif level == 1:
-            logging_level = logging. INFO
+            logging_level = logging.INFO
         elif level >= 2:
             logging_level = logging.DEBUG
         for name, handle in handles.items():
@@ -195,7 +196,7 @@ def init_cmd(args):
                 final &= (result >= 0)
         return SUCCESS if final else results
 
-    # init (fhi | ocp | ...) [<device>]
+    # init (fhi | ...) [<device>]
     elif len(args) == 2 or len(args) == 3:
         name = args[1].upper()
         if len(args) == 3:
@@ -207,7 +208,7 @@ def init_cmd(args):
             if name == "FHI":
                return handle.xorif_init(device)
             elif name == "OCP":
-                instance = handle.xocp_start(device)
+                instance = handle.xocp_start()
                 return SUCCESS if (instance >= 0) else FAIL
             elif name == "OPRACH":
                 instance = handle.xoprach_start(device)
@@ -808,14 +809,29 @@ def set_cmd(args):
                 if len(args) == 8:
                     return handle.xorif_set_ru_ports(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val)
                 else:
-                    return handle.xorif_set_ru_ports_alt1(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val)
+                    return handle.xorif_set_ru_ports_lte(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val)
 
-        # set ru_ports_table_mode <mode>
+        # set ru_ports_table_mode <mode> [<sub_mode>]
         if match(args[1], "ru_ports_table_mode"):
-            if len(args) == 3 and "FHI" in handles:
+            if len(args) >= 3 and len(args) <= 4 and "FHI" in handles:
                 handle = handles["FHI"]
                 mode = integer(args[2])
-                return handle.xorif_set_ru_ports_table_mode(mode)
+                sub_mode = integer(args[3]) if len(args) == 4 else 0
+                return handle.xorif_set_ru_ports_table_mode(mode, sub_mode)
+
+        # set ru_ports_table_mode1
+        #if match(args[1], "ru_ports_table_mode1"):
+        #    if len(args) == 2 and "FHI" in handles:
+        #        handle = handles["FHI"]
+        #        return handle.xorif_set_ru_ports_table_mode1()
+
+        # set ru_ports_table_mode2 <ss_mask> <u_mask>
+        #if match(args[1], "ru_ports_table_mode2"):
+        #    if len(args) == 4 and "FHI" in handles:
+        #        handle = handles["FHI"]
+        #        ss_mask = integer(args[2])
+        #        u_mask = integer(args[3])
+        #        return handle.xorif_set_ru_ports_table_mode2(ss_mask, u_mask)
 
         # set ru_ports_table <address> <port> <type> [<number>]
         if match(args[1], "ru_ports_table"):
@@ -826,6 +842,17 @@ def set_cmd(args):
                 type = integer(args[4])
                 number = integer(args[5]) if len(args) == 6 else 1
                 return handle.xorif_set_ru_ports_table(address, port, type, number)
+
+        # set ru_ports_table_vcc <address> <port> <type> <ccid> [<number>]
+        if match(args[1], "ru_ports_table_vcc"):
+            if (len(args) == 6 or len(args) == 7) and "FHI" in handles:
+                handle = handles["FHI"]
+                address = integer(args[2])
+                port = integer(args[3])
+                type = integer(args[4])
+                ccid = integer(args[5])
+                number = integer(args[6]) if len(args) == 7 else 1
+                return handle.xorif_set_ru_ports_table_vcc(address, port, type, ccid, number)
 
         # set system_constants <fh_decap_dly> {...}
         if match(args[1], "system_constants"):
@@ -1052,9 +1079,9 @@ def read_reg_offset_cmd(args):
             if name == "FHI":
                 result, value = handle.xorif_read_fhi_reg_offset(reg, offset)
             elif name == "OCP":
-                result, value = handle.xocp_read_reg(0, reg, offset)
+                result, value = handle.xocp_read_reg_offset(0, reg, offset)
             elif name == "OPRACH":
-                result, value = handle.xoprach_read_reg(0, reg, offset)
+                result, value = handle.xoprach_read_reg_offset(0, reg, offset)
         if result == SUCCESS:
             print(f"0x{value:x}")
         return result
@@ -1242,7 +1269,7 @@ def parse(command):
     Returns SUCCESS, EXIT or FAIL.
     The commands themselves can return SUCCESS, EXIT, FAIL or None.
     If the command returns None then the parser will try other
-    matching commands until one of them returns SUCCESS, EXIT or FAIL. 
+    matching commands until one of them returns SUCCESS, EXIT or FAIL.
     """
 
     # Remove any text after comment symbol
@@ -1542,7 +1569,8 @@ cmds.append(("set", None, "?set protocol <ECPRI | 1914.3> <VLAN = 0|1> <RAW | IP
 cmds.append(("set", None, "?set protocol_alt <ECPRI | 1914.3> <VLAN = 0|1> <RAW | IPv4 | IPv6> # doesn't set packet filter"))
 cmds.append(("set", None, "?set ru_ports <RU_bits> <SS_bits> <mask> <user_value> <prach_value> <ssb_value> [<lte_value>]"))
 cmds.append(("set", None, "?set ru_ports_table <address> <port> <type> [<number>]"))
-cmds.append(("set", None, "?set ru_ports_table_mode <mode>"))
+cmds.append(("set", None, "?set ru_ports_table_vcc <address> <port> <type> <ccid> [<number>] # for mode 2"))
+cmds.append(("set", None, "?set ru_ports_table_mode <mode> [<sub_mode>]"))
 cmds.append(("set", None, "?set src_mac_addr <port> <address = XX:XX:XX:XX:XX:XX>"))
 cmds.append(("set", None, "?set ssb_sections_per_sym <cc> <number_of_sections> <number_of_ctrl_words>"))
 cmds.append(("set", None, "?set system_constants <fh_decap_dly> {...}"))
@@ -1620,7 +1648,7 @@ if __name__ == "__main__":
         except Pyro4.errors.CommunicationError:
             pass
         except Exception as e:
-             logger.warning(f"Error: {e}")
+            logger.warning(f"Error: {e}")
         else:
             # If no error was raised, then we have a valid/active object
             handles[nickname] = handle

@@ -6,4 +6,4 @@ This directory is for source files and Makefiles for the various components. Ref
 
 ---
 
-Copyright (C) 2019 - 2022  Advanced Micro Devices, Inc.  All rights reserved.
+Copyright (C) 2019 - 2023  Advanced Micro Devices, Inc.  All rights reserved.

@@ -24,9 +24,18 @@ LDFLAGS += --coverage
 LDLIBS += -lgcov
 endif
 
+ifeq ($(OCP),1)
+SRCS += xocp.c xocp_registers.c
+CFLAGS += -DINTEGRATED_OCP
+endif
+
 all: build
 
+ifeq ($(OCP),1)
+build: lib$(LIB).so lib$(LIB).a xorif_api_cffi.h xocp_api_cffi.h
+else
 build: lib$(LIB).so lib$(LIB).a xorif_api_cffi.h
+endif
 
 lib$(LIB).so: lib$(LIB).so.$(VERSION)
 	rm -f lib$(LIB).so.$(MAJOR) lib$(LIB).so
@@ -47,15 +56,29 @@ xorif_api_cffi.h: xorif_api.h
 	sed -i '/#undef\s*__/d' $@
 	sed -i '/#undef\s*_/d' $@
 	sed -i '/#define\s*\w*\s*$$/d' $@
+	sed -i '/#undef\s*\w*\s*$$/d' $@
+	sed -i '/#define\s*CFFI_CDEF_HDR/d' $@
+	sed -i '/^$$/d' $@
+
+xocp_api_cffi.h: xocp_api.h
+	$(CC) $(CFLAGS) -E -DCFFI_CDEF_HDR -fdirectives-only -nostdinc xocp_api.h > $@
+	sed -i '/# /d' $@
+	sed -i '/#define\s*__/d' $@
+	sed -i '/#define\s*_/d' $@
+	sed -i '/#undef\s*__/d' $@
+	sed -i '/#undef\s*_/d' $@
+	sed -i '/#define\s*\w*\s*$$/d' $@
+	sed -i '/#undef\s*\w*\s*$$/d' $@
 	sed -i '/#define\s*CFFI_CDEF_HDR/d' $@
 	sed -i '/^$$/d' $@
 
 linker.script:
-	echo "{ global: xorif*; local: *; };" > $@
+	echo "{ global: xorif*; xocp*; local: *; };" > $@
 
 clean:
 	rm -f *.o *.d *.so *.so.* *.a
 	rm -f xorif_api_cffi.h
+	rm -f xocp_api_cffi.h
 	rm -f linker.script
 	rm -f *.gcov *.gcda *.gcno
 	rm -f .coverage
@@ -66,7 +89,12 @@ clean:
 	rm -f run-*.json
 
 test:
-	coverage run -a -m pytest -v test_*.py
+	coverage run -a -m pytest -v test_fhi*.py
+	coverage run -a -m pytest -v test_libxorif*.py
+ifeq ($(OCP),1)
+	coverage run -a -m pytest -v test_ocp*.py
+	coverage run -a -m pytest -v test_libxocp*.py
+endif
 
 dev-build:
 	$(MAKE) build NO_HW=1 GCOV=1 EXTRA_FLAGS="-DEXTRA_DEBUG"
@@ -76,6 +104,12 @@ coverage:
 	gcovr --json run-1.json
 	$(MAKE) -B build test NO_HW=1 GCOV=1 EXTRA_FLAGS="-DEXTRA_DEBUG -DIN_CORE_COMP=1"
 	gcovr --json run-2.json
+ifeq ($(OCP),1)
+	$(MAKE) -B build test NO_HW=1 GCOV=1 OCP=1 EXTRA_FLAGS="-DEXTRA_DEBUG -DIN_CORE_COMP=0"
+	gcovr --json run-3.json
+	$(MAKE) -B build test NO_HW=1 GCOV=1 OCP=1 EXTRA_FLAGS="-DEXTRA_DEBUG -DIN_CORE_COMP=1"
+	gcovr --json run-4.json
+endif
 	gcovr -a "run-*.json" --txt --html-details coverage.html
 	coverage report
 	coverage html

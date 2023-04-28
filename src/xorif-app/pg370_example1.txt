@@ -1,0 +1,23 @@
+# Set initial state
+init
+reset
+
+# Component carrier 0
+set numerology 0 1 0
+set num_rbs 0 275
+set ul_iq_compression 0 9 1
+set dl_iq_compression 0 9 1
+set ul_timing_params 0 30 90 30
+set dl_timing_params 0 30 30 90
+configure 0
+enable 0
+
+# Component carrier 1
+set numerology 1 1 0
+set num_rbs 1 275
+set ul_iq_compression 1 9 1
+set dl_iq_compression 1 9 1
+set ul_timing_params 1 30 90 30
+set dl_timing_params 1 30 30 90
+configure 1
+enable 1

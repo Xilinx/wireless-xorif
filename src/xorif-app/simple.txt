@@ -1,0 +1,12 @@
+# Initialize library
+init
+reset
+
+# Component carrier 0
+set numerology 0 0 0
+set num_rbs 0 20
+set ul_iq_compression 0 0 0
+set dl_iq_compression 0 0 0
+set time_advance 0 160 100 100
+configure 0
+enable 0

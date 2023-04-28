@@ -78,6 +78,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
@@ -102,30 +103,6 @@ Macros</h2></td></tr>
 <tr class="memitem:ga62b74068f303c78492667e69fe203914"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga62b74068f303c78492667e69fe203914">ENABLE_INTERRUPTS</a></td></tr>
 <tr class="memdesc:ga62b74068f303c78492667e69fe203914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Conditional compilation flags.  <a href="#ga62b74068f303c78492667e69fe203914">More...</a><br/></td></tr>
 <tr class="separator:ga62b74068f303c78492667e69fe203914"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6239c4fca76e1597fce699a2760abc9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga6239c4fca76e1597fce699a2760abc9e"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>(a)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a>(DEVICE, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a))</td></tr>
-<tr class="memdesc:ga6239c4fca76e1597fce699a2760abc9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles read from specified register field. <br/></td></tr>
-<tr class="separator:ga6239c4fca76e1597fce699a2760abc9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gade3a3a17a2ac0637d6da60a189404bad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gade3a3a17a2ac0637d6da60a189404bad"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gade3a3a17a2ac0637d6da60a189404bad">READ_REG_OFFSET</a>(a, o)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a>(DEVICE, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a))</td></tr>
-<tr class="memdesc:gade3a3a17a2ac0637d6da60a189404bad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles read from specified register field (address + offset). <br/></td></tr>
-<tr class="separator:gade3a3a17a2ac0637d6da60a189404bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaecd07b74f1fa0f5f931e7e4afa2ac6db"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaecd07b74f1fa0f5f931e7e4afa2ac6db"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaecd07b74f1fa0f5f931e7e4afa2ac6db">READ_REG_RAW</a>(a)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#gad14c3f09199a5137d32e2bcf00b0be45">read_reg_raw</a>(DEVICE, #a, a)</td></tr>
-<tr class="memdesc:gaecd07b74f1fa0f5f931e7e4afa2ac6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles raw read from specified register address. <br/></td></tr>
-<tr class="separator:gaecd07b74f1fa0f5f931e7e4afa2ac6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga099755a09b4768126feb50a21fb76ad1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga099755a09b4768126feb50a21fb76ad1"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>(a, v)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a>(DEVICE, #a, ADDR(a), MASK(a), SHIFT(a), WIDTH(a), v)</td></tr>
-<tr class="memdesc:ga099755a09b4768126feb50a21fb76ad1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles write to specified register field. <br/></td></tr>
-<tr class="separator:ga099755a09b4768126feb50a21fb76ad1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8c6459d0f3ffb39b085f2cf85e6e266e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga8c6459d0f3ffb39b085f2cf85e6e266e"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga8c6459d0f3ffb39b085f2cf85e6e266e">WRITE_REG_OFFSET</a>(a, o, v)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a>(DEVICE, #a, ADDR(a) + (o), MASK(a), SHIFT(a), WIDTH(a), v)</td></tr>
-<tr class="memdesc:ga8c6459d0f3ffb39b085f2cf85e6e266e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles write to specified register field (address + offset). <br/></td></tr>
-<tr class="separator:ga8c6459d0f3ffb39b085f2cf85e6e266e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaa2f5b3d72c170f67fabcc3c5c060ae9e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="gaa2f5b3d72c170f67fabcc3c5c060ae9e"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaa2f5b3d72c170f67fabcc3c5c060ae9e">WRITE_REG_RAW</a>(a, v)&#160;&#160;&#160;<a class="el" href="group__libxorif.html#gade91671bcfa8c4c75272b3274a076b7a">write_reg_raw</a>(DEVICE, #a, a, v)</td></tr>
-<tr class="memdesc:gaa2f5b3d72c170f67fabcc3c5c060ae9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro handles raw write to specified register address. <br/></td></tr>
-<tr class="separator:gaa2f5b3d72c170f67fabcc3c5c060ae9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga59585c1be51df603a4083ad41ee0d614"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ga59585c1be51df603a4083ad41ee0d614"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga59585c1be51df603a4083ad41ee0d614">NUM_NUMEROLOGY</a>&#160;&#160;&#160;5</td></tr>
 <tr class="memdesc:ga59585c1be51df603a4083ad41ee0d614"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of numerologies. <br/></td></tr>
@@ -197,6 +174,12 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga8f70d0a7af6a59dc1fef99ae12c31f91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Estimate of uplink delay (in microseconds).  <a href="#ga8f70d0a7af6a59dc1fef99ae12c31f91">More...</a><br/></td></tr>
 <tr class="separator:ga8f70d0a7af6a59dc1fef99ae12c31f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gac1b558456aa02ad4cb1b03d39082c9a0"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structreg__info.html">reg_info</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gac1b558456aa02ad4cb1b03d39082c9a0">reg_info_t</a></td></tr>
+<tr class="memdesc:gac1b558456aa02ad4cb1b03d39082c9a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure contains information on device register field.  <a href="#gac1b558456aa02ad4cb1b03d39082c9a0">More...</a><br/></td></tr>
+<tr class="separator:gac1b558456aa02ad4cb1b03d39082c9a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ga39d37b5bd222f3ad8f6bf67e97cb555e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga39d37b5bd222f3ad8f6bf67e97cb555e">xorif_chan_type</a> { <a class="el" href="group__libxorif.html#gga39d37b5bd222f3ad8f6bf67e97cb555ea35ca2cd1ec4d5ebe239872d5fd5403b1">CHAN_UL</a> = 0, 
@@ -209,6 +192,9 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:gabe0f12a89b7c16812d17252fe027f45a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gabe0f12a89b7c16812d17252fe027f45a">xorif_retrieve_device_info</a> (struct metal_device **dev, struct metal_io_region **io)</td></tr>
+<tr class="memdesc:gabe0f12a89b7c16812d17252fe027f45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve libmetal device info.  <a href="#gabe0f12a89b7c16812d17252fe027f45a">More...</a><br/></td></tr>
+<tr class="separator:gabe0f12a89b7c16812d17252fe027f45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac3c1601fb0d91568c305ecf8fdf87811"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gac3c1601fb0d91568c305ecf8fdf87811">xorif_get_state</a> (void)</td></tr>
 <tr class="memdesc:gac3c1601fb0d91568c305ecf8fdf87811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current state of the library.  <a href="#gac3c1601fb0d91568c305ecf8fdf87811">More...</a><br/></td></tr>
 <tr class="separator:gac3c1601fb0d91568c305ecf8fdf87811"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -229,8 +215,11 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memdesc:ga6678916262074da7a53277e8d93ee80a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get Front-Haul Interface capabilities.  <a href="#ga6678916262074da7a53277e8d93ee80a">More...</a><br/></td></tr>
 <tr class="separator:ga6678916262074da7a53277e8d93ee80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga354bba5bbf86cb1a6ea346e47590cb5b">xorif_has_front_haul_interface</a> (void)</td></tr>
-<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a Front-Haul Interface in the system.  <a href="#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
+<tr class="memdesc:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN makeFront-Haul Interface in the system.  <a href="#ga354bba5bbf86cb1a6ea346e47590cb5b">More...</a><br/></td></tr>
 <tr class="separator:ga354bba5bbf86cb1a6ea346e47590cb5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga0c512ca218a568fdbeffacd599bfbf27">xorif_has_oran_channel_processor</a> (void)</td></tr>
+<tr class="memdesc:ga0c512ca218a568fdbeffacd599bfbf27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a O-RAN Channel Processor in the system.  <a href="#ga0c512ca218a568fdbeffacd599bfbf27">More...</a><br/></td></tr>
+<tr class="separator:ga0c512ca218a568fdbeffacd599bfbf27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga60d073a6ce61f808a5489f61a721a41b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a> (uint16_t cc)</td></tr>
 <tr class="memdesc:ga60d073a6ce61f808a5489f61a721a41b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure a component carrier.  <a href="#ga60d073a6ce61f808a5489f61a721a41b">More...</a><br/></td></tr>
 <tr class="separator:ga60d073a6ce61f808a5489f61a721a41b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -359,18 +348,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga857309ea8ff7506568e3111761877eb8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val)</td></tr>
 <tr class="memdesc:ga857309ea8ff7506568e3111761877eb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits.  <a href="#ga857309ea8ff7506568e3111761877eb8">More...</a><br/></td></tr>
 <tr class="separator:ga857309ea8ff7506568e3111761877eb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaced1be08c60f1a23dd398c7da582eba5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaced1be08c60f1a23dd398c7da582eba5">xorif_set_ru_ports_alt1</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
-<tr class="memdesc:gaced1be08c60f1a23dd398c7da582eba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="#gaced1be08c60f1a23dd398c7da582eba5">More...</a><br/></td></tr>
-<tr class="separator:gaced1be08c60f1a23dd398c7da582eba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga27450fc8358a0bde441dc3a8f6975ea9">xorif_set_ru_ports_table_mode</a> (uint16_t mode)</td></tr>
-<tr class="memdesc:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the table mapping mode for the RU port id.  <a href="#ga27450fc8358a0bde441dc3a8f6975ea9">More...</a><br/></td></tr>
-<tr class="separator:ga27450fc8358a0bde441dc3a8f6975ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga9379066763d5ba7f1c7aa95467a2b69c">xorif_set_ru_ports_lte</a> (uint16_t ru_bits, uint16_t ss_bits, uint16_t mask, uint16_t user_val, uint16_t prach_val, uint16_t ssb_val, uint16_t lte_val)</td></tr>
+<tr class="memdesc:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port ID bits (alternative API, including LTE).  <a href="#ga9379066763d5ba7f1c7aa95467a2b69c">More...</a><br/></td></tr>
+<tr class="separator:ga9379066763d5ba7f1c7aa95467a2b69c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7">xorif_set_ru_ports_table_mode</a> (uint16_t mode, uint16_t sub_mode)</td></tr>
+<tr class="memdesc:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the RU port table mapping mode.  <a href="#ga02e5936a62ac2c0a803c96adcc735fb7">More...</a><br/></td></tr>
+<tr class="separator:ga02e5936a62ac2c0a803c96adcc735fb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5f12916f671ba6ee001f71f7f308e991"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga5f12916f671ba6ee001f71f7f308e991">xorif_clear_ru_ports_table</a> (void)</td></tr>
 <tr class="memdesc:ga5f12916f671ba6ee001f71f7f308e991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the RU ports mapping table.  <a href="#ga5f12916f671ba6ee001f71f7f308e991">More...</a><br/></td></tr>
 <tr class="separator:ga5f12916f671ba6ee001f71f7f308e991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6fc3068a93476321d8449fcc7871a29f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t number)</td></tr>
 <tr class="memdesc:ga6fc3068a93476321d8449fcc7871a29f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings.  <a href="#ga6fc3068a93476321d8449fcc7871a29f">More...</a><br/></td></tr>
 <tr class="separator:ga6fc3068a93476321d8449fcc7871a29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0c351b7236674c869768299e67127b1f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga0c351b7236674c869768299e67127b1f">xorif_set_ru_ports_table_vcc</a> (uint16_t address, uint16_t port, uint16_t type, uint16_t ccid, uint16_t number)</td></tr>
+<tr class="memdesc:ga0c351b7236674c869768299e67127b1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign one or more RU port id mappings (alternative with "Virtual CCID").  <a href="#ga0c351b7236674c869768299e67127b1f">More...</a><br/></td></tr>
+<tr class="separator:ga0c351b7236674c869768299e67127b1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad09430b3cb4720a008415205497c3675"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gad09430b3cb4720a008415205497c3675">xorif_get_fhi_cc_alloc</a> (uint16_t cc, struct <a class="el" href="structxorif__cc__alloc.html">xorif_cc_alloc</a> *ptr)</td></tr>
 <tr class="memdesc:gad09430b3cb4720a008415205497c3675"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the configured allocation for the specified component carrier.  <a href="#gad09430b3cb4720a008415205497c3675">More...</a><br/></td></tr>
 <tr class="separator:gad09430b3cb4720a008415205497c3675"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -477,39 +469,36 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga68b96ebcebbf5b8ed148190bb128e8a0">xorif_fhi_set_enabled_mask</a> (uint8_t mask)</td></tr>
 <tr class="memdesc:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "enabled" component carrier bit-map mask.  <a href="#ga68b96ebcebbf5b8ed148190bb128e8a0">More...</a><br/></td></tr>
 <tr class="separator:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga83f0df0585606c4660e267b34ecd2077"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a> (const char *name, uint32_t *val)</td></tr>
-<tr class="memdesc:ga83f0df0585606c4660e267b34ecd2077"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read a field from the Front-Haul Interface register map.  <a href="#ga83f0df0585606c4660e267b34ecd2077">More...</a><br/></td></tr>
-<tr class="separator:ga83f0df0585606c4660e267b34ecd2077"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gadc0dd7c8f1d053aa5b62bbdc53366bc2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gadc0dd7c8f1d053aa5b62bbdc53366bc2">xorif_read_fhi_reg_offset</a> (const char *name, uint16_t offset, uint32_t *val)</td></tr>
-<tr class="memdesc:gadc0dd7c8f1d053aa5b62bbdc53366bc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read a field from the Front-Haul Interface register map.  <a href="#gadc0dd7c8f1d053aa5b62bbdc53366bc2">More...</a><br/></td></tr>
-<tr class="separator:gadc0dd7c8f1d053aa5b62bbdc53366bc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6e05cafdb9ca35e9fb046b544e85c2a9"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga6e05cafdb9ca35e9fb046b544e85c2a9">xorif_read_reg_internal</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint8_t shift, uint8_t width)</td></tr>
+<tr class="memdesc:ga6e05cafdb9ca35e9fb046b544e85c2a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a register / register field.  <a href="#ga6e05cafdb9ca35e9fb046b544e85c2a9">More...</a><br/></td></tr>
+<tr class="separator:ga6e05cafdb9ca35e9fb046b544e85c2a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaac0358a6022b26eb78cec6f4de9492d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaac0358a6022b26eb78cec6f4de9492d4">xorif_write_reg_internal</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint8_t shift, uint8_t width, uint32_t value)</td></tr>
+<tr class="memdesc:gaac0358a6022b26eb78cec6f4de9492d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a register / register field.  <a href="#gaac0358a6022b26eb78cec6f4de9492d4">More...</a><br/></td></tr>
+<tr class="separator:gaac0358a6022b26eb78cec6f4de9492d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3b24a27fd856080b02839534e51e1bc6"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="group__libxocp.html#gac1b558456aa02ad4cb1b03d39082c9a0">reg_info_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga3b24a27fd856080b02839534e51e1bc6">xorif_find_register</a> (const char *name)</td></tr>
+<tr class="memdesc:ga3b24a27fd856080b02839534e51e1bc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find register field in register-map (for direct register access).  <a href="#ga3b24a27fd856080b02839534e51e1bc6">More...</a><br/></td></tr>
+<tr class="separator:ga3b24a27fd856080b02839534e51e1bc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga05282ac68d5d5a22557287d5b8f9afad"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga05282ac68d5d5a22557287d5b8f9afad">xorif_read_fhi_reg</a> (const char *name, uint32_t *value)</td></tr>
+<tr class="memdesc:ga05282ac68d5d5a22557287d5b8f9afad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read a field from the Front-Haul Interface register map.  <a href="#ga05282ac68d5d5a22557287d5b8f9afad">More...</a><br/></td></tr>
+<tr class="separator:ga05282ac68d5d5a22557287d5b8f9afad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7b139b27568b7f319bc71548f95a1715"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga7b139b27568b7f319bc71548f95a1715">xorif_read_fhi_reg_offset</a> (const char *name, uint16_t offset, uint32_t *value)</td></tr>
+<tr class="memdesc:ga7b139b27568b7f319bc71548f95a1715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read a field from the Front-Haul Interface register map.  <a href="#ga7b139b27568b7f319bc71548f95a1715">More...</a><br/></td></tr>
+<tr class="separator:ga7b139b27568b7f319bc71548f95a1715"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac5c6289aa4a4970e2e6c2244d876b20b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gac5c6289aa4a4970e2e6c2244d876b20b">xorif_write_fhi_reg</a> (const char *name, uint32_t value)</td></tr>
 <tr class="memdesc:gac5c6289aa4a4970e2e6c2244d876b20b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write a field to the Front-Haul Interface register map.  <a href="#gac5c6289aa4a4970e2e6c2244d876b20b">More...</a><br/></td></tr>
 <tr class="separator:gac5c6289aa4a4970e2e6c2244d876b20b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga58421571a3f2bf166aeb91fcdfdaa036"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga58421571a3f2bf166aeb91fcdfdaa036">xorif_write_fhi_reg_offset</a> (const char *name, uint16_t offset, uint32_t value)</td></tr>
 <tr class="memdesc:ga58421571a3f2bf166aeb91fcdfdaa036"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write a field to the Front-Haul Interface register map.  <a href="#ga58421571a3f2bf166aeb91fcdfdaa036">More...</a><br/></td></tr>
 <tr class="separator:ga58421571a3f2bf166aeb91fcdfdaa036"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structreg__info.html">reg_info_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga93ccdcf33c66e128d56a40a365b6f5ff">find_register</a> (const <a class="el" href="structreg__info.html">reg_info_t</a> *reg_map, int num, const char *name)</td></tr>
-<tr class="memdesc:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find register field in register-map.  <a href="#ga93ccdcf33c66e128d56a40a365b6f5ff">More...</a><br/></td></tr>
-<tr class="separator:ga93ccdcf33c66e128d56a40a365b6f5ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad14c3f09199a5137d32e2bcf00b0be45"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gad14c3f09199a5137d32e2bcf00b0be45">read_reg_raw</a> (void *io, const char *name, uint32_t addr)</td></tr>
-<tr class="memdesc:gad14c3f09199a5137d32e2bcf00b0be45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read from an address in the specified IO region.  <a href="#gad14c3f09199a5137d32e2bcf00b0be45">More...</a><br/></td></tr>
-<tr class="separator:gad14c3f09199a5137d32e2bcf00b0be45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gade91671bcfa8c4c75272b3274a076b7a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gade91671bcfa8c4c75272b3274a076b7a">write_reg_raw</a> (void *io, const char *name, uint32_t addr, uint32_t value)</td></tr>
-<tr class="memdesc:gade91671bcfa8c4c75272b3274a076b7a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write to an address in the specified IO region.  <a href="#gade91671bcfa8c4c75272b3274a076b7a">More...</a><br/></td></tr>
-<tr class="separator:gade91671bcfa8c4c75272b3274a076b7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga7b0f8380bc99c72db2fd626ed8ea3514">read_reg</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width)</td></tr>
-<tr class="memdesc:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to read from a register field in the specified IO region.  <a href="#ga7b0f8380bc99c72db2fd626ed8ea3514">More...</a><br/></td></tr>
-<tr class="separator:ga7b0f8380bc99c72db2fd626ed8ea3514"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga94282581679146b50f8f9e87adf81944"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga94282581679146b50f8f9e87adf81944">write_reg</a> (void *io, const char *name, uint32_t addr, uint32_t mask, uint16_t shift, uint16_t width, uint32_t value)</td></tr>
-<tr class="memdesc:ga94282581679146b50f8f9e87adf81944"><td class="mdescLeft">&#160;</td><td class="mdescRight">Utility function to write to a register field in the specified IO region.  <a href="#ga94282581679146b50f8f9e87adf81944">More...</a><br/></td></tr>
-<tr class="separator:ga94282581679146b50f8f9e87adf81944"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga67f74cec87237a9b418df594c4cb0571"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga67f74cec87237a9b418df594c4cb0571">get_device_name</a> (const char *short_name)</td></tr>
-<tr class="memdesc:ga67f74cec87237a9b418df594c4cb0571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the device's full name given the short name.  <a href="#ga67f74cec87237a9b418df594c4cb0571">More...</a><br/></td></tr>
-<tr class="separator:ga67f74cec87237a9b418df594c4cb0571"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga017188afeeb8ac543e701ae0143566db"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga017188afeeb8ac543e701ae0143566db">get_node_property</a> (const char *device, const char *property, void *dest, size_t max_len)</td></tr>
+<tr class="memdesc:ga017188afeeb8ac543e701ae0143566db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the node property from device tree.  <a href="#ga017188afeeb8ac543e701ae0143566db">More...</a><br/></td></tr>
+<tr class="separator:ga017188afeeb8ac543e701ae0143566db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga1e7e0639ba6631ff9b7e0dc32536ca87">get_device_property_u32</a> (const char *dev_name, const char *prop_name, uint32_t *value)</td></tr>
 <tr class="memdesc:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get device 'u32' property from device tree file system.  <a href="#ga1e7e0639ba6631ff9b7e0dc32536ca87">More...</a><br/></td></tr>
 <tr class="separator:ga1e7e0639ba6631ff9b7e0dc32536ca87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga45725fe316a907dc2ee3be02c0af347e"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga45725fe316a907dc2ee3be02c0af347e">get_device_name</a> (const char *dev_name, const char *compatible)</td></tr>
+<tr class="memdesc:ga45725fe316a907dc2ee3be02c0af347e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get device name, given hint and/or compatible property.  <a href="#ga45725fe316a907dc2ee3be02c0af347e">More...</a><br/></td></tr>
+<tr class="separator:ga45725fe316a907dc2ee3be02c0af347e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5d1f1bca487c83d010b31ca7f6941a5f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga5d1f1bca487c83d010b31ca7f6941a5f">add_device</a> (struct <a class="el" href="structxorif__device__info.html">xorif_device_info</a> *device, const char *bus_name, const char *dev_name, irq_handler_t irq_handler)</td></tr>
 <tr class="memdesc:ga5d1f1bca487c83d010b31ca7f6941a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a device to libmetal framework.  <a href="#ga5d1f1bca487c83d010b31ca7f6941a5f">More...</a><br/></td></tr>
 <tr class="separator:ga5d1f1bca487c83d010b31ca7f6941a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -583,6 +572,22 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 <p>Conditional compilation flags. </p>
 <p>When set, interrupt code is enabled </p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="gac1b558456aa02ad4cb1b03d39082c9a0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="structreg__info.html">reg_info</a>  <a class="el" href="group__libxocp.html#gac1b558456aa02ad4cb1b03d39082c9a0">reg_info_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Structure contains information on device register field. </p>
+<p>/ </p>
 
 </div>
 </div>
@@ -925,52 +930,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="ga93ccdcf33c66e128d56a40a365b6f5ff"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="structreg__info.html">reg_info_t</a> * find_register </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="structreg__info.html">reg_info_t</a> *&#160;</td>
-          <td class="paramname"><em>reg_map</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>num</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Find register field in register-map. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">reg_map</td><td>Pointer to register map array </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num</td><td>Number of elements in register map array </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of register </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>Pointer to register field info (or NULL if not found) </li>
-</ul>
-</dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="gab42fa87a33b92612bc338a58c17f4a05"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1026,7 +985,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="ga67f74cec87237a9b418df594c4cb0571"></a>
+<a class="anchor" id="ga45725fe316a907dc2ee3be02c0af347e"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1034,25 +993,36 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
           <td class="memname">const char * get_device_name </td>
           <td>(</td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>short_name</em></td><td>)</td>
+          <td class="paramname"><em>dev_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>compatible</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get the device's full name given the short name. </p>
+<p>Get device name, given hint and/or compatible property. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">short_name</td><td>Device name to look for </td></tr>
+    <tr><td class="paramname">dev_name</td><td>The name of the devivce (or a hint/partial name) </td></tr>
+    <tr><td class="paramname">compatible</td><td>The compatible property </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><ul>
-<li>NULL if not found</li>
-<li>Pointer to name string </li>
+<li>Pointer to full device name if a match is found</li>
+<li>NULL if no match is found </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The short name is something like "oran_radio_if", and the returned result, is the fully qualified name, e.g. "oran_radio_if.a0000000". The function will return with the name of the first matching device, and if multiple names match only the first gets reported. The returned pointer points to a static char buffer that owned by this function. The buffer contents are valid until the function is called again. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The "dev_name" can the full name, e.g. "a0000000.oran_radio_if" or a partial name, e.g. "oran_radio", or can be left as NULL. The "compatible" property is the Linux device compatible property of the required device, or it can also be NULL. Either "dev_name" or "compatible" must be non-NULL. </dd></dl>
 
 </div>
 </div>
@@ -1103,6 +1073,57 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
+<a class="anchor" id="ga017188afeeb8ac543e701ae0143566db"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int get_node_property </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>device</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>property</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>max_len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the node property from device tree. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">device</td><td>Path name of the device (e.g. /sys/bus/platform/devices/XYZ) </td></tr>
+    <tr><td class="paramname">property</td><td>Name of the property </td></tr>
+    <tr><td class="paramname">dest</td><td>Pointer to destination buffer </td></tr>
+    <tr><td class="paramname">max_len</td><td>Maximum size of destination buffer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 - if the property was successfully retrieved 0 - if the property was not found </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Finds the device tree property, e.g. .../devices/XYZ/of_node/property which is written back to the supplied buffer. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga8dae882df7c50f3aa75c8dba1b5c81c3"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1148,238 +1169,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </ul>
 </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>The device has various internal memories e.g. symbol buffers, etc. These are shared amongst different component carriers, and each component carrier will require different amounts of memory due to numerology, number of RBs, time advance, etc. To manage this shared resource, a memory allocation system is used. There are several separate memories, and a memory allocation pointer is used to differentiate between them. This function initializes a memory pointer for this purpose. This function will also free any memory from a previous allocation. </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga7b0f8380bc99c72db2fd626ed8ea3514"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t read_reg </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>io</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>mask</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>shift</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>width</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Utility function to read from a register field in the specified IO region. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">io</td><td>Pointer to the IO region structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Register field name (used for debug) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Address to use </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mask</td><td>Mask to be used with the field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">shift</td><td>Number of bits to shift the field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>Width of the field </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>Register field value </li>
-</ul>
-</dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="gad14c3f09199a5137d32e2bcf00b0be45"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t read_reg_raw </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>io</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>addr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Utility function to read from an address in the specified IO region. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">io</td><td>Pointer to the IO region structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Register field name (used for debug) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Address to use </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><ul>
-<li>Register field value </li>
-</ul>
-</dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="ga94282581679146b50f8f9e87adf81944"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void write_reg </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>io</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>mask</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>shift</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>width</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Utility function to write to a register field in the specified IO region. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">io</td><td>Pointer to the IO region structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Register field name (used for debug) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Address to use </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">mask</td><td>Mask to be used with the field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">shift</td><td>Number of bits to shift the field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">width</td><td>Width of the field </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value to write to the register </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a class="anchor" id="gade91671bcfa8c4c75272b3274a076b7a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void write_reg_raw </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>io</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>addr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Utility function to write to an address in the specified IO region. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">io</td><td>Pointer to the IO region structure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Register field name (used for debug) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">addr</td><td>Address to use </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>The value to write to the register </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -2636,6 +2425,35 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
+<a class="anchor" id="ga3b24a27fd856080b02839534e51e1bc6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="group__libxocp.html#gac1b558456aa02ad4cb1b03d39082c9a0">reg_info_t</a> * xorif_find_register </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Find register field in register-map (for direct register access). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">name</td><td>Name of register </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Pointer to register field info (or NULL if not found) </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The name can also be a numerical value (decimal or hexadecimal) to access the register by offset only (which assumes it is a 32 bit access). </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ga6678916262074da7a53277e8d93ee80a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2927,7 +2745,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
       </table>
 </div><div class="memdoc">
 
-<p>Check if there is a Front-Haul Interface in the system. </p>
+<p>Check if there is a O-RAN makeFront-Haul Interface in the system. </p>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>0 = false (no)</li>
+<li>1 = true (yes) </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0c512ca218a568fdbeffacd599bfbf27"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_has_oran_channel_processor </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check if there is a O-RAN Channel Processor in the system. </p>
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>0 = false (no)</li>
 <li>1 = true (yes) </li>
@@ -3081,7 +2922,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="ga83f0df0585606c4660e267b34ecd2077"></a>
+<a class="anchor" id="ga05282ac68d5d5a22557287d5b8f9afad"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3121,7 +2962,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="gadc0dd7c8f1d053aa5b62bbdc53366bc2"></a>
+<a class="anchor" id="ga7b139b27568b7f319bc71548f95a1715"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -3163,6 +3004,73 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="section return"><dt>Returns</dt><dd><ul>
 <li>XORIF_SUCCESS on success</li>
 <li>Error code on failure </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga6e05cafdb9ca35e9fb046b544e85c2a9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t xorif_read_reg_internal </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>io</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>width</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read a register / register field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">io</td><td>IO region (i.e. memory-mapped register bank) </td></tr>
+    <tr><td class="paramname">name</td><td>Register name (for debug) </td></tr>
+    <tr><td class="paramname">addr</td><td>Register address offset (from the device's base address) </td></tr>
+    <tr><td class="paramname">mask</td><td>Register field mask </td></tr>
+    <tr><td class="paramname">shift</td><td>Register field shift (i.e. bit position of LSB) </td></tr>
+    <tr><td class="paramname">width</td><td>Register field width (for debug) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>Value read </li>
 </ul>
 </dd></dl>
 
@@ -3225,6 +3133,47 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </ul>
 </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>When the mode = 1, the module is held in the reset state. Call the function again with mode = 0 to release the reset and to reset normally. This can be useful when coordinating the reset with other devices / modules. Use mode = 0 to perform the reset immediately. The reset operation should always succeed. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gabe0f12a89b7c16812d17252fe027f45a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_retrieve_device_info </td>
+          <td>(</td>
+          <td class="paramtype">struct metal_device **&#160;</td>
+          <td class="paramname"><em>dev</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct metal_io_region **&#160;</td>
+          <td class="paramname"><em>io</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve libmetal device info. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dev</td><td>Pointer to write-back the libmetal device pointer </td></tr>
+    <tr><td class="paramname">io</td><td>Pointer to write-back the libmetal io pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This function must be called after the FHI API s/w has been initialized, i.e. <a class="el" href="group__API.html#ga9d3a3d79d4361a962e11f28fefaafc36" title="Initialize the API s/w. ">xorif_init()</a> called successfully. </dd></dl>
 
 </div>
 </div>
@@ -3419,8 +3368,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -3516,7 +3465,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximmum number of Ethernet frames per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximum number of Ethernet frames per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -3557,7 +3506,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximmum number of Ethernet frames per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_frames</td><td>Maximum number of Ethernet frames per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -3889,8 +3838,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -4047,8 +3996,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">cc</td><td>Component carrier to configure </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximmum number of sections per symbol </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximmum number of control words per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_sect</td><td>Maximum number of sections per symbol </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">num_ctrl</td><td>Maximum number of control words per symbol </td></tr>
   </table>
   </dd>
 </dl>
@@ -4208,7 +4157,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16. RU port ids are mapped by one of 2 methods: mask or table. For mask-based mapping see <a class="el" href="group__libxorif.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports</a> &amp; <a class="el" href="group__libxorif.html#gaced1be08c60f1a23dd398c7da582eba5" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_alt1</a> For table-based mapping see <a class="el" href="group__libxorif.html#ga27450fc8358a0bde441dc3a8f6975ea9" title="Set the table mapping mode for the RU port id. ">xorif_set_ru_ports_table_mode</a> and <a class="el" href="group__libxorif.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The eAxC ID is 16 bits, and the total length of the 4 fields should equal 16. RU port ids are mapped by one of 2 methods: mask or table. For mask-based mapping see <a class="el" href="group__libxorif.html#ga857309ea8ff7506568e3111761877eb8" title="Set the RU port ID bits. ">xorif_set_ru_ports</a> &amp; <a class="el" href="group__libxorif.html#ga9379066763d5ba7f1c7aa95467a2b69c" title="Set the RU port ID bits (alternative API, including LTE). ">xorif_set_ru_ports_lte</a> For table-based mapping see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a> and <a class="el" href="group__libxorif.html#ga6fc3068a93476321d8449fcc7871a29f" title="Assign one or more RU port id mappings. ">xorif_set_ru_ports_table</a> </dd></dl>
 
 </div>
 </div>
@@ -4641,12 +4590,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="gaced1be08c60f1a23dd398c7da582eba5"></a>
+<a class="anchor" id="ga9379066763d5ba7f1c7aa95467a2b69c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int xorif_set_ru_ports_alt1 </td>
+          <td class="memname">int xorif_set_ru_ports_lte </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
           <td class="paramname"><em>ru_bits</em>, </td>
@@ -4768,7 +4717,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga27450fc8358a0bde441dc3a8f6975ea9" title="Set the table mapping mode for the RU port id. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
 <li>0 = PDXCH</li>
 <li>1 = PUXCH</li>
 <li>2 = SSB</li>
@@ -4781,7 +4730,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
-<a class="anchor" id="ga27450fc8358a0bde441dc3a8f6975ea9"></a>
+<a class="anchor" id="ga02e5936a62ac2c0a803c96adcc735fb7"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -4789,16 +4738,27 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
           <td class="memname">int xorif_set_ru_ports_table_mode </td>
           <td>(</td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td class="paramname"><em>mode</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>sub_mode</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set the table mapping mode for the RU port id. </p>
+<p>Set the RU port table mapping mode. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">mode</td><td>RU port id table mapping mode (see notes) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">sub_mode</td><td>RU port id table mapping sub-mode (see notes) </td></tr>
   </table>
   </dd>
 </dl>
@@ -4807,7 +4767,78 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "mode" parameter allows flexibility in how addresses are mapped to ports. For example, in mode 1 the address is constructed from 'direction + RU bits'. See PG370 for details. Mode 0 = 'RU bits' Mode 1 = 'direction + RU bits' Mode 2 = 'band-sector bits + RU bits' Mode 3 = 'direction + band-sector bits + RU bits' The number of band-sector / RU bits is defined by <a class="el" href="group__libxorif.html#ga550a91743d3aa995cc2c3c550d3afd72" title="Set the eAxC ID (c.f. ">xorif_set_fhi_eaxc_id</a>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping. The "mode" and "sub-mode" allows flexibility in how addresses are mapped to ports. See PG370 for further details, of modes, sub-modes, and address construction. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga0c351b7236674c869768299e67127b1f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_set_ru_ports_table_vcc </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>address</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>ccid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>number</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Assign one or more RU port id mappings (alternative with "Virtual CCID"). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">address</td><td>The base (external) address to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">port</td><td>The base (internal) port to use </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">type</td><td>The port type (see note for values) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ccid</td><td>The "virtual" CC ID (see note for values) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">number</td><td>The number of port mappings in this assignment </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>RU port ids are mapped by one of 2 methods: mask or table. This API relates to table-based RU port mapping, specifically for "mode 2" operation, which uses concept of "Virtual CCID" (see PG370). "Mode 2" supports BS/CC sharing, and requires mapping of "real" CC ID (i.e. as understood by O-DU) to the "virtual" CC ID (i.e. the CC instance in the s/w driver). The "address" depends upon the mode (see <a class="el" href="group__libxorif.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode</a>). The "port" is the internal port number to use. The "type" indicates which port group to use:<ul>
+<li>0 = PDXCH</li>
+<li>1 = PUXCH</li>
+<li>2 = SSB</li>
+<li>3 = PRACH</li>
+<li>4 - LTE</li>
+<li>5..62 = user-defined</li>
+<li>63 = UNKNOWN (uses to indicate not-used) The "ccid" is the "virtual" CC ID (i.e. the CC instance in the s/w driver). The "number" indicates the number of mappings in the assignment. When number &gt; 1, the address and port values are incremented for each mapping. For example, address 0 -&gt; port 8, address 1 -&gt; port 9, address 2 -&gt; port 10, etc. </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -5034,6 +5065,76 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="gaac0358a6022b26eb78cec6f4de9492d4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void xorif_write_reg_internal </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>io</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>mask</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>shift</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>width</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write a register / register field. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">io</td><td>IO region (i.e. memory-mapped register bank) </td></tr>
+    <tr><td class="paramname">name</td><td>Register name (for debug) </td></tr>
+    <tr><td class="paramname">addr</td><td>Register address offset (from the device's base address) </td></tr>
+    <tr><td class="paramname">mask</td><td>Register field mask </td></tr>
+    <tr><td class="paramname">shift</td><td>Register field shift (i.e. bit position of LSB) </td></tr>
+    <tr><td class="paramname">width</td><td>Register field width (for debug) </td></tr>
+    <tr><td class="paramname">value</td><td>Value to write </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

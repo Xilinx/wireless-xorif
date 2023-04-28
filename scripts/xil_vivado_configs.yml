@@ -9,188 +9,160 @@ cfg:
   ## configurations for example.
   ## ---------------------------------------------------------------------------
   ip:
-    ## Simple 10G configuration.
-    om5:
-      CONFIG.Axis_Ports_Fram: 1
-      CONFIG.Axis_Ports_Defm: 1
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Dl_Data_Pointers : 8
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-      
-    ## Simple 10G configuration.
-    om5_e2:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 4
-      CONFIG.Axis_Ports_Defm           : 4
-      CONFIG.Physical_Ethernet_Ports   : 2
-      CONFIG.Xran_Max_Comp_Carr        : 1
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Scs              : 3300
-      CONFIG.Xran_Max_Dl_Data_Pointers : 6
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-      
-    om5_e4:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 8
-      CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Physical_Ethernet_Ports   : 4
-      CONFIG.Xran_Max_Comp_Carr        : 1
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Scs              : 3300
-      CONFIG.Xran_Max_Dl_Data_Pointers : 6
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-      CONFIG.Circ_Meta_Table_Depth     : 256
-
-    ## Simple 25G configuration.
-    om5_25:
-      CONFIG.Physical_Ethernet_Rate    : "25G"
-      CONFIG.Axis_Ports_Fram           : 4
-      CONFIG.Axis_Ports_Defm           : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Dl_Data_Pointers : 8
-      CONFIG.Fram_Eth_Pkt_Max          : 9000
-      CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Circ_Meta_Table_Depth     : 256
-
-    ## SW develeopment configuration. This is a good example of a more complex configuration.
-    ## Xilinx use this for Driver testing.
-    om5_10_swtest:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 4
-      CONFIG.Axis_Ports_Defm           : 4
-      CONFIG.Physical_Ethernet_Ports   : 4
-      CONFIG.Xran_Max_Comp_Carr        : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Scs              : 6600
-      CONFIG.Xran_Max_Dl_Data_Pointers : 6
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-
-    ## SLV
-    om5_10_slv:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 8
-      CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Physical_Ethernet_Ports   : 4
-      CONFIG.Xran_Max_Comp_Carr        : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Scs              : 6600
-      CONFIG.Xran_Max_Dl_Data_Pointers : 6
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-      # 0x1000_0000
-      CONFIG.Production_Simulation     : 268435456
-      
-    ## SLV
-    om5_2e10_slv:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 8
-      CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Physical_Ethernet_Ports   : 2
-      CONFIG.Xran_Max_Comp_Carr        : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Scs              : 6600
-      CONFIG.Xran_Max_Dl_Data_Pointers : 12
-      CONFIG.Fram_Eth_Pkt_Max          : 9600
-      CONFIG.Defm_Eth_Pkt_Max          : 9600
-      # 0x1000_0000
-      CONFIG.Production_Simulation     : 268435456
-
-    ## SLV
-    z102_10_slv:
-      CONFIG.Physical_Ethernet_Rate    : "10G"
-      CONFIG.Axis_Ports_Fram           : 2
-      CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Physical_Ethernet_Ports   : 2
-      CONFIG.Xran_Max_Comp_Carr        : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 8
-      CONFIG.Xran_Max_Scs              : 6600
-      CONFIG.Xran_Max_Dl_Data_Pointers : 6
-      CONFIG.Fram_Eth_Pkt_Max          : 8000
-      CONFIG.Defm_Eth_Pkt_Max          : 8000
-      # 0x1000_0000
-      CONFIG.Production_Simulation     : 268435456
 
     ## -------------------------------------------------------------------------
-    ## 
+    ## SW development configuration. This is a good example of a more complex 
+    ## configuration. AMD use this for Driver testing.
+    ## Formally known as om5_10_swtest:
     ## -------------------------------------------------------------------------
-    e1x9000x25_ss4x4_cc2x6600:
-      CONFIG.Physical_Ethernet_Rate    : "25G"
-      CONFIG.Axis_Ports_Fram           : 4
-      CONFIG.Axis_Ports_Defm           : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Dl_Data_Pointers : 12
-      CONFIG.Fram_Eth_Pkt_Max          : 9000
-      CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Xran_Max_Comp_Carr        : 2
+    e4x8000x10_ss8x8_cc4x6600_dcc16x4x4x12x8_swtest:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 8
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Physical_Ethernet_Ports   : 4
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
       CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 8000
+      CONFIG.Defm_Eth_Pkt_Max          : 8000
       CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Exdes_TorwaveDepth        : 122880
       
-    e1x9000x25_ss4x4_cc2x6600_ocp:
+    e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 4
+      CONFIG.Physical_Ethernet_Ports   : 4
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 8000
+      CONFIG.Defm_Eth_Pkt_Max          : 8000
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Exdes_TorwaveDepth        : 122880
+
+    e4x8000x25_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest:
       CONFIG.Physical_Ethernet_Rate    : "25G"
       CONFIG.Axis_Ports_Fram           : 4
       CONFIG.Axis_Ports_Defm           : 4
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
+      CONFIG.Physical_Ethernet_Ports   : 4
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 8000
+      CONFIG.Defm_Eth_Pkt_Max          : 8000
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Exdes_TorwaveDepth        : 122880
+    
+    ## -------------------------------------------------------------------------
+    ## SingleEthConfigs
+    ## -------------------------------------------------------------------------
+    e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144:
+      CONFIG.Physical_Ethernet_Rate    : "25G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 16
       CONFIG.Fram_Eth_Pkt_Max          : 9000
       CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Xran_Max_Comp_Carr        : 2
+      CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
-      CONFIG.Use_OCP_In_Ex_Design      : 1
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
+      CONFIG.Exdes_TorwaveDepth        : 262144
+      
+    e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144:
+      CONFIG.Physical_Ethernet_Rate    : "25G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9000
+      CONFIG.Defm_Eth_Pkt_Max          : 9000
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Exdes_TorwaveDepth        : 262144
 
-    e2x9000x25_ss8x8_cc2x6600:
+    ## -------------------------------------------------------------------------
+    ## OCP Designs
+    ## -------------------------------------------------------------------------
+    e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 8
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 9000
+      CONFIG.Defm_Eth_Pkt_Max          : 9000
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Exdes_TorwaveDepth        : 122880
+      CONFIG.Use_OCP_In_IP             : 1
+
+    e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi:
       CONFIG.Physical_Ethernet_Rate    : "25G"
       CONFIG.Axis_Ports_Fram           : 8
       CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 1
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
       CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
       CONFIG.Fram_Eth_Pkt_Max          : 9000
       CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Xran_Max_Comp_Carr        : 2
+      CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Use_OCP_In_IP             : 1
+      CONFIG.Exdes_TorwaveDepth        : 122880
 
-    e2x9000x25_ss8x8_cc2x6600_ocp:
+    e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_opt:
       CONFIG.Physical_Ethernet_Rate    : "25G"
       CONFIG.Axis_Ports_Fram           : 8
       CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 1
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 1
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
       CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Dl_Data_Pointers : 12
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
       CONFIG.Fram_Eth_Pkt_Max          : 9000
       CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Xran_Max_Comp_Carr        : 2
+      CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
-      CONFIG.Use_OCP_In_Ex_Design      : 1
-
+      CONFIG.Use_OCP_In_IP             : 1
+      CONFIG.Core_OptEth               : "NoIp4Ip6SsbBid"
+      CONFIG.Core_OptCmp               : "OnlyBFP"
+      CONFIG.Core_OptExt               : "NoE3E11"
+      CONFIG.Exdes_TorwaveDepth        : 122880
+           
   ## ---------------------------------------------------------------------------
   ## Supported boards parts for Implementation and Petalinux Build using this 
   ## flow.

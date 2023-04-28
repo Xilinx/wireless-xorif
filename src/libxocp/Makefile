@@ -47,6 +47,7 @@ xocp_api_cffi.h: xocp_api.h
 	sed -i '/#undef\s*__/d' $@
 	sed -i '/#undef\s*_/d' $@
 	sed -i '/#define\s*\w*\s*$$/d' $@
+	sed -i '/#undef\s*\w*\s*$$/d' $@
 	sed -i '/#define\s*CFFI_CDEF_HDR/d' $@
 	sed -i '/^$$/d' $@
 

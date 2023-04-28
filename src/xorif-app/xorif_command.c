@@ -194,8 +194,9 @@ const struct command command_set[] =
     {"set", NULL, "?set packet_filter <port> <filter = (16 x 32b)> <mask = (4 x 16b)>"},
     {"set", NULL, "?set eaxc_id <DU_bits> <BS_bits> <CC_bits> <RU_bits>"},
     {"set", NULL, "?set ru_ports <RU_bits> <SS_bits> <mask> <user_value> <prach_value> <ssb_value> [<lte_value>]"},
-    {"set", NULL, "?set ru_ports_table_mode <mode>"},
+    {"set", NULL, "?set ru_ports_table_mode <mode> [<sub_mode>]"},
     {"set", NULL, "?set ru_ports_table <address> <port> <type> [<number>]"},
+    {"set", NULL, "?set ru_ports_table_vcc <address> <port> <type> <ccid> [<number>] # for mode 2"},
     {"set", NULL, "?set system_constants <fh_decap_dly> {...}"},
     {"configure", configure, "Program component carrier configuration"},
     {"configure", NULL, "?configure <cc>"},
@@ -2360,7 +2361,7 @@ static int set(const char *request, char *response)
                         parse_integer(6, &prach_val) && parse_integer(7, &ssb_val) &&
                         parse_integer(8, &lte_val))
                     {
-                        return xorif_set_ru_ports_alt1(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
+                        return xorif_set_ru_ports_lte(ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
                     }
                 }
                 else if (match(s, "ru_ports_table_mode") && num_tokens == 3)
@@ -2369,7 +2370,17 @@ static int set(const char *request, char *response)
                     unsigned int mode;
                     if (parse_integer(2, &mode))
                     {
-                        return xorif_set_ru_ports_table_mode(mode);
+                        return xorif_set_ru_ports_table_mode(mode, 0);
+                    }
+                }
+                else if (match(s, "ru_ports_table_mode") && num_tokens == 4)
+                {
+                    // set ru_ports_table_mode <mode> <sub_mode>
+                    unsigned int mode;
+                    unsigned int sub_mode;
+                    if (parse_integer(2, &mode) && parse_integer(3, &sub_mode))
+                    {
+                        return xorif_set_ru_ports_table_mode(mode, sub_mode);
                     }
                 }
                 else if (match(s, "ru_ports_table") && num_tokens == 5)
@@ -2395,6 +2406,34 @@ static int set(const char *request, char *response)
                         parse_integer(4, &type) && parse_integer(5, &number))
                     {
                         return xorif_set_ru_ports_table(address, port, type, number);
+                    }
+                }
+                else if (match(s, "ru_ports_table_vcc") && num_tokens == 6)
+                {
+                    // set ru_ports_table_vcc <address> <port> <type> <ccid>
+                    unsigned int address;
+                    unsigned int port;
+                    unsigned int type;
+                    unsigned int ccid;
+                    if (parse_integer(2, &address) && parse_integer(3, &port) &&
+                        parse_integer(4, &type) && parse_integer(5, &ccid))
+                    {
+                        return xorif_set_ru_ports_table_vcc(address, port, type, ccid, 1);
+                    }
+                }
+                else if (match(s, "ru_ports_table_vcc") && num_tokens == 7)
+                {
+                    // set ru_ports_table_vcc <address> <port> <type> <ccid> [<number>]
+                    unsigned int address;
+                    unsigned int port;
+                    unsigned int type;
+                    unsigned int ccid;
+                    unsigned int number;
+                    if (parse_integer(2, &address) && parse_integer(3, &port) &&
+                        parse_integer(4, &type) && parse_integer(5, &ccid) &&
+                        parse_integer(6, &number))
+                    {
+                        return xorif_set_ru_ports_table_vcc(address, port, type, ccid, number);
                     }
                 }
                 else if (match(s, "system_constants") && num_tokens >= 3)

@@ -20,7 +20,15 @@ SRC_URI = " \
 	file://xorif_utils.c \
 	file://xorif_utils.h \
 	file://oran_radio_if_v2_3_ctrl.h \
+	file://oran_radio_if_v2_4_ctrl.h \
+	file://oran_radio_if_v3_0_ctrl.h \
 	file://pylibxorif.py \
+	file://xocp_api.h \
+	file://xocp.c \
+	file://xocp.h \
+	file://xocp_registers.c \
+	file://xocp_registers.h \
+	file://pylibxocp.py \
 	"
 
 S = "${WORKDIR}"
@@ -28,7 +36,7 @@ S = "${WORKDIR}"
 DEPENDS = "libmetal"
 
 do_compile() {
-	oe_runmake
+	oe_runmake OCP=1
 }
 
 do_install() {
@@ -40,6 +48,9 @@ do_install() {
 	install -d ${D}/usr/share/xorif/
 	install -m 0755 ${S}/pylibxorif.py ${D}/usr/share/xorif/
 	install -m 0644 ${S}/xorif_api_cffi.h ${D}/usr/share/xorif/
+	install -m 0644 ${S}/xocp_api.h ${D}${includedir}/xorif/
+	install -m 0755 ${S}/pylibxocp.py ${D}/usr/share/xorif/
+	install -m 0644 ${S}/xocp_api_cffi.h ${D}/usr/share/xorif/
 }
 
 FILES:${PN} += " /usr/share/xorif/* "

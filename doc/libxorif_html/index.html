@@ -253,63 +253,63 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 <li>This can be a very useful feature for debugging or checking the component carrier configurations. For example...</li>
 </ul>
-<div class="fragment"><div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#gac5bb9cbc4aae17d9db299f7a7595efa0">xorif_set_cc_num_rbs</a>(0, 20)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 0, 0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 0, 0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga5ae73ee046a29f31dcaec51ea42c674e">xorif_set_cc_ul_iq_compression</a>(0, 0, 0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga8791772c6c278a79420538c9b0df202d">xorif_set_cc_ul_sections_per_symbol</a>(0, 10, 10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#gaebaccf31445eb3da67493984f26e3fba">xorif_set_cc_dl_sections_per_symbol</a>(0, 10, 10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a>(0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUMRBS (0xE100)[0:8] &lt;= 0x14 (20)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUMEROLOGY (0xE100)[16:18] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SYMPERSLOT (0xE100)[24:24] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_NUMRBS (0xE900)[0:8] &lt;= 0x14 (20)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_NUMEROLOGY (0xE900)[16:18] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SYMPERSLOT (0xE900)[24:24] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_DATA_SYM_NUM_INDEX (0xE114)[8:13] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_DATA_SYM_START_INDEX (0xE114)[0:5] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_CTRL_SYM_NUM_INDEX (0xE114)[16:21] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_CTRL_SYM_NUM_INDEX (0xE114)[24:29] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_NUM_DATA_SYM_PER_CC (0xE914)[8:13] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_DATA_SYM_START_INDEX (0xE914)[0:5] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_NUM_SYM_PER_CC (0xE914)[16:21] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_UD_IQ_WIDTH (0xE11C)[0:3] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_UD_COMP_METH (0xE11C)[4:7] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_MPLANE_UDCOMP_PARAM (0xE11C)[8:8] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_UD_IQ_WIDTH (0xE118)[0:3] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_UD_COMP_METH (0xE118)[4:7] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_MPLANE_UDCOMP_PARAM (0xE118)[8:8] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_UD_IQ_WIDTH (0xE91C)[0:3] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_UD_COMP_METH (0xE91C)[4:7] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_MPLANE_UDCOMP_PARAM (0xE91C)[8:8] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUM_CTRL_PER_SYMBOL_DL (0xE160)[0:15] &lt;= 0xA (10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_CTRL_OFFSETS (0xE104)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUM_CTRL_PER_SYMBOL_UL (0xE164)[0:15] &lt;= 0xA (10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_CTRL_OFFSETS (0xE10C)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_BASE_OFFSET (0xE140)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC (0xE960)[0:15] &lt;= 0x5 (5)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_CTRL_OFFSETS (0xE904)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_DATA_UNROLL_OFFSET (0xE500)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_DATA_UNROLL_OFFSET (0xE504)[0:15] &lt;= 0x84 (132)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_DATA_UNROLL_OFFSET (0xED00)[0:15] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_DATA_UNROLL_OFFSET (0xED04)[0:15] &lt;= 0x7F (127)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_MODVALS_DL (0xE168)[0:15] &lt;= 0x14 (20)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_MODVALS_UL (0xE16C)[0:15] &lt;= 0x14 (20)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SECTS_X_SYMBOLS (0xE968)[0:15] &lt;= 0xA (10)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_SETUP_D_CYCLES (0xE138)[0:16] &lt;= 0x33E5 (13285)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_SETUP_C_CYCLES (0xE134)[0:16] &lt;= 0x2562 (9570)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_DL_SETUP_C_ABS_SYMBOL (0xE130)[0:11] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_SETUP_D_CYCLES (0xE128)[0:16] &lt;= 0x37CD (14285)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_SETUP_C_CYCLES (0xE124)[0:16] &lt;= 0x11DA (4570)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_UL_SETUP_C_ABS_SYMBOL (0xE120)[0:11] &lt;= 0x3 (3)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_D_CYCLES (0xE938)[0:16] &lt;= 0x33E5 (13285)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_C_CYCLES (0xE934)[0:16] &lt;= 0x2562 (9570)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_SSB_SETUP_C_ABS_SYMBOL (0xE930)[0:11] &lt;= 0x2 (2)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_RELOAD (0xE000)[0:7] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x1 (1)</div>
+<div class="fragment"><div class="line">XORIF&gt; <a class="code" href="group__API.html#gac5bb9cbc4aae17d9db299f7a7595efa0">xorif_set_cc_num_rbs</a>(0, 20)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga4a3da356c6483228f09c42c2f5e2136e">xorif_set_cc_numerology</a>(0, 0, 0)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#gaa069ac48f7c01a52c0c28d83b1153d95">xorif_set_cc_dl_iq_compression</a>(0, 0, 0)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga5ae73ee046a29f31dcaec51ea42c674e">xorif_set_cc_ul_iq_compression</a>(0, 0, 0)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga8791772c6c278a79420538c9b0df202d">xorif_set_cc_ul_sections_per_symbol</a>(0, 10, 10)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#gaebaccf31445eb3da67493984f26e3fba">xorif_set_cc_dl_sections_per_symbol</a>(0, 10, 10)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga60d073a6ce61f808a5489f61a721a41b">xorif_configure_cc</a>(0)</div>
+<div class="line">XORIF&gt; READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
+<div class="line">XORIF&gt; READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_NUMRBS (0xE100)[0:8] &lt;= 0x14 (20)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_NUMEROLOGY (0xE100)[16:18] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SYMPERSLOT (0xE100)[24:24] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_NUMRBS (0xE900)[0:8] &lt;= 0x14 (20)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_NUMEROLOGY (0xE900)[16:18] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_SYMPERSLOT (0xE900)[24:24] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_DATA_SYM_NUM_INDEX (0xE114)[8:13] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_DATA_SYM_START_INDEX (0xE114)[0:5] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_CTRL_SYM_NUM_INDEX (0xE114)[16:21] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_CTRL_SYM_NUM_INDEX (0xE114)[24:29] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_NUM_DATA_SYM_PER_CC (0xE914)[8:13] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_DATA_SYM_START_INDEX (0xE914)[0:5] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_NUM_SYM_PER_CC (0xE914)[16:21] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_UD_IQ_WIDTH (0xE11C)[0:3] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_UD_COMP_METH (0xE11C)[4:7] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_MPLANE_UDCOMP_PARAM (0xE11C)[8:8] &lt;= 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_UD_IQ_WIDTH (0xE118)[0:3] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_UD_COMP_METH (0xE118)[4:7] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_MPLANE_UDCOMP_PARAM (0xE118)[8:8] &lt;= 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_UD_IQ_WIDTH (0xE91C)[0:3] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_UD_COMP_METH (0xE91C)[4:7] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_MPLANE_UDCOMP_PARAM (0xE91C)[8:8] &lt;= 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_NUM_CTRL_PER_SYMBOL_DL (0xE160)[0:15] &lt;= 0xA (10)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_CTRL_OFFSETS (0xE104)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_NUM_CTRL_PER_SYMBOL_UL (0xE164)[0:15] &lt;= 0xA (10)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_CTRL_OFFSETS (0xE10C)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_BASE_OFFSET (0xE140)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC (0xE960)[0:15] &lt;= 0x5 (5)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_CTRL_OFFSETS (0xE904)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_DATA_UNROLL_OFFSET (0xE500)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_DATA_UNROLL_OFFSET (0xE504)[0:15] &lt;= 0x84 (132)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_DATA_UNROLL_OFFSET (0xED00)[0:15] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_DATA_UNROLL_OFFSET (0xED04)[0:15] &lt;= 0x7F (127)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_MODVALS_DL (0xE168)[0:15] &lt;= 0x14 (20)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_MODVALS_UL (0xE16C)[0:15] &lt;= 0x14 (20)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_SECTS_X_SYMBOLS (0xE968)[0:15] &lt;= 0xA (10)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_SETUP_D_CYCLES (0xE138)[0:16] &lt;= 0x33E5 (13285)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_SETUP_C_CYCLES (0xE134)[0:16] &lt;= 0x2562 (9570)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_DL_SETUP_C_ABS_SYMBOL (0xE130)[0:11] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_SETUP_D_CYCLES (0xE128)[0:16] &lt;= 0x37CD (14285)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_SETUP_C_CYCLES (0xE124)[0:16] &lt;= 0x11DA (4570)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_UL_SETUP_C_ABS_SYMBOL (0xE120)[0:11] &lt;= 0x3 (3)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_SETUP_D_CYCLES (0xE938)[0:16] &lt;= 0x33E5 (13285)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_SETUP_C_CYCLES (0xE934)[0:16] &lt;= 0x2562 (9570)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_SSB_SETUP_C_ABS_SYMBOL (0xE930)[0:11] &lt;= 0x2 (2)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_RELOAD (0xE000)[0:7] &lt;= 0x1 (1)</div>
+<div class="line">XORIF&gt; READ_REG: ORAN_CC_ENABLE (0xE004)[0:7] =&gt; 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: ORAN_CC_ENABLE (0xE004)[0:7] &lt;= 0x1 (1)</div>
 </div><!-- fragment --><ul>
 <li>The register read/write debug information can be particularly useful. The debug trace shows...<ul>
 <li>The READ_REG or WRITE_REG operation</li>
@@ -327,71 +327,209 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <ul>
 <li>Configuring the protocol</li>
 </ul>
-<div class="fragment"><div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#gaa3e5758db6df0d589c86337d9268278d">xorif_set_fhi_protocol</a>(0, 0, 0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: FRAM_PROTOCOL_DEFINITION (0x2200)[0:3] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: FRAM_GEN_VLAN_TAG (0x2200)[4:4] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: FRAM_SEL_IPV_ADDRESS_TYPE (0x2200)[5:6] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#gac40979657aa87123b4cc380182829cde">xorif_set_fhi_packet_filter</a>(0, ...)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6100) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6104) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6108) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x610C) &lt;= 0xFFFFFEAE (4294966958)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6110) &lt;= 0xCFFF (53247)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6120) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6124) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6128) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x612C) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6130) &lt;= 0xFFFF (65535)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6140) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6144) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6148) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x614C) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6150) &lt;= 0xFFFF (65535)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6160) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6164) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6168) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_WORD_ADDR (0x616C) &lt;= 0xFFFFFFFF (4294967295)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6170) &lt;= 0xFFFF (65535)</div>
+<div class="fragment"><div class="line">XORIF&gt; <a class="code" href="group__API.html#gaa3e5758db6df0d589c86337d9268278d">xorif_set_fhi_protocol</a>(0, 0, 0)</div>
+<div class="line">XORIF&gt; WRITE_REG: FRAM_PROTOCOL_DEFINITION (0x2200)[0:3] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: FRAM_GEN_VLAN_TAG (0x2200)[4:4] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: FRAM_SEL_IPV_ADDRESS_TYPE (0x2200)[5:6] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#gac40979657aa87123b4cc380182829cde">xorif_set_fhi_packet_filter</a>(0, ...)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6100) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6104) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6108) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x610C) &lt;= 0xFFFFFEAE (4294966958)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6110) &lt;= 0xCFFF (53247)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6120) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6124) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6128) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x612C) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6130) &lt;= 0xFFFF (65535)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6140) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6144) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6148) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x614C) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6150) &lt;= 0xFFFF (65535)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6160) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6164) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x6168) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_WORD_ADDR (0x616C) &lt;= 0xFFFFFFFF (4294967295)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_USER_DATA_FILTER_MASK_ADDR (0x6170) &lt;= 0xFFFF (65535)</div>
 </div><!-- fragment --><ul>
-<li>Configuring the eXaC ID bits and RU ports</li>
+<li>Configuring the eAxC ID bits and RU ports (using "bit-mask" method)</li>
 </ul>
-<div class="fragment"><div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga550a91743d3aa995cc2c3c550d3afd72">xorif_set_fhi_eaxc_id</a>(4, 1, 3, 8)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_CC_SHIFT (0x6020)[0:3] &lt;= 0x8 (8)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_CC_MASK (0x6024)[0:5] &lt;= 0x7 (7)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_BS_SHIFT (0x6028)[0:3] &lt;= 0xB (11)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_BS_MASK (0x602C)[0:5] &lt;= 0x1 (1)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_DU_SHIFT (0x6030)[0:3] &lt;= 0xC (12)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_DU_MASK (0x6034)[0:5] &lt;= 0xF (15)</div>
-<div class="line">LIBXORIF&gt; DEBUG: eAxC ID bits: DDDDBCCCRRRRRRRR</div>
-<div class="line">LIBXORIF&gt; DEBUG: DU mask:      1111------------</div>
-<div class="line">LIBXORIF&gt; DEBUG: BS mask:      ----1-----------</div>
-<div class="line">LIBXORIF&gt; DEBUG: CC mask:      -----111--------</div>
-<div class="line">LIBXORIF&gt; DEBUG: RU mask:      --------11111111</div>
+<div class="fragment"><div class="line">XORIF&gt; <a class="code" href="group__API.html#ga550a91743d3aa995cc2c3c550d3afd72">xorif_set_fhi_eaxc_id</a>(4, 1, 3, 8)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_CC_SHIFT (0x6020)[0:3] &lt;= 0x8 (8)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_CC_MASK (0x6024)[0:5] &lt;= 0x7 (7)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_BS_SHIFT (0x6028)[0:3] &lt;= 0xB (11)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_BS_MASK (0x602C)[0:5] &lt;= 0x1 (1)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_DU_SHIFT (0x6030)[0:3] &lt;= 0xC (12)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_DU_MASK (0x6034)[0:5] &lt;= 0xF (15)</div>
+<div class="line">XORIF&gt; DEBUG: eAxC ID bits: DDDDBCCCRRRRRRRR</div>
+<div class="line">XORIF&gt; DEBUG: DU mask:      1111------------</div>
+<div class="line">XORIF&gt; DEBUG: BS mask:      ----1-----------</div>
+<div class="line">XORIF&gt; DEBUG: CC mask:      -----111--------</div>
+<div class="line">XORIF&gt; DEBUG: RU mask:      --------11111111</div>
 <div class="line"></div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a>(8, 5, 192, 0, 128, 64)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_SS_MASK (0x6038)[0:7] &lt;= 0x1F (31)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_U_MASK (0x603C)[0:7] &lt;= 0xC0 (192)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_U_VALUE (0x6040)[0:7] &lt;= 0x0 (0)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_PRACH_MASK (0x6044)[0:7] &lt;= 0xC0 (192)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_PRACH_VALUE (0x6048)[0:7] &lt;= 0x80 (128)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_SSB_MASK (0x604C)[0:7] &lt;= 0xC0 (192)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga099755a09b4768126feb50a21fb76ad1">WRITE_REG</a>: DEFM_CID_SSB_VALUE (0x6050)[0:7] &lt;= 0x40 (64)</div>
-<div class="line">LIBXORIF&gt; DEBUG: RU mask:     --------11111111</div>
-<div class="line">LIBXORIF&gt; DEBUG: SS mask:     -----------11111</div>
-<div class="line">LIBXORIF&gt; DEBUG: Mask:        --------11------</div>
-<div class="line">LIBXORIF&gt; DEBUG: User value:  --------00------</div>
-<div class="line">LIBXORIF&gt; DEBUG: PRACH value: --------10------</div>
-<div class="line">LIBXORIF&gt; DEBUG: SSB value:   --------01------</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga857309ea8ff7506568e3111761877eb8">xorif_set_ru_ports</a>(8, 5, 192, 0, 128, 64)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_SS_MASK (0x6038)[0:7] &lt;= 0x1F (31)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_U_MASK (0x603C)[0:7] &lt;= 0xC0 (192)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_U_VALUE (0x6040)[0:7] &lt;= 0x0 (0)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_PRACH_MASK (0x6044)[0:7] &lt;= 0xC0 (192)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_PRACH_VALUE (0x6048)[0:7] &lt;= 0x80 (128)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_SSB_MASK (0x604C)[0:7] &lt;= 0xC0 (192)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_SSB_VALUE (0x6050)[0:7] &lt;= 0x40 (64)</div>
+<div class="line">XORIF&gt; DEBUG: RU mask:     --------11111111</div>
+<div class="line">XORIF&gt; DEBUG: SS mask:     -----------11111</div>
+<div class="line">XORIF&gt; DEBUG: Mask:        --------11------</div>
+<div class="line">XORIF&gt; DEBUG: User value:  --------00------</div>
+<div class="line">XORIF&gt; DEBUG: PRACH value: --------10------</div>
+<div class="line">XORIF&gt; DEBUG: SSB value:   --------01------</div>
 </div><!-- fragment --><ul>
+<li>Configuring the eAxC ID bits and RU ports (using "table" method)</li>
+</ul>
+<div class="fragment"><div class="line"><span class="preprocessor"># Set the number of bits for the eAxC IDs (du_bits = 4, bs_bits = 2, cc_bits = 3, ru_bits = 7)</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga550a91743d3aa995cc2c3c550d3afd72">xorif_set_fhi_eaxc_id</a>(4, 2, 3, 7)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_CC_SHIFT (0x6020)[0:3] &lt;= 0x7 (7)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_CC_MASK (0x6024)[0:5] &lt;= 0x7 (7)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_BS_SHIFT (0x6028)[0:3] &lt;= 0xA (10)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_BS_MASK (0x602C)[0:5] &lt;= 0x3 (3)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_DU_SHIFT (0x6030)[0:3] &lt;= 0xC (12)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_DU_MASK (0x6034)[0:5] &lt;= 0xF (15)</div>
+<div class="line">XORIF&gt; DEBUG: eAxC ID bits: DDDDBBCCCRRRRRRR</div>
+<div class="line">XORIF&gt; DEBUG: DU mask:      1111------------</div>
+<div class="line">XORIF&gt; DEBUG: BS mask:      ----11----------</div>
+<div class="line">XORIF&gt; DEBUG: CC mask:      ------111-------</div>
+<div class="line">XORIF&gt; DEBUG: RU mask:      ---------1111111</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Clear the RU port mapping table</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991">xorif_clear_ru_ports_table</a>()</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F000 (2147741696)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F001 (2147741697)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F002 (2147741698)</div>
+<div class="line">...</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F0FD (2147741949)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F0FE (2147741950)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8003F0FF (2147741951)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Set the RU port mapping mode (mode 1 = &#39;direction + RU bits&#39;)</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor"># Note, RU port mapping table address needs to be 8 bits or more (1 + 7)</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7">xorif_set_ru_ports_table_mode</a>(1)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_MODE (0x6900)[0:1] &lt;= 0x1 (1)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Set RU port mapping for 8 x PUxCH streams, starting at address 0</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor"># i.e. address 0 maps to PUxCH SS 0, address 1 maps to PUxCH SS 1, etc.</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a>(0, 0, 1, 8)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80001000 (2147487744)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80041001 (2147749889)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80081002 (2148012034)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800C1003 (2148274179)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80101004 (2148536324)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80141005 (2148798469)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80181006 (2149060614)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x801C1007 (2149322759)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Set RU port mapping for 16 x PDxCH streams, starting at address 128</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor"># i.e. address 128 maps to PDxCH SS 0, address 129 maps to PDxCH SS 1, etc.</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a>(128, 0, 1, 16)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80001080 (2147487872)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80041081 (2147750017)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80081082 (2148012162)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800C1083 (2148274307)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80101084 (2148536452)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80141085 (2148798597)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80181086 (2149060742)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x801C1087 (2149322887)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80201088 (2149585032)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80241089 (2149847177)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8028108A (2150109322)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x802C108B (2150371467)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8030108C (2150633612)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8034108D (2150895757)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x8038108E (2151157902)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x803C108F (2151420047)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Set RU port mapping for 4 x SSB streams, starting at address 160</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor"># i.e. address 160 maps to SSB SS 0, address 161 maps to SSB SS 1, etc.</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a>(160, 0, 2, 4)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800020A0 (2147492000)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800420A1 (2147754145)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800820A2 (2148016290)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800C20A3 (2148278435)</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor"># Set RU port mapping for 4 x PRACH streams, starting at address 32</span></div>
+<div class="line"><span class="preprocessor"></span><span class="preprocessor"># i.e. address 32 maps to PRACH SS 0, address 33 maps to PRACH SS 1, etc.</span></div>
+<div class="line"><span class="preprocessor"></span>XORIF&gt; <a class="code" href="group__API.html#ga6fc3068a93476321d8449fcc7871a29f">xorif_set_ru_ports_table</a>(32, 0, 4, 4)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80004020 (2147500064)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80044021 (2147762209)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80084022 (2148024354)</div>
+<div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800C4023 (2148286499)</div>
+</div><!-- fragment --><p>The above programming would give rise to the following mapping table. Note, empty lines are not shown and should be unmapped. Use the <a class="el" href="group__API.html#ga02e5936a62ac2c0a803c96adcc735fb7" title="Set the RU port table mapping mode. ">xorif_set_ru_ports_table_mode()</a> API call to clear the table prior to programming, or selectively remap modified addresses as required.</p>
+<table class="doxtable">
+<tr>
+<th>RU port </th><th>Address </th><th>Type </th><th>SS  </th></tr>
+<tr>
+<td>0 </td><td>0 </td><td>PUxCH </td><td>0 </td></tr>
+<tr>
+<td>1 </td><td>1 </td><td>PUxCH </td><td>1 </td></tr>
+<tr>
+<td>2 </td><td>2 </td><td>PUxCH </td><td>2 </td></tr>
+<tr>
+<td>3 </td><td>3 </td><td>PUxCH </td><td>3 </td></tr>
+<tr>
+<td>4 </td><td>4 </td><td>PUxCH </td><td>4 </td></tr>
+<tr>
+<td>5 </td><td>5 </td><td>PUxCH </td><td>5 </td></tr>
+<tr>
+<td>6 </td><td>6 </td><td>PUxCH </td><td>6 </td></tr>
+<tr>
+<td>7 </td><td>7 </td><td>PUxCH </td><td>7 </td></tr>
+<tr>
+<td>32 </td><td>32 </td><td>PPRACH </td><td>0 </td></tr>
+<tr>
+<td>33 </td><td>33 </td><td>PPRACH </td><td>1 </td></tr>
+<tr>
+<td>34 </td><td>34 </td><td>PPRACH </td><td>2 </td></tr>
+<tr>
+<td>35 </td><td>35 </td><td>PPRACH </td><td>3 </td></tr>
+<tr>
+<td>0 </td><td>128 </td><td>PDxCH </td><td>0 </td></tr>
+<tr>
+<td>1 </td><td>129 </td><td>PDxCH </td><td>1 </td></tr>
+<tr>
+<td>2 </td><td>130 </td><td>PDxCH </td><td>2 </td></tr>
+<tr>
+<td>3 </td><td>131 </td><td>PDxCH </td><td>3 </td></tr>
+<tr>
+<td>4 </td><td>132 </td><td>PDxCH </td><td>4 </td></tr>
+<tr>
+<td>5 </td><td>133 </td><td>PDxCH </td><td>5 </td></tr>
+<tr>
+<td>6 </td><td>134 </td><td>PDxCH </td><td>6 </td></tr>
+<tr>
+<td>7 </td><td>135 </td><td>PDxCH </td><td>7 </td></tr>
+<tr>
+<td>... </td><td>... </td><td>... </td><td>... </td></tr>
+<tr>
+<td>14 </td><td>142 </td><td>PDxCH </td><td>14 </td></tr>
+<tr>
+<td>15 </td><td>143 </td><td>PDxCH </td><td>15 </td></tr>
+<tr>
+<td>160 </td><td>32 </td><td>SSB </td><td>0 </td></tr>
+<tr>
+<td>161 </td><td>33 </td><td>SSB </td><td>1 </td></tr>
+<tr>
+<td>162 </td><td>34 </td><td>SSB </td><td>2 </td></tr>
+<tr>
+<td>163 </td><td>35 </td><td>SSB </td><td>3 </td></tr>
+</table>
+<ul>
 <li>Reading / writing registers</li>
 </ul>
-<div class="fragment"><div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a>(ORAN_CC_NUMEROLOGY)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_NUMEROLOGY (0xE100)[16:18] =&gt; 0x1 (1)</div>
+<div class="fragment"><div class="line">XORIF&gt; <a class="code" href="group__API.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a>(ORAN_CC_NUMEROLOGY)</div>
+<div class="line">XORIF&gt; READ_REG: ORAN_CC_NUMEROLOGY (0xE100)[16:18] =&gt; 0x1 (1)</div>
 <div class="line"></div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__API.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a>(ORAN_CC_NUMRBS)</div>
-<div class="line">LIBXORIF&gt; <a class="code" href="group__libxorif.html#ga6239c4fca76e1597fce699a2760abc9e">READ_REG</a>: ORAN_CC_NUMRBS (0xE100)[0:8] =&gt; 0x19 (25)</div>
+<div class="line">XORIF&gt; <a class="code" href="group__API.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a>(ORAN_CC_NUMRBS)</div>
+<div class="line">XORIF&gt; READ_REG: ORAN_CC_NUMRBS (0xE100)[0:8] =&gt; 0x19 (25)</div>
 </div><!-- fragment --> <hr/>
-<p>Copyright (C) 2019 - 2022 Advanced Micro Devices, Inc. All rights reserved. </p>
+<p>Copyright (C) 2019 - 2023 Advanced Micro Devices, Inc. All rights reserved. </p>
 </div></div><!-- contents -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

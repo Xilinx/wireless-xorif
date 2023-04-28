@@ -12,4 +12,4 @@ libxocp:
 clean:
 	rm -rf libxorif_html
 	rm -rf xorif_app_html
-	rm -rf libxocp_html
+

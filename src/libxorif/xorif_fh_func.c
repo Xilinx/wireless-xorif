@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 - 2022 Advanced Micro Devices, Inc.
+ * Copyright 2020 - 2023 Advanced Micro Devices, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,9 +65,16 @@ static void *ssb_ctrl_memory = NULL;
 static void *ssb_data_ptrs_memory = NULL;
 static void *ssb_data_buff_memory = NULL;
 
-// Copy of RU bits and BS bits for use in RU ports table mapping
+// Copy of RU, BS and CC bits for use in RU ports table mapping
 static uint16_t num_ru_bits = 0;
 static uint16_t num_bs_bits = 0;
+static uint16_t num_cc_bits = 0;
+
+#ifdef INTEGRATED_OCP
+// Storage for callback handler for OCP interrupts
+typedef void (*ocp_callback_t)(uint16_t instance);
+ocp_callback_t ocp_callback = NULL;
+#endif
 
 // Unknown "stream type" for RU port mapping (used to de-allocate the address)
 #define UNKNOWN_STREAM_TYPE 0x3F
@@ -521,9 +528,10 @@ int xorif_set_fhi_eaxc_id(uint16_t du_bits,
     // Note, RU ID bits are handled by an additional mask register, so that
     // spatial streams can be further split into user/PRACH/SSB/...
 
-    // Save RU bits and BS bits for use in RU ports table mapping
+    // Save RU, BS and CC bits for use in RU ports table mapping
     num_ru_bits = ru_bits;
     num_bs_bits = bs_bits;
+    num_cc_bits = cc_bits;
 
 #if DEBUG
     if (xorif_trace >= 2)
@@ -639,15 +647,15 @@ int xorif_set_ru_ports(uint16_t ru_bits,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_ru_ports_alt1(uint16_t ru_bits,
-                            uint16_t ss_bits,
-                            uint16_t mask,
-                            uint16_t user_val,
-                            uint16_t prach_val,
-                            uint16_t ssb_val,
-                            uint16_t lte_val)
+int xorif_set_ru_ports_lte(uint16_t ru_bits,
+                           uint16_t ss_bits,
+                           uint16_t mask,
+                           uint16_t user_val,
+                           uint16_t prach_val,
+                           uint16_t ssb_val,
+                           uint16_t lte_val)
 {
-    TRACE("xorif_set_ru_ports_alt1(%d, %d, %d, %d, %d, %d, %d)\n", ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
+    TRACE("xorif_set_ru_ports_lte(%d, %d, %d, %d, %d, %d, %d)\n", ru_bits, ss_bits, mask, user_val, prach_val, ssb_val, lte_val);
 
     if (ss_bits > ru_bits)
     {
@@ -731,9 +739,9 @@ int xorif_set_ru_ports_alt1(uint16_t ru_bits,
     return XORIF_SUCCESS;
 }
 
-int xorif_set_ru_ports_table_mode(uint16_t mode)
+int xorif_set_ru_ports_table_mode(uint16_t mode, uint16_t sub_mode)
 {
-    TRACE("xorif_set_ru_ports_table_mode(%d)\n", mode);
+    TRACE("xorif_set_ru_ports_table_mode(%d, %d)\n", mode, sub_mode);
 
     if (mode > 3)
     {
@@ -741,28 +749,31 @@ int xorif_set_ru_ports_table_mode(uint16_t mode)
         return XORIF_INVALID_RU_PORT_MAPPING;
     }
 
+    // We used to check map table was big enough, but this is now not-trivial
+    // due to changes in design, sub-mode variants, etc. We leave it to user
+    // to ensure there is sufficient space!
+
+    if (fhi_caps.ru_ports_map_width == 0)
+    {
+        PERROR("Insufficient RU port table memory for mode\n");
+        return XORIF_INVALID_RU_PORT_MAPPING;
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_MAP_MODE, mode);
+        WRITE_REG(DEFM_CID_MAP_SUBMODE, sub_mode);
+        return XORIF_SUCCESS;
+    }
+}
+
+/*
+int xorif_set_ru_ports_table_mode1(void)
+{
+    TRACE("xorif_set_ru_ports_table_mode1()\n");
+
     // Check that the table has sufficient address space for the mode
-    uint16_t required = 0;
-    if (mode == 0)
-    {
-        // mode 0: {RU} so width = ru_bits
-        required = num_ru_bits;
-    }
-    else if (mode == 1)
-    {
-        // mode 1: {DIR, RU} so width = 1 + ru_bits
-        required = 1 + num_ru_bits;
-    }
-    else if (mode == 2)
-    {
-        // mode 2: {BS, RU} so width = bs_bits + ru_bits
-        required = num_bs_bits + num_ru_bits;
-    }
-    else if (mode == 3)
-    {
-        // mode 3: {DIR, RU, BS} so width = 1 + bs_bits + ru_bits
-        required = 1 + num_bs_bits + num_ru_bits;
-    }
+    // mode 1: {DIR, RU} so width = 1 + ru_bits
+    uint16_t required = 1 + num_ru_bits;
 
     if ((fhi_caps.ru_ports_map_width == 0) || (required > fhi_caps.ru_ports_map_width))
     {
@@ -771,10 +782,31 @@ int xorif_set_ru_ports_table_mode(uint16_t mode)
     }
     else
     {
-        WRITE_REG(DEFM_CID_MAP_MODE, mode);
+        WRITE_REG(DEFM_CID_MAP_MODE, 1);
         return XORIF_SUCCESS;
     }
 }
+
+int xorif_set_ru_ports_table_mode2(uint16_t ss_mask, uint16_t u_mask)
+{
+    TRACE("xorif_set_ru_ports_table_mode2(0x%X, 0x%X)\n", ss_mask, u_mask);
+
+    // Note, table size is not checked with this API (complex due to masking)
+
+    if (fhi_caps.ru_ports_map_width == 0)
+    {
+        PERROR("Insufficient RU port table memory for mode\n");
+        return XORIF_INVALID_RU_PORT_MAPPING;
+    }
+    else
+    {
+        WRITE_REG(DEFM_CID_MAP_MODE, 2);
+        WRITE_REG(DEFM_CID_SS_MASK, ss_mask);
+        WRITE_REG(DEFM_CID_U_MASK, u_mask);
+        return XORIF_SUCCESS;
+    }
+}
+*/
 
 int xorif_clear_ru_ports_table(void)
 {
@@ -813,6 +845,42 @@ int xorif_set_ru_ports_table(uint16_t address,
             uint16_t a = address + i;
             uint16_t p = port + i;
             uint32_t value = (1U << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
+
+            if (a < size)
+            {
+                WRITE_REG_RAW(DEFM_CID_MAP_WR_STROBE_ADDR, value);
+            }
+            else
+            {
+                PERROR("Invalid RU port table address\n");
+                return XORIF_INVALID_RU_PORT_MAPPING;
+            }
+        }
+        return XORIF_SUCCESS;
+    }
+
+    PERROR("Insufficient RU port table memory\n");
+    return XORIF_INVALID_RU_PORT_MAPPING;
+}
+
+int xorif_set_ru_ports_table_vcc(uint16_t address,
+                                 uint16_t port,
+                                 uint16_t type,
+                                 uint16_t ccid,
+                                 uint16_t number)
+{
+    TRACE("xorif_set_ru_ports_table_vcc(%d, %d, %d, %d, %d)\n", address, port, type, ccid, number);
+
+    if (fhi_caps.ru_ports_map_width > 0)
+    {
+        uint16_t size = 1 << fhi_caps.ru_ports_map_width;
+        for (int i = 0; i < number; ++i)
+        {
+            // Value: <write strobe> | <ccid> | <port> | <type> | <address>
+            uint16_t a = address + i;
+            uint16_t p = port + i;
+            uint32_t value = (1U << 31) | ((ccid & 0xF) << 24) | ((p & 0x1F) << 18) |
+                             ((type & 0x3F) << 12) | (a & 0x7FF);
 
             if (a < size)
             {
@@ -974,6 +1042,15 @@ int fhi_irq_handler(int id, void *data)
             WRITE_REG(CFG_MASTER_INT_ENABLE, 0);
             WRITE_REG(CFG_MASTER_INT_ENABLE, 1);
         }
+
+#ifdef INTEGRATED_OCP
+        if (ocp_callback)
+        {
+            // FHI and OCP interrupts are tied together, we don't know which
+            // We only access instance 0
+            ocp_callback(0);
+        }
+#endif
 
         if (fhi_callback)
         {
@@ -1800,7 +1877,7 @@ int xorif_test_error_injections(uint32_t status)
 
 int xorif_monitor_clear(void)
 {
-    TRACE("xocp_monitor_clear()\n");
+    TRACE("xorif_monitor_clear()\n");
 
     WRITE_REG(CFG_MONITOR_CLEAR, 1);
 
@@ -1837,5 +1914,19 @@ int xorif_monitor_read(uint8_t counter, uint64_t *value)
 
     return XORIF_SUCCESS;
 }
+
+#ifdef INTEGRATED_OCP
+void xorif_register_ocp(ocp_callback_t callback)
+{
+    TRACE("xorif_register_ocp(...)\n");
+    ocp_callback = callback;
+}
+
+void xorif_deregister_ocp(void)
+{
+    TRACE("xorif_deregister_ocp()\n");
+    ocp_callback = NULL;
+}
+#endif
 
 /** @} */

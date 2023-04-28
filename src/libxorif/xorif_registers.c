@@ -29,8 +29,7 @@
 
 // The following const structure defines the register map for the Front Haul Interface
 // Note, this array is sorted for more efficient access
-static const reg_info_t fhi_reg_map[] =
-{
+static const reg_info_t reg_map[] = {
     {"CFG_AXI_TIMEOUT_ENABLE", 0x14, 0x80000000, 31, 1},
     {"CFG_AXI_TIMEOUT_STATUS", 0x18, 0x80000000, 31, 1},
     {"CFG_CONFIG_LIMIT_BS_W", 0x10c, 0xf, 0, 4},
@@ -73,6 +72,8 @@ static const reg_info_t fhi_reg_map[] =
     {"CFG_CONFIG_XRAN_MAX_SCS", 0x48, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS", 0x50, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MIN_NUMEROLOGY", 0x38, 0x7, 0, 3},
+    {"CFG_CONFIG_XRAN_OCP_IN_CORE", 0x28, 0x80, 7, 1},
+    {"CFG_CONFIG_XRAN_OPTIMISATIONS", 0x78, 0xffffffff, 0, 32},
     {"CFG_CONFIG_XRAN_PRACH_C_PORTS", 0x74, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_PRECODING_EXT3_PORT", 0x28, 0x40, 6, 1},
     {"CFG_CONFIG_XRAN_SUPPORT_MODE", 0x28, 0xf, 0, 4},
@@ -121,10 +122,13 @@ static const reg_info_t fhi_reg_map[] =
     {"DEFM_CID_LTE_MASK", 0x6054, 0xff, 0, 8},
     {"DEFM_CID_LTE_VALUE", 0x6058, 0xff, 0, 8},
     {"DEFM_CID_MAP_MODE", 0x6900, 0x3, 0, 2},
+    {"DEFM_CID_MAP_RD_STREAM_CCID", 0x6908, 0x7000000, 24, 3},
     {"DEFM_CID_MAP_RD_STREAM_PORTID", 0x6908, 0x7c0000, 18, 5},
     {"DEFM_CID_MAP_RD_STREAM_TYPE", 0x6908, 0x7000, 12, 3},
     {"DEFM_CID_MAP_RD_STROBE", 0x6908, 0x80000000, 31, 1},
     {"DEFM_CID_MAP_RD_TABLE_ADDR", 0x6908, 0x7ff, 0, 11},
+    {"DEFM_CID_MAP_SUBMODE", 0x6900, 0xf00, 8, 4},
+    {"DEFM_CID_MAP_WR_STREAM_CCID", 0x6904, 0x7000000, 24, 3},
     {"DEFM_CID_MAP_WR_STREAM_PORTID", 0x6904, 0x7c0000, 18, 5},
     {"DEFM_CID_MAP_WR_STREAM_TYPE", 0x6904, 0x7000, 12, 3},
     {"DEFM_CID_MAP_WR_STROBE", 0x6904, 0x80000000, 31, 1},
@@ -136,6 +140,7 @@ static const reg_info_t fhi_reg_map[] =
     {"DEFM_CID_SS_MASK", 0x6038, 0xff, 0, 8},
     {"DEFM_CID_U_MASK", 0x603c, 0xff, 0, 8},
     {"DEFM_CID_U_VALUE", 0x6040, 0xff, 0, 8},
+    {"DEFM_CTRL_ENA_CRUPT_EAXE_CNT", 0x6014, 0x1, 0, 1},
     {"DEFM_CTRL_SS_RESET_E0_E", 0x6010, 0x10, 4, 1},
     {"DEFM_CTRL_SS_RESET_E0_RCOR", 0x6010, 0x40, 6, 1},
     {"DEFM_CTRL_SS_RESET_E0_RWIN", 0x6010, 0x20, 5, 1},
@@ -231,6 +236,7 @@ static const reg_info_t fhi_reg_map[] =
     {"ETH_VLAN_DEI", 0xa010, 0x1000, 12, 1},
     {"ETH_VLAN_ID", 0xa010, 0xfff, 0, 12},
     {"ETH_VLAN_PCP", 0xa010, 0xe000, 13, 3},
+    {"FRAM_CID_SEQTABLE_MODE", 0x200c, 0xf, 0, 4},
     {"FRAM_DISABLE", 0x2000, 0x1, 0, 1},
     {"FRAM_ENABLE_PER_SYM_RESET", 0x2004, 0x1, 0, 1},
     {"FRAM_GEN_VLAN_TAG", 0x2200, 0x10, 4, 1},
@@ -238,49 +244,46 @@ static const reg_info_t fhi_reg_map[] =
     {"FRAM_PROTOCOL_DEFINITION", 0x2200, 0xf, 0, 4},
     {"FRAM_READY", 0x2000, 0x2, 1, 1},
     {"FRAM_SEL_IPV_ADDRESS_TYPE", 0x2200, 0x60, 5, 2},
-    {"FRAM_XRAN_BANDSECTOR_FIELD_WIDTH", 0x2080, 0xf00, 8, 4},
-    {"FRAM_XRAN_CC_ID_FIELD_WIDTH", 0x2080, 0xf0, 4, 4},
-    {"FRAM_XRAN_RU_PORT_ID_FIELD_WIDTH", 0x2080, 0xf, 0, 4},
     {"ORAN_CC_DL_CTRL_OFFSETS", 0xe104, 0xffff, 0, 16},
     {"ORAN_CC_DL_CTRL_SYM_NUM_INDEX", 0xe114, 0x3f0000, 16, 6},
     {"ORAN_CC_DL_CTRL_UNROLLED_OFFSETS", 0xe108, 0xffff, 0, 16},
     {"ORAN_CC_DL_DATA_SYM_NUM_INDEX", 0xe114, 0x3f00, 8, 6},
     {"ORAN_CC_DL_DATA_SYM_START_INDEX", 0xe114, 0x3f, 0, 6},
-    {"ORAN_CC_DL_DATA_UNROLL_OFFSET", 0xe500, 0xffff, 0, 16},
+    {"ORAN_CC_DL_DATA_UNROLL_OFFSET", 0xe800, 0xffff, 0, 16},
     {"ORAN_CC_DL_MPLANE_UDCOMP_HDR_SEL", 0xe11c, 0x100, 8, 1},
     {"ORAN_CC_DL_SETUP_C_ABS_SYMBOL", 0xe130, 0xfff, 0, 12},
     {"ORAN_CC_DL_SETUP_C_CYCLES", 0xe134, 0x1ffff, 0, 17},
     {"ORAN_CC_DL_SETUP_D_CYCLES", 0xe138, 0x1ffff, 0, 17},
     {"ORAN_CC_DL_UD_COMP_METH", 0xe11c, 0xf0, 4, 4},
     {"ORAN_CC_DL_UD_IQ_WIDTH", 0xe11c, 0xf, 0, 4},
-    {"ORAN_CC_ENABLE", 0xe004, 0xff, 0, 8},
+    {"ORAN_CC_ENABLE", 0xe004, 0xffff, 0, 16},
     {"ORAN_CC_MAX_SYMBOLS", 0xe158, 0xfff, 0, 12},
     {"ORAN_CC_MODVALS_DL", 0xe168, 0xffff, 0, 16},
     {"ORAN_CC_MODVALS_UL", 0xe16c, 0xffff, 0, 16},
     {"ORAN_CC_NUMEROLOGY", 0xe100, 0x70000, 16, 3},
     {"ORAN_CC_NUMRBS", 0xe100, 0x1ff, 0, 9},
-    {"ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC", 0xe960, 0xffff, 0, 16},
+    {"ORAN_CC_NUMSSBCTRLSECT_X_SYM_X_CC", 0x8160, 0xffff, 0, 16},
     {"ORAN_CC_NUM_CTRL_PER_SYMBOL_DL", 0xe160, 0xffff, 0, 16},
     {"ORAN_CC_NUM_CTRL_PER_SYMBOL_UL", 0xe164, 0xffff, 0, 16},
-    {"ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL", 0xe920, 0x100, 8, 1},
-    {"ORAN_CC_PRACH_UD_COMP_METH", 0xe920, 0xf0, 4, 4},
-    {"ORAN_CC_PRACH_UD_IQ_WIDTH", 0xe920, 0xf, 0, 4},
-    {"ORAN_CC_RELOAD", 0xe000, 0xff, 0, 8},
-    {"ORAN_CC_SSB_CTRL_OFFSETS", 0xe904, 0xffff, 0, 16},
-    {"ORAN_CC_SSB_DATA_SYM_START_INDEX", 0xe914, 0x3f, 0, 6},
-    {"ORAN_CC_SSB_DATA_UNROLL_OFFSET", 0xed00, 0xffff, 0, 16},
-    {"ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL", 0xe91c, 0x100, 8, 1},
-    {"ORAN_CC_SSB_NUMEROLOGY", 0xe900, 0x70000, 16, 3},
-    {"ORAN_CC_SSB_NUMRBS", 0xe900, 0x1ff, 0, 9},
-    {"ORAN_CC_SSB_NUM_DATA_SYM_PER_CC", 0xe914, 0x3f00, 8, 6},
-    {"ORAN_CC_SSB_NUM_SYM_PER_CC", 0xe914, 0x3f0000, 16, 6},
-    {"ORAN_CC_SSB_SECTS_X_SYMBOLS", 0xe968, 0xffff, 0, 16},
-    {"ORAN_CC_SSB_SETUP_C_ABS_SYMBOL", 0xe930, 0xfff, 0, 12},
-    {"ORAN_CC_SSB_SETUP_C_CYCLES", 0xe934, 0x1ffff, 0, 17},
-    {"ORAN_CC_SSB_SETUP_D_CYCLES", 0xe938, 0x1ffff, 0, 17},
-    {"ORAN_CC_SSB_SYMPERSLOT", 0xe900, 0x1000000, 24, 1},
-    {"ORAN_CC_SSB_UD_COMP_METH", 0xe91c, 0xf0, 4, 4},
-    {"ORAN_CC_SSB_UD_IQ_WIDTH", 0xe91c, 0xf, 0, 4},
+    {"ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL", 0x8120, 0x100, 8, 1},
+    {"ORAN_CC_PRACH_UD_COMP_METH", 0x8120, 0xf0, 4, 4},
+    {"ORAN_CC_PRACH_UD_IQ_WIDTH", 0x8120, 0xf, 0, 4},
+    {"ORAN_CC_RELOAD", 0xe000, 0xffff, 0, 16},
+    {"ORAN_CC_SSB_CTRL_OFFSETS", 0x8104, 0xffff, 0, 16},
+    {"ORAN_CC_SSB_DATA_SYM_START_INDEX", 0x8114, 0x3f, 0, 6},
+    {"ORAN_CC_SSB_DATA_UNROLL_OFFSET", 0x8800, 0xffff, 0, 16},
+    {"ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL", 0x811c, 0x100, 8, 1},
+    {"ORAN_CC_SSB_NUMEROLOGY", 0x8100, 0x70000, 16, 3},
+    {"ORAN_CC_SSB_NUMRBS", 0x8100, 0x1ff, 0, 9},
+    {"ORAN_CC_SSB_NUM_DATA_SYM_PER_CC", 0x8114, 0x3f00, 8, 6},
+    {"ORAN_CC_SSB_NUM_SYM_PER_CC", 0x8114, 0x3f0000, 16, 6},
+    {"ORAN_CC_SSB_SECTS_X_SYMBOLS", 0x8168, 0xffff, 0, 16},
+    {"ORAN_CC_SSB_SETUP_C_ABS_SYMBOL", 0x8130, 0xfff, 0, 12},
+    {"ORAN_CC_SSB_SETUP_C_CYCLES", 0x8134, 0x1ffff, 0, 17},
+    {"ORAN_CC_SSB_SETUP_D_CYCLES", 0x8138, 0x1ffff, 0, 17},
+    {"ORAN_CC_SSB_SYMPERSLOT", 0x8100, 0x1000000, 24, 1},
+    {"ORAN_CC_SSB_UD_COMP_METH", 0x811c, 0xf0, 4, 4},
+    {"ORAN_CC_SSB_UD_IQ_WIDTH", 0x811c, 0xf, 0, 4},
     {"ORAN_CC_SYMPERSLOT", 0xe100, 0x1000000, 24, 1},
     {"ORAN_CC_UL_BASE_OFFSET", 0xe140, 0xffff, 0, 16},
     {"ORAN_CC_UL_BIDF_C_ABS_SYMBOL", 0xe144, 0xfff, 0, 12},
@@ -294,12 +297,9 @@ static const reg_info_t fhi_reg_map[] =
     {"ORAN_CC_UL_SETUP_D_CYCLES", 0xe128, 0x1ffff, 0, 17},
     {"ORAN_CC_UL_UD_COMP_METH", 0xe118, 0xf0, 4, 4},
     {"ORAN_CC_UL_UD_IQ_WIDTH", 0xe118, 0xf, 0, 4},
-    {"ORAN_SETUP_CNT", 0xe600, 0xffffffff, 0, 32},
-    {"ORAN_SETUP_SF", 0xe608, 0xf, 0, 4},
-    {"ORAN_SETUP_SL", 0xe60c, 0xf, 0, 4},
-    {"ORAN_SETUP_SY", 0xe610, 0xf, 0, 4},
-    {"ORAN_SETUP_SY_COUNTER", 0xe604, 0x2, 1, 1},
-    {"ORAN_STRIP_FCS", 0xe604, 0x1, 0, 1},
+    {"ORAN_SETUP_SF", 0x8008, 0xf, 0, 4},
+    {"ORAN_SETUP_SL", 0x800c, 0xf, 0, 4},
+    {"ORAN_SETUP_SY", 0x8010, 0xf, 0, 4},
     {"STATS_ETH_STATS_ORAN_RX_BIT_RATE", 0xc01c, 0xffffffff, 0, 32},
     {"STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_H", 0xc014, 0xffffffff, 0, 32},
     {"STATS_ETH_STATS_TOTAL_RX_BAD_FCS_CNT_L", 0xc010, 0xffffffff, 0, 32},
@@ -338,16 +338,139 @@ static const reg_info_t fhi_reg_map[] =
     {NULL, 0, 0, 0},
 };
 
-// Number of registers in register map
-// Note, the -1 is to skip the NULL terminating entry
-static const int fhi_reg_num = (sizeof(fhi_reg_map) / sizeof(reg_info_t)) - 1;
+// Fake base address for debug "devmem"
+#define FAKE_BASE_ADDR 0xA0000000
 
-int xorif_read_fhi_reg(const char *name, uint32_t *val)
+/****************************/
+/*** Function definitions ***/
+/****************************/
+
+uint32_t xorif_read_reg_internal(void *io,
+                                 const char *name,
+                                 uint32_t addr,
+                                 uint32_t mask,
+                                 uint8_t shift,
+                                 uint8_t width)
 {
-    TRACE("xorif_read_fhi_reg(%s)\n", name);
+    ASSERT_NV(io, 0);
 
-    const reg_info_t *ptr = find_register(&fhi_reg_map[0], fhi_reg_num, name);
-    if (!ptr)
+    uint32_t x;
+#ifdef NO_HW
+    // Read from fake register
+    x = ((uint32_t *)io)[addr / 4];
+#else
+    // Read with libmetal
+    x = metal_io_read32((struct metal_io_region *)io, addr);
+#endif
+    x = (x & mask) >> shift;
+
+    TRACE("READ_REG: %s (0x%04X)[%d:%d] => 0x%X (%u)\n", name, addr, shift + width - 1, shift, x, x);
+
+#ifdef EXTRA_DEBUG
+    if (xorif_trace == 3)
+    {
+        LOG(log_file, "sw_driver_read(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
+    }
+    else if (xorif_trace == 4)
+    {
+        LOG(log_file, "devmem 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), name);
+    }
+#endif
+
+    return x;
+}
+
+void xorif_write_reg_internal(void *io,
+                              const char *name,
+                              uint32_t addr,
+                              uint32_t mask,
+                              uint8_t shift,
+                              uint8_t width,
+                              uint32_t value)
+{
+    ASSERT_V(io);
+
+    uint32_t x;
+#ifdef NO_HW
+    // Read from fake register
+    x = ((uint32_t *)io)[addr / 4];
+#else
+    // Read with libmetal
+    x = metal_io_read32((struct metal_io_region *)io, addr);
+#endif
+    // Modify register field
+    x = (x & ~mask) | ((value << shift) & mask);
+#ifdef NO_HW
+    // Write to fake register
+    ((uint32_t *)io)[addr / 4] = x;
+#else
+    // Write with libmetal
+    metal_io_write32((struct metal_io_region *)io, addr, x);
+#endif
+
+    TRACE("WRITE_REG: %s (0x%04X)[%d:%d] <= 0x%X (%u)\n", name, addr, shift + width - 1, shift, value, value);
+
+#ifdef EXTRA_DEBUG
+    if (xorif_trace == 3)
+    {
+        LOG(log_file, "sw_driver_write(32'h%08X, 32'h%08X); // %s\n", addr, x, name);
+    }
+    else if (xorif_trace == 4)
+    {
+        LOG(log_file, "devmem 0x%08X 32 0x%08X # %s\n", (FAKE_BASE_ADDR + addr), x, name);
+    }
+#endif
+}
+
+/**
+ * @brief Comparator function for bsearch algorithm.
+ * @param[in] key Key to look for
+ * @param[in] data Data element that we're comparing against
+ * @returns
+ *      - <0 if key is before data
+ *      - =0 if key is equal to data
+ *      - >0 if key is after data
+ */
+static int reg_comparator(const void *key, const void *data)
+{
+    return strcmp((const char *)key, ((const reg_info_t *)data)->name);
+}
+
+const reg_info_t *xorif_find_register(const char *name)
+{
+    static reg_info_t dummy_reg = {"OFFSET", 0, 0xffffffff, 0, 32};
+    uint32_t u;
+
+    void *result = bsearch((const void *)name,
+                           (const void *)reg_map,
+                           (sizeof(reg_map) / sizeof(reg_info_t)) - 1,
+                           sizeof(reg_info_t),
+                           reg_comparator);
+
+    if (result)
+    {
+        return (const reg_info_t *)result;
+    }
+    else if ((sscanf(name, "0x%X", &u) == 1) || (sscanf(name, "%u", &u) == 1))
+    {
+        // Interpret the "name" as an address, with 32-bit width
+        // Set the address in the "dummy_reg" entry
+        dummy_reg.addr = u;
+        return (const reg_info_t *)&dummy_reg;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+int xorif_read_fhi_reg(const char *name, uint32_t *value)
+{
+    TRACE("xorif_read_reg(%s, ...)\n", name);
+    ASSERT_NV(value, XORIF_NULL_POINTER);
+
+    const reg_info_t *reg = xorif_find_register(name);
+    if (!reg)
     {
         // The register could not be found
         PERROR("Register '%s' not found\n", name);
@@ -355,17 +478,25 @@ int xorif_read_fhi_reg(const char *name, uint32_t *val)
     }
     else
     {
-        *val = read_reg(DEVICE, name, ptr->addr, ptr->mask, ptr->shift, ptr->width);
+        *value = xorif_read_reg_internal(DEV,
+                                         name,
+                                         reg->addr,
+                                         reg->mask,
+                                         reg->shift,
+                                         reg->width);
         return XORIF_SUCCESS;
     }
 }
 
-int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val)
+int xorif_read_fhi_reg_offset(const char *name,
+                              uint16_t offset,
+                              uint32_t *value)
 {
-    TRACE("xorif_read_fhi_reg_offset(%s, 0x%X)\n", name, offset);
+    TRACE("xorif_read_reg_offset(%s, %d, ...)\n", name, offset);
+    ASSERT_NV(value, XORIF_NULL_POINTER);
 
-    const reg_info_t *ptr = find_register(&fhi_reg_map[0], fhi_reg_num, name);
-    if (!ptr)
+    const reg_info_t *reg = xorif_find_register(name);
+    if (!reg)
     {
         // The register could not be found
         PERROR("Register '%s' not found\n", name);
@@ -373,17 +504,22 @@ int xorif_read_fhi_reg_offset(const char *name, uint16_t offset, uint32_t *val)
     }
     else
     {
-        *val = read_reg(DEVICE, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width);
+        *value = xorif_read_reg_internal(DEV,
+                                         name,
+                                         (reg->addr + offset),
+                                         reg->mask,
+                                         reg->shift,
+                                         reg->width);
         return XORIF_SUCCESS;
     }
 }
 
 int xorif_write_fhi_reg(const char *name, uint32_t value)
 {
-    TRACE("xorif_write_fhi_reg(%s, 0x%X)\n", name, value);
+    TRACE("xorif_write_reg(%s, 0x%X)\n", name, value);
 
-    const reg_info_t *ptr = find_register(&fhi_reg_map[0], fhi_reg_num, name);
-    if (!ptr)
+    const reg_info_t *reg = xorif_find_register(name);
+    if (!reg)
     {
         // The register could not be found
         PERROR("Register '%s' not found\n", name);
@@ -391,17 +527,25 @@ int xorif_write_fhi_reg(const char *name, uint32_t value)
     }
     else
     {
-        write_reg(DEVICE, name, ptr->addr, ptr->mask, ptr->shift, ptr->width, value);
+        xorif_write_reg_internal(DEV,
+                                 name,
+                                 reg->addr,
+                                 reg->mask,
+                                 reg->shift,
+                                 reg->width,
+                                 value);
         return XORIF_SUCCESS;
     }
 }
 
-int xorif_write_fhi_reg_offset(const char *name, uint16_t offset, uint32_t value)
+int xorif_write_fhi_reg_offset(const char *name,
+                               uint16_t offset,
+                               uint32_t value)
 {
-    TRACE("xorif_write_fhi_reg(%s, 0x%X, 0x%X)\n", name, offset, value);
+    TRACE("xorif_write_reg_offset(%s, 0x%X, 0x%X)\n", name, offset, value);
 
-    const reg_info_t *ptr = find_register(&fhi_reg_map[0], fhi_reg_num, name);
-    if (!ptr)
+    const reg_info_t *reg = xorif_find_register(name);
+    if (!reg)
     {
         // The register could not be found
         PERROR("Register '%s' not found\n", name);
@@ -409,7 +553,13 @@ int xorif_write_fhi_reg_offset(const char *name, uint16_t offset, uint32_t value
     }
     else
     {
-        write_reg(DEVICE, name, ptr->addr + offset, ptr->mask, ptr->shift, ptr->width, value);
+        xorif_write_reg_internal(DEV,
+                                 name,
+                                 (reg->addr + offset),
+                                 reg->mask,
+                                 reg->shift,
+                                 reg->width,
+                                 value);
         return XORIF_SUCCESS;
     }
 }
