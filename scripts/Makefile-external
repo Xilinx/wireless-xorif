@@ -343,7 +343,7 @@ zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exs \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
+	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
@@ -351,7 +351,7 @@ zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
 zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
+	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
   
 ##------------------------------------------------------------------------------
@@ -368,7 +368,7 @@ zcu111_e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
+	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 ##------------------------------------------------------------------------------
@@ -384,7 +384,7 @@ zcu670_om5_10_slv_exd:
 	$(MAKE) BOARD=zcu670 TARGET=$@ \
 	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="oran-codec perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
+	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 all: $(ALL)
