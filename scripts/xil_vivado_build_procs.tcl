@@ -101,7 +101,14 @@ namespace eval ::roe::data {
       if { $board == "zcu111" } {
         add_files -copy_to ../output/${projectName}/vivado/xdc -fileset constrs_1 -force -norecurse constraints/xorif_exd_zcu111.xdc
       }
-
+      
+      if { $board == "zcu670" } {
+        delete_bd_objs [get_bd_ports radio_offset_10ms_stretch]
+        delete_bd_objs [get_bd_ports radio_start_10ms_stretch ]
+        set_property CONFIG.USE_RESET {false} [get_bd_cells clk_wiz_0]
+        delete_bd_objs [get_bd_ports reset]
+      }
+      
     } else {
     
       if { $ipRepo != "" } {

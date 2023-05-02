@@ -106,10 +106,20 @@ namespace eval ::roe::data {
     create_bd_port -dir O radio_start_10ms_stretch
     connect_bd_net [get_bd_pins /torwave_0/radio_start_10ms_stretch]  [get_bd_ports radio_start_10ms_stretch]
 
-    set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {200.000} CONFIG.MMCM_CLKOUT1_DIVIDE {6} CONFIG.MMCM_CLKOUT2_DIVIDE {6} CONFIG.CLKOUT2_JITTER {102.086} CONFIG.CLKOUT3_JITTER {102.086}] [get_bd_cells clk_wiz_0]
-    set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {5000}] [get_bd_cells roe_framer_0]
-    set_property -dict [list CONFIG.clocks_for_10ms {2000000} CONFIG.clocks_for_1ms {200000} CONFIG.ps_per_clock {5000}] [get_bd_cells torwave_0]
+    if { [get_property CONFIG.Physical_Ethernet_Rate [get_bd_cells /roe_framer_0]] == "10G"} {
 
+      set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {200.000} CONFIG.MMCM_CLKOUT1_DIVIDE {6} CONFIG.MMCM_CLKOUT2_DIVIDE {6} CONFIG.CLKOUT2_JITTER {102.086} CONFIG.CLKOUT3_JITTER {102.086}] [get_bd_cells clk_wiz_0]
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {5000}] [get_bd_cells roe_framer_0]
+      set_property -dict [list CONFIG.clocks_for_10ms {2000000} CONFIG.clocks_for_1ms {200000} CONFIG.ps_per_clock {5000}] [get_bd_cells torwave_0]
+
+    } else {
+
+      set_property -dict [list CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {400.000} CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {400.000}] [get_bd_cells clk_wiz_0]
+      set_property -dict [list CONFIG.Xran_Timer_Clk_Ps {2500}] [get_bd_cells roe_framer_0]
+      set_property -dict [list CONFIG.clocks_for_10ms {4000000} CONFIG.clocks_for_1ms {400000} CONFIG.ps_per_clock {2500}] [get_bd_cells torwave_0]
+
+    
+    }
     set fName "zcu_exd_connections.xdc"
     
     if { $board eq "zcu111" } {
