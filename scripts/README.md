@@ -12,15 +12,43 @@ vivado -mode tcl -source ./xil_vivado_build.tcl
 ```
 Once loaded, review the printed help. When you are familiar with the flow and want to fully script the build, you can call vivado with launch arguments.
 ```console
-## This style uses a set of strings concatenated together to tell the 
+## The 3rd argument uses a set of strings concatenated together to tell the 
 ## script what mode it should built in. Note. case is ignored.
 ## 
 ## 1st TCLARGS = board to use (zcu111|zcu102|zcu670)
 ## 2nd TCLARGS = Ip Configuration to select from the xil_vivado_configs.yml file (e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest|e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144|...)
-## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)(loop)
+## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)(loop:loopBack the 10ms internally)(gui)(tlp:for QEMU)(exd: Example Design with ARM)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
+## For a full implementation use
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs impl
+
+## To simple generate and review
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs gui
+```
+
+The presets found in the XGUI for the IP can be used as the basis for a build by setting the Ip Configuration to one of: 'preset_default_config', 'preset_4x4_macro', or 'preset_8x8_macro'.
+
+#### **Adding new Ip Configurations to the `xil_vivado_configs.yml`**
+New Ip Configuration can be added to the `xil_vivado_configs.yml` in the format shown below. Ensure that the indentations match the configurations already included in the `xil_vivado_configs.yml` and that the file still ends with an empty new line so that the file can still be read correctly.  
+
+```console
+    <new_configuration_name>:
+      CONFIG.<set_parameter_name_1>    : <set_parameter_value_1> 
+      CONFIG.<set_parameter_name_2>    : <set_parameter_value_2> 
+      CONFIG.<set_parameter_name_...>  : <set_parameter_value_...> 
+      CONFIG.<set_parameter_name_n>    : <set_parameter_value_n> 
+```
+
+In the example above 'set_parameter_name' refers to the name of the parameter you want to (for example 'Physical_Ethernet_Rate' or 'Physical_Ethernet_Ports' or 'Axis_Ports_Fram') and the 'set_parameter_value' refers to the value you want to manually set that parameter to (for example if you had 4 Ethernet Ports you would want to set the 'set_parameter_value' linked to 'Physical_Ethernet_Ports' to 4).
+ 
+If a parameter is not manually set in the Ip Configuration you use for your build, the default value for the parameter will be used.
+
+To use the example Ip Configuration shown above on a ZCU11 board the following command can be used:
+
+``` console
+## This command can still be customised with any of the tclargs shown elsewhere in this README.me file.
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs <new_configuration_name>  -tclargs impl
 ```
 
 #### **Vivado TCL going deeper**

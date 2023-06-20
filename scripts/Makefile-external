@@ -8,6 +8,7 @@ XSA_DIR = ../xsa
 TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/) {print "$$1_$$2"}')
 PLNX_VER = $(shell printenv PETALINUX_VER)
 DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/usr/bin/dtc
+ROOTFSCONFIG = $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
 # Release-sensitive settings
 ifeq ($(shell expr $(PLNX_VER) \>= 2021.1), 1)
@@ -83,46 +84,29 @@ usage:
 
 perl-modules:
 	@echo Adding changes for $@
-	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	grep -qxF CONFIG_perl-modules $(ROOTFSCONFIG) || echo CONFIG_perl-modules >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_perl-module-findbin $(ROOTFSCONFIG) || echo CONFIG_perl-module-findbin >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_perl-module-carp $(ROOTFSCONFIG) || echo CONFIG_perl-module-carp >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_perl-module-lib $(ROOTFSCONFIG) || echo CONFIG_$perl-module-lib >> $(ROOTFSCONFIG)
 	petalinux-config --project $(PLX_DIR) --silentconfig
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-
-perl-module-findbin:
-	@echo Adding changes for $@
-	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	petalinux-config --project $(PLX_DIR) --silentconfig
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-
-perl-module-carp:
-	@echo Adding changes for $@
-	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	petalinux-config --project $(PLX_DIR) --silentconfig
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-
-perl-module-lib:
-	@echo Adding changes for $@
-	echo CONFIG_$@ >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	petalinux-config --project $(PLX_DIR) --silentconfig
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_perl-modules( |=).*\n/CONFIG_perl-modules=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_perl-module-findbin( |=).*\n/CONFIG_perl-module-findbin=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_perl-module-carp( |=).*\n/CONFIG_perl-module-carp=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_perl-module-lib( |=).*\n/CONFIG_perl-module-lib=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 
 python3-modules:
 	@echo Adding changes for $@
 	mkdir -p $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@
 	cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
-	echo CONFIG_python3-pyro4 >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	echo CONFIG_python3-cffi >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	echo CONFIG_python3-pytest >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	grep -qxF CONFIG_python3-pyro4 $(ROOTFSCONFIG) || echo CONFIG_python3-pyro4 >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_python3-cffi  $(ROOTFSCONFIG) || echo CONFIG_python3-cffi >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_python3-pytest $(ROOTFSCONFIG) || echo CONFIG_python3-pytest >> $(ROOTFSCONFIG)
+	grep -qxF echo CONFIG_python3-pyyaml $(ROOTFSCONFIG) || echo CONFIG_python3-pyyaml >> $(ROOTFSCONFIG)
 	petalinux-config --project $(PLX_DIR) --silentconfig
-	perl -i -pe 's/^# CONFIG_python3-pyro4\s.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_python3-pyro4=n.*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^# CONFIG_python3-cffi\s.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_python3-cffi=n.*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^# CONFIG_python3-pytest\s.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_python3-pytest=n.*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_python3-pyro4( |=).*\n/CONFIG_python3-pyro4=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_python3-cffi( |=).*\n/CONFIG_python3-cffi=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_python3-pytest( |=).*\n/CONFIG_python3-pytest=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_python3-pyyaml( |=).*\n/CONFIG_python3-pyyaml=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 
 linux:
 	@echo Adding changes for $@
@@ -163,8 +147,8 @@ $(APPS):
 	-rm $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/$@.bb
 	-cp -p $(SRC_DIR)/$@/* $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/files/.
 	-cp -p $(RCP_DIR)/recipes-apps/$@/*.bb $(PLX_DIR)/project-spec/meta-user/recipes-apps/$@/.
-	echo CONFIG_$@-dbg >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
-	echo CONFIG_$@-dev >> $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
+	grep -qxF CONFIG_$@-dbg $(ROOTFSCONFIG) || echo CONFIG_$@-dbg >> $(ROOTFSCONFIG)
+	grep -qxF CONFIG_$@-dev $(ROOTFSCONFIG) || echo CONFIG_$@-dev >> $(ROOTFSCONFIG)
 
 # Recipe to add pre-built (e.g. binary, scripts, etc.)
 $(INSTALL):
@@ -178,14 +162,12 @@ $(INSTALL):
 # Recipe for rootfs (=Y) config option
 $(ROOTFS_Y):
 	@echo Setting rootfs $@ to Y
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=n.*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_$@( |=).*\n/CONFIG_$@=y\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 
 # Recipe for rootfs (=N) config option
 $(ROOTFS_N):
 	@echo Setting rootfs $@ to N
-	perl -i -pe 's/^# CONFIG_$@\s.*\n/CONFIG_$@=n\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
-	perl -i -pe 's/^CONFIG_$@=y.*\n/CONFIG_$@=n\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
+	perl -i -pe 's/^.*CONFIG_$@( |=).*\n/CONFIG_$@=n\n/' $(PLX_DIR)/project-spec/configs/rootfs_config
 
 # Create the PetaLinux project, either from a template or a BSP (if supplied)
 $(PLX_DIR):
@@ -339,11 +321,9 @@ $(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
 ##------------------------------------------------------------------------------
 zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
 zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
-zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exs \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
@@ -351,9 +331,8 @@ zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
 zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
-  
+
 ##------------------------------------------------------------------------------
 ## EXD Tests
 ## These can also Target zcu102,zcu111,zcu670,vck190
@@ -368,7 +347,6 @@ zcu111_e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
 
 ##------------------------------------------------------------------------------
@@ -384,13 +362,4 @@ zcu670_om5_10_slv_exd:
 	$(MAKE) BOARD=zcu670 TARGET=$@ \
 	BSP=$(PETALINUX)/../../bsp/release/xilinx-zcu670-v$(PLNX_VER)-final.bsp \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
-	EXTRAS="perl-modules perl-module-findbin perl-module-carp perl-module-lib" \
 	package
-
-all: $(ALL)
-
-clean_all:
-	@echo Cleaning targets
-	for x in $(ALL); do \
-		$(MAKE) PLX_DIR="$(OUT_DIR)/$${x}_$(TOOL_VER)/petalinux" mrproper; \
-	done
