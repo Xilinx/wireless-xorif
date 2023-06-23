@@ -396,6 +396,38 @@ XORIF> WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) <= 0x80084022 (2148024354
 XORIF> WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) <= 0x800C4023 (2148286499)
 ~~~
 
+The above programming would give rise to the following mapping table. Note, empty lines are not shown and should be unmapped. Use the xorif_clear_ru_ports_table() API call to clear the table prior to programming, or selectively remap modified addresses as required.
+
+| eAxC RU Port | Address | Type   | Internal Port |
+|--------------|---------|--------|---------------|
+| 0            | 0       | PUxCH  | 0             |
+| 1            | 1       | PUxCH  | 1             |
+| 2            | 2       | PUxCH  | 2             |
+| 3            | 3       | PUxCH  | 3             |
+| 4            | 4       | PUxCH  | 4             |
+| 5            | 5       | PUxCH  | 5             |
+| 6            | 6       | PUxCH  | 6             |
+| 7            | 7       | PUxCH  | 7             |
+| 32           | 32      | PPRACH | 0             |
+| 33           | 33      | PPRACH | 1             |
+| 34           | 34      | PPRACH | 2             |
+| 35           | 35      | PPRACH | 3             |
+| 0            | 128     | PDxCH  | 0             |
+| 1            | 129     | PDxCH  | 1             |
+| 2            | 130     | PDxCH  | 2             |
+| 3            | 131     | PDxCH  | 3             |
+| 4            | 132     | PDxCH  | 4             |
+| 5            | 133     | PDxCH  | 5             |
+| 6            | 134     | PDxCH  | 6             |
+| 7            | 135     | PDxCH  | 7             |
+| ...          | ...     | ...    | ...           |
+| 14           | 142     | PDxCH  | 14            |
+| 15           | 143     | PDxCH  | 15            |
+| 32           | 160     | SSB    | 0             |
+| 33           | 161     | SSB    | 1             |
+| 34           | 162     | SSB    | 2             |
+| 35           | 163     | SSB    | 3             |
+
 * Reading / writing registers
 
 ~~~
