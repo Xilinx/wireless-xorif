@@ -319,15 +319,16 @@ $(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
 ## ExSys Builds
 ## No Exs for 102, can be build, limited use as no URAM.
 ##------------------------------------------------------------------------------
-zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
-zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
+zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
+zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
+zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exs \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
 	package
 
-zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
-zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
+zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
+zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
 zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu670 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
@@ -339,11 +340,11 @@ zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 ## Testing scope reduced to zcu111. Add back as required.
 ##------------------------------------------------------------------------------
 ## Make all the zcu111 Exd Targets
-zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exd \
-zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exd \
+zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exd \
+zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exd \
 zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
 zcu111_e4x8000x25_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
-zcu111_e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
+zcu111_e1x9600x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \

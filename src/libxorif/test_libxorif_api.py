@@ -1004,3 +1004,13 @@ def test_monitor_api():
     result, value = lib.xorif_monitor_read(1)
     assert result == const.XORIF_SUCCESS
     print(value)
+
+
+def test_stall_monitor_api():
+    """Test the stall monitor API."""
+    assert lib.xorif_get_state() == 1
+
+    assert lib.xorif_stall_monitor_snapshot() == const.XORIF_SUCCESS
+    result, value = lib.xorif_stall_monitor_read()
+    assert result == const.XORIF_SUCCESS
+    print(value)

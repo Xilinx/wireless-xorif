@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 2023.2
+* Added "stall monitor" commands
+
 ## Release 2023.1
 * Updated development build / tests / code coverage / linting
 

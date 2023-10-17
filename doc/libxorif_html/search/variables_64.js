@@ -13,6 +13,7 @@ var searchData=
   ['dl_5fdata_5fptrs_5foffset',['dl_data_ptrs_offset',['../structxorif__cc__alloc.html#a5d2261a36a1bc9087f8f8aaa8228d99a',1,'xorif_cc_alloc']]],
   ['dl_5fdata_5fptrs_5fsize',['dl_data_ptrs_size',['../structxorif__cc__alloc.html#a41da2138823b4df466e098db1a468217',1,'xorif_cc_alloc']]],
   ['dl_5fdata_5fsym_5fnum',['dl_data_sym_num',['../structxorif__cc__alloc.html#a3df9f92a15387e81bee1d4a546cc33f9',1,'xorif_cc_alloc']]],
+  ['dl_5fss',['dl_ss',['../structxorif__stall__monitor.html#a2dcf869839740360027e683015d6aa7c',1,'xorif_stall_monitor']]],
   ['dl_5fupdate',['dl_update',['../structxocp__triggers.html#a27034e477fc14fc559c4fd00ee4d26ae',1,'xocp_triggers']]],
   ['du_5fid_5flimit',['du_id_limit',['../structxorif__caps.html#a606b8e3de0bcae92d97f782a316acac7',1,'xorif_caps']]]
 ];

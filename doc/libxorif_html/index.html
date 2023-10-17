@@ -467,7 +467,66 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80044021 (2147762209)</div>
 <div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x80084022 (2148024354)</div>
 <div class="line">XORIF&gt; WRITE_REG: DEFM_CID_MAP_WR_STROBE_ADDR (0x6904) &lt;= 0x800C4023 (2148286499)</div>
-</div><!-- fragment --><ul>
+</div><!-- fragment --><p>The above programming would give rise to the following mapping table. Note, empty lines are not shown and should be unmapped. Use the <a class="el" href="group__API.html#ga5f12916f671ba6ee001f71f7f308e991" title="Reset the RU ports mapping table. ">xorif_clear_ru_ports_table()</a> API call to clear the table prior to programming, or selectively remap modified addresses as required.</p>
+<table class="doxtable">
+<tr>
+<th>eAxC RU Port </th><th>Address </th><th>Type </th><th>Internal Port  </th></tr>
+<tr>
+<td>0 </td><td>0 </td><td>PUxCH </td><td>0 </td></tr>
+<tr>
+<td>1 </td><td>1 </td><td>PUxCH </td><td>1 </td></tr>
+<tr>
+<td>2 </td><td>2 </td><td>PUxCH </td><td>2 </td></tr>
+<tr>
+<td>3 </td><td>3 </td><td>PUxCH </td><td>3 </td></tr>
+<tr>
+<td>4 </td><td>4 </td><td>PUxCH </td><td>4 </td></tr>
+<tr>
+<td>5 </td><td>5 </td><td>PUxCH </td><td>5 </td></tr>
+<tr>
+<td>6 </td><td>6 </td><td>PUxCH </td><td>6 </td></tr>
+<tr>
+<td>7 </td><td>7 </td><td>PUxCH </td><td>7 </td></tr>
+<tr>
+<td>32 </td><td>32 </td><td>PPRACH </td><td>0 </td></tr>
+<tr>
+<td>33 </td><td>33 </td><td>PPRACH </td><td>1 </td></tr>
+<tr>
+<td>34 </td><td>34 </td><td>PPRACH </td><td>2 </td></tr>
+<tr>
+<td>35 </td><td>35 </td><td>PPRACH </td><td>3 </td></tr>
+<tr>
+<td>0 </td><td>128 </td><td>PDxCH </td><td>0 </td></tr>
+<tr>
+<td>1 </td><td>129 </td><td>PDxCH </td><td>1 </td></tr>
+<tr>
+<td>2 </td><td>130 </td><td>PDxCH </td><td>2 </td></tr>
+<tr>
+<td>3 </td><td>131 </td><td>PDxCH </td><td>3 </td></tr>
+<tr>
+<td>4 </td><td>132 </td><td>PDxCH </td><td>4 </td></tr>
+<tr>
+<td>5 </td><td>133 </td><td>PDxCH </td><td>5 </td></tr>
+<tr>
+<td>6 </td><td>134 </td><td>PDxCH </td><td>6 </td></tr>
+<tr>
+<td>7 </td><td>135 </td><td>PDxCH </td><td>7 </td></tr>
+<tr>
+<td>... </td><td>... </td><td>... </td><td>... </td></tr>
+<tr>
+<td>14 </td><td>142 </td><td>PDxCH </td><td>14 </td></tr>
+<tr>
+<td>15 </td><td>143 </td><td>PDxCH </td><td>15 </td></tr>
+<tr>
+<td>32 </td><td>160 </td><td>SSB </td><td>0 </td></tr>
+<tr>
+<td>33 </td><td>161 </td><td>SSB </td><td>1 </td></tr>
+<tr>
+<td>34 </td><td>162 </td><td>SSB </td><td>2 </td></tr>
+<tr>
+<td>35 </td><td>163 </td><td>SSB </td><td>3 </td></tr>
+</table>
+<ul>
 <li>Reading / writing registers</li>
 </ul>
 <div class="fragment"><div class="line">XORIF&gt; <a class="code" href="group__API.html#ga83f0df0585606c4660e267b34ecd2077">xorif_read_fhi_reg</a>(ORAN_CC_NUMEROLOGY)</div>

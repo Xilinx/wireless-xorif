@@ -117,6 +117,9 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__system__constants.html">xorif_system_constants</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for Front-Haul specific system "constants".  <a href="structxorif__system__constants.html#details">More...</a><br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structxorif__stall__monitor.html">xorif_stall_monitor</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for "stall-detection" results.  <a href="structxorif__stall__monitor.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -434,6 +437,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:gaf6058ec85736dfc88d8c4927220f4775"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gaf6058ec85736dfc88d8c4927220f4775">xorif_monitor_read</a> (uint8_t counter, uint64_t *value)</td></tr>
 <tr class="memdesc:gaf6058ec85736dfc88d8c4927220f4775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read specified counter from "monitor block".  <a href="group__API.html#gaf6058ec85736dfc88d8c4927220f4775">More...</a><br/></td></tr>
 <tr class="separator:gaf6058ec85736dfc88d8c4927220f4775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga69bd2d45a44ac62f78813aafa319d1ec">xorif_stall_monitor_snapshot</a> (void)</td></tr>
+<tr class="memdesc:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take snapshot of the "stall-monitor" flags.  <a href="group__API.html#ga69bd2d45a44ac62f78813aafa319d1ec">More...</a><br/></td></tr>
+<tr class="separator:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga1da69cc5cf78ec3fe41f9fccb68d9e2f">xorif_stall_monitor_read</a> (struct <a class="el" href="structxorif__stall__monitor.html">xorif_stall_monitor</a> *ptr)</td></tr>
+<tr class="memdesc:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the "stall-monitor" flags.  <a href="group__API.html#ga1da69cc5cf78ec3fe41f9fccb68d9e2f">More...</a><br/></td></tr>
+<tr class="separator:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main header file for the Xilinx ORAN Radio Interface (libxorif). </p>

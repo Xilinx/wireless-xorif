@@ -186,6 +186,7 @@ Available commands...
     help                : Provide command help and syntax
     init                : Start-up device driver libraries
     monitor             : Configure / use monitor block
+    stall               : Use the stall detection monitor
     read_reg            : Read device registers
     read_reg_offset     : Read device registers (with offsets)
     reset               : Reset devices

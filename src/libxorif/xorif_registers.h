@@ -26,7 +26,7 @@
 #define XORIF_REGISTERS_H
 
 #include "xorif_common.h"
-#include "oran_radio_if_v3_0_ctrl.h"
+#include "oran_radio_if_v3_1_ctrl.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/

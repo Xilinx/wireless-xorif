@@ -10,6 +10,7 @@ var searchData=
   ['ssb_5fdata_5fptrs_5foffset',['ssb_data_ptrs_offset',['../structxorif__cc__alloc.html#aac395fc0f4aa03b63adb4cb6aaefae55',1,'xorif_cc_alloc']]],
   ['ssb_5fdata_5fptrs_5fsize',['ssb_data_ptrs_size',['../structxorif__cc__alloc.html#a84607e8eeefaa8c0930452ef67085ec6',1,'xorif_cc_alloc']]],
   ['ssb_5fdata_5fsym_5fnum',['ssb_data_sym_num',['../structxorif__cc__alloc.html#a55beda31b35b5f8ba4be710db83beed7',1,'xorif_cc_alloc']]],
+  ['ssb_5fss',['ssb_ss',['../structxorif__stall__monitor.html#a624ac2469c8b19158bd756e20e374500',1,'xorif_stall_monitor']]],
   ['state',['state',['../structxocp__state__t.html#a08b26b7b5e4f04b2c507b2efae35ab2b',1,'xocp_state_t']]],
   ['status',['status',['../structxorif__device__info.html#a2550c3a8884c79dffe3dcc52b3643531',1,'xorif_device_info']]]
 ];

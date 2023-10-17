@@ -73,6 +73,7 @@ static int write_reg(const char *request, char *response);
 static int write_reg_offset(const char *request, char *response);
 static int dump(const char *request, char *response);
 static int monitor(const char *request, char *response);
+static int stall(const char *request, char *response);
 #ifdef EXTRA_DEBUG
 static int test_fhi(const char *request, char *response);
 #endif // EXTRA_DEBUG
@@ -224,6 +225,9 @@ const struct command command_set[] =
     {"monitor", NULL, "?monitor fhi select <stream>"},
     {"monitor", NULL, "?monitor fhi snapshot"},
     {"monitor", NULL, "?monitor fhi read <counter>"},
+    {"stall", stall, "Use the stall detection monitor"},
+    {"stall", NULL, "?stall snapshot"},
+    {"stall", NULL, "?stall read"},
 #ifdef EXTRA_DEBUG
     {"test_fhi", test_fhi, "?test_fhi ..."},
 #endif // EXTRA_DEBUG
@@ -3230,6 +3234,59 @@ static int monitor(const char *request, char *response)
                             response += sprintf(response, "counter = %lu\n", val2);
                             return SUCCESS;
                         }
+                    }
+                }
+            }
+        }
+    }
+    return UNKNOWN_COMMAND;
+#endif // NO_HW
+}
+
+/**
+ * @brief "stall" command.
+ * @param[in] request Pointer to request string
+ * @param[in,out] response Pointer to response string
+ * @returns
+ *      - 0 if successful
+ *      - Error code if not successful
+ */
+static int stall(const char *request, char *response)
+{
+    if (remote_target)
+    {
+        return send_to_target(request, response);
+    }
+#ifdef NO_HW
+    return NO_HARDWARE;
+#else
+    else
+    {
+        if (num_tokens == 2)
+        {
+            // stall snapshot
+            // stall read
+            const char *s1;
+            const char *s2;
+            if (parse_string(1, &s1) && parse_string(2, &s2))
+            {
+                if (match(s1, "snapshot"))
+                {
+                    return xorif_stall_monitor_snapshot();
+                }
+                else if (match(s1, "read"))
+                {
+                    struct xorif_stall_monitor value;
+                    int result = xorif_stall_monitor_read(&value);
+                    if (result == XORIF_SUCCESS)
+                    {
+                        response += sprintf(response, "status = 0\n");
+                        response += sprintf(response, "dl_ss = 0x%X\n", value.dl_ss);
+                        response += sprintf(response, "ul_ss = 0x%X\n", value.ul_ss);
+                        response += sprintf(response, "prach_ss = 0x%X\n", value.prach_ss);
+                        response += sprintf(response, "ssb_ss = 0x%X\n", value.ssb_ss);
+                        response += sprintf(response, "unsol_ss = 0x%X\n", value.unsol_ss);
+                        return SUCCESS;
                     }
                 }
             }

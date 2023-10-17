@@ -58,8 +58,8 @@ can be TCL "sourced" in your own flow and extended to achieve your end design.
 ### Build Everything
 To run all the builds serially in a script, the following sequence can be called.
 ```console
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144        -tclargs implLoopNodateExit
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144 -tclargs implLoopNodateExit
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144        -tclargs implLoopNodateExit
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144 -tclargs implLoopNodateExit
 vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi               -tclargs implLoopNodateExit
 ```
 
@@ -76,17 +76,17 @@ Running `make` without a target specified displays some basic usage information,
 
 ~~~
 Usage  : make [target]
-Example: make zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+Example: make zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 
 Supported targets:
     all
     clean_all
-    zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
-    zcu111_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+    zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+    zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 
 Notes:
     Board : [zcu102 | zcu111 | zcu670]
-    Config: [e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 = See content on YAML file for this entry.]
+    Config: [e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 = See content on YAML file for this entry.]
     Design: [exs = example system]
 ~~~
 
@@ -115,12 +115,12 @@ petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --fpga images/linux
 Build the Example System for the zcu670.
 ```console
 ## If you have a local repo
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit -tclargs <optionalPathToIpRepo>
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit -tclargs <optionalPathToIpRepo>
 ## To use the build
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit 
-mkdir ../xsa/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
-cp ../output/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs/system.xsa
-make zcu670_e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu670 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144 -tclargs implLoopNodateExit 
+mkdir ../xsa/zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
+cp ../output/zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs_2022_1/vivado/system.xsa ../xsa/zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs/system.xsa
+make zcu670_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs
 ```
 Build the Example System for the zcu670. This includes the OCP.
 ```console

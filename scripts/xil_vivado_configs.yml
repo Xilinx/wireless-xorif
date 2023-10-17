@@ -69,7 +69,7 @@ cfg:
     ## -------------------------------------------------------------------------
     ## SingleEthConfigs
     ## -------------------------------------------------------------------------
-    e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144:
+    e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144:
       CONFIG.Physical_Ethernet_Rate    : "25G"
       CONFIG.Axis_Ports_Fram           : 4
       CONFIG.Axis_Ports_Defm           : 8
@@ -78,10 +78,10 @@ cfg:
       CONFIG.Xran_Max_Dl_Data_1kWords  : 16
       CONFIG.Xran_Max_Dl_Data_Pointers : 16
       CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
       CONFIG.Xran_Max_SSB_Ctrl_512Words: 4
       CONFIG.Xran_Max_SSB_Data_512Words: 8
-      CONFIG.Fram_Eth_Pkt_Max          : 9000
-      CONFIG.Defm_Eth_Pkt_Max          : 9000
       CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
@@ -91,7 +91,30 @@ cfg:
       ##
       CONFIG.Exdes_TorwaveDepth        : 262144
       
-    e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144:
+    e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144map11:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
+      CONFIG.Xran_Max_SSB_Ctrl_512Words: 4
+      CONFIG.Xran_Max_SSB_Data_512Words: 8
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
+      CONFIG.Exdes_TorwaveDepth        : 262144
+      CONFIG.Defm_Map_Table_Width      : 11
+      
+    e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144:
       CONFIG.Physical_Ethernet_Rate    : "25G"
       CONFIG.Axis_Ports_Fram           : 4
       CONFIG.Axis_Ports_Defm           : 8
@@ -100,15 +123,38 @@ cfg:
       CONFIG.Xran_Max_Dl_Data_1kWords  : 16
       CONFIG.Xran_Max_Dl_Data_Pointers : 16
       CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
       CONFIG.Xran_Max_SSB_Ctrl_512Words: 4
       CONFIG.Xran_Max_SSB_Data_512Words: 8
-      CONFIG.Fram_Eth_Pkt_Max          : 9000
-      CONFIG.Defm_Eth_Pkt_Max          : 9000
       CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
       ##
       CONFIG.Exdes_TorwaveDepth        : 262144
+
+    e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
+      CONFIG.Xran_Max_SSB_Ctrl_512Words: 4
+      CONFIG.Xran_Max_SSB_Data_512Words: 8
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
+      CONFIG.Exdes_TorwaveDepth        : 262144
+
 
     ## -------------------------------------------------------------------------
     ## OCP Designs
@@ -130,25 +176,12 @@ cfg:
       CONFIG.Exdes_TorwaveDepth        : 122880
       CONFIG.Use_OCP_In_IP             : 1
 
-    e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi:
-      CONFIG.Physical_Ethernet_Rate    : "25G"
-      CONFIG.Axis_Ports_Fram           : 8
-      CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
-      CONFIG.Xran_Max_Dl_Data_Pointers : 16
-      CONFIG.Xran_Max_Ctrl_Symbols     : 8
-      CONFIG.Fram_Eth_Pkt_Max          : 9000
-      CONFIG.Defm_Eth_Pkt_Max          : 9000
-      CONFIG.Xran_Max_Comp_Carr        : 4
-      CONFIG.Xran_Max_Scs              : 6600
-      CONFIG.Circ_Meta_Table_Depth     : 256
-      CONFIG.Use_OCP_In_IP             : 1
-      CONFIG.Exdes_TorwaveDepth        : 122880
 
-    e1x9000x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_opt:
-      CONFIG.Physical_Ethernet_Rate    : "25G"
+    ## -------------------------------------------------------------------------
+    ## Presets
+    ## -------------------------------------------------------------------------
+    e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_cmw00i_opt:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
       CONFIG.Axis_Ports_Fram           : 8
       CONFIG.Axis_Ports_Defm           : 8
       CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
@@ -161,6 +194,54 @@ cfg:
       CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
+      CONFIG.Core_OptEth               : "NoIp4Ip6SsbBid"
+      CONFIG.Core_OptCmp               : "OnlyBFP"
+      CONFIG.Core_OptExt               : "NoE3E11"
+      CONFIG.Exdes_TorwaveDepth        : 122880
+      
+    e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_opt:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 8
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 9000
+      CONFIG.Defm_Eth_Pkt_Max          : 9000
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Use_OCP_In_IP             : 1
+      CONFIG.Core_OptEth               : "NoIp4Ip6SsbBid"
+      CONFIG.Core_OptCmp               : "OnlyBFP"
+      CONFIG.Core_OptExt               : "NoE3E11"
+      CONFIG.Exdes_TorwaveDepth        : 122880
+      
+    e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_cmw00i_ocpi_opt:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 8
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 12
+      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Ctrl_Symbols     : 8
+      CONFIG.Fram_Eth_Pkt_Max          : 9000
+      CONFIG.Defm_Eth_Pkt_Max          : 9000
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
       CONFIG.Use_OCP_In_IP             : 1
       CONFIG.Core_OptEth               : "NoIp4Ip6SsbBid"
       CONFIG.Core_OptCmp               : "OnlyBFP"

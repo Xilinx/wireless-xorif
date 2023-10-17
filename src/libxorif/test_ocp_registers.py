@@ -33,7 +33,7 @@ def get_device_address(device):
 def peek(offset):
     '''Use mmap to read the 32-bit value of the specified address.'''
     # regs.seek(offset)
-    #val = regs.read(4)
+    # val = regs.read(4)
     # return int(struct.unpack("@I", val)[0])
     # Using ctypes function here to cause 32-bit read rather than 4-bytes
     return ctypes.c_uint32.from_buffer(regs, offset).value
@@ -42,7 +42,7 @@ def peek(offset):
 def poke(offset, value):
     '''Use mmap to write the 32-bit value to the specified address.'''
     # regs.seek(offset)
-    #regs.write(struct.pack("@I", value))
+    # regs.write(struct.pack("@I", value))
     # Using ctypes function here to cause 32-bit write rather than 4-bytes
     ctypes.c_uint32.from_buffer(regs, offset).value = value
 
@@ -371,6 +371,12 @@ def test_rw_reg_SEQUENCE_TAB_NEXT_DL_CC_CONFIGURATION_CC_NUM():
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
+def test_rw_reg_SEQUENCE_TAB_NEXT_DL_CC_CONFIGURATION_CC_ISG_MULT():
+    for i in range(0, ADDR_TABLE_ENTRIES):
+        do_rw_reg("SEQUENCE_TAB_NEXT_DL_CC_CONFIGURATION_CC_ISG_MULT", 0x16004 + i * 0x10, 0xf000, 12, 4)
+
+
+@pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_SEQUENCE_TAB_NEXT_DL_CC_CONFIGURATION_CC_ISG():
     for i in range(0, ADDR_TABLE_ENTRIES):
         do_rw_reg("SEQUENCE_TAB_NEXT_DL_CC_CONFIGURATION_CC_ISG", 0x16004 + i * 0x10, 0xfff0000, 16, 12)
@@ -458,6 +464,12 @@ def test_ro_reg_SEQUENCE_TAB_CURRENT_DL_CC_CONFIGURATION_CC_ID():
 def test_ro_reg_SEQUENCE_TAB_CURRENT_DL_CC_CONFIGURATION_CC_NUM():
     for i in range(0, ADDR_TABLE_ENTRIES):
         do_ro_reg("SEQUENCE_TAB_CURRENT_DL_CC_CONFIGURATION_CC_NUM", 0x16804 + i * 0x10, 0xf00, 8, 4)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_SEQUENCE_TAB_CURRENT_DL_CC_CONFIGURATION_CC_ISG_MULT():
+    for i in range(0, ADDR_TABLE_ENTRIES):
+        do_ro_reg("SEQUENCE_TAB_CURRENT_DL_CC_CONFIGURATION_CC_ISG_MULT", 0x16804 + i * 0x10, 0xf000, 12, 4)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")

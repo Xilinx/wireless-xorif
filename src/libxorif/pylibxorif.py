@@ -546,3 +546,15 @@ class LIBXORIF:
         data_ptr = ffi.new("uint64_t *")
         result = lib.xorif_monitor_read(counter, data_ptr)
         return (result, data_ptr[0])
+
+    # int xorif_stall_monitor_snapshot(void)
+    def xorif_stall_monitor_snapshot(self):
+        self.logger.info('xorif_stall_monitor_snapshot:')
+        return lib.xorif_stall_monitor_snapshot()
+
+    # xorif_stall_monitor_read(struct xorif_stall_monitor *ptr)
+    def xorif_stall_monitor_read(self):
+        self.logger.info('xorif_stall_monitor_read:')
+        data_ptr = ffi.new("struct xorif_stall_monitor *")
+        result = lib.xorif_stall_monitor_read(data_ptr)
+        return (result, cdata_to_py(data_ptr[0]))

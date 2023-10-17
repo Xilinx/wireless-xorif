@@ -77,7 +77,7 @@ ocp_callback_t ocp_callback = NULL;
 #endif
 
 // Unknown "stream type" for RU port mapping (used to de-allocate the address)
-#define UNKNOWN_STREAM_TYPE 0x3F
+#define UNKNOWN_STREAM_TYPE 0x7
 
 // Local function prototypes...
 static uint16_t calc_sym_num(uint16_t numerology, uint16_t extended_cp, double time);
@@ -87,6 +87,7 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
                                     uint16_t mplane,
                                     uint16_t num_sect,
                                     uint16_t num_frames);
+static void initialize_memory(void);
 static void deallocate_memory(int cc);
 #ifdef NO_HW
 static void init_fake_reg_bank(void);
@@ -102,6 +103,16 @@ int xorif_reset_fhi(uint16_t mode)
     WRITE_REG(FRAM_DISABLE, 1);
     WRITE_REG(DEFM_RESTART, 1);
 
+    // Reset component carrier enables
+    WRITE_REG(ORAN_CC_ENABLE, 0);
+
+    // Initialize memory allocation system
+    initialize_memory();
+
+    // Clear alarms and counters
+    xorif_clear_fhi_alarms();
+    xorif_clear_fhi_stats();
+
     if (mode == 0)
     {
         // Enable framer/de-framer
@@ -109,23 +120,6 @@ int xorif_reset_fhi(uint16_t mode)
         WRITE_REG(DEFM_RESTART, 0);
 
         // TODO should we wait for "ready" signal?
-
-        // Reset the memory allocation pointers
-        init_memory_allocator(&ul_ctrl_memory, 0, 1024 * fhi_caps.max_ul_ctrl_1kwords);
-        init_memory_allocator(&ul_ctrl_base_memory, 0, fhi_caps.max_subcarriers / RE_PER_RB);
-        init_memory_allocator(&dl_ctrl_memory, 0, 1024 * fhi_caps.max_dl_ctrl_1kwords);
-        init_memory_allocator(&dl_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
-        init_memory_allocator(&dl_data_buff_memory, 0, 1024 * fhi_caps.max_dl_data_1kwords);
-        init_memory_allocator(&ssb_ctrl_memory, 0, 512 * fhi_caps.max_ssb_ctrl_512words);
-        init_memory_allocator(&ssb_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
-        init_memory_allocator(&ssb_data_buff_memory, 0, 512 * fhi_caps.max_ssb_data_512words);
-
-        // Reset component carrier enables
-        WRITE_REG(ORAN_CC_ENABLE, 0);
-
-        // Clear alarms and counters
-        xorif_clear_fhi_alarms();
-        xorif_clear_fhi_stats();
     }
 
     return XORIF_SUCCESS;
@@ -188,7 +182,12 @@ int xorif_get_fhi_eth_stats(int port, struct xorif_fhi_eth_stats *ptr)
         return XORIF_INVALID_ETH_PORT;
     }
 
-    if (ptr)
+    if (!ptr)
+    {
+        PERROR("Null pointer\n");
+        return XORIF_NULL_POINTER;
+    }
+    else
     {
         // Take snapshot (no reset)
         WRITE_REG(DEFM_SNAP_SHOT, 1);
@@ -249,7 +248,6 @@ int xorif_get_fhi_eth_stats(int port, struct xorif_fhi_eth_stats *ptr)
 
         return XORIF_SUCCESS;
     }
-    return XORIF_FAILURE;
 }
 
 int xorif_set_fhi_dest_mac_addr(int port, const uint8_t address[])
@@ -820,8 +818,9 @@ int xorif_clear_ru_ports_table(void)
         uint16_t size = 1 << fhi_caps.ru_ports_map_width;
         for (int a = 0; a < size; ++a)
         {
-            // Value: <write strobe> | <port = 0> | <type = UNKNOWN_STREAM_TYPE> | <address>
-            uint32_t value = (1U << 31) | (0 << 18) | (UNKNOWN_STREAM_TYPE << 12) | (a & 0x7FF);
+            // Value: <write strobe> | <ccid> | <port> | <type> | <address>
+            // Set to "all ones" to align with SystemVerilog test-bench
+            uint32_t value = (0xFFFFF800) | (a & 0x7FF);
             WRITE_REG_RAW(DEFM_CID_MAP_WR_STROBE_ADDR, value);
         }
     }
@@ -844,7 +843,7 @@ int xorif_set_ru_ports_table(uint16_t address,
             // Value: <write strobe> | <port> | <type> | <address>
             uint16_t a = address + i;
             uint16_t p = port + i;
-            uint32_t value = (1U << 31) | ((p & 0x1F) << 18) | ((type & 0x3F) << 12) | (a & 0x7FF);
+            uint32_t value = (1U << 31) | ((p & 0x1F) << 18) | ((type & 0x7) << 12) | (a & 0x7FF);
 
             if (a < size)
             {
@@ -879,8 +878,8 @@ int xorif_set_ru_ports_table_vcc(uint16_t address,
             // Value: <write strobe> | <ccid> | <port> | <type> | <address>
             uint16_t a = address + i;
             uint16_t p = port + i;
-            uint32_t value = (1U << 31) | ((ccid & 0xF) << 24) | ((p & 0x1F) << 18) |
-                             ((type & 0x3F) << 12) | (a & 0x7FF);
+            uint32_t value = (1U << 31) | ((ccid & 0x7) << 24) | ((p & 0x1F) << 18) |
+                             ((type & 0x7) << 12) | (a & 0x7FF);
 
             if (a < size)
             {
@@ -1163,8 +1162,12 @@ void xorif_fhi_init_device(void)
     }
 #endif
 
-    // Reset everything
-    xorif_reset_fhi(0);
+    // Initialize memory allocation system
+    initialize_memory();
+
+    // Clear alarms and counters
+    xorif_clear_fhi_alarms();
+    xorif_clear_fhi_stats();
 
 #ifdef ENABLE_INTERRUPTS
     // Setup interrupts *** all disabled by default ***
@@ -1526,6 +1529,17 @@ int xorif_fhi_configure_cc(uint16_t cc)
         ssb_data_sym_num = calc_sym_num(ptr->numerology_ssb, ptr->extended_cp_ssb, ptr->delay_comp_up + fhi_sys_const.FH_DECAP_DLY);
     }
 
+#ifdef EXTRA_DEBUG
+    if (xorif_trace == 5)
+    {
+        TRACE("ul_ctrl_sym_num = %d\n", ul_ctrl_sym_num);
+        TRACE("dl_ctrl_sym_num = %d\n", dl_ctrl_sym_num);
+        TRACE("dl_data_sym_num = %d\n", dl_data_sym_num);
+        TRACE("ssb_ctrl_sym_num = %d\n", ssb_ctrl_sym_num);
+        TRACE("ssb_data_sym_num = %d\n", ssb_data_sym_num);
+    }
+#endif
+
     // Check number ctrl symbols
     if ((ul_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
         (dl_ctrl_sym_num > fhi_caps.max_ctrl_symbols) ||
@@ -1562,6 +1576,14 @@ int xorif_fhi_configure_cc(uint16_t cc)
                                                  ptr->num_sect_per_sym_ssb,
                                                  ptr->num_frames_per_sym_ssb);
     }
+
+#ifdef EXTRA_DEBUG
+    if (xorif_trace == 5)
+    {
+        TRACE("dl_data_buff_size = %d\n", dl_data_buff_size);
+        TRACE("ssb_data_buff_size = %d\n", ssb_data_buff_size);
+    }
+#endif
 
     // Deallocate any memory associated with this component carrier
     deallocate_memory(cc);
@@ -1777,6 +1799,22 @@ static uint16_t calc_data_buff_size(uint16_t num_rbs,
 }
 
 /**
+ * @brief Initialize memory allocation system.
+*/
+static void initialize_memory(void)
+{
+    // Reset the memory allocation pointers
+    init_memory_allocator(&ul_ctrl_memory, 0, 1024 * fhi_caps.max_ul_ctrl_1kwords);
+    init_memory_allocator(&ul_ctrl_base_memory, 0, fhi_caps.max_subcarriers / RE_PER_RB);
+    init_memory_allocator(&dl_ctrl_memory, 0, 1024 * fhi_caps.max_dl_ctrl_1kwords);
+    init_memory_allocator(&dl_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+    init_memory_allocator(&dl_data_buff_memory, 0, 1024 * fhi_caps.max_dl_data_1kwords);
+    init_memory_allocator(&ssb_ctrl_memory, 0, 512 * fhi_caps.max_ssb_ctrl_512words);
+    init_memory_allocator(&ssb_data_ptrs_memory, 0, fhi_caps.max_data_symbols);
+    init_memory_allocator(&ssb_data_buff_memory, 0, 512 * fhi_caps.max_ssb_data_512words);
+}
+
+/**
  * @brief Deallocate memory assigned to specific component carrier.
  * @param[in] cc Component carrier
  */
@@ -1827,7 +1865,7 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS, 1);
     WRITE_REG(CFG_CONFIG_LIMIT_DU_W, 4);
     WRITE_REG(CFG_CONFIG_LIMIT_BS_W, 6);
-    WRITE_REG(CFG_CONFIG_LIMIT_CC_W, 3);
+    WRITE_REG(CFG_CONFIG_LIMIT_CC_W, 4);
     WRITE_REG(CFG_CONFIG_LIMIT_RU_I_W, 8);
     WRITE_REG(CFG_CONFIG_LIMIT_RU_O_W, 5);
     WRITE_REG(CFG_CONFIG_MAP_TABLE_W, 8); // Use 0, 8, 11 ?
@@ -1913,6 +1951,39 @@ int xorif_monitor_read(uint8_t counter, uint64_t *value)
     *value = temp;
 
     return XORIF_SUCCESS;
+}
+
+int xorif_stall_monitor_snapshot(void)
+{
+    TRACE("xorif_stall_monitor_snapshot()\n");
+
+    WRITE_REG(FRAM_STALL_SAMPLE, 1);
+
+    return XORIF_SUCCESS;
+}
+
+int xorif_stall_monitor_read(struct xorif_stall_monitor *ptr)
+{
+    TRACE("xorif_stall_monitor_read(...)\n");
+
+    if (!ptr)
+    {
+        return XORIF_NULL_POINTER;
+    }
+    else
+    {
+        ptr->dl_ss = READ_REG(FRAM_STALL_MONITOR_DL_7_0) |
+                     READ_REG(FRAM_STALL_MONITOR_DL_SS_19_8) << 8;
+
+        ptr->ul_ss = READ_REG(FRAM_STALL_MONITOR_UL_SS_7_0) |
+                     READ_REG(FRAM_STALL_MONITOR_UL_SS_15_8) << 8;
+
+        ptr->ssb_ss = READ_REG(FRAM_STALL_MONITOR_SSB_3_0);
+        ptr->prach_ss = READ_REG(FRAM_STALL_MONITOR_UL_PRACH_3_0);
+        ptr->unsol_ss = READ_REG(FRAM_STALL_MONITOR_UL_UNSOL_3_0);
+
+        return XORIF_SUCCESS;
+    }
 }
 
 #ifdef INTEGRATED_OCP

@@ -1,6 +1,12 @@
 # Change Log
 
-## Release 2031.1
+## Release 2023.2
+* Change order of operations during xorif_reset_fhi()
+* Function xorif_clear_ru_ports_table() sets everything to "all ones" (type = UNKNOWN)
+* Added multiplier feature when programming OCP inter-symbol-gap value
+* Added API for stall detection logic
+
+## Release 2023.1
 * Added "example1.py" script to test basic configuration of 1 CC (100MHz/30kHz) via Python/Pyro
 * Integrated O-RAN Channel Process block into IP (merged SW driver, separate APIs)
 * Updated development build / tests / code coverage / linting

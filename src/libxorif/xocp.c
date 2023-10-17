@@ -136,10 +136,20 @@ void program_schedule_entry(int instance, bool dl, uint32_t offset,
                             uint32_t antennas, uint16_t inter_sym_gap,
                             bool last, bool final)
 {
+    // Split the provided ISG number into into 12-bit value & 4-bit multiplier
+    // Note, only used for DL, UL can be set to 0
+    uint16_t multiplier = 1;
+    uint16_t value = dl ? inter_sym_gap : 0;
+    while (value & 0xF000)
+    {
+        multiplier <<= 1;
+        value >>= 1;
+    }
+
     // Each entry consists of 3 words
     uint32_t word1 = (num_res & 0xFFF) | (start_re & 0xFFF) << 16;
     uint32_t word2 = (ccid & 0xF) | (cc & 0xF) << 8 |
-                     ((dl ? inter_sym_gap : 0) & 0xFFF) << 16 |
+                     (multiplier - 1) << 12 | value << 16 |
                      (final ? 1U : 0) << 30 | (last ? 1U : 0) << 31;
     uint32_t word3 = antennas;
 

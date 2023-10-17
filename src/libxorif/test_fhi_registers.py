@@ -39,7 +39,7 @@ def get_device_address(device):
 def peek(offset):
     '''Use mmap to read the 32-bit value of the specified address.'''
     # regs.seek(offset)
-    #val = regs.read(4)
+    # val = regs.read(4)
     # return int(struct.unpack("@I", val)[0])
     # Using ctypes function here to cause 32-bit read rather than 4-bytes
     return ctypes.c_uint32.from_buffer(regs, offset).value
@@ -48,7 +48,7 @@ def peek(offset):
 def poke(offset, value):
     '''Use mmap to write the 32-bit value to the specified address.'''
     # regs.seek(offset)
-    #regs.write(struct.pack("@I", value))
+    # regs.write(struct.pack("@I", value))
     # Using ctypes function here to cause 32-bit write rather than 4-bytes
     ctypes.c_uint32.from_buffer(regs, offset).value = value
 
@@ -397,6 +397,11 @@ def test_ro_reg_CFG_CONFIG_XRAN_TIMER_CLK_PS():
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_CFG_CONFIG_XRAN_FRAM_SECTION():
+    do_ro_reg("CFG_CONFIG_XRAN_FRAM_SECTION", 0x60, 0xff, 0, 8)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM():
     do_ro_reg("CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM", 0x68, 0xffff, 0, 16)
 
@@ -599,6 +604,46 @@ def test_rw_reg_FRAM_GEN_VLAN_TAG():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_FRAM_SEL_IPV_ADDRESS_TYPE():
     do_rw_reg("FRAM_SEL_IPV_ADDRESS_TYPE", 0x2200, 0x60, 5, 2)
+
+
+@pytest.mark.skipif(not WO, reason="w/o test deselected")
+def test_wo_reg_FRAM_STALL_SAMPLE():
+    do_wo_reg("FRAM_STALL_SAMPLE", 0x2300, 0x1, 0, 1)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_UL_SS_7_0():
+    do_ro_reg("FRAM_STALL_MONITOR_UL_SS_7_0", 0x2304, 0xff, 0, 8)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_UL_PRACH_3_0():
+    do_ro_reg("FRAM_STALL_MONITOR_UL_PRACH_3_0", 0x2304, 0xf00, 8, 4)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_UL_UNSOL_3_0():
+    do_ro_reg("FRAM_STALL_MONITOR_UL_UNSOL_3_0", 0x2304, 0xf000, 12, 4)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_DL_7_0():
+    do_ro_reg("FRAM_STALL_MONITOR_DL_7_0", 0x2304, 0xff0000, 16, 8)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_SSB_3_0():
+    do_ro_reg("FRAM_STALL_MONITOR_SSB_3_0", 0x2304, 0xf000000, 24, 4)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_UL_SS_15_8():
+    do_ro_reg("FRAM_STALL_MONITOR_UL_SS_15_8", 0x2308, 0xff, 0, 8)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_FRAM_STALL_MONITOR_DL_SS_19_8():
+    do_ro_reg("FRAM_STALL_MONITOR_DL_SS_19_8", 0x2308, 0xfff00, 8, 12)
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
@@ -1094,19 +1139,16 @@ def test_rw_reg_ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL():
         do_rw_reg("ORAN_CC_SSB_MPLANE_UDCOMP_HDR_SEL", 0x811c + i * 0x70, 0x100, 8, 1)
 
 
-@pytest.mark.skipif(not cfg_ena_ssb, reason="register not enabled")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_UD_IQ_WIDTH():
     do_rw_reg("ORAN_CC_PRACH_UD_IQ_WIDTH", 0x8120, 0xf, 0, 4)
 
 
-@pytest.mark.skipif(not cfg_ena_ssb, reason="register not enabled")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_UD_COMP_METH():
     do_rw_reg("ORAN_CC_PRACH_UD_COMP_METH", 0x8120, 0xf0, 4, 4)
 
 
-@pytest.mark.skipif(not cfg_ena_ssb, reason="register not enabled")
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL():
     do_rw_reg("ORAN_CC_PRACH_MPLANE_UDCOMP_HDR_SEL", 0x8120, 0x100, 8, 1)

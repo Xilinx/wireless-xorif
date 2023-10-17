@@ -22,3 +22,5 @@ help write_reg
 help write_reg_offset
 help schedule_bf
 help load
+help monitor
+help stall

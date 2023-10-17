@@ -172,13 +172,19 @@ def test_app_golden_configs(app_type, bf, ocp, oprach):
     try:
         do_command(client[app_type] + "-f config1.txt")
         assert os.system("diff libxorif.log libxorif-golden1.txt") == 0
+
         if bf:
             do_command(client[app_type] + "-f config2.txt")
             assert os.system("diff libxobf.log libxobf-golden2a.txt") == 0
             do_command(client[app_type] + "-f config3.txt")
             assert os.system("diff libxobf.log libxobf-golden3a.txt") == 0
+
+        if app_type == 1 and ocp:
+            do_command(client[app_type] + "-f config4.txt")
+
         # Using terminate at the end ensures any coverage info is recorded
         do_command(client[app_type] + "-c terminate")
+
     finally:
         # Kill server
         proc.kill()

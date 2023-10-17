@@ -166,6 +166,10 @@ monitor fhi select 0
 monitor fhi snapshot
 monitor fhi read 0
 
+# stall
+stall snapshot
+stall read
+
 # peek <address>
 # poke <address> <value>
 

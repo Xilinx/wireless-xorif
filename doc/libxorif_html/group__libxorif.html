@@ -466,6 +466,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <tr class="memitem:gaf6058ec85736dfc88d8c4927220f4775"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#gaf6058ec85736dfc88d8c4927220f4775">xorif_monitor_read</a> (uint8_t counter, uint64_t *value)</td></tr>
 <tr class="memdesc:gaf6058ec85736dfc88d8c4927220f4775"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read specified counter from "monitor block".  <a href="#gaf6058ec85736dfc88d8c4927220f4775">More...</a><br/></td></tr>
 <tr class="separator:gaf6058ec85736dfc88d8c4927220f4775"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga69bd2d45a44ac62f78813aafa319d1ec">xorif_stall_monitor_snapshot</a> (void)</td></tr>
+<tr class="memdesc:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Take snapshot of the "stall-monitor" flags.  <a href="#ga69bd2d45a44ac62f78813aafa319d1ec">More...</a><br/></td></tr>
+<tr class="separator:ga69bd2d45a44ac62f78813aafa319d1ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga1da69cc5cf78ec3fe41f9fccb68d9e2f">xorif_stall_monitor_read</a> (struct <a class="el" href="structxorif__stall__monitor.html">xorif_stall_monitor</a> *ptr)</td></tr>
+<tr class="memdesc:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the "stall-monitor" flags.  <a href="#ga1da69cc5cf78ec3fe41f9fccb68d9e2f">More...</a><br/></td></tr>
+<tr class="separator:ga1da69cc5cf78ec3fe41f9fccb68d9e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__libxorif.html#ga68b96ebcebbf5b8ed148190bb128e8a0">xorif_fhi_set_enabled_mask</a> (uint8_t mask)</td></tr>
 <tr class="memdesc:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the "enabled" component carrier bit-map mask.  <a href="#ga68b96ebcebbf5b8ed148190bb128e8a0">More...</a><br/></td></tr>
 <tr class="separator:ga68b96ebcebbf5b8ed148190bb128e8a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1192,7 +1198,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This sets the whole mapping table "type" value to "UNKNOWN" (i.e. not-used). </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This sets the whole mapping table to "all ones", which means type is set to "UNKNOWN" (i.e. not-used). </dd></dl>
 
 </div>
 </div>
@@ -2857,7 +2863,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <p>Read specified counter from "monitor block". </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">counter</td><td>Counter to read (see TBD for details) </td></tr>
+    <tr><td class="paramname">counter</td><td>Counter to read (see PG370 for details) </td></tr>
     <tr><td class="paramname">value</td><td>Pointer to write back the counter value </td></tr>
   </table>
   </dd>
@@ -2919,6 +2925,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure </li>
 </ul>
 </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Use <a class="el" href="group__libxorif.html#gaf6058ec85736dfc88d8c4927220f4775" title="Read specified counter from &quot;monitor block&quot;. ">xorif_monitor_read</a> to read the counters after taking the snapshot. </dd></dl>
 
 </div>
 </div>
@@ -4978,6 +4985,60 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 <li>Error code on failure. See PG370 for details. Note: This function is deprecated. Use <a class="el" href="group__API.html#gaf9fc75de00d2748b74ca7662e9ff5c5e" title="Set the uplink timing parameters for the component carrier. ">xorif_set_cc_ul_timing_parameters()</a>. </li>
 </ul>
 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga1da69cc5cf78ec3fe41f9fccb68d9e2f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_stall_monitor_read </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="structxorif__stall__monitor.html">xorif_stall_monitor</a> *&#160;</td>
+          <td class="paramname"><em>ptr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read the "stall-monitor" flags. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ptr</td><td>Pointer to structure to write-back the flags </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The "stall-monitor" flags are diagnostic aids. There are "stall" flags for up to 20 downlink spatial streams, 16 uplink spatial streams, 4 PRACH spatial streams, 4 SSB spatial streams and 4 "unsolicited" spatial streams. The flags are refreshed every 10ms, and remain high if a packet for that spatial stream was not received within that 10ms window. See PG370 for further details. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ga69bd2d45a44ac62f78813aafa319d1ec"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int xorif_stall_monitor_snapshot </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Take snapshot of the "stall-monitor" flags. </p>
+<dl class="section return"><dt>Returns</dt><dd><ul>
+<li>XORIF_SUCCESS on success</li>
+<li>Error code on failure </li>
+</ul>
+</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Use <a class="el" href="group__libxorif.html#ga1da69cc5cf78ec3fe41f9fccb68d9e2f" title="Read the &quot;stall-monitor&quot; flags. ">xorif_stall_monitor_read</a> to read the flags after taking the snapshot. </dd></dl>
 
 </div>
 </div>

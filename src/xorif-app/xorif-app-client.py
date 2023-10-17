@@ -1160,6 +1160,21 @@ def monitor_cmd(args):
                         print(value)
                     return result
 
+def stall_cmd(args):
+    # stall snapshot
+    # stall read
+    if len(args) == 2:
+        if "FHI" in handles:
+            handle = handles["FHI"]
+            if match(args[1], "snapshot"):
+                return handle.xorif_stall_monitor_snapshot()
+            elif match(args[1], "read"):
+                result, value = handle.xorif_stall_monitor_read()
+                if result == SUCCESS:
+                    for k, v in value.items():
+                        print(f"{k}: {bin(v)}")
+                return result
+
 def activate_cmd(args):
     # activate (ocp | oprach | ...)
     if len(args) == 2:
@@ -1529,6 +1544,9 @@ cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) clear"))
 cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) read <counter>"))
 cmds.append(("monitor", None, "?monitor (fhi | ...) select <stream>"))
 cmds.append(("monitor", None, "?monitor (fhi | ocp | ...) snapshot"))
+cmds.append(("stall", stall_cmd, "Use the stall detection monitor"))
+cmds.append(("stall", None, "?stall snapshot"))
+cmds.append(("stall", None, "?stall read"))
 cmds.append(("quit", exit_cmd, None))
 cmds.append(("read_reg", read_reg_cmd, "Read device registers"))
 cmds.append(("read_reg", None, "?read_reg (fhi | ocp | ...) <name>"))
@@ -1559,7 +1577,7 @@ cmds.append(("set", None, "?set num_rbs_ssb <cc> <number_of_rbs = 0|20>"))
 cmds.append(("set", None, "?set numerology_ssb <cc> <numerology = 0..4> <extended_cp = 0|1>"))
 cmds.append(("set", None, "?set ocp_antenna_cfg <num_antennas> <interleave> <data = (8 x 4b)>"))
 cmds.append(("set", None, "?set ocp_cc_cfg <cc> <enable> <num_rbs> <numerology> <ccid> [<inter_sym_gap>]"))
-cmds.append(("set", None, "?set ocp_schedule <mode> <length> {sequence}"))
+cmds.append(("set", None, "?set ocp_schedule <mode> <length> {<cc>}"))
 cmds.append(("set", None, "?set ocp_trigger_cfg <enable> <mode> <edge_level> <bit> <enable> <mode> <edge_level> <bit>"))
 cmds.append(("set", None, "?set oprach_cc_cfg {<enable> <sample_rate>}"))
 cmds.append(("set", None, "?set oprach_rcid_cfg {<cc> <ss>}"))

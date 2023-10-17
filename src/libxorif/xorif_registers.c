@@ -63,6 +63,7 @@ static const reg_info_t reg_map[] = {
     {"CFG_CONFIG_XRAN_ETH_SS_BUF_WORD_DEPTH", 0x6c, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_FRAM_AUTO_START", 0x40, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX", 0x3c, 0xffff, 0, 16},
+    {"CFG_CONFIG_XRAN_FRAM_SECTION", 0x60, 0xff, 0, 8}, // NEW
     {"CFG_CONFIG_XRAN_MAX_CC", 0x2c, 0x3f, 0, 6},
     {"CFG_CONFIG_XRAN_MAX_CTRL_SYMBOLS", 0x4c, 0xffff, 0, 16},
     {"CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS", 0x54, 0xffff, 0, 16},
@@ -244,6 +245,14 @@ static const reg_info_t reg_map[] = {
     {"FRAM_PROTOCOL_DEFINITION", 0x2200, 0xf, 0, 4},
     {"FRAM_READY", 0x2000, 0x2, 1, 1},
     {"FRAM_SEL_IPV_ADDRESS_TYPE", 0x2200, 0x60, 5, 2},
+    {"FRAM_STALL_MONITOR_DL_SS_19_8", 0x2308, 0xfff00, 8, 12}, // NEW
+    {"FRAM_STALL_MONITOR_SSB_3_0", 0x2304, 0xf000000, 24, 4}, // NEW
+    {"FRAM_STALL_MONITOR_DL_7_0", 0x2304, 0xff0000, 16, 8}, // NEW
+    {"FRAM_STALL_MONITOR_UL_PRACH_3_0", 0x2304, 0xf00, 8, 4}, // NEW
+    {"FRAM_STALL_MONITOR_UL_SS_15_8", 0x2308, 0xff, 0, 8}, // NEW
+    {"FRAM_STALL_MONITOR_UL_UNSOL_3_0", 0x2304, 0xf000, 12, 4},// NEW
+    {"FRAM_STALL_SAMPLE", 0x2300, 0x1, 0, 1}, // NEW
+    {"FRAM_STALL_MONITOR_UL_SS_7_0", 0x2304, 0xff, 0, 8}, // NEW
     {"ORAN_CC_DL_CTRL_OFFSETS", 0xe104, 0xffff, 0, 16},
     {"ORAN_CC_DL_CTRL_SYM_NUM_INDEX", 0xe114, 0x3f0000, 16, 6},
     {"ORAN_CC_DL_CTRL_UNROLLED_OFFSETS", 0xe108, 0xffff, 0, 16},

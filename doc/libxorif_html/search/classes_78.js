@@ -11,5 +11,6 @@ var searchData=
   ['xorif_5fcc_5fconfig',['xorif_cc_config',['../structxorif__cc__config.html',1,'']]],
   ['xorif_5fdevice_5finfo',['xorif_device_info',['../structxorif__device__info.html',1,'']]],
   ['xorif_5ffhi_5feth_5fstats',['xorif_fhi_eth_stats',['../structxorif__fhi__eth__stats.html',1,'']]],
+  ['xorif_5fstall_5fmonitor',['xorif_stall_monitor',['../structxorif__stall__monitor.html',1,'']]],
   ['xorif_5fsystem_5fconstants',['xorif_system_constants',['../structxorif__system__constants.html',1,'']]]
 ];

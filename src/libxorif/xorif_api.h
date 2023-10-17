@@ -289,6 +289,18 @@ struct xorif_system_constants
     // TBD Add more as required
 };
 
+/**
+ * @brief Structure for "stall-detection" results.
+ */
+struct xorif_stall_monitor
+{
+    uint32_t dl_ss;     /**< Bitmap for downlink spatial streams. */
+    uint16_t ul_ss;     /**< Bitmap for uplink spatial streams. */
+    uint8_t prach_ss;   /**< Bitmap for PRACH spatial streams. */
+    uint8_t ssb_ss;     /**< Bitmap for SSB spatial streams. */
+    uint8_t unsol_ss;   /**< Bitmap for unsolicited spatial streams. */
+};
+
 /**********************************************/
 /*** Function prototypes (common interface) ***/
 /**********************************************/
@@ -1101,7 +1113,8 @@ int xorif_set_ru_ports_table_mode(uint16_t mode, uint16_t sub_mode);
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  * @note
- * This sets the whole mapping table "type" value to "UNKNOWN" (i.e. not-used).
+ * This sets the whole mapping table to "all ones", which means type is set to
+ * "UNKNOWN" (i.e. not-used).
  */
 int xorif_clear_ru_ports_table(void);
 
@@ -1243,18 +1256,46 @@ int xorif_monitor_select(uint8_t stream);
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
+ * @note
+ * Use #xorif_monitor_read to read the counters after taking the snapshot.
  */
 int xorif_monitor_snapshot(void);
 
 /**
  * @brief Read specified counter from "monitor block".
- * @param counter Counter to read (see TBD for details)
+ * @param counter Counter to read (see PG370 for details)
  * @param value Pointer to write back the counter value
  * @returns
  *      - XORIF_SUCCESS on success
  *      - Error code on failure
  */
 int xorif_monitor_read(uint8_t counter, uint64_t *value);
+
+/**
+ * @brief Take snapshot of the "stall-monitor" flags.
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * Use #xorif_stall_monitor_read to read the flags after taking the snapshot.
+ */
+int xorif_stall_monitor_snapshot(void);
+
+/**
+ * @brief Read the "stall-monitor" flags.
+ * @param ptr Pointer to structure to write-back the flags
+ * @returns
+ *      - XORIF_SUCCESS on success
+ *      - Error code on failure
+ * @note
+ * The "stall-monitor" flags are diagnostic aids. There are "stall" flags
+ * for up to 20 downlink spatial streams, 16 uplink spatial streams, 4 PRACH
+ * spatial streams, 4 SSB spatial streams and 4 "unsolicited" spatial streams.
+ * The flags are refreshed every 10ms, and remain high if a packet for that
+ * spatial stream was not received within that 10ms window.
+ * See PG370 for further details.
+ */
+int xorif_stall_monitor_read(struct xorif_stall_monitor *ptr);
 
 #ifdef __cplusplus
 }
