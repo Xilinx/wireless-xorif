@@ -269,6 +269,13 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:gac42ef3891485579391376bda5ac38175"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerated type for supported IQ compression modes (bit-map).  <a href="group__API.html#gac42ef3891485579391376bda5ac38175">More...</a><br/></td></tr>
 <tr class="separator:gac42ef3891485579391376bda5ac38175"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9dd0d1e2b2202d805a2c6e0d4546e2ca"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#ga9dd0d1e2b2202d805a2c6e0d4546e2ca">xorif_extra_flags</a> { , <a class="el" href="group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caad39400a3bef1b3cc08ed40c9ac7af4f8">COMP_IN_CORE_ENABLED</a> = 0x02, 
+<a class="el" href="group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caa530bb779d3e1423698f2d0bb136ae922">PRECODING_EXT3_PORT</a> = 0x04, 
+<a class="el" href="group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caa16e60e0e75e4a18f56fa3a056f1878e4">OCP_IN_CORE</a> = 0x08, 
+<a class="el" href="group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caa83a7f68f5ff430993ae34de98edfbdbb">COMP_32BIT_MODE_SUPPORT</a> = 0x10
+ }</td></tr>
+<tr class="memdesc:ga9dd0d1e2b2202d805a2c6e0d4546e2ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerated type for extra capability bitmap flags.  <a href="group__API.html#ga9dd0d1e2b2202d805a2c6e0d4546e2ca">More...</a><br/></td></tr>
+<tr class="separator:ga9dd0d1e2b2202d805a2c6e0d4546e2ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab913aef59d6dfeb48ca044dd311f80ba"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__API.html#gab913aef59d6dfeb48ca044dd311f80ba">xorif_fhi_alarms</a> { <br/>
 &#160;&#160;<a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baafd8ffe789f75abadac9aefafb4e1d4ee">FRAMER_RESET_STATUS</a> = 0x1, 
 <a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baac016b81781957639286fb072a1774dcc">DEFRAMER_RESET_STATUS</a> = 0x2, 
@@ -282,6 +289,7 @@ Enumerations</h2></td></tr>
 <br/>
 &#160;&#160;<a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baaa61675bfc91f756829db3d59d09781bf">FRAMER_PRACH_SECTION_OF</a> = 0x4000, 
 <a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baaa41d008ddcc6ae919186d8c5ec1d8458">FRAMER_PRACH_SECTION_NF</a> = 0x8000, 
+<a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baa5e6d55216d4daa07e4243dbcb33b8361">FRAMER_SECTION_OF</a> = 0x10000, 
 <a class="el" href="group__API.html#ggab913aef59d6dfeb48ca044dd311f80baa5a67c8e77f8a056ad5c3434345c5ab3a">AXI_TIMEOUT</a> = 0x80000000
 <br/>
  }</td></tr>
@@ -862,6 +870,34 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 
 </div>
 </div>
+<a class="anchor" id="ga9dd0d1e2b2202d805a2c6e0d4546e2ca"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group__API.html#ga9dd0d1e2b2202d805a2c6e0d4546e2ca">xorif_extra_flags</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Enumerated type for extra capability bitmap flags. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="gga9dd0d1e2b2202d805a2c6e0d4546e2caad39400a3bef1b3cc08ed40c9ac7af4f8"></a>COMP_IN_CORE_ENABLED</em>&nbsp;</td><td class="fielddoc">
+<p>Decompressor is available in core. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga9dd0d1e2b2202d805a2c6e0d4546e2caa530bb779d3e1423698f2d0bb136ae922"></a>PRECODING_EXT3_PORT</em>&nbsp;</td><td class="fielddoc">
+<p>Compressor is available in core. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga9dd0d1e2b2202d805a2c6e0d4546e2caa16e60e0e75e4a18f56fa3a056f1878e4"></a>OCP_IN_CORE</em>&nbsp;</td><td class="fielddoc">
+<p>Precoding Extension 3 support is available in the core. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="gga9dd0d1e2b2202d805a2c6e0d4546e2caa83a7f68f5ff430993ae34de98edfbdbb"></a>COMP_32BIT_MODE_SUPPORT</em>&nbsp;</td><td class="fielddoc">
+<p>Double Buffer PUxCH, PDxCH processing is available in core. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <a class="anchor" id="gab913aef59d6dfeb48ca044dd311f80ba"></a>
 <div class="memitem">
 <div class="memproto">
@@ -903,6 +939,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="grou
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="ggab913aef59d6dfeb48ca044dd311f80baaa41d008ddcc6ae919186d8c5ec1d8458"></a>FRAMER_PRACH_SECTION_NF</em>&nbsp;</td><td class="fielddoc">
 <p>PRACH section not-found. </p>
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ggab913aef59d6dfeb48ca044dd311f80baa5e6d55216d4daa07e4243dbcb33b8361"></a>FRAMER_SECTION_OF</em>&nbsp;</td><td class="fielddoc">
+<p>"Framer" section over-flow </p>
 </td></tr>
 <tr><td class="fieldname"><em><a class="anchor" id="ggab913aef59d6dfeb48ca044dd311f80baa5a67c8e77f8a056ad5c3434345c5ab3a"></a>AXI_TIMEOUT</em>&nbsp;</td><td class="fielddoc">
 <p>AXI time-out. </p>

@@ -167,11 +167,6 @@ def test_ro_reg_CFG_INTERNAL_REVISION():
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_CFG_TIMEOUT_VALUE():
-    do_rw_reg("CFG_TIMEOUT_VALUE", 0x8, 0xfff, 0, 12)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_CFG_USER_RW_OUT():
     do_rw_reg("CFG_USER_RW_OUT", 0xc, 0xff, 0, 8)
 
@@ -227,8 +222,8 @@ def test_rw_reg_CFG_FRAM_INT_ENA_PRACH_SECTION_NOTFOUND():
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_CFG_AXI_TIMEOUT_ENABLE():
-    do_rw_reg("CFG_AXI_TIMEOUT_ENABLE", 0x14, 0x80000000, 31, 1)
+def test_rw_reg_CFG_FRAM_INT_ENA_SECTION_OF():
+    do_rw_reg("CFG_FRAM_INT_ENA_SECTION_OF", 0x14, 0x10000, 16, 1)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
@@ -282,13 +277,8 @@ def test_ro_reg_CFG_FRAM_INT_PRACH_SECTION_NOTFOUND():
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
-def test_ro_reg_CFG_AXI_TIMEOUT_STATUS():
-    do_ro_reg("CFG_AXI_TIMEOUT_STATUS", 0x18, 0x80000000, 31, 1)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_CFG_INTERRUPT_STATUS_SAMPLE():
-    do_rw_reg("CFG_INTERRUPT_STATUS_SAMPLE", 0x1c, 0x1, 0, 1)
+def test_ro_reg_CFG_FRAM_INT_SECTION_OF():
+    do_ro_reg("CFG_FRAM_INT_SECTION_OF", 0x18, 0x10000, 16, 1)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
@@ -332,6 +322,11 @@ def test_ro_reg_CFG_CONFIG_XRAN_OCP_IN_CORE():
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
+def test_ro_reg_CFG_CONFIG_XRAN_COMP_32BIT_MODE_ENABLED():
+    do_ro_reg("CFG_CONFIG_XRAN_COMP_32BIT_MODE_ENABLED", 0x28, 0x100, 8, 1)
+
+
+@pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_MAX_CC():
     do_ro_reg("CFG_CONFIG_XRAN_MAX_CC", 0x2c, 0x3f, 0, 6)
 
@@ -342,23 +337,8 @@ def test_ro_reg_CFG_CONFIG_XRAN_MAX_DL_SYMBOLS():
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
-def test_ro_reg_CFG_CONFIG_XRAN_MAX_NUMEROLOGY():
-    do_ro_reg("CFG_CONFIG_XRAN_MAX_NUMEROLOGY", 0x34, 0x7, 0, 3)
-
-
-@pytest.mark.skipif(not RO, reason="r/o test deselected")
-def test_ro_reg_CFG_CONFIG_XRAN_MIN_NUMEROLOGY():
-    do_ro_reg("CFG_CONFIG_XRAN_MIN_NUMEROLOGY", 0x38, 0x7, 0, 3)
-
-
-@pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX():
     do_ro_reg("CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX", 0x3c, 0xffff, 0, 16)
-
-
-@pytest.mark.skipif(not RO, reason="r/o test deselected")
-def test_ro_reg_CFG_CONFIG_XRAN_FRAM_AUTO_START():
-    do_ro_reg("CFG_CONFIG_XRAN_FRAM_AUTO_START", 0x40, 0xffff, 0, 16)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
@@ -627,8 +607,8 @@ def test_ro_reg_FRAM_STALL_MONITOR_UL_UNSOL_3_0():
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
-def test_ro_reg_FRAM_STALL_MONITOR_DL_7_0():
-    do_ro_reg("FRAM_STALL_MONITOR_DL_7_0", 0x2304, 0xff0000, 16, 8)
+def test_ro_reg_FRAM_STALL_MONITOR_DL_SS_7_0():
+    do_ro_reg("FRAM_STALL_MONITOR_DL_SS_7_0", 0x2304, 0xff0000, 16, 8)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
@@ -664,11 +644,6 @@ def test_rw_reg_DEFM_ERR_PACKET_FILTER():
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_USE_ONE_SYMBOL_STROBE():
     do_rw_reg("DEFM_USE_ONE_SYMBOL_STROBE", 0x6008, 0x1, 0, 1)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_DEFM_DEBUG():
-    do_rw_reg("DEFM_DEBUG", 0x600c, 0xf, 0, 4)
 
 
 @pytest.mark.skipif(not WO, reason="w/o test deselected")
@@ -986,7 +961,7 @@ def test_wo_reg_DEFM_CID_MAP_WR_STROBE():
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_DEFM_CID_MAP_WR_STREAM_CCID():
-    do_rw_reg("DEFM_CID_MAP_WR_STREAM_CCID", 0x6904, 0x7000000, 24, 3)
+    do_rw_reg("DEFM_CID_MAP_WR_STREAM_CCID", 0x6904, 0xf000000, 24, 4)
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
@@ -1011,7 +986,7 @@ def test_wo_reg_DEFM_CID_MAP_RD_STROBE():
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
 def test_ro_reg_DEFM_CID_MAP_RD_STREAM_CCID():
-    do_ro_reg("DEFM_CID_MAP_RD_STREAM_CCID", 0x6908, 0x7000000, 24, 3)
+    do_ro_reg("DEFM_CID_MAP_RD_STREAM_CCID", 0x6908, 0xf000000, 24, 4)
 
 
 @pytest.mark.skipif(not RO, reason="r/o test deselected")
@@ -1749,21 +1724,9 @@ def test_rw_reg_ORAN_CC_DL_CTRL_OFFSETS():
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_ORAN_CC_DL_CTRL_UNROLLED_OFFSETS():
-    for i in range(0, C_MAX_COMP_CARR):
-        do_rw_reg("ORAN_CC_DL_CTRL_UNROLLED_OFFSETS", 0xe108 + i * 0x70, 0xffff, 0, 16)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
 def test_rw_reg_ORAN_CC_UL_CTRL_OFFSETS():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_UL_CTRL_OFFSETS", 0xe10c + i * 0x70, 0xffff, 0, 16)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_ORAN_CC_UL_CTRL_UNROLLED_OFFSETS():
-    for i in range(0, C_MAX_COMP_CARR):
-        do_rw_reg("ORAN_CC_UL_CTRL_UNROLLED_OFFSETS", 0xe110 + i * 0x70, 0xffff, 0, 16)
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")
@@ -1878,12 +1841,6 @@ def test_rw_reg_ORAN_CC_UL_BIDF_C_ABS_SYMBOL():
 def test_rw_reg_ORAN_CC_UL_BIDF_C_CYCLES():
     for i in range(0, C_MAX_COMP_CARR):
         do_rw_reg("ORAN_CC_UL_BIDF_C_CYCLES", 0xe148 + i * 0x70, 0x1ffff, 0, 17)
-
-
-@pytest.mark.skipif(not RW, reason="r/w test deselected")
-def test_rw_reg_ORAN_CC_MAX_SYMBOLS():
-    for i in range(0, C_MAX_COMP_CARR):
-        do_rw_reg("ORAN_CC_MAX_SYMBOLS", 0xe158 + i * 0x70, 0xfff, 0, 12)
 
 
 @pytest.mark.skipif(not RW, reason="r/w test deselected")

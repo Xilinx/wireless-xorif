@@ -103,6 +103,7 @@ var searchData=
   ['xorif_5fenable_5fcc',['xorif_enable_cc',['../group__API.html#ga7b3839531a2c838f6d1a0185d39efdb6',1,'xorif_enable_cc(uint16_t cc):&#160;xorif_common.c'],['../group__libxorif.html#ga7b3839531a2c838f6d1a0185d39efdb6',1,'xorif_enable_cc(uint16_t cc):&#160;xorif_common.c']]],
   ['xorif_5fenable_5ffhi_5finterrupts',['xorif_enable_fhi_interrupts',['../group__API.html#ga4eaaa1adb6e01922ff4576bd4e816a72',1,'xorif_enable_fhi_interrupts(uint32_t mask):&#160;xorif_fh_func.c'],['../group__libxorif.html#ga4eaaa1adb6e01922ff4576bd4e816a72',1,'xorif_enable_fhi_interrupts(uint32_t mask):&#160;xorif_fh_func.c']]],
   ['xorif_5ferror_5fcodes',['xorif_error_codes',['../group__API.html#ga9a97d2a2455bd1b40ba42a84ddbe2f3f',1,'xorif_api.h']]],
+  ['xorif_5fextra_5fflags',['xorif_extra_flags',['../group__API.html#ga9dd0d1e2b2202d805a2c6e0d4546e2ca',1,'xorif_api.h']]],
   ['xorif_5ffailure',['XORIF_FAILURE',['../group__API.html#gga9a97d2a2455bd1b40ba42a84ddbe2f3fa9a03a40b03b36e83d8ebdc2a08ef6df4',1,'xorif_api.h']]],
   ['xorif_5ffh_5ffunc_2ec',['xorif_fh_func.c',['../xorif__fh__func_8c.html',1,'']]],
   ['xorif_5ffh_5ffunc_2eh',['xorif_fh_func.h',['../xorif__fh__func_8h.html',1,'']]],

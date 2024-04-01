@@ -1313,6 +1313,7 @@ static int get(const char *request, char *response)
                     response += sprintf(response, "ru_id_limit = %d\n", ptr->ru_id_limit);
                     response += sprintf(response, "ss_id_limit = %d\n", ptr->ss_id_limit);
                     response += sprintf(response, "ru_ports_map_width = %d\n", ptr->ru_ports_map_width);
+                    response += sprintf(response, "extra_flags = 0x%X\n", ptr->extra_flags);
                     return SUCCESS;
                 }
                 else if (match(s, "fhi_alarms") && num_tokens == 2)

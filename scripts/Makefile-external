@@ -7,12 +7,16 @@ RCP_DIR = ../yocto-recipes
 XSA_DIR = ../xsa
 TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/) {print "$$1_$$2"}')
 PLNX_VER = $(shell printenv PETALINUX_VER)
-DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/usr/bin/dtc
 ROOTFSCONFIG = $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
 # Release-sensitive settings
 ifeq ($(shell expr $(PLNX_VER) \>= 2021.1), 1)
 	YOCTO_BUILDTOOLS_EXTENDED = 1
+endif
+ifeq ($(shell expr $(PLNX_VER) \>= 2024.1), 1)
+	DTC = $(PETALINUX)/sysroots/x86_64-petalinux-linux/usr/bin/dtc
+else
+	DTC = $(PETALINUX)/components/yocto/buildtools/sysroots/x86_64-petalinux-linux/usr/bin/dtc
 endif
 
 ### CONFIGURATION SECTION ###
@@ -24,7 +28,7 @@ ROOTFS = 0
 SYS_INIT = 1
 
 # Add kernel modules (e.g. drivers) here
-override MODULES += xlnx-ptp-timer
+#override MODULES += xlnx-ptp-timer
 
 # Add apps / libs here
 override APPS += libxorif
@@ -321,7 +325,6 @@ $(XSA_DIR)/zcu111_om5_25_exs/system.xsa:
 ##------------------------------------------------------------------------------
 zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exs \
 zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exs \
-zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exs \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 	$(MAKE) BOARD=zcu111 TARGET=$@ XXV=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \
@@ -340,11 +343,16 @@ zcu670_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exs:
 ## Testing scope reduced to zcu111. Add back as required.
 ##------------------------------------------------------------------------------
 ## Make all the zcu111 Exd Targets
-zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exd \
+zcu111_e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144_exd \
 zcu111_e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144_exd \
-zcu111_e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
-zcu111_e4x8000x25_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest_exd \
+zcu111_e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144map11_exd \
+zcu111_e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_cmw00i_opt_exd \
+zcu111_e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_opt_exd \
+zcu111_e1x9600x10_ss8x8_cc4x6600_dcc12x4x4x16x8_cmw00i_ocpi_opt_exd \
 zcu111_e1x9600x25_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd \
+zcu111_e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x32x16_cmw00i_aptw262144_exd \
+zcu111_e1x9600x10_ss8x4_cc4x6600_dcc24x8x8x32x16_cmw00i_aptw458752_exd \
+zcu111_e1x9600x10_ss8x4_cc4x6600_dcc24x8x8x32x16_cmw00i_aptw458752sort8_exd \
 zcu111_e1x9000x10_ss8x8_cc4x6600_dcc12x4x4x16x8_ocpi_exd:
 	$(MAKE) BOARD=zcu111 TARGET=$@ DBG=1 \
 	PLX_DIR=$(OUT_DIR)/$@_$(TOOL_VER)/petalinux \

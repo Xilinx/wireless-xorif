@@ -1025,9 +1025,9 @@ int fhi_irq_handler(int id, void *data)
             {
                 INFO("FHI IRQ: CFG_FRAM_INT_PRACH_SECTION_NOTFOUND\n");
             }
-            if (status & CFG_AXI_TIMEOUT_STATUS_MASK)
+            if (status & CFG_FRAM_INT_ENA_SECTION_OF_MASK)
             {
-                INFO("FHI IRQ: CFG_AXI_TIMEOUT_STATUS\n");
+                INFO("FHI IRQ: CFG_FRAM_INT_ENA_SECTION_OF\n");
             }
 
             // All interrupts are serious error conditions
@@ -1144,6 +1144,15 @@ void xorif_fhi_init_device(void)
     fhi_caps.ru_id_limit = READ_REG(CFG_CONFIG_LIMIT_RU_I_W);
     fhi_caps.ss_id_limit = READ_REG(CFG_CONFIG_LIMIT_RU_O_W);
     fhi_caps.ru_ports_map_width = READ_REG(CFG_CONFIG_MAP_TABLE_W);
+
+    // Extra flags
+    uint16_t flags = 0;
+    flags |= READ_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED) ? DECOMP_IN_CORE_ENABLED : 0;
+    flags |= READ_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED) ? COMP_IN_CORE_ENABLED : 0;
+    flags |= READ_REG(CFG_CONFIG_XRAN_PRECODING_EXT3_PORT) ? PRECODING_EXT3_PORT : 0;
+    flags |= READ_REG(CFG_CONFIG_XRAN_OCP_IN_CORE) ? OCP_IN_CORE : 0;
+    flags |= READ_REG(CFG_CONFIG_XRAN_COMP_32BIT_MODE_ENABLED) ? COMP_32BIT_MODE_SUPPORT : 0;
+    fhi_caps.extra_flags = flags;
 
     // Set up any useful defaults, etc.
     XRAN_TIMER_CLK = fhi_caps.timer_clk_ps; //READ_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS);
@@ -1585,12 +1594,20 @@ int xorif_fhi_configure_cc(uint16_t cc)
     }
 #endif
 
+    // Calculate number of sections (per symbol)
+    uint16_t num_sections = READ_REG(CFG_CONFIG_XRAN_FRAM_SECTION);
+    if (num_sections == 0)
+    {
+        // Classic mode: use number of RBs
+        num_sections = ptr->num_rbs;
+    }
+
     // Deallocate any memory associated with this component carrier
     deallocate_memory(cc);
 
     // Get new memory allocations
     int ul_ctrl_offset = alloc_block(ul_ctrl_memory, (ul_ctrl_sym_num * ptr->num_ctrl_per_sym_ul), cc);
-    int ul_ctrl_base_offset = alloc_block(ul_ctrl_base_memory, ptr->num_rbs, cc);
+    int ul_ctrl_base_offset = alloc_block(ul_ctrl_base_memory, num_sections, cc);
     int dl_ctrl_offset = alloc_block(dl_ctrl_memory, (dl_ctrl_sym_num * ptr->num_ctrl_per_sym_dl), cc);
     int dl_data_ptrs_offset = alloc_block(dl_data_ptrs_memory, dl_data_sym_num, cc);
     int dl_data_buff_offset = alloc_block(dl_data_buff_memory, (dl_data_sym_num * dl_data_buff_size), cc);
@@ -1853,14 +1870,15 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_NO_OF_ETH_PORTS, 4);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_CC, 8);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_SYMBOLS, 16);
-    WRITE_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX, 8000);
-    WRITE_REG(CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX, 8000);
+    WRITE_REG(CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX, 9000);
+    WRITE_REG(CFG_CONFIG_XRAN_DEFM_ETH_PKT_MAX, 9000);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_SCS, 6600); // 3300, 6600, 13200
     WRITE_REG(CFG_CONFIG_XRAN_MAX_CTRL_SYMBOLS, 16);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_UL_CTRL_1KWORDS, 4);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_CTRL_1KWORDS, 4);
     WRITE_REG(CFG_CONFIG_XRAN_MAX_DL_DATA_1KWORDS, 16);
     WRITE_REG(CFG_CONFIG_XRAN_TIMER_CLK_PS, 5000); // 2500, 2560, 5000
+    WRITE_REG(CFG_CONFIG_XRAN_FRAM_SECTION, 0); // 0, 8, 16
     WRITE_REG(CFG_CONFIG_XRAN_UNSOL_PORTS_FRAM, 1);
     WRITE_REG(CFG_CONFIG_XRAN_PRACH_C_PORTS, 1);
     WRITE_REG(CFG_CONFIG_LIMIT_DU_W, 4);
@@ -1871,18 +1889,23 @@ static void init_fake_reg_bank(void)
     WRITE_REG(CFG_CONFIG_MAP_TABLE_W, 8); // Use 0, 8, 11 ?
 #ifdef IN_CORE_COMP
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_ENABLED, IN_CORE_COMP); // 0 = external, 1 = in-core
-#endif
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
     WRITE_REG(CFG_CONFIG_XRAN_DECOMP_IN_CORE_MODC_WIDTHS, 0x3E); // 1, 2, 3, 4, 5
+#endif
 #ifdef IN_CORE_COMP
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_ENABLED, IN_CORE_COMP); // 0 = external, 1 = in-core
-#endif
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_NOCOMP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP, 1);
     WRITE_REG(CFG_CONFIG_XRAN_COMP_IN_CORE_BFP_WIDTHS, 0x5200); // 9, 12, 14
+#endif
+    WRITE_REG(CFG_CONFIG_XRAN_PRECODING_EXT3_PORT, 0);
+#ifdef INTEGRATED_OCP
+    WRITE_REG(CFG_CONFIG_XRAN_OCP_IN_CORE, 1);
+#endif
+    WRITE_REG(CFG_CONFIG_XRAN_COMP_32BIT_MODE_ENABLED, 0);
 
     // Restore debug tracing level
     xorif_trace = temp;
@@ -1972,7 +1995,7 @@ int xorif_stall_monitor_read(struct xorif_stall_monitor *ptr)
     }
     else
     {
-        ptr->dl_ss = READ_REG(FRAM_STALL_MONITOR_DL_7_0) |
+        ptr->dl_ss = READ_REG(FRAM_STALL_MONITOR_DL_SS_7_0) |
                      READ_REG(FRAM_STALL_MONITOR_DL_SS_19_8) << 8;
 
         ptr->ul_ss = READ_REG(FRAM_STALL_MONITOR_UL_SS_7_0) |

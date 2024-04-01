@@ -23,6 +23,7 @@ SRC_URI = " \
 	file://oran_radio_if_v2_4_ctrl.h \
 	file://oran_radio_if_v3_0_ctrl.h \
 	file://oran_radio_if_v3_1_ctrl.h \
+	file://oran_radio_if_v3_2_ctrl.h \
 	file://pylibxorif.py \
 	file://xocp_api.h \
 	file://xocp.c \

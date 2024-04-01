@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['ocp_5fin_5fcore',['OCP_IN_CORE',['../group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caa16e60e0e75e4a18f56fa3a056f1878e4',1,'xorif_api.h']]],
   ['offset_5fearliest_5fc_5fpkt',['offset_earliest_c_pkt',['../structxorif__fhi__eth__stats.html#ac4dcbabac029c8741a1495b8590f463a',1,'xorif_fhi_eth_stats']]],
   ['offset_5fearliest_5fu_5fpkt',['offset_earliest_u_pkt',['../structxorif__fhi__eth__stats.html#a683b24ccf1c066d763012dca7a4cf31f',1,'xorif_fhi_eth_stats']]],
   ['oran_5frx_5fbit_5frate',['oran_rx_bit_rate',['../structxorif__fhi__eth__stats.html#a6fad1268922a2113c2afa96e11ca9743',1,'xorif_fhi_eth_stats']]],

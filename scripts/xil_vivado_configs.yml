@@ -133,14 +133,14 @@ cfg:
       ##
       CONFIG.Exdes_TorwaveDepth        : 262144
 
-    e1x9600x10_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144:
+    e1x9600x10_ss8x4_cc4x6600_dcc24x8x8x32x16_cmw00i_aptw458752:
       CONFIG.Physical_Ethernet_Rate    : "10G"
       CONFIG.Axis_Ports_Fram           : 4
       CONFIG.Axis_Ports_Defm           : 8
-      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 4
-      CONFIG.Xran_Max_Dl_Data_1kWords  : 16
-      CONFIG.Xran_Max_Dl_Data_Pointers : 16
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 8
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 8
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 24
+      CONFIG.Xran_Max_Dl_Data_Pointers : 32
       CONFIG.Xran_Max_Ctrl_Symbols     : 16
       CONFIG.Fram_Eth_Pkt_Max          : 9600
       CONFIG.Defm_Eth_Pkt_Max          : 9600
@@ -149,13 +149,39 @@ cfg:
       CONFIG.Xran_Max_Comp_Carr        : 4
       CONFIG.Xran_Max_Scs              : 6600
       CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Xran_Prach_Sections       : 32
       ##
       CONFIG.Fram_Comp_In_Core         : 1
       CONFIG.Defm_Decomp_In_Core       : 1   
       ##
-      CONFIG.Exdes_TorwaveDepth        : 262144
+      #CONFIG.Exdes_TorwaveDepth        : 262144
+      CONFIG.Exdes_TorwaveDepth        : 458752
 
-
+    e1x9600x10_ss8x4_cc4x6600_dcc24x8x8x32x16_cmw00i_aptw458752sort8:
+      CONFIG.Physical_Ethernet_Rate    : "10G"
+      CONFIG.Axis_Ports_Fram           : 4
+      CONFIG.Axis_Ports_Defm           : 8
+      CONFIG.Xran_Max_Dl_Ctrl_1kWords  : 8
+      CONFIG.Xran_Max_Ul_Ctrl_1kWords  : 8
+      CONFIG.Xran_Max_Dl_Data_1kWords  : 24
+      CONFIG.Xran_Max_Dl_Data_Pointers : 32
+      CONFIG.Xran_Max_Ctrl_Symbols     : 16
+      CONFIG.Fram_Eth_Pkt_Max          : 9600
+      CONFIG.Defm_Eth_Pkt_Max          : 9600
+      CONFIG.Xran_Max_SSB_Ctrl_512Words: 4
+      CONFIG.Xran_Max_SSB_Data_512Words: 8
+      CONFIG.Xran_Max_Comp_Carr        : 4
+      CONFIG.Xran_Max_Scs              : 6600
+      CONFIG.Circ_Meta_Table_Depth     : 256
+      CONFIG.Xran_Prach_Sections       : 32
+      CONFIG.Enable_Section_Sort       : 8
+      ##
+      CONFIG.Fram_Comp_In_Core         : 1
+      CONFIG.Defm_Decomp_In_Core       : 1   
+      ##
+      #CONFIG.Exdes_TorwaveDepth        : 262144
+      CONFIG.Exdes_TorwaveDepth        : 458752
+      
     ## -------------------------------------------------------------------------
     ## OCP Designs
     ## -------------------------------------------------------------------------

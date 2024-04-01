@@ -29,7 +29,7 @@
 
 // Software version number
 #define SW_MAJ_VER 2
-#define SW_MIN_VER 5
+#define SW_MIN_VER 7
 #define SW_REVISION 0
 
 // System constants

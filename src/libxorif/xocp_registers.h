@@ -26,7 +26,7 @@
 #define XOCP_REGISTERS_H
 
 #include "xocp.h"
-#include "oran_radio_if_v3_0_ctrl.h"
+#include "oran_radio_if_v3_2_ctrl.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/

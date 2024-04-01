@@ -108,6 +108,16 @@ enum xorif_iq_comp_flags
 };
 #endif // XORIF_COMMON_IQ_COMP_CODES
 
+/** @brief Enumerated type for extra capability bitmap flags. */
+enum xorif_extra_flags
+{
+    DECOMP_IN_CORE_ENABLED = 0x01,  /** Decompressor is available in core. */
+    COMP_IN_CORE_ENABLED = 0x02,    /** Compressor is available in core. */
+    PRECODING_EXT3_PORT = 0x04,     /** Precoding Extension 3 support is available in the core. */
+    OCP_IN_CORE = 0x08,             /** Double Buffer PUxCH, PDxCH processing is available in core.*/
+    COMP_32BIT_MODE_SUPPORT = 0x10, /** Compressor is using 32-bit mode (see PG370). */
+};
+
 /**
  * @brief Structure for supported capabilities.
  */
@@ -143,6 +153,7 @@ struct xorif_caps
     uint16_t ru_id_limit;               /**< Maximum size (in bits) of the RU id */
     uint16_t ss_id_limit;               /**< Maximum size (in bits) of the spatial stream id */
     uint16_t ru_ports_map_width;        /**< Width of RU port mapping table */
+    uint16_t extra_flags;               /**< Various capability flags (see #xorif_extra_flags) */
 };
 
 /**
@@ -253,6 +264,7 @@ enum xorif_fhi_alarms
     FRAMER_OUT_FIFO_UF = 0x2000,           /**< "Framer" output FIFO under-flow */
     FRAMER_PRACH_SECTION_OF = 0x4000,      /**< PRACH section over-flow */
     FRAMER_PRACH_SECTION_NF = 0x8000,      /**< PRACH section not-found */
+    FRAMER_SECTION_OF = 0x10000,           /**<"Framer" section over-flow */
     AXI_TIMEOUT = 0x80000000,              /**< AXI time-out */
 };
 

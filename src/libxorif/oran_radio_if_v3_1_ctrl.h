@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0
+// SPDX-License-Identifier: GPL-2.0 
 /*-----------------------------------------------------------------------------
 * C Header bank BASE definitions
 *------------------------------------------------------------------------------
@@ -16,7 +16,7 @@
 #define ORAN_RADIO_IF_V3_1_CHAN_PROC_SEQUENCE_TABLE_BASE_ADDR 0x16000 /* 90112  */
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_cfg
+* C Header bank register definitions for bank oran_radio_if_v3_1_cfg 
 * with prefix cfg_ @ address 0x0
 *------------------------------------------------------------------------------
 */
@@ -54,16 +54,8 @@
 #define CFG_INTERNAL_REVISION_MASK 0xffffffff /* 4294967295  */
 #define CFG_INTERNAL_REVISION_OFFSET 0x0 /* 0  */
 #define CFG_INTERNAL_REVISION_WIDTH 0x20 /* 32  */
-#define CFG_INTERNAL_REVISION_DEFAULT 0x1603739 /* 23082809  */
+#define CFG_INTERNAL_REVISION_DEFAULT 0x160cae8 /* 23120616  */
 
-/* Type   = rw  */
-/* sigena =  */
-/* Doc    : Timeout for AXI4-Lite interface access */
-#define CFG_TIMEOUT_VALUE_ADDR 0x8 /* 8  */
-#define CFG_TIMEOUT_VALUE_MASK 0xfff /* 4095  */
-#define CFG_TIMEOUT_VALUE_OFFSET 0x0 /* 0  */
-#define CFG_TIMEOUT_VALUE_WIDTH 0xc /* 12  */
-#define CFG_TIMEOUT_VALUE_DEFAULT 0x80 /* 128  */
 
 /* Type   = rw  */
 /* sigena =  */
@@ -94,7 +86,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for defm_int_infifo_of */
+/* Doc    : Enable interrupt for defm_int_infifo_of field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_DEFM_INT_ENA_INFIFO_OF_ADDR 0x14 /* 20  */
 #define CFG_DEFM_INT_ENA_INFIFO_OF_MASK 0x100 /* 256  */
 #define CFG_DEFM_INT_ENA_INFIFO_OF_OFFSET 0x8 /* 8  */
@@ -103,7 +95,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for defm_int_infifo_uf */
+/* Doc    : Enable interrupt for defm_int_infifo_uf field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_DEFM_INT_ENA_INFIFO_UF_ADDR 0x14 /* 20  */
 #define CFG_DEFM_INT_ENA_INFIFO_UF_MASK 0x200 /* 512  */
 #define CFG_DEFM_INT_ENA_INFIFO_UF_OFFSET 0x9 /* 9  */
@@ -112,7 +104,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for defm_int_eth_pipe_c_buf_of */
+/* Doc    : Enable interrupt for defm_int_eth_pipe_c_buf_of field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_C_BUF_OF_ADDR 0x14 /* 20  */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_C_BUF_OF_MASK 0x400 /* 1024  */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_C_BUF_OF_OFFSET 0xa /* 10  */
@@ -121,7 +113,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for defm_int_eth_pipe_table_of */
+/* Doc    : Enable interrupt for defm_int_eth_pipe_table_of field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_TABLE_OF_ADDR 0x14 /* 20  */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_TABLE_OF_MASK 0x800 /* 2048  */
 #define CFG_DEFM_INT_ENA_ETH_PIPE_TABLE_OF_OFFSET 0xb /* 11  */
@@ -130,7 +122,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for fram_int_outfifo_of */
+/* Doc    : Enable interrupt for fram_int_outfifo_of field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_FRAM_INT_ENA_OUTFIFO_OF_ADDR 0x14 /* 20  */
 #define CFG_FRAM_INT_ENA_OUTFIFO_OF_MASK 0x1000 /* 4096  */
 #define CFG_FRAM_INT_ENA_OUTFIFO_OF_OFFSET 0xc /* 12  */
@@ -139,7 +131,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for fram_int_outfifo_uf */
+/* Doc    : Enable interrupt for fram_int_outfifo_uf field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_FRAM_INT_ENA_OUTFIFO_UF_ADDR 0x14 /* 20  */
 #define CFG_FRAM_INT_ENA_OUTFIFO_UF_MASK 0x2000 /* 8192  */
 #define CFG_FRAM_INT_ENA_OUTFIFO_UF_OFFSET 0xd /* 13  */
@@ -148,7 +140,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for fram_int_prach_section_overflow */
+/* Doc    : Enable interrupt for fram_int_prach_section_overflow field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_OVERFLOW_ADDR 0x14 /* 20  */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_OVERFLOW_MASK 0x4000 /* 16384  */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_OVERFLOW_OFFSET 0xe /* 14  */
@@ -157,7 +149,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Enable interrupt for fram_int_prach_section_notfound */
+/* Doc    : Enable interrupt for fram_int_prach_section_notfound field in master interrupt generation. Status can still be read in roe_status. */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_NOTFOUND_ADDR 0x14 /* 20  */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_NOTFOUND_MASK 0x8000 /* 32768  */
 #define CFG_FRAM_INT_ENA_PRACH_SECTION_NOTFOUND_OFFSET 0xf /* 15  */
@@ -166,12 +158,13 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : AXI4-Lite interface Interrupt Enable */
-#define CFG_AXI_TIMEOUT_ENABLE_ADDR 0x14 /* 20  */
-#define CFG_AXI_TIMEOUT_ENABLE_MASK 0x80000000 /* 2147483648  */
-#define CFG_AXI_TIMEOUT_ENABLE_OFFSET 0x1f /* 31  */
-#define CFG_AXI_TIMEOUT_ENABLE_WIDTH 0x1 /* 1  */
-#define CFG_AXI_TIMEOUT_ENABLE_DEFAULT 0x1 /* 1  */
+/* Doc    : Enable interrupt for fram_int_section_of field in master interrupt generation. Status can still be read in roe_status. */
+#define CFG_FRAM_INT_ENA_SECTION_OF_ADDR 0x14 /* 20  */
+#define CFG_FRAM_INT_ENA_SECTION_OF_MASK 0x10000 /* 65536  */
+#define CFG_FRAM_INT_ENA_SECTION_OF_OFFSET 0x10 /* 16  */
+#define CFG_FRAM_INT_ENA_SECTION_OF_WIDTH 0x1 /* 1  */
+#define CFG_FRAM_INT_ENA_SECTION_OF_DEFAULT 0x0 /* 0  */
+
 
 /* Type   = roSig  */
 /* sigena =  */
@@ -265,21 +258,13 @@
 
 /* Type   = roSig  */
 /* sigena =  */
-/* Doc    : AXI4-Lite interface timeout has occurred */
-#define CFG_AXI_TIMEOUT_STATUS_ADDR 0x18 /* 24  */
-#define CFG_AXI_TIMEOUT_STATUS_MASK 0x80000000 /* 2147483648  */
-#define CFG_AXI_TIMEOUT_STATUS_OFFSET 0x1f /* 31  */
-#define CFG_AXI_TIMEOUT_STATUS_WIDTH 0x1 /* 1  */
-#define CFG_AXI_TIMEOUT_STATUS_DEFAULT 0x0 /* 0  */
+/* Doc    : Reports that too many setions were passed to an UL endpoint in a symbol period. This flag is only used when the UL FRAM Sections are restricted to 8 or 16 per symbol. */
+#define CFG_FRAM_INT_SECTION_OF_ADDR 0x18 /* 24  */
+#define CFG_FRAM_INT_SECTION_OF_MASK 0x10000 /* 65536  */
+#define CFG_FRAM_INT_SECTION_OF_OFFSET 0x10 /* 16  */
+#define CFG_FRAM_INT_SECTION_OF_WIDTH 0x1 /* 1  */
+#define CFG_FRAM_INT_SECTION_OF_DEFAULT 0x0 /* 0  */
 
-/* Type   = rw  */
-/* sigena =  */
-/* Doc    : NODOC Flag used to sample status register in alternate clock domains. Routed but unused */
-#define CFG_INTERRUPT_STATUS_SAMPLE_ADDR 0x1c /* 28  */
-#define CFG_INTERRUPT_STATUS_SAMPLE_MASK 0x1 /* 1  */
-#define CFG_INTERRUPT_STATUS_SAMPLE_OFFSET 0x0 /* 0  */
-#define CFG_INTERRUPT_STATUS_SAMPLE_WIDTH 0x1 /* 1  */
-#define CFG_INTERRUPT_STATUS_SAMPLE_DEFAULT 0x1 /* 1  */
 
 /* Type   = roSig  */
 /* sigena =  */
@@ -373,39 +358,12 @@
 
 /* Type   = roSig  */
 /* sigena =  */
-/* Doc    : NODOC XRAN max supported Numerology. */
-#define CFG_CONFIG_XRAN_MAX_NUMEROLOGY_ADDR 0x34 /* 52  */
-#define CFG_CONFIG_XRAN_MAX_NUMEROLOGY_MASK 0x7 /* 7  */
-#define CFG_CONFIG_XRAN_MAX_NUMEROLOGY_OFFSET 0x0 /* 0  */
-#define CFG_CONFIG_XRAN_MAX_NUMEROLOGY_WIDTH 0x3 /* 3  */
-#define CFG_CONFIG_XRAN_MAX_NUMEROLOGY_DEFAULT 0x0 /* 0  */
-
-/* Type   = roSig  */
-/* sigena =  */
-/* Doc    : NODOC XRAN min supported Numerology. */
-#define CFG_CONFIG_XRAN_MIN_NUMEROLOGY_ADDR 0x38 /* 56  */
-#define CFG_CONFIG_XRAN_MIN_NUMEROLOGY_MASK 0x7 /* 7  */
-#define CFG_CONFIG_XRAN_MIN_NUMEROLOGY_OFFSET 0x0 /* 0  */
-#define CFG_CONFIG_XRAN_MIN_NUMEROLOGY_WIDTH 0x3 /* 3  */
-#define CFG_CONFIG_XRAN_MIN_NUMEROLOGY_DEFAULT 0x0 /* 0  */
-
-/* Type   = roSig  */
-/* sigena =  */
 /* Doc    : Max size of the framer payload in bytes. */
 #define CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX_ADDR 0x3c /* 60  */
 #define CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX_MASK 0xffff /* 65535  */
 #define CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX_OFFSET 0x0 /* 0  */
 #define CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX_WIDTH 0x10 /* 16  */
 #define CFG_CONFIG_XRAN_FRAM_ETH_PKT_MAX_DEFAULT 0x0 /* 0  */
-
-/* Type   = roSig  */
-/* sigena =  */
-/* Doc    : NODOC, unused remove in .2 */
-#define CFG_CONFIG_XRAN_FRAM_AUTO_START_ADDR 0x40 /* 64  */
-#define CFG_CONFIG_XRAN_FRAM_AUTO_START_MASK 0xffff /* 65535  */
-#define CFG_CONFIG_XRAN_FRAM_AUTO_START_OFFSET 0x0 /* 0  */
-#define CFG_CONFIG_XRAN_FRAM_AUTO_START_WIDTH 0x10 /* 16  */
-#define CFG_CONFIG_XRAN_FRAM_AUTO_START_DEFAULT 0x0 /* 0  */
 
 /* Type   = roSig  */
 /* sigena =  */
@@ -472,7 +430,7 @@
 
 /* Type   = roSig  */
 /* sigena =  */
-/* Doc    : NODOC, Section limit per symbol, when the section sort mechanism is enabled. 0=classic. */
+/* Doc    : Section limit per symbol, when the section sort mechanism is enabled. 0=classic. */
 #define CFG_CONFIG_XRAN_FRAM_SECTION_ADDR 0x60 /* 96  */
 #define CFG_CONFIG_XRAN_FRAM_SECTION_MASK 0xff /* 255  */
 #define CFG_CONFIG_XRAN_FRAM_SECTION_OFFSET 0x0 /* 0  */
@@ -778,7 +736,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_fram
+* C Header bank register definitions for bank oran_radio_if_v3_1_fram 
 * with prefix fram_ @ address 0x2000
 *------------------------------------------------------------------------------
 */
@@ -893,11 +851,11 @@
 /* Type   = roSig  */
 /* sigena =  */
 /* Doc    : Read value for first 8 DL SS stall flags */
-#define FRAM_STALL_MONITOR_DL_7_0_ADDR 0x2304 /* 8964  */
-#define FRAM_STALL_MONITOR_DL_7_0_MASK 0xff0000 /* 16711680  */
-#define FRAM_STALL_MONITOR_DL_7_0_OFFSET 0x10 /* 16  */
-#define FRAM_STALL_MONITOR_DL_7_0_WIDTH 0x8 /* 8  */
-#define FRAM_STALL_MONITOR_DL_7_0_DEFAULT 0x0 /* 0  */
+#define FRAM_STALL_MONITOR_DL_SS_7_0_ADDR 0x2304 /* 8964  */
+#define FRAM_STALL_MONITOR_DL_SS_7_0_MASK 0xff0000 /* 16711680  */
+#define FRAM_STALL_MONITOR_DL_SS_7_0_OFFSET 0x10 /* 16  */
+#define FRAM_STALL_MONITOR_DL_SS_7_0_WIDTH 0x8 /* 8  */
+#define FRAM_STALL_MONITOR_DL_SS_7_0_DEFAULT 0x0 /* 0  */
 
 /* Type   = roSig  */
 /* sigena =  */
@@ -928,7 +886,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_defm
+* C Header bank register definitions for bank oran_radio_if_v3_1_defm 
 * with prefix defm_ @ address 0x6000
 *------------------------------------------------------------------------------
 */
@@ -967,15 +925,6 @@
 #define DEFM_USE_ONE_SYMBOL_STROBE_OFFSET 0x0 /* 0  */
 #define DEFM_USE_ONE_SYMBOL_STROBE_WIDTH 0x1 /* 1  */
 #define DEFM_USE_ONE_SYMBOL_STROBE_DEFAULT 0x0 /* 0  */
-
-/* Type   = rw  */
-/* sigena =  */
-/* Doc    : NODOC - Internal debug register. Use for trouble shooting */
-#define DEFM_DEBUG_ADDR 0x600c /* 24588  */
-#define DEFM_DEBUG_MASK 0xf /* 15  */
-#define DEFM_DEBUG_OFFSET 0x0 /* 0  */
-#define DEFM_DEBUG_WIDTH 0x4 /* 4  */
-#define DEFM_DEBUG_DEFAULT 0x1 /* 1  */
 
 /* Type   = wPlsH  */
 /* sigena =  */
@@ -1485,9 +1434,9 @@
 /* sigena =  */
 /* Doc    : Set the internal stream CC ID. */
 #define DEFM_CID_MAP_WR_STREAM_CCID_ADDR 0x6904 /* 26884  */
-#define DEFM_CID_MAP_WR_STREAM_CCID_MASK 0x7000000 /* 117440512  */
+#define DEFM_CID_MAP_WR_STREAM_CCID_MASK 0xf000000 /* 251658240  */
 #define DEFM_CID_MAP_WR_STREAM_CCID_OFFSET 0x18 /* 24  */
-#define DEFM_CID_MAP_WR_STREAM_CCID_WIDTH 0x3 /* 3  */
+#define DEFM_CID_MAP_WR_STREAM_CCID_WIDTH 0x4 /* 4  */
 #define DEFM_CID_MAP_WR_STREAM_CCID_DEFAULT 0x0 /* 0  */
 
 /* Type   = rw  */
@@ -1501,7 +1450,7 @@
 
 /* Type   = rw  */
 /* sigena =  */
-/* Doc    : Set the internal stream Type. The IP interpreted types are shown below. Other types can be used to identify other streams not processed by the IP. IP UNKNOWN = All ones UserDefined = 5 to (Max-1), IP LTE = 4, IP PRACH = 3, IP SSB = 2, IP PUXCH = 1, IP PDXCH = 0 */
+/* Doc    : Set the internal stream Type. The IP interpreted types are shown below. Other types can be used to identify other streams not processed by the IP. IP UNKNOWN = All ones (Currently this reads back as 0x3 as only 3 of the 6 bits avaiable are used.) UserDefined = 5 to (Max-1), IP LTE = 4, IP PRACH = 3, IP SSB = 2, IP PUXCH = 1, IP PDXCH = 0 */
 #define DEFM_CID_MAP_WR_STREAM_TYPE_ADDR 0x6904 /* 26884  */
 #define DEFM_CID_MAP_WR_STREAM_TYPE_MASK 0x7000 /* 28672  */
 #define DEFM_CID_MAP_WR_STREAM_TYPE_OFFSET 0xc /* 12  */
@@ -1530,9 +1479,9 @@
 /* sigena =  */
 /* Doc    : Read the internal stream CC ID. */
 #define DEFM_CID_MAP_RD_STREAM_CCID_ADDR 0x6908 /* 26888  */
-#define DEFM_CID_MAP_RD_STREAM_CCID_MASK 0x7000000 /* 117440512  */
+#define DEFM_CID_MAP_RD_STREAM_CCID_MASK 0xf000000 /* 251658240  */
 #define DEFM_CID_MAP_RD_STREAM_CCID_OFFSET 0x18 /* 24  */
-#define DEFM_CID_MAP_RD_STREAM_CCID_WIDTH 0x3 /* 3  */
+#define DEFM_CID_MAP_RD_STREAM_CCID_WIDTH 0x4 /* 4  */
 #define DEFM_CID_MAP_RD_STREAM_CCID_DEFAULT 0x0 /* 0  */
 
 /* Type   = roSig  */
@@ -1609,7 +1558,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_oranshr
+* C Header bank register definitions for bank oran_radio_if_v3_1_oranshr 
 * with prefix oran_ @ address 0x8000
 *------------------------------------------------------------------------------
 */
@@ -1813,7 +1762,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_eth
+* C Header bank register definitions for bank oran_radio_if_v3_1_eth 
 * with prefix eth_ @ address 0xa000
 *------------------------------------------------------------------------------
 */
@@ -2211,7 +2160,7 @@
 #define ETH_DU_TABLE_RD_VLAN_ID_MASK 0xfff /* 4095  */
 #define ETH_DU_TABLE_RD_VLAN_ID_OFFSET 0x0 /* 0  */
 #define ETH_DU_TABLE_RD_VLAN_ID_WIDTH 0xc /* 12  */
-#define ETH_DU_TABLE_RD_VLAN_ID_DEFAULT 0x1 /* 1  */
+#define ETH_DU_TABLE_RD_VLAN_ID_DEFAULT 0x0 /* 0  */
 
 /* Type   = roSig  repeats using C_ETH_W @ multiples of 0x100 */
 /* sigena =  */
@@ -2229,7 +2178,7 @@
 #define ETH_DU_TABLE_RD_VLAN_PCP_MASK 0xe000 /* 57344  */
 #define ETH_DU_TABLE_RD_VLAN_PCP_OFFSET 0xd /* 13  */
 #define ETH_DU_TABLE_RD_VLAN_PCP_WIDTH 0x3 /* 3  */
-#define ETH_DU_TABLE_RD_VLAN_PCP_DEFAULT 0x7 /* 7  */
+#define ETH_DU_TABLE_RD_VLAN_PCP_DEFAULT 0x0 /* 0  */
 
 /* Type   = wPlsH  repeats using C_ETH_W @ multiples of 0x100 */
 /* sigena =  */
@@ -2251,7 +2200,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_stats
+* C Header bank register definitions for bank oran_radio_if_v3_1_stats 
 * with prefix stats_ @ address 0xc000
 *------------------------------------------------------------------------------
 */
@@ -2563,7 +2512,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_oran
+* C Header bank register definitions for bank oran_radio_if_v3_1_oran 
 * with prefix oran_ @ address 0xe000
 *------------------------------------------------------------------------------
 */
@@ -2623,30 +2572,12 @@
 
 /* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
 /* sigena =  */
-/* Doc    : NODOC Remove from core. Base offset for DL T1 Section unroll tables. CC[0]=0, CC[1]=CC[0]+(SectionsPerSymbol[1]), etc. */
-#define ORAN_CC_DL_CTRL_UNROLLED_OFFSETS_ADDR 0xe108 /* 57608  */
-#define ORAN_CC_DL_CTRL_UNROLLED_OFFSETS_MASK 0xffff /* 65535  */
-#define ORAN_CC_DL_CTRL_UNROLLED_OFFSETS_OFFSET 0x0 /* 0  */
-#define ORAN_CC_DL_CTRL_UNROLLED_OFFSETS_WIDTH 0x10 /* 16  */
-#define ORAN_CC_DL_CTRL_UNROLLED_OFFSETS_DEFAULT 0x0 /* 0  */
-
-/* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
-/* sigena =  */
 /* Doc    : Base offset for UL T1 Section messages. E.g. CC[0]=0, CC[1]=CC[0]+(SectionsPerSymbol[1]*Symbols[1]), etc. */
 #define ORAN_CC_UL_CTRL_OFFSETS_ADDR 0xe10c /* 57612  */
 #define ORAN_CC_UL_CTRL_OFFSETS_MASK 0xffff /* 65535  */
 #define ORAN_CC_UL_CTRL_OFFSETS_OFFSET 0x0 /* 0  */
 #define ORAN_CC_UL_CTRL_OFFSETS_WIDTH 0x10 /* 16  */
 #define ORAN_CC_UL_CTRL_OFFSETS_DEFAULT 0x0 /* 0  */
-
-/* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
-/* sigena =  */
-/* Doc    : NODOC Remove from core. Base offset for UL T1 Section unroll tables. CC[0]=0, CC[1]=CC[0]+(SectionsPerSymbol[1]), etc. */
-#define ORAN_CC_UL_CTRL_UNROLLED_OFFSETS_ADDR 0xe110 /* 57616  */
-#define ORAN_CC_UL_CTRL_UNROLLED_OFFSETS_MASK 0xffff /* 65535  */
-#define ORAN_CC_UL_CTRL_UNROLLED_OFFSETS_OFFSET 0x0 /* 0  */
-#define ORAN_CC_UL_CTRL_UNROLLED_OFFSETS_WIDTH 0x10 /* 16  */
-#define ORAN_CC_UL_CTRL_UNROLLED_OFFSETS_DEFAULT 0x0 /* 0  */
 
 /* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
 /* sigena =  */
@@ -2821,15 +2752,6 @@
 
 /* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
 /* sigena =  */
-/* Doc    : NODOC Remove from core. 10 times num_times_symperslot[cc] */
-#define ORAN_CC_MAX_SYMBOLS_ADDR 0xe158 /* 57688  */
-#define ORAN_CC_MAX_SYMBOLS_MASK 0xfff /* 4095  */
-#define ORAN_CC_MAX_SYMBOLS_OFFSET 0x0 /* 0  */
-#define ORAN_CC_MAX_SYMBOLS_WIDTH 0xc /* 12  */
-#define ORAN_CC_MAX_SYMBOLS_DEFAULT 0x8c /* 140  */
-
-/* Type   = rw  repeats using C_MAX_COMP_CARR @ multiples of 0x70 */
-/* sigena =  */
 /* Doc    : DL number of CTRL sections per symbol per component carrier */
 #define ORAN_CC_NUM_CTRL_PER_SYMBOL_DL_ADDR 0xe160 /* 57696  */
 #define ORAN_CC_NUM_CTRL_PER_SYMBOL_DL_MASK 0xffff /* 65535  */
@@ -2875,7 +2797,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_cfg
+* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_cfg 
 * with prefix opxxch_cfg_ @ address 0x10000
 *------------------------------------------------------------------------------
 */
@@ -3079,7 +3001,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_fram
+* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_fram 
 * with prefix opxxch_fram_ @ address 0x12000
 *------------------------------------------------------------------------------
 */
@@ -3121,7 +3043,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_setup
+* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_setup 
 * with prefix opxxch_ctrl_ @ address 0x14000
 *------------------------------------------------------------------------------
 */
@@ -3271,7 +3193,7 @@
 
 
 /*-----------------------------------------------------------------------------
-* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_sequence_table
+* C Header bank register definitions for bank oran_radio_if_v3_1_chan_proc_sequence_table 
 * with prefix sequence_tab_ @ address 0x16000
 *------------------------------------------------------------------------------
 */

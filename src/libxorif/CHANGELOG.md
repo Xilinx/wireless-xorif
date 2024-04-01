@@ -1,5 +1,9 @@
 # Change Log
 
+## Release 2024.1
+* Updated register map
+* Added support for "UL Section Sort" feature
+
 ## Release 2023.2
 * Change order of operations during xorif_reset_fhi()
 * Function xorif_clear_ru_ports_table() sets everything to "all ones" (type = UNKNOWN)

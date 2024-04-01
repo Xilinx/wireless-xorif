@@ -105,6 +105,39 @@ def test_capabilities_api():
     assert caps['max_subcarriers'] >= 3300
     # Note, difficult to check values, since they will change
 
+    # But we can check that the element actually exists
+    assert caps["max_cc"] is not None
+    assert caps["num_eth_ports"] is not None
+    assert caps["numerologies"] is not None
+    assert caps["extended_cp"] is not None
+    assert caps["iq_de_comp_methods"] is not None
+    assert caps["iq_de_comp_bfp_widths"] is not None
+    assert caps["iq_de_comp_mod_widths"] is not None
+    assert caps["iq_comp_methods"] is not None
+    assert caps["iq_comp_bfp_widths"] is not None
+    assert caps["no_framer_ss"] is not None
+    assert caps["no_deframer_ss"] is not None
+    assert caps["max_framer_ethernet_pkt"] is not None
+    assert caps["max_deframer_ethernet_pkt"] is not None
+    assert caps["max_subcarriers"] is not None
+    assert caps["max_data_symbols"] is not None
+    assert caps["max_ctrl_symbols"] is not None
+    assert caps["max_ul_ctrl_1kwords"] is not None
+    assert caps["max_dl_ctrl_1kwords"] is not None
+    assert caps["max_dl_data_1kwords"] is not None
+    assert caps["max_ssb_ctrl_512words"] is not None
+    assert caps["max_ssb_data_512words"] is not None
+    assert caps["timer_clk_ps"] is not None
+    assert caps["num_unsolicited_ports"] is not None
+    assert caps["num_prach_ports"] is not None
+    assert caps["du_id_limit"] is not None
+    assert caps["bs_id_limit"] is not None
+    assert caps["cc_id_limit"] is not None
+    assert caps["ru_id_limit"] is not None
+    assert caps["ss_id_limit"] is not None
+    assert caps["ru_ports_map_width"] is not None
+    assert caps["extra_flags"] is not None
+
 
 def test_miscellaneous_api():
     """Check various miscellaneous APIs."""
@@ -751,7 +784,6 @@ def test_fhi_register_read_api():
                  'CFG_MINOR_REVISION',
                  'CFG_VERSION_REVISION',
                  'CFG_CONFIG_NO_OF_ETH_PORTS',
-                 'CFG_CONFIG_XRAN_MAX_NUMEROLOGY',
                  '0x0000']
     for reg in reg_list1:
         result, value = lib.xorif_read_fhi_reg(reg)

@@ -26,7 +26,7 @@
 #define XORIF_REGISTERS_H
 
 #include "xorif_common.h"
-#include "oran_radio_if_v3_1_ctrl.h"
+#include "oran_radio_if_v3_2_ctrl.h"
 
 /*******************************************/
 /*** Constants / macros / structs / etc. ***/
@@ -43,7 +43,7 @@
                        CFG_FRAM_INT_OUTFIFO_UF_MASK |             \
                        CFG_FRAM_INT_PRACH_SECTION_OVERFLOW_MASK | \
                        CFG_FRAM_INT_PRACH_SECTION_NOTFOUND_MASK | \
-                       CFG_AXI_TIMEOUT_STATUS_MASK)
+                       CFG_FRAM_INT_ENA_SECTION_OF_MASK)
 
 // Start address of packet filter word
 #define DEFM_USER_DATA_FILTER_ADDR DEFM_USER_DATA_FILTER_W0_31_0_ADDR

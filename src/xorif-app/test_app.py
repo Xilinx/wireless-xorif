@@ -170,8 +170,12 @@ def test_app_golden_configs(app_type, bf, ocp, oprach):
     proc = subprocess.Popen(server[app_type].split())
     time.sleep(5)
     try:
-        do_command(client[app_type] + "-f config1.txt")
-        assert os.system("diff libxorif.log libxorif-golden1.txt") == 0
+        if not ocp:
+            do_command(client[app_type] + "-f config1.txt")
+            assert os.system("diff libxorif.log libxorif-golden1a.txt") == 0
+        else:
+            do_command(client[app_type] + "-f config1.txt")
+            assert os.system("diff libxorif.log libxorif-golden1b.txt") == 0
 
         if bf:
             do_command(client[app_type] + "-f config2.txt")

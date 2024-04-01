@@ -40,7 +40,7 @@ FILE *log_file = NULL;
 #endif
 
 // Local variables
-static const char *compatible = "xlnx,oran-radio-if-3.1";
+static const char *compatible = "xlnx,oran-radio-if-3."; // Only checking major version
 
 // System "constants" (can be changed with API)
 struct xorif_system_constants fhi_sys_const =

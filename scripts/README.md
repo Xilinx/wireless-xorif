@@ -11,20 +11,21 @@ Usage:
 vivado -mode tcl -source ./xil_vivado_build.tcl
 ```
 Once loaded, review the printed help. When you are familiar with the flow and want to fully script the build, you can call vivado with launch arguments.
+IP configurations may change and can be added by the user. Be sure and review xil_vivado_configs.yml to see what configs are avaiable, or to add your own.
 ```console
 ## The 3rd argument uses a set of strings concatenated together to tell the 
 ## script what mode it should built in. Note. case is ignored.
 ## 
 ## 1st TCLARGS = board to use (zcu111|zcu102|zcu670)
-## 2nd TCLARGS = Ip Configuration to select from the xil_vivado_configs.yml file (e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest|e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144|...)
+## 2nd TCLARGS = Ip Configuration to select from the xil_vivado_configs.yml file (e4x8000x10_ss4x4_cc4x6600_dcc16x4x4x12x8_swtest|e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_cmw00i_aptw262144|...)
 ## 3rd TCLARGS = Command mode to run (impl)(exit)(nodate)(loop:loopBack the 10ms internally)(gui)(tlp:for QEMU)(exd: Example Design with ARM)
 ## 4rd TCLARGS = IP Directory        (Path to local IP repo.) [optional]
 
 ## For a full implementation use
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs impl
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs impl
 
 ## To simple generate and review
-vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9000x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs gui
+vivado -mode tcl -source ./xil_vivado_build.tcl -tclargs zcu111 -tclargs e1x9600x25_ss8x4_cc4x6600_dcc16x4x4x16x16_aptw262144  -tclargs gui
 ```
 
 The presets found in the XGUI for the IP can be used as the basis for a build by setting the Ip Configuration to one of: 'preset_default_config', 'preset_4x4_macro', or 'preset_8x8_macro'.
