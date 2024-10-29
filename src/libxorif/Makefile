@@ -9,7 +9,7 @@ OBJS = $(SRCS:.c=.o)
 DEPS = $(SRCS:.c=.d)
 CFLAGS += -I. -Werror -Wall -std=gnu99 -g -DDEBUG -Wno-unused-function
 CFLAGS += $(EXTRA_FLAGS)
-LDFLAGS += -Wl,--version-script linker.script
+LDFLAGS += -Wl,--version-script=linker.script
 LDLIBS += -lm
 
 ifeq ($(NO_HW),1)

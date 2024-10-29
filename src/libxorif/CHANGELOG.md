@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 2024.2
+* No significant changes
+
 ## Release 2024.1
 * Updated register map
 * Added support for "UL Section Sort" feature

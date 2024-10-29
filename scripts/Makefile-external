@@ -5,8 +5,11 @@ SRC_DIR = ../src
 OUT_DIR = ../output
 RCP_DIR = ../yocto-recipes
 XSA_DIR = ../xsa
+SDT_DIR = ../sdt
 TOOL_VER = $(shell printenv PETALINUX_VER | perl -lne 'if (m/([0-9]+)\.([0-9]+)/) {print "$$1_$$2"}')
 PLNX_VER = $(shell printenv PETALINUX_VER)
+VITIS = $(shell printenv XILINX_VITIS)
+XSCT = $(VITIS)/bin/xsct
 ROOTFSCONFIG = $(PLX_DIR)/project-spec/meta-user/conf/user-rootfsconfig
 
 # Release-sensitive settings
@@ -26,6 +29,9 @@ ROOTFS = 0
 
 # Set System Init type: 0 = sysvinit, 1 = systemd
 SYS_INIT = 1
+
+# Use SDT flow for hw-description: 0 = XSA, 1 = SDT
+USE_SDT_FLOW = 1
 
 # Add kernel modules (e.g. drivers) here
 #override MODULES += xlnx-ptp-timer
@@ -197,19 +203,12 @@ else ifeq ($(BOARD),zcu670)
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_zynqmp_virt_defconfig"/' $@/project-spec/configs/config
 else ifeq ($(BOARD),vck190)
 	cd $(shell dirname $@) && petalinux-create --type project --template versal --name $(shell basename $@) --force
-	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_MACHINE_NAME.*/CONFIG_SUBSYSTEM_MACHINE_NAME=""/' $(PLX_DIR)/project-spec/configs/config
+	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_MACHINE_NAME.*/CONFIG_SUBSYSTEM_MACHINE_NAME="versal-vck190-reva-x-ebm-01-reva"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_YOCTO_MACHINE_NAME.*/CONFIG_YOCTO_MACHINE_NAME="vck190-versal"/' $(PLX_DIR)/project-spec/configs/config
 	perl -p -i -e 's/^.*CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET.*/CONFIG_SUBSYSTEM_UBOOT_CONFIG_TARGET="xilinx_versal_virt_defconfig"/' $(PLX_DIR)/project-spec/configs/config
 endif
 ifeq ($(YOCTO_BUILDTOOLS_EXTENDED),1)
 	echo CONFIG_YOCTO_BUILDTOOLS_EXTENDED=y >> $(PLX_DIR)/project-spec/configs/config
-endif
-
-# Update with the hardware description (e.g. HDF or XSA) if it exists
-ifneq ("$(wildcard $(XSA_DIR)/$(TARGET)/system.xsa)","")
-$(PLX_DIR)/project-spec/hw-description/system.xsa: $(XSA_DIR)/$(TARGET)/system.xsa
-	@echo Setting hw-description $(PLX_DIR)
-	petalinux-config --project $(PLX_DIR) --get-hw-description $(XSA_DIR)/$(TARGET) --silentconfig
 endif
 
 # Generate DTS from DTB
@@ -219,7 +218,24 @@ $(PLX_DIR)/images/linux/system.dts: $(PLX_DIR)/images/linux/system.dtb
 .PHONY: config1 config2 config3 build package clean mrproper
 
 # Configure step 1 (hw description, base rootfs, apps, etc.)
-config1: $(PLX_DIR) $(PLX_DIR)/project-spec/hw-description/system.xsa $(APPS) $(MODULES) $(INSTALL)
+config1: $(PLX_DIR) $(APPS) $(MODULES) $(INSTALL)
+	@echo Configuring hw-description $(PLX_DIR)
+ifeq ($(USE_SDT_FLOW),1)
+	@ echo Setting hw-description $(PLX_DIR) using SDT flow
+ifeq ($(BOARD),zcu102)
+	$(XSCT) sdt.tcl $(XSA_DIR)/$(TARGET)/system.xsa zcu102-rev1.0 $(SDT_DIR)/$(TARGET)
+else ifeq ($(BOARD),zcu111)
+	$(XSCT) sdt.tcl $(XSA_DIR)/$(TARGET)/system.xsa zcu111-reva $(SDT_DIR)/$(TARGET)
+else ifeq ($(BOARD),zcu670)
+	$(XSCT) sdt.tcl $(XSA_DIR)/$(TARGET)/system.xsa zcu670-revb $(SDT_DIR)/$(TARGET)
+else ifeq ($(BOARD),vck190)
+	$(XSCT) sdt.tcl $(XSA_DIR)/$(TARGET)/system.xsa versal-vck190-reva-x-ebm-01-reva $(SDT_DIR)/$(TARGET)
+endif
+	petalinux-config --project $(PLX_DIR) --get-hw-description $(SDT_DIR)/$(TARGET) --silentconfig
+else
+	@echo Setting hw-description $(PLX_DIR) using XSA
+	petalinux-config --project $(PLX_DIR) --get-hw-description $(XSA_DIR)/$(TARGET)/system.xsa --silentconfig
+endif
 	@echo Configuring 1 $(PLX_DIR)
 	petalinux-config --project $(PLX_DIR) --component rootfs --silentconfig
 
