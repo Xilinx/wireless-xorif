@@ -13,5 +13,5 @@ var searchData=
   ['check_5fnumerology',['check_numerology',['../group__libxorif.html#ga49de484cfbc8e1e1f322d885aa1df4f0',1,'xorif_utils.c']]],
   ['comp_5f32bit_5fmode_5fsupport',['COMP_32BIT_MODE_SUPPORT',['../group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caa83a7f68f5ff430993ae34de98edfbdbb',1,'xorif_api.h']]],
   ['comp_5fin_5fcore_5fenabled',['COMP_IN_CORE_ENABLED',['../group__API.html#gga9dd0d1e2b2202d805a2c6e0d4546e2caad39400a3bef1b3cc08ed40c9ac7af4f8',1,'xorif_api.h']]],
-  ['change_20log',['Change Log',['../md__home_stevend_projects_oran-radio-if-release_release_src_libxorif_CHANGELOG.html',1,'']]]
+  ['change_20log',['Change Log',['../md__proj_ipeng_staff_stevend_projects_oran-radio-if-release_release_src_libxorif_CHANGELOG.html',1,'']]]
 ];

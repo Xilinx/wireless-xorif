@@ -424,6 +424,9 @@ int xocp_set_antenna_cfg(uint16_t instance,
  * The "sequence" parameter is an array (pointer) defining the sequence of
  * component carrier symbols to process, e.g. {0, 0, 1} means a symbol
  * from CC0, another symbol from CC0, and a symbol from CC1.
+ * The ordering of REs within a symbol is flexible in the HW, but the SW driver
+ * currently uses the following ordering [N/2 .. N-1, 0 .. N/2-1] where N is the
+ * total number of REs in the symbol (i.e. num_rbs * 12).
  * Note, the component carrier IDs used here are the O-RAN CC IDs.
  * Note, the actual symbol sequence needs to be coordinated with the DFE
  * processing chain, and take into account the availability of symbols to/from

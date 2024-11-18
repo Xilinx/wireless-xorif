@@ -65,8 +65,8 @@ xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
 xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
-xorif_set_cc_dl_iq_compression(0, 9, 1);
-xorif_set_cc_ul_iq_compression(0, 9, 1);
+xorif_set_cc_dl_iq_compression(0, 9, 1, 1);
+xorif_set_cc_ul_iq_compression(0, 9, 1, 1);
 
 // CC[0]: Configure
 xorif_configure_cc(0);
@@ -95,8 +95,8 @@ xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
 xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (9 bits, block-floating-point)
-xorif_set_cc_dl_iq_compression(0, 9, 1);
-xorif_set_cc_ul_iq_compression(0, 9, 1);
+xorif_set_cc_dl_iq_compression(0, 9, 1, 1);
+xorif_set_cc_ul_iq_compression(0, 9, 1, 1);
 
 // CC[0]: Configure
 xorif_configure_cc(0);
@@ -119,8 +119,8 @@ xorif_set_cc_ul_timing_parameters(1, 30, 90, 30);
 xorif_set_cc_dl_timing_parameters(1, 30, 30, 90);
 
 // CC[1]: Set the down-link & up-link compression (9 bits, block-floating-point)
-xorif_set_cc_dl_iq_compression(1, 9, 1);
-xorif_set_cc_ul_iq_compression(1, 9, 1);
+xorif_set_cc_dl_iq_compression(1, 9, 1, 1);
+xorif_set_cc_ul_iq_compression(1, 9, 1, 1);
 
 // CC[1]: Configure
 xorif_configure_cc(1);
@@ -149,8 +149,8 @@ xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
 xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
 
 // CC[0]: Set the down-link & up-link compression (no compression)
-xorif_set_cc_dl_iq_compression(0, 0, 0);
-xorif_set_cc_ul_iq_compression(0, 0, 0);
+xorif_set_cc_dl_iq_compression(0, 0, 0, 1);
+xorif_set_cc_ul_iq_compression(0, 0, 0, 1);
 
 // CC[0]: Set max number of sections per symbol (10 for both uplink and downlink)
 // Note, this number affects the memory allocation for component carriers
@@ -175,6 +175,73 @@ xorif_configure_cc(0);
 xorif_enable_cc(0)
 ~~~
 
+### Example 4: Configure 2 component carrier (275 RBS, numerology 1) with OCP scheduling
+
+// Precondition: libxorif has already been initialized with xorif_init()
+// Precondition: OCP has already been initialized with xocp_start()
+
+// Reset and activate the OCP
+xocp_reset(0, 0);
+xocp_activate(0);
+
+// Configure OCP antenna order
+struct xocp_antenna_data ant_config = {
+    .num_antennas = 8,
+    .interleave = 2,
+    .data = {0, 1, 2, 3, 4, 5, 6, 7}
+};
+xocp_get_antenna_cfg(0, &ant_config);
+
+// Configure component carrier [0] (e.g. as per Example 1)...
+xorif_set_cc_num_rbs(0, 275);
+xorif_set_cc_numerology(0, 1, 0);
+xorif_set_cc_ul_timing_parameters(0, 30, 90, 30);
+xorif_set_cc_dl_timing_parameters(0, 30, 30, 90);
+xorif_set_cc_dl_iq_compression(0, 9, 1, 1);
+xorif_set_cc_ul_iq_compression(0, 9, 1, 1);
+xorif_configure_cc(0);
+
+// Configure component carrier [1] (e.g. as per Example 1)...
+xorif_set_cc_num_rbs(1, 275);
+xorif_set_cc_numerology(1, 1, 0);
+xorif_set_cc_ul_timing_parameters(1, 30, 90, 30);
+xorif_set_cc_dl_timing_parameters(1, 30, 30, 90);
+xorif_set_cc_dl_iq_compression(1, 9, 1, 1);
+xorif_set_cc_ul_iq_compression(1, 9, 1, 1);
+xorif_configure_cc(1);
+
+// Configure the OCP component carriers...
+struct xocp_cc_data cc_config0 = {
+    .enable = 1,
+    .num_rbs = 275,
+    .numerology = 1,
+    .ccid = 0,
+    .inter_sym_gap = 0
+};
+struct xocp_cc_data cc_config1 = {
+    .enable = 1,
+    .num_rbs = 275,
+    .numerology = 1,
+    .ccid = 1,
+    .inter_sym_gap = 0
+};
+xocp_set_cc_cfg(0, 0, &cc_config0);
+xocp_set_cc_cfg(0, 1, &cc_config1);
+
+// Set OCP scheduling (CC[0] then CC[1])
+// The ordering of REs within a symbol is flexible in the HW, but the SW driver
+// currently uses the following ordering [N/2 .. N-1, 0 .. N/2-1] where N is the
+// total number of REs in the symbol (i.e. num_rbs * 12)
+uint8_t sequence[] = { 0 , 1 };
+xocp_set_schedule(0, 3, 2, sequence);
+
+// Trigger the OCP to update the scheduling
+xocp_trigger_update(0);
+
+// Enable the component carriers
+xorif_enable_cc(0);
+xorif_enable_cc(1);
+
 ## Debug Mode
 
 * The library API command `xorif_debug()` can be used to enable library's "trace" feature
@@ -186,8 +253,8 @@ xorif_enable_cc(0)
 ~~~
 XORIF> xorif_set_cc_num_rbs(0, 20)
 XORIF> xorif_set_cc_numerology(0, 0, 0)
-XORIF> xorif_set_cc_dl_iq_compression(0, 0, 0)
-XORIF> xorif_set_cc_ul_iq_compression(0, 0, 0)
+XORIF> xorif_set_cc_dl_iq_compression(0, 0, 0, 1)
+XORIF> xorif_set_cc_ul_iq_compression(0, 0, 0, 1)
 XORIF> xorif_set_cc_ul_sections_per_symbol(0, 10, 10)
 XORIF> xorif_set_cc_dl_sections_per_symbol(0, 10, 10)
 XORIF> xorif_configure_cc(0)
