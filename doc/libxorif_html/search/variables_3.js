@@ -1,0 +1,19 @@
+var searchData=
+[
+  ['data_0',['data',['../structxocp__antenna__data.html#abdf53b8d8d984c60cf9ba11ed273fe59',1,'xocp_antenna_data']]],
+  ['delay_5fcomp_5fcp_5fdl_1',['delay_comp_cp_dl',['../structxorif__cc__config.html#af76e3a40e8358abaf9df21421f6fe3fa',1,'xorif_cc_config']]],
+  ['delay_5fcomp_5fcp_5ful_2',['delay_comp_cp_ul',['../structxorif__cc__config.html#aba7d50c07f0623299df9342b0dc9166c',1,'xorif_cc_config']]],
+  ['delay_5fcomp_5fup_3',['delay_comp_up',['../structxorif__cc__config.html#a40900332ee2f3e7d22a12908d82843fd',1,'xorif_cc_config']]],
+  ['dev_4',['dev',['../structxocp__state__t.html#a35e47228a69d772908f95e795e93fc1f',1,'xocp_state_t::dev'],['../structxorif__device__info.html#aa24b891a199e30f1c320cd9a4bf97105',1,'xorif_device_info::dev']]],
+  ['dl_5fctrl_5foffset_5',['dl_ctrl_offset',['../structxorif__cc__alloc.html#a19c9f386790852accd90f455b1ee2344',1,'xorif_cc_alloc']]],
+  ['dl_5fctrl_5fsize_6',['dl_ctrl_size',['../structxorif__cc__alloc.html#ae6c865fd024998bfe2aa5fa04a956015',1,'xorif_cc_alloc']]],
+  ['dl_5fctrl_5fsym_5fnum_7',['dl_ctrl_sym_num',['../structxorif__cc__alloc.html#a0d209f4967cafc8719a1d3f2d598a381',1,'xorif_cc_alloc']]],
+  ['dl_5fdata_5fbuff_5foffset_8',['dl_data_buff_offset',['../structxorif__cc__alloc.html#afede1ad03c1d6f4a2d28775e31d5dcd0',1,'xorif_cc_alloc']]],
+  ['dl_5fdata_5fbuff_5fsize_9',['dl_data_buff_size',['../structxorif__cc__alloc.html#a3c00efc492da6a8969c473c2fc65fa0e',1,'xorif_cc_alloc']]],
+  ['dl_5fdata_5fptrs_5foffset_10',['dl_data_ptrs_offset',['../structxorif__cc__alloc.html#a5d2261a36a1bc9087f8f8aaa8228d99a',1,'xorif_cc_alloc']]],
+  ['dl_5fdata_5fptrs_5fsize_11',['dl_data_ptrs_size',['../structxorif__cc__alloc.html#a41da2138823b4df466e098db1a468217',1,'xorif_cc_alloc']]],
+  ['dl_5fdata_5fsym_5fnum_12',['dl_data_sym_num',['../structxorif__cc__alloc.html#a3df9f92a15387e81bee1d4a546cc33f9',1,'xorif_cc_alloc']]],
+  ['dl_5fss_13',['dl_ss',['../structxorif__stall__monitor.html#a2dcf869839740360027e683015d6aa7c',1,'xorif_stall_monitor']]],
+  ['dl_5fupdate_14',['dl_update',['../structxocp__triggers.html#a27034e477fc14fc559c4fd00ee4d26ae',1,'xocp_triggers']]],
+  ['du_5fid_5flimit_15',['du_id_limit',['../structxorif__caps.html#a606b8e3de0bcae92d97f782a316acac7',1,'xorif_caps']]]
+];

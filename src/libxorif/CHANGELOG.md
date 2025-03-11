@@ -1,5 +1,8 @@
 # Change Log
 
+## Release 2024.2-fix1
+* Fixed bug in downlink timing offset calculation (CR-1229486).
+
 ## Release 2024.2
 * No significant changes
 

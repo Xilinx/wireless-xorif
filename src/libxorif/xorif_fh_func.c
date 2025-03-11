@@ -1458,7 +1458,7 @@ int xorif_fhi_configure_time_advance_offsets(uint16_t cc,
     double ul_radio_ch_dly = cc_config[cc].ul_radio_ch_dly * 1e6;
 
     // Compute offsets from 10 ms strobe
-    double dl_offset = advance_dl + fh_decap_dly;
+    double dl_offset = advance_dl + fh_decap_dly - sym_period;
     double ul_offset = advance_ul + ul_radio_ch_dly;
     double ul_bidf_offset;
 
